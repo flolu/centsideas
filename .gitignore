@@ -1,0 +1,24 @@
+# logs
+yarn-error.log
+.log
+
+# OS junk
+.DS_Store
+
+# compiled libraries
+lib
+dist
+
+# dependency directories
+node_modules
+
+# environment variables
+.env.development
+.env.production
+.env.test
+
+# in memory mongo
+globalConfigMongo.json
+
+# kubernetes secrets
+secrets.yml

@@ -1,0 +1,6 @@
+{
+  "name": "@cents-ideas/enums",
+  "version": "0.0.0",
+  "main": "dist/enums.js",
+  "license": "MIT"
+}

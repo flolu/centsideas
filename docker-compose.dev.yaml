@@ -1,0 +1,14 @@
+version: "3"
+services:
+  gateway:
+    container_name: gateway
+    build:
+      context: ./
+      dockerfile: ./docker/gateway/dev.Dockerfile
+    command: yarn start:watch
+    ports:
+      - 3000:3000
+    volumes:
+      - ./services/gateway/dist:/usr/app/src/services/gateway/dist
+      - ./packages:/usr/app/src/packages
+      - ./node_modules:/usr/app/src/node_modules

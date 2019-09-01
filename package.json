@@ -1,0 +1,27 @@
+{
+  "name": "cents-ideas",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "bootstrap": "yarn install && yarn run build",
+    "tsc": "tsc",
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch",
+    "start": "docker-compose up --build",
+    "start:dev": "docker-compose -f docker-compose.dev.yml up --build"
+  },
+  "devDependencies": {
+    "typescript": "^3.6.2"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "singleQuote": true,
+    "bracketSpacing": true
+  }
+}

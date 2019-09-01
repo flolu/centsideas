@@ -1,0 +1,10 @@
+version: "3"
+services:
+  gateway:
+    container_name: gateway
+    build:
+      context: ./
+      dockerfile: ./docker/gateway/Dockerfile
+    command: yarn start:watch
+    ports:
+      - 3000:3000
