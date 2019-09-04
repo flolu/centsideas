@@ -1,5 +1,5 @@
 {
-  "name": "@cents-ideas/enums",
+  "name": "@cents-ideas/event-sourcing",
   "version": "0.0.0",
   "main": "dist/index.js",
   "license": "MIT"

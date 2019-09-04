@@ -1,4 +1,10 @@
 {
   "files": [],
-  "references": [{ "path": "packages/enums" }, { "path": "services/gateway" }]
+  "references": [
+    { "path": "packages/enums" },
+    { "path": "packages/models" },
+    { "path": "packages/event-sourcing" },
+    { "path": "services/gateway" },
+    { "path": "services/ideas" }
+  ]
 }

@@ -1,11 +1,7 @@
 {
   "extends": "../../tsconfig.settings.json",
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
     "rootDir": "src",
-    "outDir": "dist",
-    "declaration": true
+    "outDir": "dist"
   }
 }
