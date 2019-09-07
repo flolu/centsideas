@@ -8,13 +8,14 @@ import { HttpRequest, HttpResponse } from '@cents-ideas/models';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
 import { IdeasService } from './ideas.service';
+import env from './environment';
 
-// NEXT logger
-const port: number = 3000;
+const port: number = env.port;
 const app = express();
 const repository = new IdeaRepository();
 const commandHandler = new IdeaCommandHandler(repository);
 const ideasService = new IdeasService(commandHandler);
+const { logger } = env;
 
 app.use(bodyParser.json());
 
@@ -37,4 +38,6 @@ app.delete('/:id', expressJsonAdapter(ideasService.delete));
 app.get('', (_req, res) => res.send('get all ideas'));
 app.get('/:id', (_req, res) => res.send('get one idea'));
 
-app.listen(port, () => console.log('ideas service listening on internal port', port));
+app.listen(port, () => {
+  logger.info('ideas service listening on internal port', port);
+});

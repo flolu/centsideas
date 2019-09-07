@@ -48,6 +48,7 @@ export abstract class EventEntity<T> {
     return this;
   }
 
+  // TODO make use of this method
   confirmEvents() {
     this.persistedEvents = [...this.persistedEvents, ...this.pendingEvents];
     this.pendingEvents = [];
