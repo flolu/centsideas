@@ -2,7 +2,6 @@ import { EventRepository, IEvent } from '@cents-ideas/event-sourcing';
 import { Idea } from './idea.entity';
 
 // FIXME snapshots
-// NEXT in memory for now
 export class IdeaRepository extends EventRepository<Idea> {
   events: { [key: string]: IEvent<any>[] } = {};
 
@@ -15,10 +14,7 @@ export class IdeaRepository extends EventRepository<Idea> {
   save(idea: Idea): Promise<Idea> {
     return new Promise(resolve => {
       // TODO implement save
-      const currentEvents = this.events[idea.id];
-      if (!(currentEvents && currentEvents.length)) {
-        this.events[idea.id] = [];
-      }
+      const currentEvents = this.events[idea.id] || [];
       this.events[idea.id] = [...currentEvents, ...idea.pendingEvents];
       return resolve(idea);
     });

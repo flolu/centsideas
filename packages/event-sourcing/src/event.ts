@@ -1,3 +1,5 @@
+import { Identifier } from '@cents-ideas/utils';
+
 export interface IEvent<T> {
   id: string;
   name: string;
@@ -15,8 +17,7 @@ export class Event<T> implements IEvent<T> {
   readonly eventNumber: number;
 
   constructor(name: string, data: T, eventNumber?: number) {
-    // NEXT random id generate
-    this.id = 'random-id-' + Date.now().toString();
+    this.id = Identifier.makeUniqueId();
     this.name = name;
     this.data = data;
     this.timestamp = new Date().toISOString();

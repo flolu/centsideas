@@ -5,6 +5,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
+import { HttpStatusCodes } from '@cents-ideas/enums';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
 import { IdeasService } from './ideas.service';
@@ -27,17 +28,36 @@ const expressJsonAdapter = (controller: (request: HttpRequest) => Promise<HttpRe
   };
 };
 
-app.post('', expressJsonAdapter(ideasService.createEmptyIdea));
-app.put('/draft/:id', expressJsonAdapter(ideasService.saveIdeaDraft));
-app.put('/publish/:id', expressJsonAdapter(ideasService.publish));
-app.put('/:id', expressJsonAdapter(ideasService.update));
-app.put('/unpublish/:id', expressJsonAdapter(ideasService.unpublish));
-app.delete('/:id', expressJsonAdapter(ideasService.delete));
+app.post('/create', expressJsonAdapter(ideasService.createEmptyIdea));
+app.post('/save-draft', expressJsonAdapter(ideasService.saveIdeaDraft));
+app.post('/publish', expressJsonAdapter(ideasService.publish));
+app.post('/update', expressJsonAdapter(ideasService.update));
+app.post('/unpublish', expressJsonAdapter(ideasService.unpublish));
+app.post('/delete', expressJsonAdapter(ideasService.delete));
+
+// FIXME only access with admin password or so
+app.post(
+  '/debug/events',
+  expressJsonAdapter(
+    async (req: HttpRequest) =>
+      new Promise(async (resolve, reject) => {
+        logger.info('[debug] get events');
+        try {
+          const events = repository.findById(req.params.id);
+          return resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { events },
+            headers: {},
+          });
+        } catch (error) {
+          return reject(error);
+        }
+      }),
+  ),
+);
 
 // TODO move projection into own service
-app.get('', (_req, res) => res.send('get all ideas'));
-app.get('/:id', (_req, res) => res.send('get one idea'));
+app.post('/queries/get-all', (_req, res) => res.send('get all ideas'));
+app.post('/queries/get-one', (_req, res) => res.send('get one idea'));
 
-app.listen(port, () => {
-  logger.info('ideas service listening on internal port', port);
-});
+app.listen(port, () => logger.info('ideas service listening on internal port', port));

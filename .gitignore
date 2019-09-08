@@ -13,8 +13,8 @@ dist
 node_modules
 
 # environment variables
-.env.development
-.env.production
+.env.dev
+.env.prod
 .env.test
 
 # in memory mongo

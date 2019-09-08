@@ -5,9 +5,11 @@
   "license": "MIT",
   "dependencies": {
     "pino": "^5.13.2",
-    "pino-pretty": "^3.2.1"
+    "pino-pretty": "^3.2.1",
+    "shortid": "^2.2.15"
   },
   "devDependencies": {
-    "@types/pino": "^5.8.10"
+    "@types/pino": "^5.8.10",
+    "@types/shortid": "^0.0.29"
   }
 }

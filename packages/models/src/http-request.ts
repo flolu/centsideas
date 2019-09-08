@@ -7,5 +7,5 @@ export interface HttpRequest<T = any> {
   cookies: any;
   query: { [key: string]: string };
   params: { [key: string]: string };
-  headers: { [key: string]: string };
+  headers: { [key: string]: string | string[] | undefined };
 }

@@ -2,5 +2,8 @@
   "name": "@cents-ideas/event-sourcing",
   "version": "0.0.0",
   "main": "dist/index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@cents-ideas/utils": "0.0.0"
+  }
 }

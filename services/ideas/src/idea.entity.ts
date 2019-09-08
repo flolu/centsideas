@@ -62,6 +62,7 @@ export class Idea extends EventEntity<Idea> {
   }
 
   get state() {
+    // FIXME start from current state?
     const currentState = this.reducer.reduce(new Idea(), [...this.persistedEvents, ...this.pendingEvents]);
     return {
       id: currentState.id,

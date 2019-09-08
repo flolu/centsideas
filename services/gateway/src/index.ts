@@ -1,15 +1,35 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { CentsCommandments } from '@cents-ideas/enums';
+import env, { logger } from './environment';
+import { ExpressAdapter } from './express-adapter';
 
-const port: number = 3000;
+const expressAdapter = new ExpressAdapter();
+const port: number = env.port;
 const app = express();
+const ideasApiRoot = env.api.ideas.root;
+const ideasHost = env.hosts.ideas;
+
+logger.debug('initialized with env: ', env);
 
 app.use(bodyParser.json());
 
-app.get('**', (_req, res) => {
-  res.send(CentsCommandments);
-});
+// FIXME change from get to appropriate method
+app.get(
+  `${ideasApiRoot}/create`,
+  (req, res, next) => {
+    req.body = {};
+    next();
+  },
+  expressAdapter.makeJsonAdapter(`${ideasHost}/create`),
+);
+app.get(`${ideasApiRoot}/save-draft/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/save-draft`));
+app.get(`${ideasApiRoot}/publish/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/publish`));
+app.get(`${ideasApiRoot}/update/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/update`));
+app.get(`${ideasApiRoot}/unpublish/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/unpublish`));
+app.get(`${ideasApiRoot}/delete/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/delete`));
 
-app.listen(port, () => console.log('gateway listening on internal port', port));
+app.get(`${ideasApiRoot}/get-all`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-all`));
+app.get(`${ideasApiRoot}/get-one`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-one`));
+
+app.listen(port, () => logger.info('gateway listening on internal port', port));

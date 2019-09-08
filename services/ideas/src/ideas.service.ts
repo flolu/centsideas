@@ -8,10 +8,10 @@ const { logger } = env;
 export class IdeasService {
   constructor(private readonly commandHandler: IdeaCommandHandler) {}
 
-  createEmptyIdea(_req: HttpRequest): Promise<HttpResponse> {
-    return new Promise(async (resolve, reject) => {
+  createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse> =>
+    new Promise(async (resolve, reject) => {
+      logger.info('create');
       try {
-        logger.info('create');
         const idea = await this.commandHandler.create();
         return resolve({
           status: HttpStatusCodes.Accepted,
@@ -22,8 +22,8 @@ export class IdeasService {
         return reject(error);
       }
     });
-  }
 
+  // FIXME at the moment savedraft is equivalent to update
   saveIdeaDraft = (req: HttpRequest<{ title?: string; description?: string }>): Promise<HttpResponse> =>
     new Promise(async (resolve, reject) => {
       try {

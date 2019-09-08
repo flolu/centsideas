@@ -8,11 +8,14 @@
     "start:watch": "nodemon dist/index.js"
   },
   "dependencies": {
-    "@cents-ideas/enums": "0.0.0",
+    "@cents-ideas/models": "0.0.0",
+    "@cents-ideas/utils": "0.0.0",
+    "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.1",
     "nodemon": "^1.19.1",

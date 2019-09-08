@@ -5,10 +5,20 @@ services:
     build:
       context: ./
       dockerfile: ./docker/gateway/dev.Dockerfile
-    command: yarn start:watch
     ports:
       - 3000:3000
     volumes:
       - ./services/gateway/dist:/usr/app/src/services/gateway/dist
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
+    env_file: ./env/.env.dev
+  ideas:
+    container_name: ideas
+    build:
+      context: ./
+      dockerfile: ./docker/ideas/dev.Dockerfile
+    volumes:
+      - ./services/ideas/dist:/usr/app/src/services/ideas/dist
+      - ./packages:/usr/app/src/packages
+      - ./node_modules:/usr/app/src/node_modules
+    env_file: ./env/.env.dev
