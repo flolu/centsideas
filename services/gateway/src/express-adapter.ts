@@ -5,7 +5,7 @@ import { HttpRequest, HttpResponse } from '@cents-ideas/models';
 import { logger } from './environment';
 
 export class ExpressAdapter {
-  // FIXME timeout handler either here or in mq
+  // FIXME timeout handler
   public makeJsonAdapter = (url: string): express.RequestHandler => {
     return async (req: express.Request, res: express.Response) => {
       const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);

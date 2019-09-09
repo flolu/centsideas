@@ -1,10 +1,15 @@
 import { EventEntity } from '@cents-ideas/event-sourcing';
-import { IdeaCreatedEvent } from './events/idea-created.event';
-import { IdeaDeletedEvent } from './events/idea-deleted.event';
-import { IdeaDraftSavedEvent } from './events/idea-draft-saved.event';
-import { IdeaPublishedEvent } from './events/idea-published.event';
-import { IdeaUnpublishedEvent } from './events/idea-unpublished.events';
-import { IdeaUpdatedEvent } from './events/idea-updated.event';
+import {
+  IdeaCreatedEvent,
+  IdeaDraftSavedEvent,
+  IdeaDraftDiscardedEvent,
+  IdeaDraftCommittedEvent,
+  IdeaPublishedEvent,
+  IdeaUpdatedEvent,
+  IdeaUnpublishedEvent,
+  IdeaDeletedEvent,
+  commitFunctions,
+} from './events';
 
 export class Idea extends EventEntity<Idea> {
   public id: string = '';
@@ -17,17 +22,10 @@ export class Idea extends EventEntity<Idea> {
   public updatedAt: string | null = null;
   public deleted: boolean = false;
   public deletedAt: string | null = null;
+  public draft: { title: string | null; description: string | null } | null = null;
 
   constructor() {
-    // FIXME simplify
-    super({
-      [IdeaCreatedEvent.eventName]: IdeaCreatedEvent.commit,
-      [IdeaDraftSavedEvent.eventName]: IdeaDraftSavedEvent.commit,
-      [IdeaUpdatedEvent.eventName]: IdeaUpdatedEvent.commit,
-      [IdeaPublishedEvent.eventName]: IdeaPublishedEvent.commit,
-      [IdeaUnpublishedEvent.eventName]: IdeaUnpublishedEvent.commit,
-      [IdeaDeletedEvent.eventName]: IdeaDeletedEvent.commit,
-    });
+    super(commitFunctions);
   }
 
   static create(ideaId: string): Idea {
@@ -38,6 +36,16 @@ export class Idea extends EventEntity<Idea> {
 
   saveDraft(title?: string, description?: string) {
     this.pushNewEvents([new IdeaDraftSavedEvent(title, description)]);
+    return this;
+  }
+
+  discardDraft() {
+    this.pushNewEvents([new IdeaDraftDiscardedEvent()]);
+    return this;
+  }
+
+  commitDraft(title?: string, description?: string) {
+    this.pushNewEvents([new IdeaDraftCommittedEvent()]);
     return this;
   }
 
@@ -75,6 +83,7 @@ export class Idea extends EventEntity<Idea> {
       updatedAt: currentState.updatedAt,
       deleted: currentState.deleted,
       deletedAt: currentState.deletedAt,
+      draft: currentState.draft,
     };
   }
 }

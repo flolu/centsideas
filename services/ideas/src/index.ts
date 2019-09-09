@@ -20,16 +20,17 @@ const { logger } = env;
 
 app.use(bodyParser.json());
 
-const expressJsonAdapter = (controller: (request: HttpRequest) => Promise<HttpResponse>) => {
-  return async (req: express.Request, res: express.Response) => {
-    const httpRequest: HttpRequest = req.body;
-    const response: HttpResponse = await controller(httpRequest);
-    return res.json(response);
-  };
+const expressJsonAdapter = (controller: (request: HttpRequest) => Promise<HttpResponse>) => async (
+  req: express.Request,
+  res: express.Response,
+) => {
+  const httpRequest: HttpRequest = req.body;
+  const response: HttpResponse = await controller(httpRequest);
+  return res.json(response);
 };
 
 app.post('/create', expressJsonAdapter(ideasService.createEmptyIdea));
-app.post('/save-draft', expressJsonAdapter(ideasService.saveIdeaDraft));
+app.post('/save-draft', expressJsonAdapter(ideasService.saveDraft));
 app.post('/publish', expressJsonAdapter(ideasService.publish));
 app.post('/update', expressJsonAdapter(ideasService.update));
 app.post('/unpublish', expressJsonAdapter(ideasService.unpublish));
@@ -43,20 +44,20 @@ app.post(
       new Promise(async (resolve, reject) => {
         logger.info('[debug] get events');
         try {
-          const events = repository.findById(req.params.id);
-          return resolve({
+          const events = await repository.getStream(req.params.id);
+          resolve({
             status: HttpStatusCodes.Accepted,
-            body: { events },
+            body: events,
             headers: {},
           });
         } catch (error) {
-          return reject(error);
+          reject(error);
         }
       }),
   ),
 );
 
-// TODO move projection into own service
+// FIXME move projection into own microservice (or just another service... read model not needed until it has significant performance boost)
 app.post('/queries/get-all', (_req, res) => res.send('get all ideas'));
 app.post('/queries/get-one', (_req, res) => res.send('get one idea'));
 

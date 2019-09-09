@@ -1,51 +1,88 @@
-import { Identifier } from '@cents-ideas/utils';
-import { IdeaRepository } from './idea.repository';
+import {
+  IdeaAlreadyDeletedError,
+  IdeaAlreadyPublishedError,
+  IdeaAlreadyUnpublishedError,
+  IdeaDescriptionLengthError,
+  IdeaIdRequiredError,
+  IdeaTitleLengthError,
+  SaveIdeaPayloadRequiredError,
+} from './errors';
 import { Idea } from './idea.entity';
+import { IdeaRepository } from './idea.repository';
 
-// TODO validation
 export class IdeaCommandHandler {
   constructor(private readonly repository: IdeaRepository) {}
 
-  async create(): Promise<Idea> {
-    const ideaId = Identifier.makeUniqueId();
+  create = async (): Promise<Idea> => {
+    const ideaId = await this.repository.generateUniqueId();
     const idea = Idea.create(ideaId);
-    await this.repository.save(idea);
-    return idea.confirmEvents();
-  }
+    return this.repository.save(idea);
+  };
 
-  async saveDraft(ideaId: string, title?: string, description?: string): Promise<Idea> {
-    // TODO handle not found
+  // FIXME sanitize text
+  saveDraft = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
+    /**
+     * Only check for id validity, because it should be allowed
+     * to save an invalid state as a draft
+     * FIXME but maybe user shouldn't be allowed to save a 1 trillion char title?!
+     */
+    IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
     idea.saveDraft(title, description);
-    await this.repository.save(idea);
-    return idea.confirmEvents();
-  }
+    return this.repository.save(idea);
+  };
 
-  async publish(ideaId: string) {
+  discardDraft = async (ideaId: string): Promise<Idea> => {
+    IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
-    idea.publish();
-    await this.repository.save(idea);
-    return idea.confirmEvents();
-  }
+    idea.discardDraft();
+    return this.repository.save(idea);
+  };
 
-  async update(ideaId: string, title?: string, description?: string) {
+  commitDraft = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
+    IdeaIdRequiredError.validate(ideaId);
+    const idea = await this.repository.findById(ideaId);
+    idea.commitDraft(title, description);
+    SaveIdeaPayloadRequiredError.validate(idea.title, idea.description);
+    IdeaTitleLengthError.validate(idea.title);
+    IdeaDescriptionLengthError.validate(idea.description);
+    return this.repository.save(idea);
+  };
+
+  publish = async (ideaId: string): Promise<Idea> => {
+    IdeaIdRequiredError.validate(ideaId);
+    const idea = await this.repository.findById(ideaId);
+    IdeaAlreadyUnpublishedError.validate(idea.published);
+    idea.publish();
+    SaveIdeaPayloadRequiredError.validate(idea.title, idea.description);
+    IdeaTitleLengthError.validate(idea.title);
+    IdeaDescriptionLengthError.validate(idea.description);
+    return this.repository.save(idea);
+  };
+
+  update = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
+    IdeaIdRequiredError.validate(ideaId);
+    SaveIdeaPayloadRequiredError.validate(title, description);
+    IdeaTitleLengthError.validate(title);
+    IdeaDescriptionLengthError.validate(description);
     const idea = await this.repository.findById(ideaId);
     idea.update(title, description);
-    await this.repository.save(idea);
-    return idea.confirmEvents();
-  }
+    return this.repository.save(idea);
+  };
 
-  async unpublish(ideaId: string) {
+  unpublish = async (ideaId: string): Promise<Idea> => {
+    IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
+    IdeaAlreadyPublishedError.validate(idea.published);
     idea.unpublish();
-    await this.repository.save(idea);
-    return idea.confirmEvents();
-  }
+    return this.repository.save(idea);
+  };
 
-  async delete(ideaId: string) {
+  delete = async (ideaId: string): Promise<Idea> => {
+    IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
+    IdeaAlreadyDeletedError.validate(idea.deleted, ideaId);
     idea.delete();
-    await this.repository.save(idea);
-    return idea.confirmEvents();
-  }
+    return this.repository.save(idea);
+  };
 }

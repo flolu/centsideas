@@ -1,11 +1,11 @@
-export interface HttpRequest<T = any> {
-  body: T;
+export interface HttpRequest<Body = any, Params = any, Query = any, Headers = any> {
+  body: Body;
   ip: string;
   method: string;
   path: string;
   url: string;
   cookies: any;
-  query: { [key: string]: string };
-  params: { [key: string]: string };
-  headers: { [key: string]: string | string[] | undefined };
+  params: Params;
+  query: Query;
+  headers: Headers;
 }

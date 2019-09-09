@@ -31,35 +31,34 @@ export abstract class EventEntity<T> {
     throw new Error('Method not implemented.');
   }
 
-  get events() {
+  get events(): IEvent<T>[] {
     return [...this.persistedEvents, ...this.pendingEvents];
   }
 
-  setPersistedEvents(events: IEvent<any>[]) {
+  setPersistedEvents = (events: IEvent<any>[]): EventEntity<T> => {
     // FIXME use spread operator in function arguments
     this.persistedEvents = events;
     this.updateState();
     return this;
-  }
+  };
 
-  pushNewEvents(events: IEvent<any>[]) {
+  pushNewEvents = (events: IEvent<any>[]): EventEntity<T> => {
     this.pendingEvents = this.pendingEvents.concat(events);
     this.updateState();
     return this;
-  }
+  };
 
-  // TODO make use of this method
-  confirmEvents() {
+  confirmEvents = () => {
     this.persistedEvents = [...this.persistedEvents, ...this.pendingEvents];
     this.pendingEvents = [];
     return this;
-  }
+  };
 
-  private updateState() {
+  private updateState = (): void => {
     const state = this.state;
 
     for (const propertyName of Object.keys(state)) {
       (this as any)[propertyName] = state[propertyName];
     }
-  }
+  };
 }

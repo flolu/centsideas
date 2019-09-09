@@ -13,9 +13,11 @@ export class IdeaDraftSavedEvent extends Event<{
 
   static commit(state: Idea, { data }: IdeaDraftSavedEvent): Idea {
     const { title, description } = data;
-    state.title = title || state.title;
-    state.description = description || state.description;
-    state.updatedAt = new Date().toISOString();
+    state.draft = {
+      ...state.draft,
+      title: title || (state.draft && state.draft.title) || '',
+      description: description || (state.draft && state.draft.description) || '',
+    };
     return state;
   }
 }

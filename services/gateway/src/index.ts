@@ -29,6 +29,8 @@ app.get(`${ideasApiRoot}/update/:id`, expressAdapter.makeJsonAdapter(`${ideasHos
 app.get(`${ideasApiRoot}/unpublish/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/unpublish`));
 app.get(`${ideasApiRoot}/delete/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/delete`));
 
+app.get(`${ideasApiRoot}/debug/events/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/debug/events`));
+
 app.get(`${ideasApiRoot}/get-all`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-all`));
 app.get(`${ideasApiRoot}/get-one`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-one`));
 
