@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
+import { Identifier } from '@cents-ideas/utils';
 import env, { logger } from './environment';
 import { ExpressAdapter } from './express-adapter';
 
@@ -33,5 +34,9 @@ app.get(`${ideasApiRoot}/debug/events/:id`, expressAdapter.makeJsonAdapter(`${id
 
 app.get(`${ideasApiRoot}/get-all`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-all`));
 app.get(`${ideasApiRoot}/get-one`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-one`));
+
+app.get('**', (req, res) => {
+  res.send('gateway ' + Identifier.makeUniqueId());
+});
 
 app.listen(port, () => logger.info('gateway listening on internal port', port));

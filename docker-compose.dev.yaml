@@ -8,7 +8,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./services/gateway/dist:/usr/app/src/services/gateway/dist
+      - ./services/gateway:/usr/app/src/services/gateway
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
     env_file: ./env/.env.dev
@@ -18,7 +18,7 @@ services:
       context: ./
       dockerfile: ./docker/ideas/dev.Dockerfile
     volumes:
-      - ./services/ideas/dist:/usr/app/src/services/ideas/dist
+      - ./services/ideas:/usr/app/src/services/ideas
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
     env_file: ./env/.env.dev

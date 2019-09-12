@@ -7,8 +7,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon --ext ts --watch src --exec \"yarn start\" --ignore src/**/*.spec.ts",
-    "prestart:prod": "rimraf dist && tsc",
-    "start:prod": "node dist/index.js",
+    "start:prod": "ts-node src/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

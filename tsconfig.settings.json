@@ -14,7 +14,7 @@
     "noFallthroughCasesInSwitch": true,
     "declaration": true,
     "declarationMap": true,
-    "target": "es6",
+    "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
     "baseUrl": "./",

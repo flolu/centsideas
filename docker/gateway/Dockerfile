@@ -3,15 +3,13 @@ FROM node:lts-alpine
 WORKDIR /usr/app/src
 
 # TODO automatically gnerate those files
-COPY ./packages/enums ./packages/enums
-COPY ./packages/models ./packages/models
+COPY ./packages ./packages
 COPY ./services/gateway ./services/gateway
 
 COPY package.json .
-COPY ./docker/gateway/tsconfig.json ./
 COPY ./tsconfig.settings.json ./
 
-RUN yarn bootstrap
+RUN yarn fire
 
 WORKDIR /usr/app/src/services/gateway
-CMD yarn start
+CMD yarn start:prod

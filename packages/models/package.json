@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "clean": "rimraf dist && rimraf coverage && rimraf node_modules",
+    "clean": "rimraf dist && rimraf coverage && rimraf node_modules && rimraf tsconfig.tsbuildinfo",
     "build": "tsc"
   }
 }

@@ -7,16 +7,15 @@
   ],
   "private": true,
   "scripts": {
-    "fire": "yarn install && yarn run build",
     "clean": "lerna run clean && rimraf node_modules",
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
     "tsc": "tsc",
-    "_____": "_____",
-    "start:docker": "docker-compose up --build",
     "start:docker:dev": "docker-compose -f docker-compose.dev.yaml up --build",
-    "start": "yarn start:docker",
-    "dev": "npm-run-all --parallel build:watch start:docker:dev"
+    "start:dev": "npm-run-all --parallel build:watch start:docker:dev",
+    "start:docker": "docker-compose up --build",
+    "fire": "yarn install && yarn build",
+    "start": "yarn start:docker"
   },
   "devDependencies": {
     "lerna": "^3.16.4",

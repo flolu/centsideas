@@ -6,4 +6,4 @@ COPY ./packages/enums ./packages/enums
 COPY ./services/gateway ./services/gateway
 
 WORKDIR /usr/app/src/services/gateway
-CMD yarn start:watch
+CMD yarn start:dev

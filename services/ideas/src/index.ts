@@ -61,8 +61,4 @@ app.post(
 app.post('/queries/get-all', (_req, res) => res.send('get all ideas'));
 app.post('/queries/get-one', (_req, res) => res.send('get one idea'));
 
-app.get('**', (req, res) => {
-  res.send('hello');
-});
-
 app.listen(port, () => logger.info('ideas service listening on internal port', port));
