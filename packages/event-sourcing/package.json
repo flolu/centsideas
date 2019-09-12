@@ -1,6 +1,6 @@
 {
   "name": "@cents-ideas/event-sourcing",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "license": "MIT",
   "private": true,
@@ -9,6 +9,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@cents-ideas/utils": "0.0.0"
+    "@cents-ideas/utils": "^0.1.0"
   }
 }
