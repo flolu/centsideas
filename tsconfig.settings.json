@@ -16,6 +16,10 @@
     "declarationMap": true,
     "target": "es6",
     "module": "commonjs",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "@cents-ideas/*": ["packages/*/src"]
+    }
   }
 }

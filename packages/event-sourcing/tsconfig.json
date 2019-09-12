@@ -2,6 +2,10 @@
   "extends": "../../tsconfig.settings.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist"
-  }
+    "outDir": "dist",
+    "composite": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"],
+  "references": [{ "path": "../utils" }]
 }

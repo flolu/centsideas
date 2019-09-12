@@ -2,5 +2,10 @@
   "name": "@cents-ideas/enums",
   "version": "0.0.0",
   "main": "dist/index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf dist && rimraf coverage && rimraf node_modules",
+    "build": "tsc"
+  }
 }

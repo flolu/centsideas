@@ -4,8 +4,8 @@
     { "path": "packages/enums" },
     { "path": "packages/models" },
     { "path": "packages/utils" },
-    { "path": "packages/event-sourcing" },
-    { "path": "services/gateway" },
-    { "path": "services/ideas" }
+    { "path": "packages/event-sourcing" }
+    //{ "path": "services/gateway" },
+    //{ "path": "services/ideas" }
   ]
 }

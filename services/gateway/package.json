@@ -3,9 +3,16 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "license": "MIT",
+  "private": true,
   "scripts": {
-    "start": "node dist/index.js",
-    "start:watch": "nodemon dist/index.js"
+    "start": "ts-node src/index.ts",
+    "start:dev": "nodemon --ext ts --watch src --exec \"yarn start\" --ignore src/**/*.spec.ts",
+    "prestart:prod": "rimraf dist && tsc",
+    "start:prod": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "clean": "rimraf dist && rimraf coverage && rimraf node_modules"
   },
   "dependencies": {
     "@cents-ideas/models": "0.0.0",
@@ -18,7 +25,21 @@
     "@types/axios": "^0.14.0",
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.1",
+    "@types/jest": "^24.0.18",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.1",
+    "rimraf": "^3.0.0",
     "typescript": "^3.6.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   }
 }

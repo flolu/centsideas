@@ -1,24 +1,27 @@
 {
   "name": "cents-ideas",
   "version": "0.0.0",
-  "private": true,
   "workspaces": [
     "packages/*",
     "services/*"
   ],
-  "license": "MIT",
+  "private": true,
   "scripts": {
-    "bootstrap": "yarn install && yarn run build",
-    "tsc": "tsc",
+    "fire": "yarn install && yarn run build",
+    "clean": "lerna run clean && rimraf node_modules",
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
+    "tsc": "tsc",
+    "_____": "_____",
     "start:docker": "docker-compose up --build",
     "start:docker:dev": "docker-compose -f docker-compose.dev.yaml up --build",
     "start": "yarn start:docker",
     "dev": "npm-run-all --parallel build:watch start:docker:dev"
   },
   "devDependencies": {
+    "lerna": "^3.16.4",
     "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.0",
     "typescript": "^3.6.2"
   },
   "prettier": {

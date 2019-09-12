@@ -3,6 +3,11 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "license": "MIT",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf dist && rimraf coverage && rimraf node_modules",
+    "build": "tsc"
+  },
   "dependencies": {
     "pino": "^5.13.2",
     "pino-pretty": "^3.2.1",
@@ -10,6 +15,8 @@
   },
   "devDependencies": {
     "@types/pino": "^5.8.10",
-    "@types/shortid": "^0.0.29"
+    "@types/shortid": "^0.0.29",
+    "rimraf": "^3.0.0",
+    "typescript": "^3.6.3"
   }
 }
