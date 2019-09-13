@@ -35,37 +35,37 @@ export class Idea extends EventEntity<Idea> {
   }
 
   saveDraft(title?: string, description?: string) {
-    this.pushNewEvents([new IdeaDraftSavedEvent(title, description)]);
+    this.pushNewEvents([new IdeaDraftSavedEvent(this.id, title, description)]);
     return this;
   }
 
   discardDraft() {
-    this.pushNewEvents([new IdeaDraftDiscardedEvent()]);
+    this.pushNewEvents([new IdeaDraftDiscardedEvent(this.id)]);
     return this;
   }
 
   commitDraft(title?: string, description?: string) {
-    this.pushNewEvents([new IdeaDraftCommittedEvent()]);
+    this.pushNewEvents([new IdeaDraftCommittedEvent(this.id, title, description)]);
     return this;
   }
 
   publish(): Idea {
-    this.pushNewEvents([new IdeaPublishedEvent()]);
+    this.pushNewEvents([new IdeaPublishedEvent(this.id)]);
     return this;
   }
 
   update(title?: string, description?: string): Idea {
-    this.pushNewEvents([new IdeaUpdatedEvent(title, description)]);
+    this.pushNewEvents([new IdeaUpdatedEvent(this.id, title, description)]);
     return this;
   }
 
   unpublish(): Idea {
-    this.pushNewEvents([new IdeaUnpublishedEvent()]);
+    this.pushNewEvents([new IdeaUnpublishedEvent(this.id)]);
     return this;
   }
 
   delete(): Idea {
-    this.pushNewEvents([new IdeaDeletedEvent()]);
+    this.pushNewEvents([new IdeaDeletedEvent(this.id)]);
     return this;
   }
 

@@ -7,8 +7,8 @@ export class IdeaDraftSavedEvent extends Event<{
 }> {
   static readonly eventName = 'idea-draft-saved';
 
-  constructor(title?: string, description?: string) {
-    super(IdeaDraftSavedEvent.eventName, { title, description });
+  constructor(ideaId: string, title?: string, description?: string) {
+    super(IdeaDraftSavedEvent.eventName, { title, description }, ideaId);
   }
 
   static commit(state: Idea, { data }: IdeaDraftSavedEvent): Idea {

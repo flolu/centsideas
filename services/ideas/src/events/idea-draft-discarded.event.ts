@@ -1,11 +1,11 @@
 import { Event } from '@cents-ideas/event-sourcing';
 import { Idea } from '../idea.entity';
 
-export class IdeaDraftDiscardedEvent extends Event<void> {
+export class IdeaDraftDiscardedEvent extends Event<{}> {
   static readonly eventName = 'idea-draft-discarded';
 
-  constructor() {
-    super(IdeaDraftDiscardedEvent.eventName);
+  constructor(ideaId: string) {
+    super(IdeaDraftDiscardedEvent.eventName, {}, ideaId);
   }
 
   static commit(state: Idea): Idea {
