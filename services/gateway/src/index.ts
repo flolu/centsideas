@@ -15,7 +15,7 @@ logger.debug('initialized with env: ', env);
 
 app.use(bodyParser.json());
 
-// FIXME change from get to appropriate method
+// FIXME change from get to appropriate methods
 app.get(
   `${ideasApiRoot}/create`,
   (req, res, next) => {

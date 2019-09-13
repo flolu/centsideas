@@ -3,7 +3,7 @@ import { Identifier } from '@cents-ideas/utils';
 import { IdeaNotFoundError } from './errors/idea-not-found.error';
 import { Idea } from './idea.entity';
 
-// FIXME snapshots
+// TODO snapshots
 export class IdeaRepository extends EventRepository<Idea> {
   private events: { [key: string]: IEvent<any>[] } = {};
 
@@ -11,13 +11,18 @@ export class IdeaRepository extends EventRepository<Idea> {
     super(Idea);
   }
 
-  // TODO concurrency control
   save = async (idea: Idea): Promise<Idea> => {
     const streamId = idea.id;
-    const lastEvent = await this.getLastEvent(streamId);
+    const currentLastPersistedEvent = await this.getLastEvent(streamId);
     let eventNumber = 0;
-    if (lastEvent) {
-      eventNumber = lastEvent.eventNumber;
+    if (currentLastPersistedEvent) {
+      // FIXME maybe method onto entity to fetch last persisted event (how to deal with snapshots?!)
+      const previousLastPersistedEvent = idea.persistedEvents[idea.persistedEvents.length - 1];
+      if (previousLastPersistedEvent.id !== currentLastPersistedEvent.id) {
+        // FIXME what should happen when this error occurs?
+        throw new Error('concurrency violated!');
+      }
+      eventNumber = currentLastPersistedEvent.eventNumber;
     }
     let eventsToInsert = idea.pendingEvents.map(e => {
       eventNumber = eventNumber + 1;
