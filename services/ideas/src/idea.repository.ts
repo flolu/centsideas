@@ -11,11 +11,28 @@ export class IdeaRepository extends EventRepository<Idea> {
     super(Idea);
   }
 
-  // TODO event numbers
   // TODO concurrency control
   save = async (idea: Idea): Promise<Idea> => {
-    const currentEvents = await this.getStream(idea.id);
-    this.events[idea.id] = [...currentEvents, ...idea.pendingEvents];
+    const streamId = idea.id;
+    const lastEvent = await this.getLastEvent(streamId);
+    let eventNumber = 0;
+    if (lastEvent) {
+      eventNumber = lastEvent.eventNumber;
+    }
+    let eventsToInsert = idea.pendingEvents.map(e => {
+      eventNumber = eventNumber + 1;
+      return {
+        ...e,
+        eventNumber,
+      };
+    });
+    for (const event of eventsToInsert) {
+      if (event.eventNumber === 1) {
+        this.events[streamId] = [event];
+      } else {
+        this.events[streamId].push(event);
+      }
+    }
     return idea.confirmEvents();
   };
 
@@ -40,5 +57,14 @@ export class IdeaRepository extends EventRepository<Idea> {
       exists ? checkAvailability(resolve) : resolve(id);
     };
     return new Promise(resolve => checkAvailability(resolve));
+  };
+
+  private getLastEvent = async (streamId: string): Promise<IEvent<any>> => {
+    const stream = await this.getStream(streamId);
+    if (stream) {
+      return stream[stream.length - 1];
+    } else {
+      return null;
+    }
   };
 }

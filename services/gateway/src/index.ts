@@ -35,8 +35,4 @@ app.get(`${ideasApiRoot}/debug/events/:id`, expressAdapter.makeJsonAdapter(`${id
 app.get(`${ideasApiRoot}/get-all`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-all`));
 app.get(`${ideasApiRoot}/get-one`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-one`));
 
-app.get('**', (req, res) => {
-  res.send('gateway ' + Identifier.makeUniqueId());
-});
-
 app.listen(port, () => logger.info('gateway listening on internal port', port));
