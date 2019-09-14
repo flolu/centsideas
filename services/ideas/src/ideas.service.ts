@@ -1,5 +1,6 @@
 import { HttpStatusCodes } from '@cents-ideas/enums';
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
+import { ICommitIdeaDraftDto, IQueryIdeaDto, ISaveIdeaDto, IUpdateIdeaDraftDto } from './dtos/ideas.dto';
 import env from './environment';
 import { IdeaError } from './errors';
 import { IdeaCommandHandler } from './idea.command-handler';
@@ -25,7 +26,7 @@ export class IdeasService {
       }
     });
 
-  saveDraft = (req: HttpRequest<{ title?: string; description?: string }, { id: string }>): Promise<HttpResponse> =>
+  saveDraft = (req: HttpRequest<ISaveIdeaDto, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
       try {
         logger.info('save draft');
@@ -41,7 +42,7 @@ export class IdeasService {
       }
     });
 
-  discardDraft = (req: HttpRequest<{}, { id: string }>): Promise<HttpResponse> =>
+  discardDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
       try {
         logger.info('discard draft');
@@ -57,7 +58,7 @@ export class IdeasService {
       }
     });
 
-  commitDraft = (req: HttpRequest<{ title?: string; description?: string }, { id: string }>): Promise<HttpResponse> =>
+  commitDraft = (req: HttpRequest<ICommitIdeaDraftDto, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
       try {
         logger.info('commit draft');
@@ -73,7 +74,7 @@ export class IdeasService {
       }
     });
 
-  publish = (req: HttpRequest): Promise<HttpResponse> =>
+  publish = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
       try {
         logger.info('publish');
@@ -89,8 +90,7 @@ export class IdeasService {
       }
     });
 
-  // FIXME dto interfaces for payloads
-  update = (req: HttpRequest<{ title?: string; description?: string }>): Promise<HttpResponse> =>
+  update = (req: HttpRequest<IUpdateIdeaDraftDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
       try {
         logger.info('update');
