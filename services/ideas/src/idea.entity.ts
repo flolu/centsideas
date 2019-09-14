@@ -9,6 +9,7 @@ import {
   IdeaDeletedEvent,
   commitFunctions,
 } from './events';
+import { IdeaNotFoundError } from './errors';
 import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 
 export interface IIdeaState {
@@ -25,7 +26,6 @@ export interface IIdeaState {
   draft: { title: string | null; description: string | null } | null;
 }
 
-// TODO maybe save commit functions and errors as static members on idea
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
     id: null,
@@ -42,7 +42,7 @@ export class Idea extends EventEntity<IIdeaState> {
   };
 
   constructor(snapshot?: ISnapshot<IIdeaState>) {
-    super(commitFunctions, (snapshot && snapshot.state) || Idea.initialState);
+    super(commitFunctions, (snapshot && snapshot.state) || Idea.initialState, IdeaNotFoundError);
     if (snapshot) {
       this.lastPersistedEventId = snapshot.lastEventId;
     }

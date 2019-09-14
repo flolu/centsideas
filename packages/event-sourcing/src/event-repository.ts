@@ -35,11 +35,13 @@ export abstract class EventRepository<Entity extends IEventEntity> {
   };
 
   findById = async (id: string): Promise<Entity> => {
-    // TODO 404 error
     const snapshot = await this.getLastSnapshotOfStream(id);
     const events: IEvent[] = await (snapshot ? this.getEventsAfterSnapshot(snapshot) : this.getAllEventsFromStream(id));
     const entity = new this._Entity(snapshot);
     entity.pushEvents(...events);
+    if (!entity.currentState.id) {
+      throw entity.NotFoundError(id);
+    }
     return entity.confirmEvents();
   };
 

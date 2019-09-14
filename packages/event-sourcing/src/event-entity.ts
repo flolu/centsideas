@@ -9,6 +9,7 @@ export interface IEventEntity {
   pushEvents(...events: IEvent[]): any;
   confirmEvents(): any;
   currentState: any;
+  NotFoundError: any;
 }
 
 export interface IEventCommitFunctions<IEntityState> {
@@ -22,7 +23,7 @@ export abstract class EventEntity<IEntityState> implements IEventEntity {
 
   protected reducer: Reducer<IEntityState>;
 
-  constructor(knownEvents: IEventCommitFunctions<IEntityState>, initialState: IEntityState) {
+  constructor(knownEvents: IEventCommitFunctions<IEntityState>, initialState: IEntityState, public NotFoundError: any) {
     this.reducer = new Reducer<IEntityState>(knownEvents);
     this.persistedState = initialState;
   }

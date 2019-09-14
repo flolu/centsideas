@@ -37,7 +37,7 @@ app.post('/unpublish', expressJsonAdapter(ideasService.unpublish));
 app.post('/delete', expressJsonAdapter(ideasService.delete));
 
 // FIXME only access with admin password or so
-// TODO clean this up
+// FIXME clean this up
 app.post(
   '/debug/events',
   expressJsonAdapter(
