@@ -2,7 +2,7 @@ import { Event } from '@cents-ideas/event-sourcing';
 import { Idea, IIdeaState } from '../idea.entity';
 
 export class IdeaUnpublishedEvent extends Event<{}> {
-  static readonly eventName = 'idea-unpublished';
+  static readonly eventName: string = 'idea-unpublished';
 
   constructor(ideaId: string) {
     super(IdeaUnpublishedEvent.eventName, {}, ideaId);

@@ -1,16 +1,15 @@
 import { Identifier } from '@cents-ideas/utils';
 
-export interface IEvent {
+export interface IEvent<IData = any> {
   id: string;
   aggregateId: string;
   name: string;
-  // FIXME event data type
-  data: any;
+  data: IData;
   timestamp: string;
   eventNumber: number;
 }
 
-export class Event<IData> implements IEvent {
+export class Event<IData> implements IEvent<IData> {
   readonly id: string;
   readonly aggregateId: string;
   readonly name: string;

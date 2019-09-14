@@ -5,7 +5,7 @@ export class IdeaDraftSavedEvent extends Event<{
   title?: string;
   description?: string;
 }> {
-  static readonly eventName = 'idea-draft-saved';
+  static readonly eventName: string = 'idea-draft-saved';
 
   constructor(ideaId: string, title?: string, description?: string) {
     super(IdeaDraftSavedEvent.eventName, { title, description }, ideaId);

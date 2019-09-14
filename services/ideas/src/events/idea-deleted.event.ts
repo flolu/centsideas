@@ -2,7 +2,7 @@ import { Event } from '@cents-ideas/event-sourcing';
 import { Idea, IIdeaState } from '../idea.entity';
 
 export class IdeaDeletedEvent extends Event<{}> {
-  static readonly eventName = 'idea-deleted';
+  static readonly eventName: string = 'idea-deleted';
 
   constructor(ideaId: string) {
     super(IdeaDeletedEvent.eventName, {}, ideaId);

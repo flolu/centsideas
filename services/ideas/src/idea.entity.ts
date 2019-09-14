@@ -9,8 +9,7 @@ import {
   IdeaDeletedEvent,
   commitFunctions,
 } from './events';
-import { ISnapshot } from './idea.repository';
-import { EventEntity } from '@cents-ideas/event-sourcing';
+import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 
 export interface IIdeaState {
   id: string;
@@ -26,6 +25,7 @@ export interface IIdeaState {
   draft: { title: string | null; description: string | null } | null;
 }
 
+// TODO maybe save commit functions and errors as static members on idea
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
     id: null,

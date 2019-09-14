@@ -6,8 +6,10 @@ import { IdeaDraftSavedEvent } from './idea-draft-saved.event';
 import { IdeaPublishedEvent } from './idea-published.event';
 import { IdeaUnpublishedEvent } from './idea-unpublished.events';
 import { IdeaUpdatedEvent } from './idea-updated.event';
+import { IEventCommitFunctions } from '@cents-ideas/event-sourcing';
+import { IIdeaState } from '../idea.entity';
 
-export const commitFunctions: any = {
+export const commitFunctions: IEventCommitFunctions<IIdeaState> = {
   [IdeaCreatedEvent.eventName]: IdeaCreatedEvent.commit,
   [IdeaDeletedEvent.eventName]: IdeaDeletedEvent.commit,
   [IdeaDraftCommittedEvent.eventName]: IdeaDraftCommittedEvent.commit,

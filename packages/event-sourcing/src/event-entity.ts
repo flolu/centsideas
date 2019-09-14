@@ -1,5 +1,6 @@
 import { Reducer } from './reducer';
 import { IEvent } from './event';
+import { Event } from './event';
 
 export interface IEventEntity {
   lastPersistedEventId: string | null;
@@ -10,6 +11,10 @@ export interface IEventEntity {
   currentState: any;
 }
 
+export interface IEventCommitFunctions<IEntityState> {
+  [name: string]: (state: IEntityState, event: Event<any>) => IEntityState;
+}
+
 export abstract class EventEntity<IEntityState> implements IEventEntity {
   lastPersistedEventId: string | null = null;
   persistedState: IEntityState;
@@ -17,8 +22,7 @@ export abstract class EventEntity<IEntityState> implements IEventEntity {
 
   protected reducer: Reducer<IEntityState>;
 
-  // FIXME known events type
-  constructor(knownEvents: any, initialState: IEntityState) {
+  constructor(knownEvents: IEventCommitFunctions<IEntityState>, initialState: IEntityState) {
     this.reducer = new Reducer<IEntityState>(knownEvents);
     this.persistedState = initialState;
   }
