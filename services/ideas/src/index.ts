@@ -37,6 +37,7 @@ app.post('/unpublish', expressJsonAdapter(ideasService.unpublish));
 app.post('/delete', expressJsonAdapter(ideasService.delete));
 
 // FIXME only access with admin password or so
+// TODO clean this up
 app.post(
   '/debug/events',
   expressJsonAdapter(
@@ -44,7 +45,7 @@ app.post(
       new Promise(async (resolve, reject) => {
         logger.info('[debug] get events');
         try {
-          const events = await repository.getStream(req.params.id);
+          const events = await repository.getAllEventsFromStream(req.params.id);
           resolve({
             status: HttpStatusCodes.Accepted,
             body: events,
@@ -63,7 +64,7 @@ app.post(
       new Promise(async (resolve, reject) => {
         logger.info('[debug] get snapshots');
         try {
-          const snapshots = await repository.getSnapshots(req.params.id);
+          const snapshots = await repository.getLastSnapshotOfStream(req.params.id);
           resolve({
             status: HttpStatusCodes.Accepted,
             body: snapshots,

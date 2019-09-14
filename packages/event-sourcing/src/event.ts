@@ -4,20 +4,21 @@ export interface IEvent {
   id: string;
   aggregateId: string;
   name: string;
+  // FIXME event data type
   data: any;
   timestamp: string;
   eventNumber: number;
 }
 
-export class Event<T> implements IEvent {
+export class Event<IData> implements IEvent {
   readonly id: string;
   readonly aggregateId: string;
   readonly name: string;
-  readonly data: T;
+  readonly data: IData;
   readonly timestamp: string;
   readonly eventNumber: number;
 
-  constructor(name: string, data: T, aggregateId: string) {
+  constructor(name: string, data: IData, aggregateId: string) {
     this.id = Identifier.makeUniqueId();
     this.aggregateId = aggregateId;
     this.name = name;

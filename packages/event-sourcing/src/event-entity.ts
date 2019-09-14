@@ -1,24 +1,34 @@
 import { Reducer } from './reducer';
 import { IEvent } from './event';
 
-export abstract class EventEntity<IEntityState> {
+export interface IEventEntity {
+  lastPersistedEventId: string | null;
+  persistedState: any;
+  pendingEvents: IEvent[];
+  pushEvents(...events: IEvent[]): any;
+  confirmEvents(): any;
+  currentState: any;
+}
+
+export abstract class EventEntity<IEntityState> implements IEventEntity {
   lastPersistedEventId: string | null = null;
   persistedState: IEntityState;
   pendingEvents: IEvent[] = [];
 
   protected reducer: Reducer<IEntityState>;
 
+  // FIXME known events type
   constructor(knownEvents: any, initialState: IEntityState) {
     this.reducer = new Reducer<IEntityState>(knownEvents);
     this.persistedState = initialState;
   }
 
-  pushEvents = (...events: IEvent[]) => {
+  pushEvents = (...events: IEvent[]): EventEntity<IEntityState> => {
     this.pendingEvents = this.pendingEvents.concat(events);
     return this;
   };
 
-  confirmEvents = () => {
+  confirmEvents = (): EventEntity<IEntityState> => {
     this.persistedState = this.reducer.reduce(this.persistedState, this.pendingEvents);
     this.lastPersistedEventId = this.pendingEvents[this.pendingEvents.length - 1].id;
     this.pendingEvents = [];

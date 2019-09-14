@@ -1,4 +1,5 @@
 export { IEvent, Event } from './event';
-export { EventEntity } from './event-entity';
+export { EventEntity, IEventEntity } from './event-entity';
 export { EventRepository } from './event-repository';
 export { Reducer } from './reducer';
+export { ISnapshot } from './snapshot';
