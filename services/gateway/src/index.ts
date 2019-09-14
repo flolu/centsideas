@@ -1,7 +1,6 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { Identifier } from '@cents-ideas/utils';
 import env, { logger } from './environment';
 import { ExpressAdapter } from './express-adapter';
 

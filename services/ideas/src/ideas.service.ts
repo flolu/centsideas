@@ -2,7 +2,7 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
 import { ICommitIdeaDraftDto, IQueryIdeaDto, ISaveIdeaDto, IUpdateIdeaDraftDto } from './dtos/ideas.dto';
 import env from './environment';
-import { IdeaError } from './errors';
+import { handleHttpResponseError } from './errors/http-response-error-handler';
 import { IdeaCommandHandler } from './idea.command-handler';
 
 const { logger } = env;
@@ -12,8 +12,9 @@ export class IdeasService {
 
   createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async resolve => {
+      const _loggerName = 'create';
       try {
-        logger.info('create');
+        logger.info(_loggerName);
         const idea = await this.commandHandler.create();
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -21,15 +22,16 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error('create', error);
-        resolve(this.handleError(error));
+        logger.error(_loggerName, error);
+        resolve(handleHttpResponseError(error));
       }
     });
 
   saveDraft = (req: HttpRequest<ISaveIdeaDto, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
+      const _loggerName = 'save draft';
       try {
-        logger.info('save draft');
+        logger.info(_loggerName);
         const idea = await this.commandHandler.saveDraft(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -37,15 +39,16 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error('save draft', error);
-        resolve(this.handleError(error));
+        logger.error(_loggerName, error);
+        resolve(handleHttpResponseError(error));
       }
     });
 
   discardDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
+      const _loggerName = 'discard draft';
       try {
-        logger.info('discard draft');
+        logger.info(_loggerName);
         const idea = await this.commandHandler.discardDraft(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -53,15 +56,16 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error('discard draft', error);
-        resolve(this.handleError(error));
+        logger.error(_loggerName, error);
+        resolve(handleHttpResponseError(error));
       }
     });
 
   commitDraft = (req: HttpRequest<ICommitIdeaDraftDto, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
+      const _loggerName = 'commit draft';
       try {
-        logger.info('commit draft');
+        logger.info(_loggerName);
         const idea = await this.commandHandler.commitDraft(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -69,15 +73,16 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error('commit draft', error);
-        resolve(this.handleError(error));
+        logger.error(_loggerName, error);
+        resolve(handleHttpResponseError(error));
       }
     });
 
   publish = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
+      const _loggerName = 'publish';
       try {
-        logger.info('publish');
+        logger.info(_loggerName);
         const idea = await this.commandHandler.publish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -85,15 +90,16 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error('publish', error);
-        resolve(this.handleError(error));
+        logger.error(_loggerName, error);
+        resolve(handleHttpResponseError(error));
       }
     });
 
   update = (req: HttpRequest<IUpdateIdeaDraftDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
+      const _loggerName = 'update';
       try {
-        logger.info('update');
+        logger.info(_loggerName);
         const idea = await this.commandHandler.update(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -101,15 +107,16 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error('update', error);
-        resolve(this.handleError(error));
+        logger.error(_loggerName, error);
+        resolve(handleHttpResponseError(error));
       }
     });
 
   unpublish = (req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async resolve => {
+      const _loggerName = 'unpublish';
       try {
-        logger.info('unpublish');
+        logger.info(_loggerName);
         const idea = await this.commandHandler.unpublish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -117,15 +124,16 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error('unpublish', error);
-        resolve(this.handleError(error));
+        logger.error(_loggerName, error);
+        resolve(handleHttpResponseError(error));
       }
     });
 
   delete = (req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async resolve => {
+      const _loggerName = 'delete';
       try {
-        logger.info('delete');
+        logger.info(_loggerName);
         const idea = await this.commandHandler.delete(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -133,15 +141,8 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error('delete', error);
-        resolve(this.handleError(error));
+        logger.error(_loggerName, error);
+        resolve(handleHttpResponseError(error));
       }
     });
-
-  private handleError = (error: IdeaError, overrides: Partial<HttpResponse> = {}): HttpResponse => ({
-    status: (error && error.status) || HttpStatusCodes.InternalServerError,
-    body: { error: error.message },
-    headers: {},
-    ...overrides,
-  });
 }
