@@ -1,5 +1,5 @@
 import { Event } from '@cents-ideas/event-sourcing';
-import { Idea } from '../idea.entity';
+import { Idea, IIdeaState } from '../idea.entity';
 
 export class IdeaUpdatedEvent extends Event<{
   title?: string;
@@ -11,7 +11,7 @@ export class IdeaUpdatedEvent extends Event<{
     super(IdeaUpdatedEvent.eventName, { title, description }, ideaId);
   }
 
-  static commit(state: Idea, { data }: IdeaUpdatedEvent): Idea {
+  static commit(state: IIdeaState, { data }: IdeaUpdatedEvent): IIdeaState {
     const { title, description } = data;
     state.title = title || state.title;
     state.description = description || state.description;

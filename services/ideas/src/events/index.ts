@@ -1,5 +1,3 @@
-import { KnownEvents } from '@cents-ideas/event-sourcing';
-import { Idea } from '../idea.entity';
 import { IdeaCreatedEvent } from './idea-created.event';
 import { IdeaDeletedEvent } from './idea-deleted.event';
 import { IdeaDraftCommittedEvent } from './idea-draft-committed.event';
@@ -9,7 +7,7 @@ import { IdeaPublishedEvent } from './idea-published.event';
 import { IdeaUnpublishedEvent } from './idea-unpublished.events';
 import { IdeaUpdatedEvent } from './idea-updated.event';
 
-export const commitFunctions: KnownEvents<Idea> = {
+export const commitFunctions: any = {
   [IdeaCreatedEvent.eventName]: IdeaCreatedEvent.commit,
   [IdeaDeletedEvent.eventName]: IdeaDeletedEvent.commit,
   [IdeaDraftCommittedEvent.eventName]: IdeaDraftCommittedEvent.commit,

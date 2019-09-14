@@ -1,4 +1,3 @@
-import { EventEntity } from '@cents-ideas/event-sourcing';
 import {
   IdeaCreatedEvent,
   IdeaDraftSavedEvent,
@@ -10,80 +9,83 @@ import {
   IdeaDeletedEvent,
   commitFunctions,
 } from './events';
+import { ISnapshot } from './idea.repository';
+import { EventEntity } from '@cents-ideas/event-sourcing';
 
-export class Idea extends EventEntity<Idea> {
-  public id: string = '';
-  public title: string = '';
-  public description: string = '';
-  public createdAt: string | null = null;
-  public published: boolean = false;
-  public publishedAt: string | null = null;
-  public unpublishedAt: string | null = null;
-  public updatedAt: string | null = null;
-  public deleted: boolean = false;
-  public deletedAt: string | null = null;
-  public draft: { title: string | null; description: string | null } | null = null;
+export interface IIdeaState {
+  id: string;
+  title: string;
+  description: string;
+  createdAt: string | null;
+  published: boolean;
+  publishedAt: string | null;
+  unpublishedAt: string | null;
+  updatedAt: string | null;
+  deleted: boolean;
+  deletedAt: string | null;
+  draft: { title: string | null; description: string | null } | null;
+}
 
-  constructor() {
-    super(commitFunctions);
+export class Idea extends EventEntity<IIdeaState> {
+  static initialState: IIdeaState = {
+    id: null,
+    title: null,
+    description: null,
+    createdAt: null,
+    published: false,
+    publishedAt: null,
+    unpublishedAt: null,
+    updatedAt: null,
+    deleted: false,
+    deletedAt: null,
+    draft: null,
+  };
+
+  constructor(snapshot?: ISnapshot<IIdeaState>) {
+    super(commitFunctions, (snapshot && snapshot.state) || Idea.initialState);
+    if (snapshot) {
+      this.lastPersistedEventId = snapshot.lastEventId;
+    }
   }
 
   static create(ideaId: string): Idea {
     const idea = new Idea();
-    idea.pushNewEvents([new IdeaCreatedEvent(ideaId)]);
+    idea.pushEvents(new IdeaCreatedEvent(ideaId));
     return idea;
   }
 
   saveDraft(title?: string, description?: string) {
-    this.pushNewEvents([new IdeaDraftSavedEvent(this.id, title, description)]);
+    this.pushEvents(new IdeaDraftSavedEvent(this.persistedState.id, title, description));
     return this;
   }
 
   discardDraft() {
-    this.pushNewEvents([new IdeaDraftDiscardedEvent(this.id)]);
+    this.pushEvents(new IdeaDraftDiscardedEvent(this.persistedState.id));
     return this;
   }
 
   commitDraft(title?: string, description?: string) {
-    this.pushNewEvents([new IdeaDraftCommittedEvent(this.id, title, description)]);
+    this.pushEvents(new IdeaDraftCommittedEvent(this.persistedState.id, title, description));
     return this;
   }
 
   publish(): Idea {
-    this.pushNewEvents([new IdeaPublishedEvent(this.id)]);
+    this.pushEvents(new IdeaPublishedEvent(this.persistedState.id));
     return this;
   }
 
   update(title?: string, description?: string): Idea {
-    this.pushNewEvents([new IdeaUpdatedEvent(this.id, title, description)]);
+    this.pushEvents(new IdeaUpdatedEvent(this.persistedState.id, title, description));
     return this;
   }
 
   unpublish(): Idea {
-    this.pushNewEvents([new IdeaUnpublishedEvent(this.id)]);
+    this.pushEvents(new IdeaUnpublishedEvent(this.persistedState.id));
     return this;
   }
 
   delete(): Idea {
-    this.pushNewEvents([new IdeaDeletedEvent(this.id)]);
+    this.pushEvents(new IdeaDeletedEvent(this.persistedState.id));
     return this;
-  }
-
-  get state() {
-    // FIXME start from current state?
-    const currentState = this.reducer.reduce(new Idea(), [...this.persistedEvents, ...this.pendingEvents]);
-    return {
-      id: currentState.id,
-      title: currentState.title,
-      description: currentState.description,
-      createdAt: currentState.createdAt,
-      published: currentState.published,
-      publishedAt: currentState.publishedAt,
-      unpublishedAt: currentState.unpublishedAt,
-      updatedAt: currentState.updatedAt,
-      deleted: currentState.deleted,
-      deletedAt: currentState.deletedAt,
-      draft: currentState.draft,
-    };
   }
 }

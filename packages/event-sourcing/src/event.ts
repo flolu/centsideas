@@ -1,15 +1,15 @@
 import { Identifier } from '@cents-ideas/utils';
 
-export interface IEvent<T> {
+export interface IEvent {
   id: string;
   aggregateId: string;
   name: string;
-  data: T;
+  data: any;
   timestamp: string;
   eventNumber: number;
 }
 
-export class Event<T> implements IEvent<T> {
+export class Event<T> implements IEvent {
   readonly id: string;
   readonly aggregateId: string;
   readonly name: string;

@@ -43,20 +43,21 @@ export class IdeaCommandHandler {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
     idea.commitDraft(title, description);
-    SaveIdeaPayloadRequiredError.validate(idea.title, idea.description);
-    IdeaTitleLengthError.validate(idea.title);
-    IdeaDescriptionLengthError.validate(idea.description);
+    SaveIdeaPayloadRequiredError.validate(idea.persistedState.title, idea.persistedState.description);
+    IdeaTitleLengthError.validate(idea.persistedState.title);
+    IdeaDescriptionLengthError.validate(idea.persistedState.description);
     return this.repository.save(idea);
   };
 
+  // FIXME should idea bea publishable when it's already deleted?
   publish = async (ideaId: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
-    IdeaAlreadyUnpublishedError.validate(idea.published);
+    IdeaAlreadyPublishedError.validate(idea.persistedState.published);
     idea.publish();
-    SaveIdeaPayloadRequiredError.validate(idea.title, idea.description);
-    IdeaTitleLengthError.validate(idea.title);
-    IdeaDescriptionLengthError.validate(idea.description);
+    SaveIdeaPayloadRequiredError.validate(idea.persistedState.title, idea.persistedState.description);
+    IdeaTitleLengthError.validate(idea.persistedState.title);
+    IdeaDescriptionLengthError.validate(idea.persistedState.description);
     return this.repository.save(idea);
   };
 
@@ -73,7 +74,7 @@ export class IdeaCommandHandler {
   unpublish = async (ideaId: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
-    IdeaAlreadyPublishedError.validate(idea.published);
+    IdeaAlreadyUnpublishedError.validate(idea.persistedState.published);
     idea.unpublish();
     return this.repository.save(idea);
   };
@@ -81,7 +82,7 @@ export class IdeaCommandHandler {
   delete = async (ideaId: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
-    IdeaAlreadyDeletedError.validate(idea.deleted, ideaId);
+    IdeaAlreadyDeletedError.validate(idea.persistedState.deleted, ideaId);
     idea.delete();
     return this.repository.save(idea);
   };

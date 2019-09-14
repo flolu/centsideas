@@ -15,22 +15,15 @@ logger.debug('initialized with env: ', env);
 
 app.use(bodyParser.json());
 
-// FIXME change from get to appropriate methods
-app.get(
-  `${ideasApiRoot}/create`,
-  (req, res, next) => {
-    req.body = {};
-    next();
-  },
-  expressAdapter.makeJsonAdapter(`${ideasHost}/create`),
-);
-app.get(`${ideasApiRoot}/save-draft/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/save-draft`));
-app.get(`${ideasApiRoot}/publish/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/publish`));
-app.get(`${ideasApiRoot}/update/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/update`));
-app.get(`${ideasApiRoot}/unpublish/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/unpublish`));
-app.get(`${ideasApiRoot}/delete/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/delete`));
+app.post(`${ideasApiRoot}`, expressAdapter.makeJsonAdapter(`${ideasHost}/create`));
+app.put(`${ideasApiRoot}/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/update`));
+app.put(`${ideasApiRoot}/save-draft/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/save-draft`));
+app.put(`${ideasApiRoot}/publish/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/publish`));
+app.put(`${ideasApiRoot}/unpublish/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/unpublish`));
+app.delete(`${ideasApiRoot}/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/delete`));
 
 app.get(`${ideasApiRoot}/debug/events/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/debug/events`));
+app.get(`${ideasApiRoot}/debug/snapshots/:id`, expressAdapter.makeJsonAdapter(`${ideasHost}/debug/snapshots`));
 
 app.get(`${ideasApiRoot}/get-all`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-all`));
 app.get(`${ideasApiRoot}/get-one`, expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-one`));

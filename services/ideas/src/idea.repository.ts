@@ -1,30 +1,35 @@
 import { EventRepository, IEvent } from '@cents-ideas/event-sourcing';
 import { Identifier } from '@cents-ideas/utils';
 import { IdeaNotFoundError } from './errors/idea-not-found.error';
-import { Idea } from './idea.entity';
+import { Idea, IIdeaState } from './idea.entity';
 
-// TODO snapshots
-export class IdeaRepository extends EventRepository<Idea> {
-  private events: { [key: string]: IEvent<any>[] } = {};
+export interface ISnapshot<EntityState> {
+  lastEventId: string;
+  state: EntityState;
+}
+// TODO move generic logic to event repo
+export class IdeaRepository extends EventRepository {
+  private events: { [key: string]: IEvent[] } = {};
+  private snapshots: { [key: string]: ISnapshot<IIdeaState>[] } = {};
+  private readonly maxSnapshotsToKeep = 3;
+  private readonly minNumberOfEventsToCreateSnapshot = 5;
 
   constructor() {
-    super(Idea);
+    super();
   }
 
   save = async (idea: Idea): Promise<Idea> => {
-    const streamId = idea.id;
-    const currentLastPersistedEvent = await this.getLastEvent(streamId);
+    const streamId = idea.currentState.id;
+    const lastPersistedEvent = await this.getLastEvent(streamId);
     let eventNumber = 0;
-    if (currentLastPersistedEvent) {
-      // FIXME maybe method onto entity to fetch last persisted event (how to deal with snapshots?!)
-      const previousLastPersistedEvent = idea.persistedEvents[idea.persistedEvents.length - 1];
-      if (previousLastPersistedEvent.id !== currentLastPersistedEvent.id) {
-        // FIXME what should happen when this error occurs?
-        throw new Error('concurrency violated!');
+    if (lastPersistedEvent) {
+      if (idea.lastPersistedEventId !== lastPersistedEvent.id) {
+        // FIXME retry once?!
+        throw new Error('concurrency issue!');
       }
-      eventNumber = currentLastPersistedEvent.eventNumber;
+      eventNumber = lastPersistedEvent.eventNumber;
     }
-    let eventsToInsert = idea.pendingEvents.map(e => {
+    let eventsToInsert: IEvent[] = idea.pendingEvents.map(e => {
       eventNumber = eventNumber + 1;
       return {
         ...e,
@@ -37,25 +42,47 @@ export class IdeaRepository extends EventRepository<Idea> {
       } else {
         this.events[streamId].push(event);
       }
+      if (eventNumber % this.minNumberOfEventsToCreateSnapshot === 0) {
+        this.saveSnapshot(streamId);
+      }
     }
+    // FIXME event publisher
     return idea.confirmEvents();
   };
 
+  // TODO idea not found error
   findById = async (id: string) => {
-    const idea = new Idea();
-    const events = await this.getStream(id);
-    if (!events.length) {
+    const snapshot = await this.getLatestSnapshot(id);
+    let events: IEvent[] = [];
+    let idea: Idea;
+    if (snapshot) {
+      idea = new Idea(snapshot);
+      events = await this.getEventsAfterSnapshot(snapshot);
+    } else {
+      idea = new Idea();
+      events = await this.getStream(id);
+    }
+    idea.pushEvents(...events);
+    idea.confirmEvents();
+    if (!idea.persistedState.id) {
       throw new IdeaNotFoundError(id);
     }
-    idea.pushNewEvents(events);
+    idea.pushEvents(...events);
     return idea.confirmEvents();
   };
 
-  getStream = async (streamId: string): Promise<IEvent<any>[]> => {
+  getStream = async (streamId: string): Promise<IEvent[]> => {
     return this.events[streamId] || [];
   };
 
+  getSnapshots = async (aggregateId: string): Promise<ISnapshot<IIdeaState>[]> => {
+    return this.snapshots[aggregateId] || [];
+  };
+
   generateUniqueId = (): Promise<string> => {
+    /**
+     * Generate ids until it is unique
+     */
     const checkAvailability = async (resolve: Function) => {
       const id = Identifier.makeUniqueId();
       const exists = !!(await this.getStream(id)).length;
@@ -64,12 +91,38 @@ export class IdeaRepository extends EventRepository<Idea> {
     return new Promise(resolve => checkAvailability(resolve));
   };
 
-  private getLastEvent = async (streamId: string): Promise<IEvent<any>> => {
+  private getEventsAfterSnapshot = (snapshot: ISnapshot<IIdeaState>) => {
+    const streamId = snapshot.state.id;
+    const lastEventId = snapshot.lastEventId;
+    return this.events[streamId].slice(this.events[streamId].map(e => e.id).indexOf(lastEventId));
+  };
+
+  private getLatestSnapshot = async (streamId: string): Promise<ISnapshot<IIdeaState>> => {
+    if (this.snapshots[streamId] && this.snapshots[streamId].length) {
+      return this.snapshots[streamId][this.snapshots[streamId].length - 1];
+    } else {
+      return null;
+    }
+  };
+
+  private getLastEvent = async (streamId: string): Promise<IEvent> => {
     const stream = await this.getStream(streamId);
     if (stream) {
       return stream[stream.length - 1];
     } else {
       return null;
+    }
+  };
+
+  private saveSnapshot = async (streamId: string) => {
+    const idea = await this.findById(streamId);
+    const lastEvent = await this.getLastEvent(streamId);
+    if (!this.snapshots[streamId]) {
+      this.snapshots[streamId] = [];
+    }
+    this.snapshots[streamId].push({ lastEventId: lastEvent.id, state: idea.persistedState });
+    if (this.snapshots[streamId].length > this.maxSnapshotsToKeep) {
+      this.snapshots[streamId].shift();
     }
   };
 }

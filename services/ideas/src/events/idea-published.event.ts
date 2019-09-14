@@ -1,5 +1,5 @@
 import { Event } from '@cents-ideas/event-sourcing';
-import { Idea } from '../idea.entity';
+import { Idea, IIdeaState } from '../idea.entity';
 
 export class IdeaPublishedEvent extends Event<{}> {
   static readonly eventName = 'idea-published';
@@ -8,7 +8,7 @@ export class IdeaPublishedEvent extends Event<{}> {
     super(IdeaPublishedEvent.eventName, {}, ideaId);
   }
 
-  static commit(state: Idea, _event: IdeaPublishedEvent): Idea {
+  static commit(state: IIdeaState, _event: IdeaPublishedEvent): IIdeaState {
     state.published = true;
     state.publishedAt = new Date().toISOString();
     return state;

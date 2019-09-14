@@ -56,6 +56,25 @@ app.post(
       }),
   ),
 );
+app.post(
+  '/debug/snapshots',
+  expressJsonAdapter(
+    async (req: HttpRequest) =>
+      new Promise(async (resolve, reject) => {
+        logger.info('[debug] get snapshots');
+        try {
+          const snapshots = await repository.getSnapshots(req.params.id);
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: snapshots,
+            headers: {},
+          });
+        } catch (error) {
+          reject(error);
+        }
+      }),
+  ),
+);
 
 // FIXME move projection into own microservice (or just another service... read model not needed until it has significant performance boost)
 app.post('/queries/get-all', (_req, res) => res.send('get all ideas'));

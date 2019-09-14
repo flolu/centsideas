@@ -16,7 +16,7 @@ export class IdeasService {
         const idea = await this.commandHandler.create();
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { created: idea.state },
+          body: { created: idea.persistedState },
           headers: {},
         });
       } catch (error) {
@@ -32,7 +32,7 @@ export class IdeasService {
         const idea = await this.commandHandler.saveDraft(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { saved: idea.state },
+          body: { saved: idea.persistedState },
           headers: {},
         });
       } catch (error) {
@@ -48,7 +48,7 @@ export class IdeasService {
         const idea = await this.commandHandler.discardDraft(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { updated: idea.state },
+          body: { updated: idea.persistedState },
           headers: {},
         });
       } catch (error) {
@@ -64,7 +64,7 @@ export class IdeasService {
         const idea = await this.commandHandler.commitDraft(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { updated: idea.state },
+          body: { updated: idea.persistedState },
           headers: {},
         });
       } catch (error) {
@@ -80,7 +80,7 @@ export class IdeasService {
         const idea = await this.commandHandler.publish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { published: idea.state },
+          body: { published: idea.persistedState },
           headers: {},
         });
       } catch (error) {
@@ -97,7 +97,7 @@ export class IdeasService {
         const idea = await this.commandHandler.update(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { unpublish: idea.state },
+          body: { unpublish: idea.persistedState },
           headers: {},
         });
       } catch (error) {
@@ -113,7 +113,7 @@ export class IdeasService {
         const idea = await this.commandHandler.unpublish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { unpublish: idea.state },
+          body: { unpublish: idea.persistedState },
           headers: {},
         });
       } catch (error) {
@@ -129,7 +129,7 @@ export class IdeasService {
         const idea = await this.commandHandler.delete(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { deleted: idea.state },
+          body: { deleted: idea.persistedState },
           headers: {},
         });
       } catch (error) {
