@@ -10,6 +10,8 @@ import {
 import { Idea } from './idea.entity';
 import { IdeaRepository } from './idea.repository';
 import { inject, injectable } from 'inversify';
+import { IdeaDeletedError } from './errors/idea.deleted.error';
+import { sanitizeHtml } from '@cents-ideas/utils';
 
 @injectable()
 export class IdeaCommandHandler {
@@ -21,14 +23,16 @@ export class IdeaCommandHandler {
     return this.repository.save(idea);
   };
 
-  // FIXME sanitize text
   saveDraft = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
-    /**
-     * Only check for id validity, because it should be allowed
-     * to save an invalid state as a draft
-     * FIXME but maybe user shouldn't be allowed to save a 1 trillion char title?!
-     */
     IdeaIdRequiredError.validate(ideaId);
+    title = sanitizeHtml(title);
+    description = sanitizeHtml(description);
+    /**
+     * It is allowed to save invalid draft
+     * But text shouldn't be longer than max length
+     */
+    IdeaTitleLengthError.validate(title, true);
+    IdeaDescriptionLengthError.validate(description, true);
     const idea = await this.repository.findById(ideaId);
     idea.saveDraft(title, description);
     return this.repository.save(idea);
@@ -44,6 +48,8 @@ export class IdeaCommandHandler {
   commitDraft = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
+    title = sanitizeHtml(title);
+    description = sanitizeHtml(description);
     idea.commitDraft(title, description);
     SaveIdeaPayloadRequiredError.validate(idea.persistedState.title, idea.persistedState.description);
     IdeaTitleLengthError.validate(idea.persistedState.title);
@@ -51,10 +57,10 @@ export class IdeaCommandHandler {
     return this.repository.save(idea);
   };
 
-  // FIXME should idea bea publishable when it's already deleted?
   publish = async (ideaId: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
+    IdeaDeletedError.validate(ideaId, idea.persistedState.deleted);
     IdeaAlreadyPublishedError.validate(idea.persistedState.published);
     idea.publish();
     SaveIdeaPayloadRequiredError.validate(idea.persistedState.title, idea.persistedState.description);
@@ -65,6 +71,8 @@ export class IdeaCommandHandler {
 
   update = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
+    title = sanitizeHtml(title);
+    description = sanitizeHtml(description);
     SaveIdeaPayloadRequiredError.validate(title, description);
     IdeaTitleLengthError.validate(title);
     IdeaDescriptionLengthError.validate(description);

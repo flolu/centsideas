@@ -6,6 +6,7 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "declarationMap": true,
     "baseUrl": "./",
     "paths": {
       "@cents-ideas/*": ["packages/*/src"]

@@ -5,14 +5,14 @@ const max: number = 3000;
 const min: number = 0;
 
 export class IdeaDescriptionLengthError extends IdeaError {
-  static validate = (description?: string): void => {
+  static validate = (description?: string, onlyMaxLength: boolean = false): void => {
     if (!description) {
       return;
     }
     if (description.length > max) {
       throw new IdeaDescriptionLengthError(`Idea description should not be longer than ${max} characters`);
     }
-    if (description.length < min) {
+    if (onlyMaxLength && description.length < min) {
       throw new IdeaDescriptionLengthError(`Idea description should at least be ${min} characters long`);
     }
   };
