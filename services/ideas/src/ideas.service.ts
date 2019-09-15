@@ -4,11 +4,14 @@ import { ICommitIdeaDraftDto, IQueryIdeaDto, ISaveIdeaDto, IUpdateIdeaDraftDto }
 import env from './environment';
 import { handleHttpResponseError } from './errors/http-response-error-handler';
 import { IdeaCommandHandler } from './idea.command-handler';
-
+import { injectable, inject } from 'inversify';
+import 'reflect-metadata';
+import { TYPES } from '.';
 const { logger } = env;
 
+@injectable()
 export class IdeasService {
-  constructor(private readonly commandHandler: IdeaCommandHandler) {}
+  @inject(TYPES.IdeaCommandHandler) private commandHandler: IdeaCommandHandler;
 
   createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async resolve => {

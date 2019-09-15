@@ -2,18 +2,21 @@ import { IEventEntity } from './event-entity';
 import { IEvent } from '.';
 import { Identifier } from '@cents-ideas/utils';
 import { ISnapshot } from './snapshot';
+// TODO add to package.sjon
+import { injectable, unmanaged } from 'inversify';
 
 export interface IEntityConstructor<Entity> {
   new (snapshot?: any): Entity;
 }
 
+@injectable()
 export abstract class EventRepository<Entity extends IEventEntity> {
   private events: { [key: string]: IEvent[] } = {};
   private snapshots: { [key: string]: ISnapshot[] } = {};
   private readonly maxSnapshotsToKeep = 3;
   private readonly minNumberOfEventsToCreateSnapshot = 5;
 
-  constructor(protected readonly _Entity: IEntityConstructor<Entity>) {}
+  constructor(@unmanaged() protected readonly _Entity: IEntityConstructor<Entity>) {}
 
   save = async (entity: Entity) => {
     const streamId: string = entity.currentState.id;

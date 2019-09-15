@@ -9,9 +9,12 @@ import {
 } from './errors';
 import { Idea } from './idea.entity';
 import { IdeaRepository } from './idea.repository';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '.';
 
+@injectable()
 export class IdeaCommandHandler {
-  constructor(private readonly repository: IdeaRepository) {}
+  @inject(TYPES.IdeaRepository) private repository: IdeaRepository;
 
   create = async (): Promise<Idea> => {
     const ideaId = await this.repository.generateUniqueId();

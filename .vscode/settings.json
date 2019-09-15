@@ -5,11 +5,13 @@
     "Unprocessable",
     "dtos",
     "fllu",
+    "inversify",
     "microservice",
     "pino",
     "prestart",
     "tsbuildinfo",
     "uncommit",
+    "unmanaged",
     "unpublish"
   ]
 }
