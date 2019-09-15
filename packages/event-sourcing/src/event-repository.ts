@@ -2,7 +2,6 @@ import { IEventEntity } from './event-entity';
 import { IEvent } from '.';
 import { Identifier } from '@cents-ideas/utils';
 import { ISnapshot } from './snapshot';
-// TODO add to package.sjon
 import { injectable, unmanaged } from 'inversify';
 
 export interface IEntityConstructor<Entity> {

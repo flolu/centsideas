@@ -9,11 +9,15 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@cents-ideas/models": "0.1.0",
+    "express": "^4.17.1",
+    "inversify": "^5.0.1",
     "pino": "^5.13.2",
     "pino-pretty": "^3.2.1",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
+    "@types/express": "^4.17.1",
     "@types/pino": "^5.8.10",
     "@types/shortid": "^0.0.29",
     "rimraf": "^3.0.0",

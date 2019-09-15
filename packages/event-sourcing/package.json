@@ -9,6 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@cents-ideas/utils": "^0.1.0"
+    "@cents-ideas/utils": "^0.1.0",
+    "inversify": "^5.0.1"
   }
 }

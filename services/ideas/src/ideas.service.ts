@@ -5,13 +5,11 @@ import env from './environment';
 import { handleHttpResponseError } from './errors/http-response-error-handler';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { injectable, inject } from 'inversify';
-import 'reflect-metadata';
-import { TYPES } from '.';
 const { logger } = env;
 
 @injectable()
 export class IdeasService {
-  @inject(TYPES.IdeaCommandHandler) private commandHandler: IdeaCommandHandler;
+  @inject(IdeaCommandHandler.name) private commandHandler: IdeaCommandHandler;
 
   createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async resolve => {

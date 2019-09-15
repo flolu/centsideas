@@ -15,6 +15,7 @@
     "start:dev": "npm-run-all --parallel build:watch start:docker:dev",
     "start:docker": "docker-compose up --build",
     "fire": "yarn install && yarn build",
+    "refire": "yarn clean && yarn fire",
     "start": "yarn start:docker"
   },
   "devDependencies": {
