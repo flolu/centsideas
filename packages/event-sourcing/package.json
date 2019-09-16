@@ -10,6 +10,11 @@
   },
   "dependencies": {
     "@cents-ideas/utils": "^0.1.0",
-    "inversify": "^5.0.1"
+    "async-retry": "^1.2.3",
+    "inversify": "^5.0.1",
+    "mongodb": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.3.1"
   }
 }

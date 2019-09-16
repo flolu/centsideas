@@ -23,7 +23,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error);
+        logger.error(_loggerName, error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -40,7 +40,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error);
+        logger.error(_loggerName, error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -57,7 +57,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error);
+        logger.error(_loggerName, error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -74,7 +74,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error);
+        logger.error(_loggerName, error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -91,7 +91,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error);
+        logger.error(_loggerName, error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -108,7 +108,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error);
+        logger.error(_loggerName, error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -125,7 +125,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error);
+        logger.error(_loggerName, error.stack);
         resolve(handleHttpResponseError(error));
       }
     });

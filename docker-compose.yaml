@@ -8,9 +8,15 @@ services:
     ports:
       - 3000:3000
     env_file: ./env/.env.prod
+
   ideas:
     container_name: ideas
     build:
       context: ./
       dockerfile: ./docker/ideas/Dockerfile
     env_file: ./env/.env.prod
+  ideas-event-store:
+    container_name: ideas-event-store
+    image: mongo:4.2
+    ports:
+      - 27017:27017

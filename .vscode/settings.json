@@ -12,6 +12,7 @@
     "tsbuildinfo",
     "uncommit",
     "unmanaged",
-    "unpublish"
+    "unpublish",
+    "upsert"
   ]
 }

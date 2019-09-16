@@ -8,5 +8,7 @@ import { Idea } from './idea.entity';
 export class IdeaRepository extends EventRepository<Idea> {
   constructor() {
     super(Idea);
+
+    this.initialize('mongodb://ideas-event-store:27017', 'ideas');
   }
 }
