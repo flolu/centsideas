@@ -32,18 +32,8 @@
     "jest": "^24.9.0",
     "nodemon": "^1.19.1",
     "rimraf": "^3.0.0",
+    "ts-jest": "^24.1.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.6.2"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".spec.ts$",
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }

@@ -15,6 +15,8 @@ export class IdeaDraftCommittedEvent extends Event<{
     const { title, description } = data;
     state.title = title || (state.draft && state.draft.title) || state.title;
     state.description = description || (state.draft && state.draft.description) || state.description;
+    state.draft.title = null;
+    state.draft.description = null;
     state.updatedAt = new Date().toISOString();
     return state;
   }

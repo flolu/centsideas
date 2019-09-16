@@ -1,3 +1,5 @@
+import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
+
 import {
   IdeaCreatedEvent,
   IdeaDraftSavedEvent,
@@ -10,7 +12,6 @@ import {
   commitFunctions,
 } from './events';
 import { IdeaNotFoundError } from './errors';
-import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 
 export interface IIdeaState {
   id: string;

@@ -16,7 +16,8 @@
     "start:docker": "docker-compose up --build",
     "fire": "yarn install && yarn build",
     "refire": "yarn clean && yarn fire",
-    "start": "yarn start:docker"
+    "start": "yarn start:docker",
+    "test": "lerna run test"
   },
   "devDependencies": {
     "lerna": "^3.16.4",
