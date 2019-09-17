@@ -16,7 +16,6 @@ export interface IEventCommitFunctions<IEntityState> {
   [name: string]: (state: IEntityState, event: Event<any>) => IEntityState;
 }
 
-// TODO use mongodb ids for event ids (not shortid)
 export abstract class EventEntity<IEntityState> implements IEventEntity {
   lastPersistedEventId: string | null = null;
   persistedState: IEntityState;

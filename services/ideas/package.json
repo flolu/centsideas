@@ -35,5 +35,16 @@
     "ts-jest": "^24.1.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.6.2"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "testMatch": [
+      "<rootDir>/**/*.spec.ts"
+    ]
   }
 }

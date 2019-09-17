@@ -1,8 +1,9 @@
-import { injectable, unmanaged, id } from 'inversify';
+import { injectable, unmanaged, decorate } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 import * as retry from 'async-retry';
+import { EventEmitter } from 'events';
 
-import { Identifier } from '@cents-ideas/utils';
+import { Identifier, renameObjectProperty } from '@cents-ideas/utils';
 
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
@@ -12,8 +13,10 @@ export interface IEntityConstructor<Entity> {
   new (snapshot?: ISnapshot): Entity;
 }
 
+decorate(injectable(), EventEmitter);
+
 @injectable()
-export abstract class EventRepository<Entity extends IEventEntity> {
+export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter {
   private client: MongoClient;
   private db: Db;
   private eventCollection: Collection;
@@ -22,19 +25,22 @@ export abstract class EventRepository<Entity extends IEventEntity> {
   private namespace: string;
   private readonly minNumberOfEventsToCreateSnapshot = 5;
 
-  constructor(@unmanaged() protected readonly _Entity: IEntityConstructor<Entity>) {}
+  constructor(@unmanaged() protected readonly _Entity: IEntityConstructor<Entity>) {
+    super();
+  }
 
   initialize = async (url: string, namespace: string) => {
     this.namespace = `store_${namespace}`;
 
     this.client = await retry(async () => {
-      const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true });
+      const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true, useUnifiedTopology: true });
       return connection;
     });
 
     this.db = this.client.db(namespace);
+
     this.db.on('close', () => {
-      // TODO disconnect
+      this.emit('disconnect');
     });
 
     this.eventCollection = this.db.collection(`${namespace}_events`);
@@ -79,8 +85,8 @@ export abstract class EventRepository<Entity extends IEventEntity> {
     const streamId: string = entity.currentState.id;
     const lastPersistedEvent = await this.getLastEventOfStream(streamId);
     let eventNumber = (lastPersistedEvent && lastPersistedEvent.eventNumber) || 0;
-    if (entity.lastPersistedEventId !== (lastPersistedEvent && lastPersistedEvent.id)) {
-      // FIXME retry once?!
+    if (lastPersistedEvent && entity.lastPersistedEventId !== lastPersistedEvent.id) {
+      // FIXME retry once (issue: command handler has to retry, not save)
       throw new Error('concurrency issue!');
     }
 
@@ -145,14 +151,15 @@ export abstract class EventRepository<Entity extends IEventEntity> {
         limit: 1,
       },
     );
-    const events = await result.toArray();
-    return (events[0] && this.transform_idToId(events[0])) || null;
+    const event = (await result.toArray())[0];
+    return event ? renameObjectProperty(event, '_id', 'id') : null;
   };
 
   private appendEvent = async (event: IEvent): Promise<IEvent> => {
     const seq = await this.getNextSequence('events');
 
-    const result = await this.eventCollection.insertOne({ ...this.transformIdTo_id(event), position: seq });
+    const payload = renameObjectProperty(event, 'id', '_id');
+    const result = await this.eventCollection.insertOne({ ...payload, position: seq });
     return result.ops[0];
   };
 
@@ -168,7 +175,7 @@ export abstract class EventRepository<Entity extends IEventEntity> {
       { sort: { eventNumber: 1 } },
     );
     const events = await result.toArray();
-    return events.map(this.transform_idToId);
+    return events.map(e => renameObjectProperty(e, '_id', 'id'));
   };
 
   private getEventsAfterSnapshot = async (snapshot: ISnapshot): Promise<IEvent[]> => {
@@ -193,9 +200,4 @@ export abstract class EventRepository<Entity extends IEventEntity> {
       { upsert: true },
     );
   };
-
-  // FIXME into utils or so?
-  // FIXME better
-  private transform_idToId = ({ _id: id, ...data }: any): any => ({ id, ...data });
-  private transformIdTo_id = ({ id: _id, ...data }: any): any => ({ _id, ...data });
 }

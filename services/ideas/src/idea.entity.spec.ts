@@ -5,7 +5,6 @@ import { ISnapshot } from '@cents-ideas/event-sourcing';
 import { Idea, IIdeaState } from './idea.entity';
 
 describe('Idea Entity', () => {
-  // TODO mock data generator / hard-coded
   const id = 'some-id-12345';
   const title = 'some lorem ipsum title';
   const description = 'lorem ipsum description bla bla';

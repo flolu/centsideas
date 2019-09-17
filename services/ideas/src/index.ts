@@ -1,4 +1,4 @@
-// FIXME unit and integration tests
+// FIXME unit, integration, performance tests
 
 import 'reflect-metadata';
 import * as express from 'express';

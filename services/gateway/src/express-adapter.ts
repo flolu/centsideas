@@ -2,18 +2,27 @@ import * as express from 'express';
 import axios from 'axios';
 
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
+import { HttpStatusCodes } from '@cents-ideas/enums';
+
 import { logger } from './environment';
 
 export class ExpressAdapter {
-  // FIXME timeout handler
   public makeJsonAdapter = (url: string): express.RequestHandler => {
     return async (req: express.Request, res: express.Response) => {
-      const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);
-      logger.info(url);
-      const response = await axios.post(url, httpRequest);
-      const httpResponse: HttpResponse = response.data;
-      logger.info(url, ' -> done');
-      this.handleExpressHttpResponse(res, httpResponse);
+      try {
+        const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);
+        logger.info(url);
+        const response = await axios.post(url, httpRequest);
+        const httpResponse: HttpResponse = response.data;
+        logger.info(url, ' -> done');
+        this.handleExpressHttpResponse(res, httpResponse);
+      } catch (err) {
+        this.handleExpressHttpResponse(res, {
+          status: HttpStatusCodes.InternalServerError,
+          body: `Unexpected error occurred: ${err.message}`,
+          headers: {},
+        });
+      }
     };
   };
 

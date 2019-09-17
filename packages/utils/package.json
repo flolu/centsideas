@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@cents-ideas/models": "0.1.0",
+    "@cents-ideas/models": "^0.1.0",
     "express": "^4.17.1",
     "inversify": "^5.0.1",
     "pino": "^5.13.2",
