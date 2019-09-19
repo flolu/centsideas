@@ -2,6 +2,7 @@ import { injectable, unmanaged, decorate } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 import * as retry from 'async-retry';
 import { EventEmitter } from 'events';
+import { Kafka, logLevel, Producer } from 'kafkajs';
 
 import { Identifier, renameObjectProperty } from '@cents-ideas/utils';
 
@@ -15,6 +16,18 @@ export interface IEntityConstructor<Entity> {
 
 decorate(injectable(), EventEmitter);
 
+// TODO maybe extract into a message broker package
+const kafka = new Kafka({
+  clientId: 'cents-ideas',
+  brokers: ['172.18.0.1:9092'],
+  logLevel: logLevel.WARN,
+  retry: {
+    initialRetryTime: 300,
+    retries: 10,
+  },
+});
+
+// FIXME logging
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter {
   private client: MongoClient;
@@ -25,8 +38,16 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   private namespace: string;
   private readonly minNumberOfEventsToCreateSnapshot = 5;
 
+  private producer: Producer = kafka.producer();
+
   constructor(@unmanaged() protected readonly _Entity: IEntityConstructor<Entity>) {
     super();
+    this.producer.on('producer.connect', () => {
+      console.log('kafka producer connected');
+    });
+    this.producer.on('producer.disconnect', () => {
+      console.log('kafka producer disconnected');
+    });
   }
 
   initialize = async (url: string, namespace: string) => {
@@ -57,11 +78,12 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
         name: `${this.namespace}_aggregateId_eventNumber`,
         unique: true,
       },
-      {
+      // TODO i don't think this one is needed ?!
+      /* {
         key: { eventNumber: 1 },
         name: `${this.namespace}_eventNumber`,
         unique: true,
-      },
+      }, */
     ]);
 
     await this.snapshotCollection.createIndexes([
@@ -71,6 +93,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       },
     ]);
 
+    // TODO try to understand this properly
     try {
       await this.counterCollection.insertOne({ _id: 'events', seq: 0 });
     } catch (error) {
@@ -79,6 +102,8 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       }
       throw error;
     }
+
+    await this.producer.connect();
   };
 
   save = async (entity: Entity) => {
@@ -96,6 +121,10 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     });
 
     const appendedEvents = await Promise.all(eventsToInsert.map(event => this.appendEvent(event)));
+
+    await Promise.all(
+      appendedEvents.map(e => this.producer.send({ topic: 'test-topic', messages: [{ value: JSON.stringify(e) }] })),
+    );
 
     for (const event of appendedEvents) {
       if (event.eventNumber % this.minNumberOfEventsToCreateSnapshot === 0) {

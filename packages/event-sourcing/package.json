@@ -12,9 +12,11 @@
     "@cents-ideas/utils": "^0.1.0",
     "async-retry": "^1.2.3",
     "inversify": "^5.0.1",
+    "kafkajs": "^1.10.0",
     "mongodb": "^3.3.2"
   },
   "devDependencies": {
+    "@types/kafkajs": "^1.8.2",
     "@types/mongodb": "^3.3.1"
   }
 }

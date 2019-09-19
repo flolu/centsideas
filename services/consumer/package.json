@@ -1,0 +1,42 @@
+{
+  "name": "@cents-ideas/consumer",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "start:dev": "nodemon --ext ts --watch src --exec \"yarn start\" --ignore src/**/*.spec.ts",
+    "start:prod": "ts-node src/index.ts",
+    "test": "echo jest not configured",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "clean": "rimraf dist && rimraf coverage && rimraf node_modules"
+  },
+  "dependencies": {
+    "@cents-ideas/utils": "^0.1.0",
+    "kafkajs": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.17.1",
+    "@types/express": "^4.17.1",
+    "@types/jest": "^24.0.18",
+    "@types/kafkajs": "^1.8.2",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.1",
+    "rimraf": "^3.0.0",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.6.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
