@@ -3,28 +3,19 @@ import 'reflect-metadata';
 import { ISnapshot } from '@cents-ideas/event-sourcing';
 
 import { Idea, IIdeaState } from './idea.entity';
+import {
+  fakeIdeaId,
+  fakeIdeaTitle,
+  fakeIdeaDescription,
+  fakeEventId,
+  fakeIdeaState,
+} from './__test__/idea.entity.fake';
 
 describe('Idea Entity', () => {
-  const id = 'some-id-12345';
-  const title = 'some lorem ipsum title';
-  const description = 'lorem ipsum description bla bla';
-
   it('should initialize correctly', () => {
     const snapshot: ISnapshot<IIdeaState> = {
-      lastEventId: id,
-      state: {
-        id: id,
-        title,
-        description,
-        createdAt: new Date().toISOString(),
-        published: false,
-        publishedAt: new Date().toISOString(),
-        unpublishedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        deleted: false,
-        deletedAt: new Date().toISOString(),
-        draft: null,
-      },
+      lastEventId: fakeEventId,
+      state: fakeIdeaState,
     };
     const idea = new Idea(snapshot);
 
@@ -33,22 +24,22 @@ describe('Idea Entity', () => {
   });
 
   it('should create an idea', () => {
-    const idea = Idea.create(id);
+    const idea = Idea.create(fakeIdeaId);
 
-    expect(idea.currentState.id).toEqual(id);
+    expect(idea.currentState.id).toEqual(fakeIdeaId);
   });
 
   it('should save a draft', () => {
-    const idea = Idea.create(id);
-    idea.saveDraft(title, description);
+    const idea = Idea.create(fakeIdeaId);
+    idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
 
-    expect(idea.currentState.draft.title).toEqual(title);
-    expect(idea.currentState.draft.description).toEqual(description);
+    expect(idea.currentState.draft.title).toEqual(fakeIdeaTitle);
+    expect(idea.currentState.draft.description).toEqual(fakeIdeaDescription);
   });
 
   it('should discard a draft', () => {
-    const idea = Idea.create(id);
-    idea.saveDraft(title, description);
+    const idea = Idea.create(fakeIdeaId);
+    idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.discardDraft();
 
     expect(idea.currentState.draft.title).toEqual(null);
@@ -56,19 +47,19 @@ describe('Idea Entity', () => {
   });
 
   it('should commit a draft', () => {
-    const idea = Idea.create(id);
-    idea.saveDraft(title, description);
+    const idea = Idea.create(fakeIdeaId);
+    idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
 
     expect(idea.currentState.draft.title).toEqual(null);
     expect(idea.currentState.draft.description).toEqual(null);
-    expect(idea.currentState.title).toEqual(title);
-    expect(idea.currentState.description).toEqual(description);
+    expect(idea.currentState.title).toEqual(fakeIdeaTitle);
+    expect(idea.currentState.description).toEqual(fakeIdeaDescription);
   });
 
   it('should publish an idea', () => {
-    const idea = Idea.create(id);
-    idea.saveDraft(title, description);
+    const idea = Idea.create(fakeIdeaId);
+    idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.publish();
 
@@ -77,8 +68,8 @@ describe('Idea Entity', () => {
   });
 
   it('should unpublish an idea', () => {
-    const idea = Idea.create(id);
-    idea.saveDraft(title, description);
+    const idea = Idea.create(fakeIdeaId);
+    idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.unpublish();
 
@@ -86,8 +77,8 @@ describe('Idea Entity', () => {
   });
 
   it('should delete an idea', () => {
-    const idea = Idea.create(id);
-    idea.saveDraft(title, description);
+    const idea = Idea.create(fakeIdeaId);
+    idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.unpublish();
     idea.delete();

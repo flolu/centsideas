@@ -13,8 +13,19 @@ import { inject, injectable } from 'inversify';
 import { IdeaDeletedError } from './errors/idea.deleted.error';
 import { sanitizeHtml } from '@cents-ideas/utils';
 
+export interface IIdeaCommandHandler {
+  create: () => Promise<Idea>;
+  saveDraft: (ideaId: string, title?: string, description?: string) => Promise<Idea>;
+  discardDraft: (ideaId: string) => Promise<Idea>;
+  commitDraft: (ideaId: string, title?: string, description?: string) => Promise<Idea>;
+  publish: (ideaId: string) => Promise<Idea>;
+  update: (ideaId: string, title?: string, description?: string) => Promise<Idea>;
+  unpublish: (ideaId: string) => Promise<Idea>;
+  delete: (ideaId: string) => Promise<Idea>;
+}
+
 @injectable()
-export class IdeaCommandHandler {
+export class IdeaCommandHandler implements IIdeaCommandHandler {
   @inject(IdeaRepository.name) private repository: IdeaRepository;
 
   create = async (): Promise<Idea> => {
