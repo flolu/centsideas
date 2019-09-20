@@ -2,68 +2,17 @@ import * as retry from 'async-retry';
 import { injectable } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 import { EventEmitter } from 'events';
-import { Kafka, logLevel, Producer, KafkaConfig, Message, RecordMetadata, Consumer } from 'kafkajs';
 
 import { Identifier, renameObjectProperty, Logger } from '@cents-ideas/utils';
 
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
-import { IEvent } from '.';
+import { IEvent, MessageBroker } from '.';
 
 export interface IEntityConstructor<Entity> {
   new (snapshot?: ISnapshot): Entity;
 }
 
-@injectable()
-export class MessageBroker {
-  private readonly defaultConfig = {
-    clientId: 'cents-ideas',
-    brokers: ['172.18.0.1:9092'],
-    logLevel: logLevel.WARN,
-    retry: {
-      initialRetryTime: 300,
-      retries: 10,
-    },
-  };
-  private kafka: Kafka;
-  private producer: Producer;
-  private consumer: Consumer;
-
-  constructor(private logger: Logger) {}
-
-  initialize = (overrides: Partial<KafkaConfig> = {}) => {
-    this.kafka = new Kafka({ ...this.defaultConfig, ...overrides });
-  };
-
-  send = async (topic: string = 'test-topic', messages: Message[] = []): Promise<RecordMetadata[]> => {
-    if (!this.producer) {
-      this.producer = this.kafka.producer();
-    }
-    // FIXME does it reconnect if it is already connected?
-    await this.producer.connect();
-    return this.producer.send({ topic, messages });
-  };
-
-  subscribe = async (topic: string = 'test-topic') => {
-    if (!this.consumer) {
-      // FIXME does the group need to be unique?
-      this.consumer = this.kafka.consumer({
-        groupId: 'test-group' + Number(Date.now()).toString(),
-        rebalanceTimeout: 1000,
-      });
-    }
-    await this.consumer.connect();
-    await this.consumer.subscribe({ topic });
-    await this.consumer.run({
-      eachMessage: async ({ message }) => {
-        const payload = JSON.parse(message.value.toString());
-        this.logger.info(`consumed ${payload.name} event`);
-      },
-    });
-  };
-}
-
-// FIXME logging
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter {
   protected _Entity: IEntityConstructor<Entity>;
@@ -76,13 +25,16 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   private namespace: string;
   private readonly minNumberOfEventsToCreateSnapshot = 5;
 
+  private hasInitializedBeenCalled: boolean = false;
+  private hasInitializationFinished: boolean = false;
+
   constructor(private messageBroker: MessageBroker, private logger: Logger) {
     super();
     this.messageBroker.initialize();
   }
 
-  // FIXME build mechanism that makes sure initialized has been finished before doing anything else
   initialize = async (entity: IEntityConstructor<Entity>, url: string, name: string) => {
+    this.hasInitializedBeenCalled = true;
     this.logger.debug(`initialize ${name} event repository (${url})`);
 
     this._Entity = entity;
@@ -133,10 +85,12 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       throw error;
     }
 
+    this.hasInitializationFinished = true;
     this.logger.debug(`${name} event repository initialized`);
   };
 
   save = async (entity: Entity) => {
+    await this.waitUntilInitialized();
     const streamId: string = entity.currentState.id;
     const lastPersistedEvent = await this.getLastEventOfStream(streamId);
     let eventNumber = (lastPersistedEvent && lastPersistedEvent.eventNumber) || 0;
@@ -169,6 +123,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   };
 
   findById = async (id: string): Promise<Entity> => {
+    await this.waitUntilInitialized();
     const snapshot = await this.getSnapshot(id);
 
     const events: IEvent[] = await (snapshot ? this.getEventsAfterSnapshot(snapshot) : this.getEventStream(id));
@@ -185,6 +140,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
 
   generateUniqueId = (): Promise<string> => {
     const checkAvailability = async (resolve: Function) => {
+      await this.waitUntilInitialized();
       const id = Identifier.makeUniqueId();
       const result = await this.eventCollection.findOne({ aggregateId: id });
       result ? checkAvailability(resolve) : resolve(id);
@@ -192,7 +148,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     return new Promise(resolve => checkAvailability(resolve));
   };
 
-  async getNextSequence(name: string) {
+  private getNextSequence = async (name: string) => {
     const counter = await this.counterCollection.findOneAndUpdate(
       { _id: name },
       {
@@ -202,7 +158,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     );
 
     return counter.value.seq;
-  }
+  };
 
   private getLastEventOfStream = async (streamId: string): Promise<IEvent | null> => {
     const result = await this.eventCollection.find(
@@ -263,6 +219,14 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       { upsert: true },
     );
     this.logger.debug(`saved ${this.namespace} snapshot for stream: ${streamId}`);
+    return true;
+  };
+
+  private waitUntilInitialized = async (): Promise<boolean> => {
+    if (!this.hasInitializedBeenCalled) {
+      throw new Error(`You need to call ${this.initialize.name} in the constructor of the EventRepository`);
+    }
+    await retry(async () => this.hasInitializationFinished);
     return true;
   };
 }

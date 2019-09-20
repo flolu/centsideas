@@ -6,6 +6,7 @@
     { "path": "packages/utils" },
     { "path": "packages/event-sourcing" },
     { "path": "services/ideas" },
-    { "path": "services/gateway" }
+    { "path": "services/gateway" },
+    { "path": "services/consumer" }
   ]
 }
