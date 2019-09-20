@@ -11,7 +11,7 @@ import {
 } from './idea.entity.fake';
 
 @injectable()
-export class IdeaCommandHandler implements IIdeaCommandHandler {
+export class IdeaCommandHandlerMock implements IIdeaCommandHandler {
   create = async (): Promise<Idea> => {
     const idea = Idea.create(fakeIdeaId);
     idea.confirmEvents();

@@ -12,4 +12,8 @@ export const registerProviders = (...providers: any[]): void => {
 };
 
 export const getProvider = (provider: any): any => container.get(provider);
-//export const getProvider = (provider: any): any => container.get(provider.name);
+
+export const overrideProvider = (provider: any, newProvider: any) => {
+  container.unbind(provider);
+  container.bind(provider).to(newProvider);
+};

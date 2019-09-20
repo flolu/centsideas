@@ -1,12 +1,17 @@
 import * as pino from 'pino';
+import { injectable } from 'inversify';
 
+@injectable()
 export class Logger {
   private logger: pino.Logger;
+  private prefix: string = '[-] ';
 
-  constructor(private prefix: string = '', prettyPrint: boolean = true, level: string = process.env.LEVEL || 'info') {
-    const options: pino.LoggerOptions = { prettyPrint, level };
+  constructor() {
+    const options: pino.LoggerOptions = { prettyPrint: true, level: process.env.LEVEL || 'info' };
+    if (process.env.LOGGER_PREFIX) {
+      this.prefix = process.env.LOGGER_PREFIX + ' ';
+    }
     this.logger = pino(options);
-    this.debug('logger initialized', options);
   }
 
   public info = (message: string, ...args: any[]) => {

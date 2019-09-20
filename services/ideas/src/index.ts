@@ -1,11 +1,11 @@
-// FIXME unit, integration, performance tests
+// FIXME unit, integration, (performance) tests
 
 import 'reflect-metadata';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { expressJsonAdapter } from '@cents-ideas/utils';
-import { registerProviders, getProvider, Logger } from '@cents-ideas/utils';
+import { expressJsonAdapter, Logger } from '@cents-ideas/utils';
+import { registerProviders, getProvider } from '@cents-ideas/utils';
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 
 import { IdeasService } from './ideas.service';
@@ -13,12 +13,15 @@ import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
 import env from './environment';
 
-registerProviders(IdeaCommandHandler, IdeaRepository, IdeasService, MessageBroker);
+process.env.LOGGER_PREFIX = '💡';
+registerProviders(IdeaCommandHandler, IdeaRepository, IdeasService, MessageBroker, Logger);
 
 const port: number = env.port;
 const app = express();
-const { logger } = env;
 const ideasService: IdeasService = getProvider(IdeasService);
+const logger: Logger = getProvider(Logger);
+
+logger.debug('initialized with env: ', env);
 
 app.use(bodyParser.json());
 

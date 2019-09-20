@@ -1,5 +1,5 @@
 import * as retry from 'async-retry';
-import { injectable, decorate } from 'inversify';
+import { injectable } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 import { EventEmitter } from 'events';
 import { Kafka, logLevel, Producer, KafkaConfig, Message, RecordMetadata, Consumer } from 'kafkajs';
@@ -29,7 +29,7 @@ export class MessageBroker {
   private producer: Producer;
   private consumer: Consumer;
 
-  constructor() {}
+  constructor(private logger: Logger) {}
 
   initialize = (overrides: Partial<KafkaConfig> = {}) => {
     this.kafka = new Kafka({ ...this.defaultConfig, ...overrides });
@@ -57,7 +57,7 @@ export class MessageBroker {
     await this.consumer.run({
       eachMessage: async ({ message }) => {
         const payload = JSON.parse(message.value.toString());
-        console.log('consumed event: ', payload.name);
+        this.logger.info(`consumed ${payload.name} event`);
       },
     });
   };
@@ -76,24 +76,27 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   private namespace: string;
   private readonly minNumberOfEventsToCreateSnapshot = 5;
 
-  constructor(private messageBroker: MessageBroker) {
+  constructor(private messageBroker: MessageBroker, private logger: Logger) {
     super();
     this.messageBroker.initialize();
   }
 
   // FIXME build mechanism that makes sure initialized has been finished before doing anything else
   initialize = async (entity: IEntityConstructor<Entity>, url: string, name: string) => {
+    this.logger.debug(`initialize ${name} event repository (${url})`);
+
     this._Entity = entity;
-    this.namespace = `store_${name}`;
+    this.namespace = name;
 
     this.client = await retry(async () => {
       const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true, useUnifiedTopology: true });
       return connection;
     });
-
     this.db = this.client.db(name);
+    this.logger.debug(`connected to ${name} database`);
 
     this.db.on('close', () => {
+      this.logger.info(`disconnected from ${name} database`);
       this.emit('disconnect');
     });
 
@@ -111,12 +114,6 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
         name: `${this.namespace}_aggregateId_eventNumber`,
         unique: true,
       },
-      // TODO i don't think this one is needed ?!
-      /* {
-        key: { eventNumber: 1 },
-        name: `${this.namespace}_eventNumber`,
-        unique: true,
-      }, */
     ]);
 
     await this.snapshotCollection.createIndexes([
@@ -135,6 +132,8 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       }
       throw error;
     }
+
+    this.logger.debug(`${name} event repository initialized`);
   };
 
   save = async (entity: Entity) => {
@@ -152,6 +151,12 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     });
 
     const appendedEvents = await Promise.all(eventsToInsert.map(event => this.appendEvent(event)));
+    this.logger.debug(
+      `saved ${appendedEvents.length} ${appendedEvents.length === 1 ? 'event' : 'events'} into ${
+        this.namespace
+      } event store`,
+    );
+
     await Promise.all(appendedEvents.map(e => this.messageBroker.send('test-topic', [{ value: JSON.stringify(e) }])));
 
     for (const event of appendedEvents) {
@@ -174,6 +179,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       throw entity.NotFoundError(id);
     }
 
+    this.logger.debug(`found entity with id: ${id}`);
     return entity.confirmEvents();
   };
 
@@ -251,10 +257,12 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     if (!lastEvent) {
       return false;
     }
-    this.snapshotCollection.updateOne(
+    await this.snapshotCollection.updateOne(
       { aggregateId: streamId },
       { $set: { aggregateId: streamId, lastEventId: lastEvent.id, state: entity.persistedState } },
       { upsert: true },
     );
+    this.logger.debug(`saved ${this.namespace} snapshot for stream: ${streamId}`);
+    return true;
   };
 }

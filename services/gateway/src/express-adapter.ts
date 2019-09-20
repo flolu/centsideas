@@ -1,20 +1,22 @@
 import * as express from 'express';
 import axios from 'axios';
+import { injectable } from 'inversify';
 
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
 import { HttpStatusCodes } from '@cents-ideas/enums';
+import { Logger } from '@cents-ideas/utils';
 
-import { logger } from './environment';
-
+@injectable()
 export class ExpressAdapter {
+  constructor(private logger: Logger) {}
+
   public makeJsonAdapter = (url: string): express.RequestHandler => {
     return async (req: express.Request, res: express.Response) => {
       try {
         const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);
-        logger.info(url);
+        this.logger.info(`${httpRequest.method} request to ${httpRequest.url}`);
         const response = await axios.post(url, httpRequest);
         const httpResponse: HttpResponse = response.data;
-        logger.info(url, ' -> done');
         this.handleExpressHttpResponse(res, httpResponse);
       } catch (err) {
         this.handleExpressHttpResponse(res, {

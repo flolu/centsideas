@@ -1,3 +1,7 @@
+import { injectable } from 'inversify';
+
+import { sanitizeHtml } from '@cents-ideas/utils';
+
 import {
   IdeaAlreadyDeletedError,
   IdeaAlreadyPublishedError,
@@ -9,9 +13,7 @@ import {
 } from './errors';
 import { Idea } from './idea.entity';
 import { IdeaRepository } from './idea.repository';
-import { inject, injectable } from 'inversify';
 import { IdeaDeletedError } from './errors/idea.deleted.error';
-import { sanitizeHtml } from '@cents-ideas/utils';
 
 export interface IIdeaCommandHandler {
   create: () => Promise<Idea>;

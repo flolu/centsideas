@@ -1,21 +1,22 @@
+import { injectable } from 'inversify';
+
 import { HttpStatusCodes } from '@cents-ideas/enums';
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
+import { Logger } from '@cents-ideas/utils';
+
 import { ICommitIdeaDraftDto, IQueryIdeaDto, ISaveIdeaDto, IUpdateIdeaDraftDto } from './dtos/ideas.dto';
-import env from './environment';
 import { handleHttpResponseError } from './errors/http-response-error-handler';
 import { IdeaCommandHandler } from './idea.command-handler';
-import { injectable, inject } from 'inversify';
-const { logger } = env;
 
 @injectable()
 export class IdeasService {
-  constructor(private commandHandler: IdeaCommandHandler) {}
+  constructor(private commandHandler: IdeaCommandHandler, private logger: Logger) {}
 
   createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async resolve => {
       const _loggerName = 'create';
       try {
-        logger.info(_loggerName);
+        this.logger.info(_loggerName);
         const idea = await this.commandHandler.create();
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -23,7 +24,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -32,7 +33,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'save draft';
       try {
-        logger.info(_loggerName);
+        this.logger.info(_loggerName);
         const idea = await this.commandHandler.saveDraft(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -40,7 +41,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -49,7 +50,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'discard draft';
       try {
-        logger.info(_loggerName);
+        this.logger.info(_loggerName);
         const idea = await this.commandHandler.discardDraft(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -57,7 +58,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -66,7 +67,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'commit draft';
       try {
-        logger.info(_loggerName);
+        this.logger.info(_loggerName);
         const idea = await this.commandHandler.commitDraft(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -74,7 +75,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -83,7 +84,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'publish';
       try {
-        logger.info(_loggerName);
+        this.logger.info(_loggerName);
         const idea = await this.commandHandler.publish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -91,7 +92,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -100,7 +101,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'update';
       try {
-        logger.info(_loggerName);
+        this.logger.info(_loggerName);
         const idea = await this.commandHandler.update(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -108,7 +109,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -117,7 +118,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'unpublish';
       try {
-        logger.info(_loggerName);
+        this.logger.info(_loggerName);
         const idea = await this.commandHandler.unpublish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -125,7 +126,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -134,7 +135,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'delete';
       try {
-        logger.info(_loggerName);
+        this.logger.info(_loggerName);
         const idea = await this.commandHandler.delete(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -142,7 +143,7 @@ export class IdeasService {
           headers: {},
         });
       } catch (error) {
-        logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });

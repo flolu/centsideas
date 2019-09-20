@@ -1,11 +1,20 @@
+import 'reflect-metadata';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import env, { logger } from './environment';
+import { Logger, registerProviders, getProvider } from '@cents-ideas/utils';
+
+import env from './environment';
 import { ExpressAdapter } from './express-adapter';
 
-const expressAdapter = new ExpressAdapter();
-const port: number = env.port;
+process.env.LOGGER_PREFIX = '⛩️';
+registerProviders(Logger, ExpressAdapter);
+
+// FIXME inject in some kind of main class to prevent duplicate initialization, same with other services
+// FIXME maybe some kind of module file like angular (e.g. common module has logger)
+const logger: Logger = getProvider(Logger);
+const expressAdapter: ExpressAdapter = getProvider(ExpressAdapter);
+const { port } = env;
 const app = express();
 const ideasApiRoot = env.api.ideas.root;
 const ideasHost = env.hosts.ideas;
