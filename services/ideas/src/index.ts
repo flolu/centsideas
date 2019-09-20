@@ -5,14 +5,15 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import { expressJsonAdapter } from '@cents-ideas/utils';
-import { registerProviders, getProvider } from '@cents-ideas/utils';
+import { registerProviders, getProvider, Logger } from '@cents-ideas/utils';
+import { MessageBroker } from '@cents-ideas/event-sourcing';
 
-import env from './environment';
 import { IdeasService } from './ideas.service';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
+import env from './environment';
 
-registerProviders(IdeaCommandHandler, IdeaRepository, IdeasService);
+registerProviders(IdeaCommandHandler, IdeaRepository, IdeasService, MessageBroker);
 
 const port: number = env.port;
 const app = express();

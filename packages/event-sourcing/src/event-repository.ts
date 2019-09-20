@@ -1,10 +1,10 @@
-import { injectable, unmanaged, decorate } from 'inversify';
-import { MongoClient, Db, Collection } from 'mongodb';
 import * as retry from 'async-retry';
+import { injectable, decorate } from 'inversify';
+import { MongoClient, Db, Collection } from 'mongodb';
 import { EventEmitter } from 'events';
-import { Kafka, logLevel, Producer } from 'kafkajs';
+import { Kafka, logLevel, Producer, KafkaConfig, Message, RecordMetadata, Consumer } from 'kafkajs';
 
-import { Identifier, renameObjectProperty } from '@cents-ideas/utils';
+import { Identifier, renameObjectProperty, Logger } from '@cents-ideas/utils';
 
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
@@ -14,18 +14,54 @@ export interface IEntityConstructor<Entity> {
   new (snapshot?: ISnapshot): Entity;
 }
 
-decorate(injectable(), EventEmitter);
+@injectable()
+export class MessageBroker {
+  private readonly defaultConfig = {
+    clientId: 'cents-ideas',
+    brokers: ['172.18.0.1:9092'],
+    logLevel: logLevel.WARN,
+    retry: {
+      initialRetryTime: 300,
+      retries: 10,
+    },
+  };
+  private kafka: Kafka;
+  private producer: Producer;
+  private consumer: Consumer;
 
-// TODO maybe extract into a message broker package
-const kafka = new Kafka({
-  clientId: 'cents-ideas',
-  brokers: ['172.18.0.1:9092'],
-  logLevel: logLevel.WARN,
-  retry: {
-    initialRetryTime: 300,
-    retries: 10,
-  },
-});
+  constructor() {}
+
+  initialize = (overrides: Partial<KafkaConfig> = {}) => {
+    this.kafka = new Kafka({ ...this.defaultConfig, ...overrides });
+  };
+
+  send = async (topic: string = 'test-topic', messages: Message[] = []): Promise<RecordMetadata[]> => {
+    if (!this.producer) {
+      this.producer = this.kafka.producer();
+    }
+    // FIXME does it reconnect if it is already connected?
+    await this.producer.connect();
+    return this.producer.send({ topic, messages });
+  };
+
+  subscribe = async (topic: string = 'test-topic') => {
+    if (!this.consumer) {
+      // FIXME does the group need to be unique?
+      this.consumer = this.kafka.consumer({
+        groupId: 'test-group' + Number(Date.now()).toString(),
+        rebalanceTimeout: 1000,
+      });
+    }
+    await this.consumer.connect();
+    await this.consumer.subscribe({ topic });
+    await this.consumer.run({
+      eachMessage: async ({ message }) => {
+        const payload = JSON.parse(message.value.toString());
+        console.log('consumed event: ', payload.name);
+      },
+    });
+  };
+}
 
 // FIXME logging
 @injectable()
@@ -40,16 +76,9 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   private namespace: string;
   private readonly minNumberOfEventsToCreateSnapshot = 5;
 
-  private producer: Producer = kafka.producer();
-
-  constructor() {
+  constructor(private messageBroker: MessageBroker) {
     super();
-    this.producer.on('producer.connect', () => {
-      console.log('kafka producer connected');
-    });
-    this.producer.on('producer.disconnect', () => {
-      console.log('kafka producer disconnected');
-    });
+    this.messageBroker.initialize();
   }
 
   // FIXME build mechanism that makes sure initialized has been finished before doing anything else
@@ -106,8 +135,6 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       }
       throw error;
     }
-
-    await this.producer.connect();
   };
 
   save = async (entity: Entity) => {
@@ -125,10 +152,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     });
 
     const appendedEvents = await Promise.all(eventsToInsert.map(event => this.appendEvent(event)));
-
-    await Promise.all(
-      appendedEvents.map(e => this.producer.send({ topic: 'test-topic', messages: [{ value: JSON.stringify(e) }] })),
-    );
+    await Promise.all(appendedEvents.map(e => this.messageBroker.send('test-topic', [{ value: JSON.stringify(e) }])));
 
     for (const event of appendedEvents) {
       if (event.eventNumber % this.minNumberOfEventsToCreateSnapshot === 0) {
