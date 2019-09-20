@@ -9,7 +9,7 @@ const { logger } = env;
 
 @injectable()
 export class IdeasService {
-  @inject(IdeaCommandHandler.name) private commandHandler: IdeaCommandHandler;
+  constructor(private commandHandler: IdeaCommandHandler) {}
 
   createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async resolve => {

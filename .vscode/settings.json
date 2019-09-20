@@ -8,6 +8,7 @@
     "inversify",
     "kafkajs",
     "microservice",
+    "mongodb",
     "pino",
     "prestart",
     "rebalance",

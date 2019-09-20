@@ -30,6 +30,8 @@ const kafka = new Kafka({
 // FIXME logging
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter {
+  protected _Entity: IEntityConstructor<Entity>;
+
   private client: MongoClient;
   private db: Db;
   private eventCollection: Collection;
@@ -40,7 +42,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
 
   private producer: Producer = kafka.producer();
 
-  constructor(@unmanaged() protected readonly _Entity: IEntityConstructor<Entity>) {
+  constructor() {
     super();
     this.producer.on('producer.connect', () => {
       console.log('kafka producer connected');
@@ -50,23 +52,25 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     });
   }
 
-  initialize = async (url: string, namespace: string) => {
-    this.namespace = `store_${namespace}`;
+  // FIXME build mechanism that makes sure initialized has been finished before doing anything else
+  initialize = async (entity: IEntityConstructor<Entity>, url: string, name: string) => {
+    this._Entity = entity;
+    this.namespace = `store_${name}`;
 
     this.client = await retry(async () => {
       const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true, useUnifiedTopology: true });
       return connection;
     });
 
-    this.db = this.client.db(namespace);
+    this.db = this.client.db(name);
 
     this.db.on('close', () => {
       this.emit('disconnect');
     });
 
-    this.eventCollection = this.db.collection(`${namespace}_events`);
-    this.snapshotCollection = this.db.collection(`${namespace}_snapshots`);
-    this.counterCollection = this.db.collection(`${namespace}_counters`);
+    this.eventCollection = this.db.collection(`${name}_events`);
+    this.snapshotCollection = this.db.collection(`${name}_snapshots`);
+    this.counterCollection = this.db.collection(`${name}_counters`);
 
     await this.eventCollection.createIndexes([
       {

@@ -26,7 +26,7 @@ export interface IIdeaCommandHandler {
 
 @injectable()
 export class IdeaCommandHandler implements IIdeaCommandHandler {
-  @inject(IdeaRepository.name) private repository: IdeaRepository;
+  constructor(private repository: IdeaRepository) {}
 
   create = async (): Promise<Idea> => {
     const ideaId = await this.repository.generateUniqueId();

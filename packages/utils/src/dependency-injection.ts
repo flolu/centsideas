@@ -4,11 +4,12 @@ const container = new Container();
 
 export const registerProviders = (...providers: any[]): void => {
   providers.forEach(p => {
-    if (!(p && p.name)) {
+    if (!p) {
       throw new Error(`Provider: ${p} could not be registered`);
     }
-    container.bind(p.name).to(p);
+    container.bind(p).to(p);
   });
 };
 
-export const getProvider = (provider: any): any => container.get(provider.name);
+export const getProvider = (provider: any): any => container.get(provider);
+//export const getProvider = (provider: any): any => container.get(provider.name);
