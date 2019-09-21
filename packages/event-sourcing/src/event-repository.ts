@@ -75,15 +75,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       },
     ]);
 
-    // TODO try to understand this properly
-    try {
-      await this.counterCollection.insertOne({ _id: 'events', seq: 0 });
-    } catch (error) {
-      if (error.code === 11000 && error.message.includes('_counters index: _id_ dup key')) {
-        return;
-      }
-      throw error;
-    }
+    await this.counterCollection.insertOne({ _id: 'events', seq: 0 });
 
     this.hasInitializationFinished = true;
     this.logger.debug(`${name} event repository initialized`);
@@ -148,9 +140,9 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     return new Promise(resolve => checkAvailability(resolve));
   };
 
-  private getNextSequence = async (name: string) => {
+  private getNextSequence = async () => {
     const counter = await this.counterCollection.findOneAndUpdate(
-      { _id: name },
+      { _id: 'events' },
       {
         $inc: { seq: 1 },
       },
@@ -175,7 +167,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   };
 
   private appendEvent = async (event: IEvent): Promise<IEvent> => {
-    const seq = await this.getNextSequence('events');
+    const seq = await this.getNextSequence();
 
     const payload = renameObjectProperty(event, 'id', '_id');
     const result = await this.eventCollection.insertOne({ ...payload, position: seq });

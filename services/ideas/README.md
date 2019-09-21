@@ -1,35 +1,60 @@
-### Create idea
+# 💡 Ideas Service
+
+## Environment Variables
+
+```
+IDEAS_DATABASE_URL=mongodb://ideas-event-store:27017
+```
+
+## API
+
+### Endpoints
+
+> All those endpoints are only accessible through the `gateway` service
+
+| Method | Endpoint              |
+| ------ | --------------------- |
+| POST   | /ideas                |
+| PUT    | /ideas/:id            |
+| PUT    | /ideas/save-draft/:id |
+| PUT    | /ideas/publish/:id    |
+| PUT    | /ideas/unpublish/:id  |
+| DELETE | /ideas/:id            |
+
+### Examples
+
+#### Create idea
 
 ```
 curl --data "" http://localhost:3000/ideas
 ```
 
-### Save draft
+#### Save draft
 
 ```
 curl --header "Content-Type: application/json" --request PUT --data '{"title":"This is an draft"}' http://localhost:3000/ideas/save-draft/id
 ```
 
-### Update idea
+#### Update idea
 
 ```
 curl --header "Content-Type: application/json" --request PUT --data '{"title":"This is an updated title"}' http://localhost:3000/ideas/id
 curl --header "Content-Type: application/json" --request PUT --data '{"description":"This is an updated description"}' http://localhost:3000/ideas/id
 ```
 
-### Publish idea
+#### Publish idea
 
 ```
 curl --header "Content-Type: application/json" --request PUT http://localhost:3000/ideas/publish/id
 ```
 
-### Unpublish idea
+#### Unpublish idea
 
 ```
 curl --header "Content-Type: application/json" --request PUT http://localhost:3000/ideas/unpublish/id
 ```
 
-### Delete idea
+#### Delete idea
 
 ```
 curl --header "Content-Type: application/json" --request DELETE http://localhost:3000/ideas/id

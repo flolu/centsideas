@@ -22,7 +22,6 @@ export class GatewayServer implements IServer {
 
     this.app.use(bodyParser.json());
 
-    // TODO @JsonAdapter decorator
     this.app.post(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/create`));
     this.app.put(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/update`));
     this.app.put(`${ideasApiRoot}/save-draft/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/save-draft`));
