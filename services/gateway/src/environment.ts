@@ -1,4 +1,18 @@
-const env = {
+import { IServerEnvironment } from '@cents-ideas/models';
+
+export interface IGatewayEnvironment extends IServerEnvironment {
+  port: number;
+  hosts: {
+    ideas: string;
+  };
+  api: {
+    ideas: {
+      root: string;
+    };
+  };
+}
+
+const env: IGatewayEnvironment = {
   environment: process.env.NODE_ENV,
   port: 3000,
   hosts: {

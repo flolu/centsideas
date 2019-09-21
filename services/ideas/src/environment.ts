@@ -1,4 +1,13 @@
-const env = {
+import { IServerEnvironment } from '@cents-ideas/models';
+
+export interface IIdeasServiceEnvironment extends IServerEnvironment {
+  port: number;
+  database: {
+    url: string;
+    name: string;
+  };
+}
+const env: IIdeasServiceEnvironment = {
   environment: process.env.NODE_ENV,
   port: 3000,
   database: {

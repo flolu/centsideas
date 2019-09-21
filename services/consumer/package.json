@@ -16,7 +16,8 @@
   "dependencies": {
     "@cents-ideas/utils": "^0.1.0",
     "@cents-ideas/event-sourcing": "^0.1.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "inversify": "^5.0.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
