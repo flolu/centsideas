@@ -65,8 +65,8 @@ export class Idea extends EventEntity<IIdeaState> {
     return this;
   }
 
-  commitDraft(title?: string, description?: string) {
-    this.pushEvents(new IdeaDraftCommittedEvent(this.persistedState.id, title, description));
+  commitDraft() {
+    this.pushEvents(new IdeaDraftCommittedEvent(this.persistedState.id));
     return this;
   }
 

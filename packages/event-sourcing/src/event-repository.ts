@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 
 import { Identifier, renameObjectProperty, Logger } from '@cents-ideas/utils';
 
-import { IEventEntity } from './event-entity';
+import { IEventEntity, EventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
 import { IEvent, MessageBroker } from '.';
 
@@ -13,8 +13,21 @@ export interface IEntityConstructor<Entity> {
   new (snapshot?: ISnapshot): Entity;
 }
 
+export interface IEventRepository<Entity> {
+  initialize: (
+    entity: IEntityConstructor<Entity>,
+    url: string,
+    name: string,
+    minNumberOfEventsToCreateSnapshot: number,
+  ) => void;
+  save: (entity: Entity) => Promise<Entity>;
+  findById: (id: string) => Promise<Entity>;
+  generateUniqueId: () => Promise<string>;
+}
+
 @injectable()
-export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter {
+export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter
+  implements IEventRepository<Entity> {
   protected _Entity: IEntityConstructor<Entity>;
 
   private client: MongoClient;
@@ -23,7 +36,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   private snapshotCollection: Collection;
   private counterCollection: Collection;
   private namespace: string;
-  private readonly minNumberOfEventsToCreateSnapshot = 5;
+  private snapshotThreshold: number;
 
   private hasInitializedBeenCalled: boolean = false;
   private hasInitializationFinished: boolean = false;
@@ -33,10 +46,16 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     this.messageBroker.initialize();
   }
 
-  initialize = async (entity: IEntityConstructor<Entity>, url: string, name: string) => {
+  initialize = async (
+    entity: IEntityConstructor<Entity>,
+    url: string,
+    name: string,
+    minNumberOfEventsToCreateSnapshot: number = 100,
+  ) => {
     this.hasInitializedBeenCalled = true;
     this.logger.debug(`initialize ${name} event repository (${url})`);
 
+    this.snapshotThreshold = minNumberOfEventsToCreateSnapshot;
     this._Entity = entity;
     this.namespace = name;
 
@@ -75,7 +94,13 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       },
     ]);
 
-    await this.counterCollection.insertOne({ _id: 'events', seq: 0 });
+    try {
+      await this.counterCollection.insertOne({ _id: 'events', seq: 0 });
+    } catch (error) {
+      if (!(error.code === 11000 && error.message.includes('index: _id_ dup key:'))) {
+        throw error;
+      }
+    }
 
     this.hasInitializationFinished = true;
     this.logger.debug(`${name} event repository initialized`);
@@ -106,11 +131,10 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     await Promise.all(appendedEvents.map(e => this.messageBroker.send('test-topic', [{ value: JSON.stringify(e) }])));
 
     for (const event of appendedEvents) {
-      if (event.eventNumber % this.minNumberOfEventsToCreateSnapshot === 0) {
+      if (event.eventNumber % this.snapshotThreshold === 0) {
         this.saveSnapshot(event.aggregateId);
       }
     }
-
     return entity.confirmEvents();
   };
 
@@ -174,7 +198,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     return result.ops[0];
   };
 
-  getSnapshot = async (streamId: string): Promise<ISnapshot | null> => {
+  private getSnapshot = async (streamId: string): Promise<ISnapshot | null> => {
     return this.snapshotCollection.findOne({ aggregateId: streamId });
   };
 

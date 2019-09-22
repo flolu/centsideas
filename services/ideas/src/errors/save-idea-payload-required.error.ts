@@ -3,12 +3,17 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 
 export class SaveIdeaPayloadRequiredError extends IdeaError {
   static validate = (title?: string, description?: string): void => {
-    if (!(title || description)) {
-      throw new SaveIdeaPayloadRequiredError('Title or description is required to save an idea draft');
+    if (!(title && description)) {
+      throw new SaveIdeaPayloadRequiredError(!title, !description);
     }
   };
 
-  constructor(message: string) {
-    super(message, HttpStatusCodes.BadRequest);
+  constructor(titleMissing: boolean, descriptionMissing: boolean) {
+    super(
+      `Title and description are required to save an idea. Missing: ${titleMissing ? 'title' : ''} ${
+        descriptionMissing ? ', description' : ''
+      }`,
+      HttpStatusCodes.BadRequest,
+    );
   }
 }

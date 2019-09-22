@@ -1,20 +1,17 @@
 import { Event } from '@cents-ideas/event-sourcing';
-import { Idea, IIdeaState } from '../idea.entity';
 
-export class IdeaDraftCommittedEvent extends Event<{
-  title?: string;
-  description?: string;
-}> {
+import { IIdeaState } from '../idea.entity';
+
+export class IdeaDraftCommittedEvent extends Event<{}> {
   static readonly eventName: string = 'idea-draft-committed';
 
-  constructor(ideaId: string, title?: string, description?: string) {
-    super(IdeaDraftCommittedEvent.eventName, { title, description }, ideaId);
+  constructor(ideaId: string) {
+    super(IdeaDraftCommittedEvent.eventName, {}, ideaId);
   }
 
-  static commit(state: IIdeaState, { data }: IdeaDraftCommittedEvent): IIdeaState {
-    const { title, description } = data;
-    state.title = title || (state.draft && state.draft.title) || state.title;
-    state.description = description || (state.draft && state.draft.description) || state.description;
+  static commit(state: IIdeaState): IIdeaState {
+    state.title = state.draft.title;
+    state.description = state.draft.description;
     state.draft.title = null;
     state.draft.description = null;
     state.updatedAt = new Date().toISOString();

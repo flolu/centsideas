@@ -33,10 +33,10 @@ export class IdeaCommandHandlerMock implements IIdeaCommandHandler {
     return idea;
   };
 
-  commitDraft = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
+  commitDraft = async (ideaId: string): Promise<Idea> => {
     const idea = Idea.create(ideaId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
-    idea.commitDraft(title, description);
+    idea.commitDraft();
     idea.confirmEvents();
     return idea;
   };
@@ -44,7 +44,7 @@ export class IdeaCommandHandlerMock implements IIdeaCommandHandler {
   publish = async (ideaId: string): Promise<Idea> => {
     const idea = Idea.create(ideaId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
-    idea.commitDraft(fakeIdeaTitle2, fakeIdeaDescription2);
+    idea.commitDraft();
     idea.publish();
     idea.confirmEvents();
     return idea;
@@ -63,7 +63,7 @@ export class IdeaCommandHandlerMock implements IIdeaCommandHandler {
   unpublish = async (ideaId: string): Promise<Idea> => {
     const idea = Idea.create(ideaId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
-    idea.commitDraft(fakeIdeaTitle2, fakeIdeaDescription2);
+    idea.commitDraft();
     idea.publish();
     idea.unpublish();
     idea.confirmEvents();
@@ -73,7 +73,7 @@ export class IdeaCommandHandlerMock implements IIdeaCommandHandler {
   delete = async (ideaId: string): Promise<Idea> => {
     const idea = Idea.create(ideaId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
-    idea.commitDraft(fakeIdeaTitle2, fakeIdeaDescription2);
+    idea.commitDraft();
     idea.publish();
     idea.delete();
     idea.confirmEvents();

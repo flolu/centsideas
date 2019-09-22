@@ -4,11 +4,11 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 export class IdeaIdRequiredError extends IdeaError {
   static validate = (ideaId: string): void => {
     if (!ideaId) {
-      throw new IdeaIdRequiredError('Idea id required');
+      throw new IdeaIdRequiredError();
     }
   };
 
-  constructor(message: string) {
-    super(message, HttpStatusCodes.BadRequest);
+  constructor() {
+    super(`Idea id required`, HttpStatusCodes.BadRequest);
   }
 }

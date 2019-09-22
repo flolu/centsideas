@@ -1,23 +1,28 @@
-import { IdeaError } from './idea.error';
 import { HttpStatusCodes } from '@cents-ideas/enums';
 
-const max: number = 100;
-const min: number = 3;
+import { IdeaError } from './idea.error';
 
 export class IdeaTitleLengthError extends IdeaError {
+  static readonly max: number = 100;
+  static readonly min: number = 3;
+
   static validate = (title?: string, onlyMaxLength: boolean = false): void => {
+    // FIXME will this return if title is ''? !.... could cause issues
     if (!title) {
       return;
     }
-    if (title.length > max) {
-      throw new IdeaTitleLengthError(`Idea title should not be longer than ${max} characters`);
+    if (title.length > IdeaTitleLengthError.max) {
+      throw new IdeaTitleLengthError(true, title.length);
     }
-    if (onlyMaxLength && title.length < min) {
-      throw new IdeaTitleLengthError(`Idea title should at least be ${min} characters long`);
+    if (onlyMaxLength && title.length < IdeaTitleLengthError.min) {
+      throw new IdeaTitleLengthError(false, title.length);
     }
   };
 
-  constructor(message: string) {
-    super(message, HttpStatusCodes.BadRequest);
+  constructor(isToLong: boolean, actualLength: number) {
+    const message = isToLong
+      ? `Idea title should not be longer than ${IdeaTitleLengthError.max} characters.`
+      : `Idea title should at least be ${IdeaTitleLengthError.min} characters long.`;
+    super(`${message} You provided a title with a length of ${actualLength}`, HttpStatusCodes.BadRequest);
   }
 }

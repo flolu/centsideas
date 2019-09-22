@@ -1,23 +1,28 @@
-import { IdeaError } from './idea.error';
 import { HttpStatusCodes } from '@cents-ideas/enums';
 
-const max: number = 3000;
-const min: number = 0;
+import { IdeaError } from './idea.error';
 
 export class IdeaDescriptionLengthError extends IdeaError {
+  static max: number = 3000;
+  static min: number = 0;
+
   static validate = (description?: string, onlyMaxLength: boolean = false): void => {
     if (!description) {
       return;
     }
-    if (description.length > max) {
-      throw new IdeaDescriptionLengthError(`Idea description should not be longer than ${max} characters`);
+    if (description.length > IdeaDescriptionLengthError.max) {
+      throw new IdeaDescriptionLengthError(true, description.length);
     }
-    if (onlyMaxLength && description.length < min) {
-      throw new IdeaDescriptionLengthError(`Idea description should at least be ${min} characters long`);
+    if (onlyMaxLength && description.length < IdeaDescriptionLengthError.min) {
+      throw new IdeaDescriptionLengthError(false, description.length);
     }
   };
 
-  constructor(message: string) {
+  constructor(isToLong: boolean, actualLength: number) {
+    const message = isToLong
+      ? `Idea description should not be longer than ${IdeaDescriptionLengthError.max} characters.`
+      : `Idea description should at least be ${IdeaDescriptionLengthError.min} characters long.`;
+    super(`${message} You provided a description with a length of ${actualLength}`, HttpStatusCodes.BadRequest);
     super(message, HttpStatusCodes.BadRequest);
   }
 }

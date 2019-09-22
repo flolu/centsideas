@@ -5,8 +5,7 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 import { makeFakeHttpRequest } from '@cents-ideas/models';
 
 import { IdeasService } from './ideas.service';
-import { IdeaCommandHandlerMock } from './__test__/idea.command-handler.mock';
-import { fakeIdeaId } from './__test__/idea.entity.fake';
+import { IdeaCommandHandlerMock, fakeIdeaId } from './test';
 import { Idea } from './idea.entity';
 import { IdeaCommandHandler } from './idea.command-handler';
 

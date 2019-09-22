@@ -7,6 +7,8 @@ export const fakeIdeaDescription = 'This concept is so hilarious, that no one wo
 export const fakeIdeaTitle2 = 'This is the Dumbest Idea Ever #2';
 export const fakeIdeaDescription2 =
   'This concept is so hilarious, that no one would ever actually take action on it! #2';
+export const insaneIdeaTitle: string = `<script>insane title 👹</script>`;
+export const insaneIdeaDescription: string = '<script>totally insane title 👹</script>';
 export const fakeIdeaState: IIdeaState = {
   id: fakeIdeaId,
   title: fakeIdeaTitle,

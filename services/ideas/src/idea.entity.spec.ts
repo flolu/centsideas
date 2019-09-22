@@ -3,13 +3,7 @@ import 'reflect-metadata';
 import { ISnapshot } from '@cents-ideas/event-sourcing';
 
 import { Idea, IIdeaState } from './idea.entity';
-import {
-  fakeIdeaId,
-  fakeIdeaTitle,
-  fakeIdeaDescription,
-  fakeEventId,
-  fakeIdeaState,
-} from './__test__/idea.entity.fake';
+import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeEventId, fakeIdeaState } from './test';
 
 describe('Idea Entity', () => {
   it('should initialize correctly', () => {

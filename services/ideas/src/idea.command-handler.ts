@@ -58,15 +58,14 @@ export class IdeaCommandHandler implements IIdeaCommandHandler {
     return this.repository.save(idea);
   };
 
-  commitDraft = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
+  // FIXME should commit draft override current title and description? ... probably yes but frontend needs to warn
+  commitDraft = async (ideaId: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
-    title = sanitizeHtml(title);
-    description = sanitizeHtml(description);
-    idea.commitDraft(title, description);
-    SaveIdeaPayloadRequiredError.validate(idea.persistedState.title, idea.persistedState.description);
+    SaveIdeaPayloadRequiredError.validate(idea.persistedState.draft.title, idea.persistedState.draft.description);
     IdeaTitleLengthError.validate(idea.persistedState.title);
     IdeaDescriptionLengthError.validate(idea.persistedState.description);
+    idea.commitDraft();
     return this.repository.save(idea);
   };
 

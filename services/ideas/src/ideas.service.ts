@@ -63,12 +63,12 @@ export class IdeasService {
       }
     });
 
-  commitDraft = (req: HttpRequest<ICommitIdeaDraftDto, IQueryIdeaDto>): Promise<HttpResponse> =>
+  commitDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
       const _loggerName = 'commit draft';
       try {
         this.logger.info(_loggerName);
-        const idea = await this.commandHandler.commitDraft(req.params.id, req.body.title, req.body.description);
+        const idea = await this.commandHandler.commitDraft(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
           body: { updated: idea.persistedState },

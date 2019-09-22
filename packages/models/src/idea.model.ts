@@ -1,3 +1,4 @@
+// TODO remove this.... i thinks it's not needed anymore
 interface IdeaPayload {
   id: string;
   title: string;
