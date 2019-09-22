@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 import { injectable } from 'inversify';
 
 import { IServer } from '@cents-ideas/models';
@@ -21,6 +22,8 @@ export class GatewayServer implements IServer {
     const ideasHost = env.hosts.ideas;
 
     this.app.use(bodyParser.json());
+    // FIXME whitelist in prod mode
+    this.app.use(cors());
 
     this.app.post(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/create`));
     this.app.put(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/update`));

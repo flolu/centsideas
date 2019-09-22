@@ -7,17 +7,19 @@
   ],
   "private": true,
   "scripts": {
+    "fire": "yarn install && yarn build",
+    "refire": "yarn clean && yarn fire",
+    "start:dev": "npm-run-all --parallel build:watch start:docker:dev start:frontend",
+    "test": "lerna run test",
+    "start": "yarn start:docker",
+    "___ ___ ___": "___ ___ ___",
+    "start:frontend": "lerna exec --scope frontend-main -- yarn start",
     "clean": "lerna run clean && rimraf node_modules",
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
     "tsc": "tsc",
     "start:docker:dev": "docker-compose -f docker-compose.dev.yaml up --build",
-    "start:dev": "npm-run-all --parallel build:watch start:docker:dev",
-    "start:docker": "docker-compose up --build",
-    "fire": "yarn install && yarn build",
-    "refire": "yarn clean && yarn fire",
-    "start": "yarn start:docker",
-    "test": "lerna run test"
+    "start:docker": "docker-compose up --build"
   },
   "devDependencies": {
     "lerna": "^3.16.4",
