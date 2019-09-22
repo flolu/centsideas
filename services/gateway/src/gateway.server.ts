@@ -25,12 +25,13 @@ export class GatewayServer implements IServer {
     this.app.post(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/create`));
     this.app.put(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/update`));
     this.app.put(`${ideasApiRoot}/save-draft/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/save-draft`));
+    this.app.put(`${ideasApiRoot}/commit-draft/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/commit-draft`));
     this.app.put(`${ideasApiRoot}/publish/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/publish`));
     this.app.put(`${ideasApiRoot}/unpublish/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/unpublish`));
     this.app.delete(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/delete`));
 
-    this.app.get(`${ideasApiRoot}/get-all`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-all`));
-    this.app.get(`${ideasApiRoot}/get-one`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-one`));
+    this.app.get(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-all`));
+    this.app.get(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-by-id`));
 
     this.app.listen(port, () => this.logger.info('gateway listening on internal port', port));
   };

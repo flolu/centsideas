@@ -23,10 +23,14 @@ export class IdeasServer implements IServer {
     // FIXME don't use http for internal service communication (instead use kafka or other message broker)
     this.app.post('/create', this.expressAdapter.json(this.ideasService.createEmptyIdea));
     this.app.post('/save-draft', this.expressAdapter.json(this.ideasService.saveDraft));
+    this.app.post('/commit-draft', this.expressAdapter.json(this.ideasService.commitDraft));
     this.app.post('/publish', this.expressAdapter.json(this.ideasService.publish));
     this.app.post('/update', this.expressAdapter.json(this.ideasService.update));
     this.app.post('/unpublish', this.expressAdapter.json(this.ideasService.unpublish));
     this.app.post('/delete', this.expressAdapter.json(this.ideasService.delete));
+
+    this.app.post('/queries/get-all', this.expressAdapter.json(this.ideasService.getAllIdeas));
+    this.app.post('/queries/get-by-id', this.expressAdapter.json(this.ideasService.getIdeaById));
 
     this.app.listen(port, () => this.logger.info('ideas service listening on internal port', port));
   };

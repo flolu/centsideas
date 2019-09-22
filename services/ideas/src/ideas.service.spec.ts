@@ -8,10 +8,13 @@ import { IdeasService } from './ideas.service';
 import { IdeaCommandHandlerMock, fakeIdeaId } from './test';
 import { Idea } from './idea.entity';
 import { IdeaCommandHandler } from './idea.command-handler';
+import { IdeaRepository } from './idea.repository';
+import { IdeaRepositoryMock } from './test/idea.repository.mock';
 
 describe('Ideas Service', () => {
-  registerProviders(IdeasService, IdeaCommandHandler, Logger);
+  registerProviders(IdeasService, IdeaCommandHandler, Logger, IdeaRepository);
   overrideProvider(IdeaCommandHandler, IdeaCommandHandlerMock);
+  overrideProvider(IdeaRepository, IdeaRepositoryMock);
 
   const service: IdeasService = getProvider(IdeasService);
 

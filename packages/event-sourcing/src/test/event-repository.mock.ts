@@ -60,6 +60,11 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
     return entity.confirmEvents();
   };
 
+  listAll = async (): Promise<Entity[]> => {
+    const ids = Object.keys(this.events);
+    return ids.map(id => this.findById(id));
+  };
+
   generateUniqueId = (): Promise<string> => {
     const checkAvailability = (resolve: Function) => {
       const id = Identifier.makeUniqueId();

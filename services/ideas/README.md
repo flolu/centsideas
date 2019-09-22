@@ -12,14 +12,17 @@ IDEAS_DATABASE_URL=mongodb://ideas-event-store:27017
 
 > All those endpoints are only accessible through the `gateway` service
 
-| Method | Endpoint              |
-| ------ | --------------------- |
-| POST   | /ideas                |
-| PUT    | /ideas/:id            |
-| PUT    | /ideas/save-draft/:id |
-| PUT    | /ideas/publish/:id    |
-| PUT    | /ideas/unpublish/:id  |
-| DELETE | /ideas/:id            |
+| Method | Endpoint                |
+| ------ | ----------------------- |
+| POST   | /ideas                  |
+| PUT    | /ideas/:id              |
+| PUT    | /ideas/save-draft/:id   |
+| PUT    | /ideas/commit-draft/:id |
+| PUT    | /ideas/publish/:id      |
+| PUT    | /ideas/unpublish/:id    |
+| DELETE | /ideas/:id              |
+| GET    | /ideas                  |
+| GET    | /ideas/:id              |
 
 ### Examples
 
@@ -29,10 +32,28 @@ IDEAS_DATABASE_URL=mongodb://ideas-event-store:27017
 curl --data "" http://localhost:3000/ideas
 ```
 
+#### Get all ideas
+
+```
+curl http://localhost:3000/ideas
+```
+
+#### Get idea by id
+
+```
+curl http://localhost:3000/ideas/id
+```
+
 #### Save draft
 
 ```
 curl --header "Content-Type: application/json" --request PUT --data '{"title":"This is an draft"}' http://localhost:3000/ideas/save-draft/id
+```
+
+#### Commit draft
+
+```
+curl --header "Content-Type: application/json" --request PUT http://localhost:3000/ideas/commit-draft/id
 ```
 
 #### Update idea

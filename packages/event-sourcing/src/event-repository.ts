@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 
 import { Identifier, renameObjectProperty, Logger } from '@cents-ideas/utils';
 
-import { IEventEntity, EventEntity } from './event-entity';
+import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
 import { IEvent, MessageBroker } from '.';
 
@@ -22,6 +22,7 @@ export interface IEventRepository<Entity> {
   ) => void;
   save: (entity: Entity) => Promise<Entity>;
   findById: (id: string) => Promise<Entity>;
+  listAll: () => Promise<Entity[]>;
   generateUniqueId: () => Promise<string>;
 }
 
@@ -138,7 +139,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     return entity.confirmEvents();
   };
 
-  findById = async (id: string): Promise<Entity> => {
+  findById = async (id: string, log: boolean = true): Promise<Entity> => {
     await this.waitUntilInitialized();
     const snapshot = await this.getSnapshot(id);
 
@@ -150,8 +151,19 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       throw entity.NotFoundError(id);
     }
 
-    this.logger.debug(`found entity with id: ${id}`);
+    log && this.logger.debug(`found entity with id: ${id}`);
     return entity.confirmEvents();
+  };
+
+  // FIXME create projection db when this gets to intense
+  listAll = async (): Promise<Entity[]> => {
+    const start = new Date();
+    await this.waitUntilInitialized();
+    const ids: string[] = await this.eventCollection.distinct('aggregateId', {});
+    const ideas = await Promise.all(ids.map(id => this.findById(id, false)));
+    const end = new Date();
+    this.logger.debug(`Fetching all ideas took ${Math.abs(Number(start) - Number(end))} ms`);
+    return ideas;
   };
 
   generateUniqueId = (): Promise<string> => {
