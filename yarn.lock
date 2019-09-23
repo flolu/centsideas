@@ -1861,7 +1861,7 @@
     tree-kill "1.2.1"
     webpack-sources "1.4.3"
 
-"@nguniversal/express-engine@^8.1.1":
+"@nguniversal/express-engine@8.1.1", "@nguniversal/express-engine@^8.1.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@nguniversal/express-engine/-/express-engine-8.1.1.tgz#253f2a484764cf183a679847a0c25c52d5b25ab9"
   integrity sha512-LKfNnKb1BU1IyI/U7LcDgU744ptrn7fTYb3QqHAlGaozHUNRjXpNuBdkrcAS5+8UAhRlTllpSt1c+TmY2/tomA==
