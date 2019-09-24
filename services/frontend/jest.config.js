@@ -26,3 +26,4 @@ module.exports = {
     },
   },
 };
+// TODO global jest config https://github.com/entria/entria-fullstack/blob/master/jest.config.js
