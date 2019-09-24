@@ -13,7 +13,7 @@
     "test": "lerna run test",
     "start": "yarn start:docker",
     "___ ___ ___": "___ ___ ___",
-    "start:frontend": "lerna exec --scope frontend-main -- yarn start",
+    "start:frontend": "lerna exec --scope frontend -- yarn start",
     "clean": "lerna run clean && rimraf node_modules",
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",

@@ -1,3 +1,0 @@
-# 💻 Main Frontend
-
-> Angular project

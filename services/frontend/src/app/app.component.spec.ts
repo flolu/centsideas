@@ -2,12 +2,17 @@ import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { IdeasService } from './ideas.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, ReactiveFormsModule],
+      imports: [RouterTestingModule, ReactiveFormsModule /* HttpClientModule */],
       declarations: [AppComponent],
+      providers: [
+        /* IdeasService */
+      ],
     }).compileComponents();
   }));
 
