@@ -1,0 +1,4 @@
+{
+  "files": [],
+  "references": [{ "path": "packages/event-sourcing" }, { "path": "packages/utils" }, { "path": "services/consumer" }]
+}

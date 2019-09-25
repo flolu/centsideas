@@ -37,6 +37,7 @@
     "uncommit",
     "unmanaged",
     "unpublish",
-    "upsert"
+    "upsert",
+    "wurstmeister"
   ]
 }

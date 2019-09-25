@@ -3,6 +3,7 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 
 export class IdeaIdRequiredError extends IdeaError {
   static validate = (ideaId: string): void => {
+    // FIXME maybe validate if id is valid id
     if (!ideaId) {
       throw new IdeaIdRequiredError();
     }

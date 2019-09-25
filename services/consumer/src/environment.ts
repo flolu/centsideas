@@ -7,7 +7,7 @@ export interface IConsumerEnvironment extends IServerEnvironment {
 }
 
 const env: IConsumerEnvironment = {
-  environment: process.env.NODE_ENV,
+  environment: process.env.NODE_ENV || 'dev',
   kafka: {
     brokers: ['172.18.0.1:9092'],
   },

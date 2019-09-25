@@ -52,7 +52,7 @@ describe('Idea Command Handler', () => {
     });
 
     it('should throw id required error', async () => {
-      await expectAsyncError(() => commandHandler.saveDraft(null), new IdeaIdRequiredError());
+      await expectAsyncError(() => commandHandler.saveDraft(''), new IdeaIdRequiredError());
     });
 
     it('should sanitize title and description', async () => {
@@ -63,8 +63,8 @@ describe('Idea Command Handler', () => {
         insaneIdeaDescription + fakeIdeaDescription,
       );
 
-      expect(saved.persistedState.draft.title).toEqual(fakeIdeaTitle);
-      expect(saved.persistedState.draft.description).toEqual(fakeIdeaDescription);
+      expect(saved.persistedState.draft && saved.persistedState.draft.title).toEqual(fakeIdeaTitle);
+      expect(saved.persistedState.draft && saved.persistedState.draft.description).toEqual(fakeIdeaDescription);
     });
 
     it('should validate length of title and description', async () => {
@@ -90,11 +90,11 @@ describe('Idea Command Handler', () => {
       const saved = await commandHandler.saveDraft(created.persistedState.id, fakeIdeaTitle, fakeIdeaDescription);
       const discarded = await commandHandler.discardDraft(created.persistedState.id);
 
-      expect(discarded.persistedState.draft).toEqual({ title: null, description: null });
+      expect(discarded.persistedState.draft).toEqual(null);
     });
 
     it('should throw id required error', async () => {
-      await expectAsyncError(() => commandHandler.discardDraft(null), new IdeaIdRequiredError());
+      await expectAsyncError(() => commandHandler.discardDraft(''), new IdeaIdRequiredError());
     });
   });
 
@@ -104,7 +104,7 @@ describe('Idea Command Handler', () => {
       const saved = await commandHandler.saveDraft(created.persistedState.id, fakeIdeaTitle, fakeIdeaDescription);
       const committed = await commandHandler.commitDraft(saved.persistedState.id);
 
-      expect(committed.persistedState.draft).toEqual({ title: null, description: null });
+      expect(committed.persistedState.draft).toEqual(null);
       expect(committed.persistedState.updatedAt).toBeDefined();
       expect(committed.persistedState.title).toEqual(fakeIdeaTitle);
       expect(committed.persistedState.description).toEqual(fakeIdeaDescription);
@@ -117,7 +117,7 @@ describe('Idea Command Handler', () => {
     it('should validate title and description length', async () => {});
 
     it('should throw id required error', async () => {
-      await expectAsyncError(() => commandHandler.commitDraft(null), new IdeaIdRequiredError());
+      await expectAsyncError(() => commandHandler.commitDraft(''), new IdeaIdRequiredError());
     });
   });
 });

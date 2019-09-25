@@ -1,15 +1,20 @@
+# // FIXME automate creation of those files
+
 FROM node:lts-alpine
 
 WORKDIR /usr/app/src
 
-# TODO automatically gnerate those files
+COPY package.json .
+COPY yarn.lock .
 COPY ./packages ./packages
 COPY ./services/gateway ./services/gateway
 
-COPY package.json .
-COPY ./tsconfig.settings.json ./
+RUN yarn install
 
-RUN yarn fire
+COPY ./tsconfig.settings.json ./
+COPY ./docker/gateway/tsconfig.json ./
+
+RUN yarn build
 
 WORKDIR /usr/app/src/services/gateway
 CMD yarn start:prod

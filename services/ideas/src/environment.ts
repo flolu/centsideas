@@ -8,7 +8,7 @@ export interface IIdeasServiceEnvironment extends IServerEnvironment {
   };
 }
 const env: IIdeasServiceEnvironment = {
-  environment: process.env.NODE_ENV,
+  environment: process.env.NODE_ENV || 'dev',
   port: 3000,
   database: {
     url: process.env.IDEAS_DATABASE_URL || 'mongodb://ideas-event-store:27017',

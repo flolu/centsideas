@@ -16,6 +16,7 @@
     "mongodb": "^3.3.2"
   },
   "devDependencies": {
+    "@types/async-retry": "^1.4.1",
     "@types/kafkajs": "^1.8.2",
     "@types/mongodb": "^3.3.1"
   }

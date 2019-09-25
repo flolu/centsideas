@@ -14,9 +14,9 @@ export class MessageBroker {
       retries: 10,
     },
   };
-  private kafka: Kafka;
-  private producer: Producer;
-  private consumer: Consumer;
+  private kafka: Kafka | undefined;
+  private producer: Producer | undefined;
+  private consumer: Consumer | undefined;
 
   constructor(private logger: Logger) {}
 
@@ -26,6 +26,7 @@ export class MessageBroker {
 
   send = async (topic: string = 'test-topic', messages: Message[] = []): Promise<RecordMetadata[]> => {
     if (!this.producer) {
+      if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
       this.producer = this.kafka.producer();
     }
     await this.producer.connect();
@@ -34,6 +35,7 @@ export class MessageBroker {
 
   subscribe = async (topic: string = 'test-topic') => {
     if (!this.consumer) {
+      if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
       this.consumer = this.kafka.consumer({
         groupId: 'test-group' + Number(Date.now()).toString(),
         rebalanceTimeout: 1000,

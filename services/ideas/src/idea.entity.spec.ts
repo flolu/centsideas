@@ -27,8 +27,8 @@ describe('Idea Entity', () => {
     const idea = Idea.create(fakeIdeaId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
 
-    expect(idea.currentState.draft.title).toEqual(fakeIdeaTitle);
-    expect(idea.currentState.draft.description).toEqual(fakeIdeaDescription);
+    expect(idea.currentState.draft && idea.currentState.draft.title).toEqual(fakeIdeaTitle);
+    expect(idea.currentState.draft && idea.currentState.draft.description).toEqual(fakeIdeaDescription);
   });
 
   it('should discard a draft', () => {
@@ -36,8 +36,8 @@ describe('Idea Entity', () => {
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.discardDraft();
 
-    expect(idea.currentState.draft.title).toEqual(null);
-    expect(idea.currentState.draft.description).toEqual(null);
+    expect(idea.currentState.draft && idea.currentState.draft.title).toEqual(null);
+    expect(idea.currentState.draft && idea.currentState.draft.description).toEqual(null);
   });
 
   it('should commit a draft', () => {
@@ -45,8 +45,8 @@ describe('Idea Entity', () => {
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
 
-    expect(idea.currentState.draft.title).toEqual(null);
-    expect(idea.currentState.draft.description).toEqual(null);
+    expect(idea.currentState.draft && idea.currentState.draft.title).toEqual(null);
+    expect(idea.currentState.draft && idea.currentState.draft.description).toEqual(null);
     expect(idea.currentState.title).toEqual(fakeIdeaTitle);
     expect(idea.currentState.description).toEqual(fakeIdeaDescription);
   });

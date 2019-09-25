@@ -1,16 +1,14 @@
 {
+  "extends": "../../tsconfig.settings.json",
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es6"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "types": ["reflect-metadata", "jest"],
     "rootDir": "src",
     "outDir": "dist",
-    "composite": true
+    "types": ["reflect-metadata", "node", "jest"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "references": [
+    { "path": "../../packages/enums" },
+    { "path": "../../packages/models" },
+    { "path": "../../packages/utils" },
+    { "path": "../../packages/event-sourcing" }
+  ]
 }

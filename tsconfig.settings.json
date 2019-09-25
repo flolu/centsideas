@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": true,
     "target": "es5",
     "lib": ["es6"],
     "module": "commonjs",
@@ -7,9 +8,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declarationMap": true,
-    "baseUrl": "./",
-    "paths": {
-      "@cents-ideas/*": ["packages/*/src"]
-    }
+    "composite": true
   }
 }

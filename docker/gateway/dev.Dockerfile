@@ -2,8 +2,10 @@ FROM node:lts-alpine
 
 WORKDIR /usr/app/src
 
-COPY ./packages/enums ./packages/enums
+COPY ./packages ./packages
 COPY ./services/gateway ./services/gateway
+
+COPY ./tsconfig.settings.json ./
 
 WORKDIR /usr/app/src/services/gateway
 CMD yarn start:dev

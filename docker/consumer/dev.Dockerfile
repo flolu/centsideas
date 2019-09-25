@@ -2,9 +2,10 @@ FROM node:lts-alpine
 
 WORKDIR /usr/app/src
 
-COPY ./packages/event-sourcing ./packages/event-sourcing
-COPY ./packages/utils ./packages/utils
+COPY ./packages ./packages
 COPY ./services/consumer ./services/consumer
+
+COPY ./tsconfig.settings.json ./
 
 WORKDIR /usr/app/src/services/consumer
 CMD yarn start:dev

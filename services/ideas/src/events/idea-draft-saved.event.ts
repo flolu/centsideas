@@ -1,5 +1,6 @@
 import { Event } from '@cents-ideas/event-sourcing';
-import { Idea, IIdeaState } from '../idea.entity';
+
+import { IIdeaState } from '../idea.entity';
 
 export class IdeaDraftSavedEvent extends Event<{
   title?: string;

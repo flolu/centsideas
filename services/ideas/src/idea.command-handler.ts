@@ -38,8 +38,8 @@ export class IdeaCommandHandler implements IIdeaCommandHandler {
 
   saveDraft = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
-    title = sanitizeHtml(title);
-    description = sanitizeHtml(description);
+    title = sanitizeHtml(title || '');
+    description = sanitizeHtml(description || '');
     /**
      * It is allowed to save invalid draft
      * But text shouldn't be longer than max length
@@ -62,7 +62,10 @@ export class IdeaCommandHandler implements IIdeaCommandHandler {
   commitDraft = async (ideaId: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
-    SaveIdeaPayloadRequiredError.validate(idea.persistedState.draft.title, idea.persistedState.draft.description);
+    SaveIdeaPayloadRequiredError.validate(
+      (idea.persistedState.draft && idea.persistedState.draft.title) || '',
+      (idea.persistedState.draft && idea.persistedState.draft.description) || '',
+    );
     IdeaTitleLengthError.validate(idea.persistedState.title);
     IdeaDescriptionLengthError.validate(idea.persistedState.description);
     idea.commitDraft();
@@ -83,8 +86,8 @@ export class IdeaCommandHandler implements IIdeaCommandHandler {
 
   update = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
-    title = sanitizeHtml(title);
-    description = sanitizeHtml(description);
+    title = sanitizeHtml(title || '');
+    description = sanitizeHtml(description || '');
     SaveIdeaPayloadRequiredError.validate(title, description);
     IdeaTitleLengthError.validate(title);
     IdeaDescriptionLengthError.validate(description);

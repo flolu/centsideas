@@ -1,5 +1,5 @@
 import { IServerEnvironment } from '.';
 
 export interface IServer {
-  start: (env: IServerEnvironment) => void;
+  start: (env: IServerEnvironment & any) => void;
 }

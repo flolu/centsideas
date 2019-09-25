@@ -1,4 +1,4 @@
-export const renameObjectProperty = <T = any>(object: T, from: string, to: string): T => {
+export const renameObjectProperty = (object: any, from: string, to: string): any => {
   if (from === to) {
     return object;
   }

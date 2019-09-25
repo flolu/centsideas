@@ -21,11 +21,11 @@ export class AppComponent {
   });
   ideas$: Observable<any[]>;
 
-  /* constructor(private service: IdeasService) {
+  constructor(private service: IdeasService) {
     this.ideas$ = this.service.fetchAll();
   }
 
   onCreate = () => {
     this.service.create(this.form.value);
-  }; */
+  };
 }

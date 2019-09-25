@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.1",
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.1",
     "@types/jest": "^24.0.18",
     "jest": "^24.9.0",

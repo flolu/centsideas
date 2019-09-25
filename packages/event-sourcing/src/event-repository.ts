@@ -29,15 +29,15 @@ export interface IEventRepository<Entity> {
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter
   implements IEventRepository<Entity> {
-  protected _Entity: IEntityConstructor<Entity>;
+  protected _Entity!: IEntityConstructor<Entity>;
 
-  private client: MongoClient;
-  private db: Db;
-  private eventCollection: Collection;
-  private snapshotCollection: Collection;
-  private counterCollection: Collection;
-  private namespace: string;
-  private snapshotThreshold: number;
+  private client!: MongoClient;
+  private db!: Db;
+  private eventCollection!: Collection;
+  private snapshotCollection!: Collection;
+  private counterCollection!: Collection;
+  private namespace!: string;
+  private snapshotThreshold!: number;
 
   private hasInitializedBeenCalled: boolean = false;
   private hasInitializationFinished: boolean = false;
@@ -145,7 +145,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
 
     const events: IEvent[] = await (snapshot ? this.getEventsAfterSnapshot(snapshot) : this.getEventStream(id));
 
-    const entity = new this._Entity(snapshot);
+    const entity = new this._Entity(snapshot || undefined);
     entity.pushEvents(...events);
     if (!entity.currentState.id) {
       throw entity.NotFoundError(id);
@@ -229,7 +229,10 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     const streamId = snapshot.state.id;
     const lastEventId = snapshot.lastEventId;
 
-    const lastEvent: IEvent = await this.eventCollection.findOne({ _id: lastEventId });
+    const lastEvent: IEvent | null = await this.eventCollection.findOne({ _id: lastEventId });
+    if (!lastEvent) {
+      return [];
+    }
     const lastEventNumber = lastEvent.eventNumber;
 
     return this.getEventStream(streamId, lastEventNumber);

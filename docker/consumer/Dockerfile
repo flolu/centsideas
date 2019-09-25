@@ -2,13 +2,17 @@ FROM node:lts-alpine
 
 WORKDIR /usr/app/src
 
+COPY package.json .
+COPY yarn.lock .
 COPY ./packages ./packages
 COPY ./services/consumer ./services/consumer
 
-COPY package.json .
-COPY ./tsconfig.settings.json ./
+RUN yarn install
 
-RUN yarn fire
+COPY ./tsconfig.settings.json ./
+COPY ./docker/consumer/tsconfig.json ./
+
+RUN yarn build
 
 WORKDIR /usr/app/src/services/consumer
 CMD yarn start:prod

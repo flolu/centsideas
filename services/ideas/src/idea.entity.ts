@@ -24,14 +24,14 @@ export interface IIdeaState {
   updatedAt: string | null;
   deleted: boolean;
   deletedAt: string | null;
-  draft: { title: string | null; description: string | null } | null;
+  draft: { title: string; description: string } | null;
 }
 
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
-    id: null,
-    title: null,
-    description: null,
+    id: '',
+    title: '',
+    description: '',
     createdAt: null,
     published: false,
     publishedAt: null,

@@ -10,8 +10,8 @@ import { throwStatement } from '@babel/types';
 export class EventRepositoryMock<Entity extends IEventEntity> implements IEventRepository<Entity> {
   private events: { [id: string]: IEvent[] } = {};
   private snapshots: { [id: string]: ISnapshot } = {};
-  private snapshotThreshold: number;
-  protected _Entity: IEntityConstructor<Entity>;
+  private snapshotThreshold: number = 100;
+  protected _Entity: IEntityConstructor<Entity> | undefined;
 
   initialize = (
     entity: IEntityConstructor<Entity>,
@@ -51,7 +51,8 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
 
     const events: IEvent[] = snapshot ? this.getEventsAfterSnapshot(snapshot) : this.getEventStream(id);
 
-    const entity = new this._Entity(snapshot);
+    if (!this._Entity) throw new Error('You need to initialize EventEntity (eventRepository.initialize())');
+    const entity = new this._Entity(snapshot || undefined);
     entity.pushEvents(...events);
     if (!entity.currentState.id) {
       throw entity.NotFoundError(id);
@@ -92,6 +93,7 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
       return false;
     }
     this.snapshots[streamId] = { lastEventId: lastEvent.id, state: entity.persistedState };
+    return true;
   };
 
   private getSnapshot = (streamId: string): ISnapshot | null => this.snapshots[streamId];
@@ -107,7 +109,10 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
     const streamId = snapshot.state.id;
     const lastEventId = snapshot.lastEventId;
 
-    const lastEvent: IEvent = this.events[streamId].find(e => e.id === lastEventId);
+    const lastEvent: IEvent | undefined = this.events[streamId].find(e => e.id === lastEventId);
+    if (!lastEvent) {
+      throw new Error(`Couldn't find events after snapshot with last event id: ${snapshot.lastEventId}`);
+    }
     const lastEventNumber = lastEvent.eventNumber;
 
     return this.getEventStream(streamId, lastEventNumber);
