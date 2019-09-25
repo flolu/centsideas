@@ -1,6 +1,6 @@
 {
   "name": "@cents-ideas/consumer",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "main": "dist/index.js",
   "license": "MIT",
   "private": true,
@@ -14,10 +14,10 @@
     "clean": "rimraf dist && rimraf coverage && rimraf node_modules"
   },
   "dependencies": {
-    "@cents-ideas/utils": "^0.1.0",
-    "@cents-ideas/event-sourcing": "^0.1.0",
-    "reflect-metadata": "^0.1.13",
-    "inversify": "^5.0.1"
+    "@cents-ideas/event-sourcing": "^0.2.0",
+    "@cents-ideas/utils": "^0.2.0",
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
