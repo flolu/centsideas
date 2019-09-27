@@ -10,7 +10,7 @@
     "fire": "yarn install && yarn build",
     "refire": "yarn clean && yarn fire",
     "start:dev": "npm-run-all --parallel build:watch start:docker:dev start:frontend",
-    "test": "lerna run test --ignore frontend",
+    "test": "lerna run test",
     "start": "yarn start:docker",
     "---": "---",
     "start:frontend": "lerna exec --scope frontend -- yarn start",

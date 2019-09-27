@@ -8,11 +8,9 @@ import { IdeasService } from './ideas.service';
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, ReactiveFormsModule /* HttpClientModule */],
+      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientModule],
       declarations: [AppComponent],
-      providers: [
-        /* IdeasService */
-      ],
+      providers: [IdeasService],
     }).compileComponents();
   }));
 
