@@ -1,6 +1,15 @@
 version: "3"
 # // TODO: build order
 services:
+  # frontend
+  frontend:
+    container_name: frontend
+    ports:
+      - 4000:4000
+    build:
+      context: ./
+      dockerfile: ./docker/frontend/Dockerfile
+
   # // FIXME: frontend
   # gateway
   gateway:

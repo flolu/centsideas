@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ideas
+spec:
+  selector:
+    matchLabels:
+      app: ideas
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ideas
+    spec:
+      containers:
+        - name: ideas
+          image: flolu/cents-ideas_ideas:latest
+          env:
+            - name: NODE_ENV
+              value: development
+            - name: LEVEL
+              value: info
+            - name: IDEAS_DATABASE_URL
+              value: mongodb://ideas-event-store:27017
+            - name: KAFKA_ADVERTISED_HOST_NAME
+              value: 172.18.0.1
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cents-ideas_ideas
+spec:
+  selector:
+    app: ideas
+  ports:
+    - name: http
+      port: 3000
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ideas-db
+spec:
+  selector:
+    matchLabels:
+      app: ideas-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ideas-db
+    spec:
+      containers:
+        - name: ideas-db
+          image: mongo:4.0
+          volumeMounts:
+            - name: persistent-db-storage
+              mountPath: /data/db
+      volumes:
+        - name: persistent-db-storage
+          persistentVolumeClaim:
+            claimName: database-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cents-ideas_ideas-db
+spec:
+  selector:
+    app: ideas-db
+  ports:
+    - name: mongo
+      port: 27017
+  type: ClusterIP

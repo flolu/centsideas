@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+spec:
+  selector:
+    matchLabels:
+      app: gateway
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: flolu/cents-ideas_gateway:latest
+          env:
+            - name: NODE_ENV
+              value: development
+            - name: LEVEL
+              value: debug
+            - name: IDEAS_SERVICE_HOST
+              value: cents-ideas.ideas:3000
+            - name: IDEAS_API_ROOT
+              value: ideas
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cents-ideas_gateway
+spec:
+  selector:
+    app: gateway
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
+      nodePort: 30000
+  type: NodePort

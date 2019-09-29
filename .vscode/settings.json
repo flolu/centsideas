@@ -39,5 +39,6 @@
     "unpublish",
     "upsert",
     "wurstmeister"
-  ]
+  ],
+  "docker.defaultRegistryPath": "flolu"
 }
