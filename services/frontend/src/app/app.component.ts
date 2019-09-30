@@ -5,8 +5,6 @@ import { Observable } from 'rxjs';
 
 import { IdeasService } from './ideas.service';
 
-// TODO prettier with angular
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

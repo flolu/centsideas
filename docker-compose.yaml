@@ -1,5 +1,4 @@
 version: "3"
-# // TODO: build order
 services:
   # frontend
   frontend:
