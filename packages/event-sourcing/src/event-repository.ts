@@ -44,7 +44,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
 
   constructor(private messageBroker: MessageBroker, private logger: Logger) {
     super();
-    this.messageBroker.initialize();
+    this.messageBroker.initialize({ brokers: [process.env.KAFKA_BROKER_HOST || '172.18.0.1:9092'] });
   }
 
   initialize = async (

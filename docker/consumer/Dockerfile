@@ -12,7 +12,5 @@ RUN yarn install
 COPY ./tsconfig.settings.json ./
 COPY ./docker/consumer/tsconfig.json ./
 
-RUN yarn build
-
 WORKDIR /usr/app/src/services/consumer
-CMD yarn start:prod
+CMD yarn start

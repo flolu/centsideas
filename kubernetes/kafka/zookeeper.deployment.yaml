@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zookeeper1
+spec:
+  replicas: 1
+  selector:
+    app: zookeeper1
+  template:
+    metadata:
+      labels:
+        app: zookeeper1
+    spec:
+      containers:
+        - name: zookeeper1
+          image: digitalwonderland/zookeeper
+          ports:
+            - containerPort: 2181
+            - containerPort: 2888
+            - containerPort: 3888
+          env:
+            - name: ZOOKEEPER_ID
+              value: "1"
+            - name: ZOOKEEPER_SERVER_1
+              value: zoo1
+            - name: ZOOKEEPER_SERVER_2
+              value: zoo2
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: zookeeper2
+spec:
+  replicas: 1
+  selector:
+    app: zookeeper2
+  template:
+    metadata:
+      labels:
+        app: zookeeper2
+    spec:
+      containers:
+        - name: zookeeper2
+          image: digitalwonderland/zookeeper
+          ports:
+            - containerPort: 2181
+            - containerPort: 2888
+            - containerPort: 3888
+          env:
+            - name: ZOOKEEPER_ID
+              value: "2"
+            - name: ZOOKEEPER_SERVER_1
+              value: zoo1
+            - name: ZOOKEEPER_SERVER_2
+              value: zoo2

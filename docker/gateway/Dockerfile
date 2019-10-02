@@ -14,7 +14,5 @@ RUN yarn install
 COPY ./tsconfig.settings.json ./
 COPY ./docker/gateway/tsconfig.json ./
 
-RUN yarn build
-
 WORKDIR /usr/app/src/services/gateway
-CMD yarn start:prod
+CMD yarn start

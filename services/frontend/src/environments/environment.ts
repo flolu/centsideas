@@ -2,8 +2,9 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// TODO dynamic env https://medium.com/faun/angular-on-docker-environment-specific-settings-1e92c3ad01e6
 export const environment = {
-  production: false
+  production: false,
 };
 
 /*

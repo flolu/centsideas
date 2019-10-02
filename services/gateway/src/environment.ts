@@ -20,6 +20,7 @@ const env: IGatewayEnvironment = {
   },
   api: {
     ideas: {
+      // TODO not as env var
       root: `/${process.env.IDEAS_API_ROOT}` || '/ideas',
     },
   },

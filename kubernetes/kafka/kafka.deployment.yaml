@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: kafka1
+spec:
+  replicas: 1
+  selector:
+    app: kafka1
+  template:
+    metadata:
+      labels:
+        app: kafka1
+    spec:
+      containers:
+        - name: kafka1
+          image: wurstmeister/kafka
+          ports:
+            - containerPort: 9092
+          env:
+            - name: KAFKA_BROKER_ID
+              value: "1"
+            - name: KAFKA_ADVERTISED_PORT
+              value: "9092"
+            - name: KAFKA_ADVERTISED_HOST_NAME
+              value: 172.31.25.198
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: zoo1:2181,zoo2:2181
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: kafka2
+spec:
+  replicas: 1
+  selector:
+    app: kafka2
+  template:
+    metadata:
+      labels:
+        app: kafka2
+    spec:
+      containers:
+        - name: kafka2
+          image: wurstmeister/kafka
+          ports:
+            - containerPort: 9092
+          env:
+            - name: KAFKA_BROKER_ID
+              value: "2"
+            - name: KAFKA_ADVERTISED_PORT
+              value: "9092"
+            - name: KAFKA_ADVERTISED_HOST_NAME
+              value: 172.31.26.5
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: zoo1:2181,zoo2:2181

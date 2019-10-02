@@ -14,24 +14,25 @@ spec:
     spec:
       containers:
         - name: ideas
-          image: flolu/cents-ideas_ideas:latest
+          image: registry.hub.docker.com/flolu/cents-ideas_ideas:0.2.1
+          imagePullPolicy: Always
           env:
             - name: NODE_ENV
               value: development
             - name: LEVEL
-              value: info
+              value: debug
             - name: IDEAS_DATABASE_URL
-              value: mongodb://ideas-event-store:27017
+              value: mongodb://cents-ideas-ideas-db:27017
             - name: KAFKA_ADVERTISED_HOST_NAME
-              value: 172.18.0.1
-            - name: KAFKA_ZOOKEEPER_CONNECT
-              value: zookeeper:2181
+              value: 172.31.25.198
+            #- name: KAFKA_ZOOKEEPER_CONNECT
+            #  value: zookeeper:2181
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cents-ideas_ideas
+  name: cents-ideas-ideas
 spec:
   selector:
     app: ideas
@@ -41,6 +42,7 @@ spec:
   type: ClusterIP
 
 ---
+# // TODO change name to ideas-event-store
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -70,7 +72,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cents-ideas_ideas-db
+  name: cents-ideas-ideas-db
 spec:
   selector:
     app: ideas-db

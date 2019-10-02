@@ -21,7 +21,9 @@ export class MessageBroker {
   constructor(private logger: Logger) {}
 
   initialize = (overrides: Partial<KafkaConfig> = {}) => {
-    this.kafka = new Kafka({ ...this.defaultConfig, ...overrides });
+    const config = { ...this.defaultConfig, ...overrides };
+    this.logger.debug(`initialize message broker with config: `, config, `(overrides: `, overrides, ')');
+    this.kafka = new Kafka(config);
   };
 
   send = async (topic: string = 'test-topic', messages: Message[] = []): Promise<RecordMetadata[]> => {

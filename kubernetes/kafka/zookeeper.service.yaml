@@ -1,0 +1,38 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: zoo1
+spec:
+  type: LoadBalancer
+  ports:
+    - name: port-2181
+      port: 2181
+      protocol: TCP
+    - name: port-2888
+      port: 2888
+      protocol: TCP
+    - name: port-3888
+      port: 3888
+      protocol: TCP
+  selector:
+    app: zookeeper1
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: zoo2
+spec:
+  type: LoadBalancer
+  ports:
+    - name: port-2181
+      port: 2181
+      protocol: TCP
+    - name: port-2888
+      port: 2888
+      protocol: TCP
+    - name: port-3888
+      port: 3888
+      protocol: TCP
+  selector:
+    app: zookeeper2
