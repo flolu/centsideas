@@ -9,7 +9,6 @@ import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
 import { IdeasService } from './ideas.service';
 
-// FIXME unit, integration, (performance) tests
 const bootstrap = () => {
   process.env.LOGGER_PREFIX = '💡';
   registerProviders(

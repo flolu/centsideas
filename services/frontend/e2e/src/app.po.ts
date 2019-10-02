@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-// TODO e2e with jest https://github.com/thymikee/jest-preset-angular/tree/master/example/e2e
+// FIXME e2e with jest https://github.com/thymikee/jest-preset-angular/tree/master/examKple/e2e
 
 export class AppPage {
   navigateTo() {
