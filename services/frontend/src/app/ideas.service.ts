@@ -3,9 +3,11 @@ import { HttpClient } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable()
 export class IdeasService {
-  private readonly url = 'http://localhost:3000';
+  private readonly url = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

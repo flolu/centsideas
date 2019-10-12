@@ -22,5 +22,7 @@ spec:
               value: debug
             - name: KAFKA_ADVERTISED_HOST_NAME
               value: 172.31.25.198
+            - name: KAFKA_BROKER_HOST
+              value: kafka-1-ip-service:9092
             - name: KAFKA_ZOOKEEPER_CONNECT
-              value: zookeeper:2181
+              value: zookeeper-ip-service:2181

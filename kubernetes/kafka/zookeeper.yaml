@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: zookeeper
+  template:
+    metadata:
+      labels:
+        component: zookeeper
+    spec:
+      containers:
+        - name: zookeeper
+          image: digitalwonderland/zookeeper
+          ports:
+            - containerPort: 2181
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: zookeeper
+  ports:
+    - name: zookeeper
+      port: 2181
+      targetPort: 2181
