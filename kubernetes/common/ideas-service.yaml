@@ -41,23 +41,22 @@ spec:
   type: ClusterIP
 
 ---
-# // TODO change name to ideas-event-store
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ideas-db
+  name: ideas-event-store
 spec:
   selector:
     matchLabels:
-      app: ideas-db
+      app: ideas-event-store
   replicas: 1
   template:
     metadata:
       labels:
-        app: ideas-db
+        app: ideas-event-store
     spec:
       containers:
-        - name: ideas-db
+        - name: ideas-event-store
           image: mongo:4.0
           volumeMounts:
             - name: persistent-db-storage
@@ -71,10 +70,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cents-ideas-ideas-db
+  name: cents-ideas-ideas-event-store
 spec:
   selector:
-    app: ideas-db
+    app: ideas-event-store
   ports:
     - name: mongo
       port: 27017

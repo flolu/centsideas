@@ -1,0 +1,16 @@
+# // FIXME readiness and liveness probes
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-config
+data:
+  # // TODO change to dev (but i need to create a third env in frontend to do this)
+  NODE_ENV: prod
+  LEVEL: debug
+  KAFKA_ADVERTISED_PORT: "9092"
+  KAFKA_ADVERTISED_HOST_NAME: 172.31.25.198
+  KAFKA_BROKER_HOST: kafka-1-ip-service:9092
+  KAFKA_ZOOKEEPER_CONNECT: zookeeper-ip-service:2181
+  IDEAS_DATABASE_URL: mongodb://cents-ideas-ideas-event-store:27017
+  IDEAS_SERVICE_HOST: cents-ideas-ideas:3000

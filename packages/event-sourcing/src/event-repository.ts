@@ -26,6 +26,8 @@ export interface IEventRepository<Entity> {
   generateUniqueId: () => Promise<string>;
 }
 
+// TODO event repository throws errors "cannot read 'distinct' of undefined when started before database"
+
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter
   implements IEventRepository<Entity> {

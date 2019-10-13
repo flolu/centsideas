@@ -11,11 +11,11 @@
 | Requirement             | Keywords                            | Importance | Status |
 | ----------------------- | ----------------------------------- | ---------- | ------ |
 | Event Sourcing          | CQRS, Event-Driven, Commands, Kafka | 🔥         | ⏳     |
-| Deployment              | CI, CD, Build Pipeline              | 🔥         | ❌     |
+| Deployment              | CI, CD, Build Pipeline, Rollback    | 🔥         | ❌     |
 | Test Driven Development | Unit Tests, Integration Tests       | 🔥         | ⏳     |
 | Microservices           | Small, Independent                  | 🔥         | ✅     |
 | Docker                  | Container                           | 🔥         | ✅     |
-| Kubernetes              | Container Orchestration             | 🔥         | ❌     |
+| Kubernetes              | Container Orchestration             | 🔥         | ⏳     |
 | Encryption              | HTTPs, Hashing, Safety              | 🔥         | ❌     |
 | Database(s)             | Storage, Event-Store                | 🔥         | ⏳     |
 | File Storage            | Storage                             | 🔥         | ❌     |
