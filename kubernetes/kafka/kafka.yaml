@@ -17,19 +17,23 @@ spec:
           image: wurstmeister/kafka
           ports:
             - containerPort: 9092
+          envFrom:
+            - configMapRef:
+                name: global-config
           env:
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-            - name: KAFKA_ADVERTISED_PORT
-              value: "9092"
-            - name: KAFKA_ZOOKEEPER_CONNECT
-              value: zookeeper-ip-service:2181
-            - name: KAFKA_ADVERTISED_PORT
-              value: "9092"
             - name: KAFKA_ADVERTISED_HOST_NAME
               value: $(MY_POD_IP)
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 
 ---
 apiVersion: v1
