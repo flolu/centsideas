@@ -63,6 +63,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     this.namespace = name;
 
     this.client = await retry(async () => {
+      this.logger.debug(`retry to connect to ${name} database`);
       const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true, useUnifiedTopology: true });
       return connection;
     });
@@ -259,7 +260,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     if (!this.hasInitializedBeenCalled) {
       throw new Error(`You need to call ${this.initialize.name} in the constructor of the EventRepository`);
     }
-    await retry(async () => this.hasInitializationFinished);
+    await retry(async () => this.initialize);
     return true;
   };
 }

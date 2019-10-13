@@ -4,6 +4,7 @@
 </h2>
 
 <h2>Create Idea</h2>
+<pre>envFile: {{ envFile$ | async | json }}</pre>
 <form
     [formGroup]="form"
     (submit)='onCreate()'

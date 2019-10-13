@@ -5,7 +5,6 @@ kind: ConfigMap
 metadata:
   name: global-config
 data:
-  # // TODO change to dev (but i need to create a third env in frontend to do this)
   NODE_ENV: prod
   LEVEL: debug
   KAFKA_ADVERTISED_PORT: "9092"
