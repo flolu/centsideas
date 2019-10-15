@@ -5,14 +5,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { IdeasService } from './ideas.service';
+import { SettingsService } from './settings.service';
+import { SettingsMockService } from './settings.mock.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientModule],
       declarations: [AppComponent],
-      providers: [IdeasService],
+      providers: [IdeasService, SettingsService],
     }).compileComponents();
+    TestBed.overrideProvider(SettingsService, { useValue: new SettingsMockService() });
   }));
 
   it('should create the app', () => {

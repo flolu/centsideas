@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { map, tap, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
-import { environment } from 'src/environments/environment';
+import { SettingsService } from './settings.service';
 
 @Injectable()
 export class IdeasService {
-  private readonly url = environment.apiUrl;
+  private readonly url = this.settingsService.settings.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private settingsService: SettingsService) {}
 
   fetchAll = () =>
     this.http
