@@ -8,6 +8,7 @@ data:
   # // TODO change to dev (but i need to create a third env in frontend to do this)
   NODE_ENV: prod
   LEVEL: debug
+  API_URL: http://MINIKUBE_IP:30000 # // TODO get ip of minikube cluster
   KAFKA_ADVERTISED_PORT: "9092"
   KAFKA_ADVERTISED_HOST_NAME: 172.31.25.198
   KAFKA_BROKER_HOST: kafka-1-ip-service:9092

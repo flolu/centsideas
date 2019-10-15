@@ -7,6 +7,7 @@ metadata:
 data:
   NODE_ENV: prod
   LEVEL: debug
+  API_URL: http://localhost:3000 # // TODO get ip of gateway load balancer
   KAFKA_ADVERTISED_PORT: "9092"
   KAFKA_ADVERTISED_HOST_NAME: 172.31.25.198
   KAFKA_BROKER_HOST: kafka-1-ip-service:9092

@@ -17,6 +17,7 @@ export class SettingsService {
   initializeApp = () =>
     new Promise(async resolve => {
       this.settings = await this.http.get<IAppSettings>(`/assets/${this.filename}`).toPromise();
+      console.log('initialize angular app with settings: ', this.settings);
       resolve();
     });
 }

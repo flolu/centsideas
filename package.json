@@ -19,7 +19,8 @@
     "build:watch": "tsc --build --watch",
     "tsc": "tsc",
     "start:docker:dev": "docker-compose -f docker-compose.dev.yaml up --build",
-    "start:docker": "docker-compose up --build"
+    "start:docker": "docker-compose up --build",
+    "start:docker:frontend": "docker-compose up --build frontend"
   },
   "devDependencies": {
     "lerna": "^3.16.4",

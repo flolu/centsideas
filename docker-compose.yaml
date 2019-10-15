@@ -8,6 +8,7 @@ services:
     build:
       context: ./
       dockerfile: ./docker/frontend/Dockerfile
+    env_file: ./env/.env.prod
 
   # gateway
   gateway:
