@@ -26,8 +26,6 @@ export interface IEventRepository<Entity> {
   generateUniqueId: () => Promise<string>;
 }
 
-// TODO event repository throws errors "cannot read 'distinct' of undefined when started before database"
-
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter
   implements IEventRepository<Entity> {
@@ -42,72 +40,79 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   private snapshotThreshold!: number;
 
   private hasInitializedBeenCalled: boolean = false;
-  private hasInitializationFinished: boolean = false;
+  private hasInitialized: boolean = false;
 
   constructor(private messageBroker: MessageBroker, private logger: Logger) {
     super();
     this.messageBroker.initialize({ brokers: [process.env.KAFKA_BROKER_HOST || '172.18.0.1:9092'] });
   }
 
-  initialize = async (
+  initialize = (
     entity: IEntityConstructor<Entity>,
     url: string,
     name: string,
     minNumberOfEventsToCreateSnapshot: number = 100,
-  ) => {
-    this.hasInitializedBeenCalled = true;
-    this.logger.debug(`initialize ${name} event repository (${url})`);
+  ): Promise<any> => {
+    return new Promise(async (res, rej) => {
+      try {
+        this.hasInitializedBeenCalled = true;
+        this.logger.debug(`initialize ${name} event repository (${url})`);
 
-    this.snapshotThreshold = minNumberOfEventsToCreateSnapshot;
-    this._Entity = entity;
-    this.namespace = name;
+        this.snapshotThreshold = minNumberOfEventsToCreateSnapshot;
+        this._Entity = entity;
+        this.namespace = name;
 
-    this.client = await retry(async () => {
-      this.logger.debug(`retry to connect to ${name} database`);
-      const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true, useUnifiedTopology: true });
-      return connection;
-    });
-    this.db = this.client.db(name);
-    this.logger.debug(`connected to ${name} database`);
+        this.client = await retry(async () => {
+          this.logger.debug(`retry to connect to ${name} database`);
+          const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true, useUnifiedTopology: true });
+          return connection;
+        });
+        this.db = this.client.db(name);
+        this.logger.debug(`connected to ${name} database`);
 
-    this.db.on('close', () => {
-      this.logger.info(`disconnected from ${name} database`);
-      this.emit('disconnect');
-    });
+        this.db.on('close', () => {
+          this.logger.info(`disconnected from ${name} database`);
+          this.emit('disconnect');
+        });
 
-    this.eventCollection = this.db.collection(`${name}_events`);
-    this.snapshotCollection = this.db.collection(`${name}_snapshots`);
-    this.counterCollection = this.db.collection(`${name}_counters`);
+        this.eventCollection = this.db.collection(`${name}_events`);
+        this.snapshotCollection = this.db.collection(`${name}_snapshots`);
+        this.counterCollection = this.db.collection(`${name}_counters`);
 
-    await this.eventCollection.createIndexes([
-      {
-        key: { aggregateId: 1 },
-        name: `${this.namespace}_aggregateId`,
-      },
-      {
-        key: { aggregateId: 1, eventNumber: 1 },
-        name: `${this.namespace}_aggregateId_eventNumber`,
-        unique: true,
-      },
-    ]);
+        await this.eventCollection.createIndexes([
+          {
+            key: { aggregateId: 1 },
+            name: `${this.namespace}_aggregateId`,
+          },
+          {
+            key: { aggregateId: 1, eventNumber: 1 },
+            name: `${this.namespace}_aggregateId_eventNumber`,
+            unique: true,
+          },
+        ]);
 
-    await this.snapshotCollection.createIndexes([
-      {
-        key: { aggregateId: 1 },
-        unique: true,
-      },
-    ]);
+        await this.snapshotCollection.createIndexes([
+          {
+            key: { aggregateId: 1 },
+            unique: true,
+          },
+        ]);
 
-    try {
-      await this.counterCollection.insertOne({ _id: 'events', seq: 0 });
-    } catch (error) {
-      if (!(error.code === 11000 && error.message.includes('index: _id_ dup key:'))) {
-        throw error;
+        try {
+          await this.counterCollection.insertOne({ _id: 'events', seq: 0 });
+        } catch (error) {
+          if (!(error.code === 11000 && error.message.includes('index: _id_ dup key:'))) {
+            throw error;
+          }
+        }
+
+        this.logger.debug(`${name} event repository initialized`);
+        this.hasInitialized = true;
+        res();
+      } catch (error) {
+        rej(error);
       }
-    }
-
-    this.hasInitializationFinished = true;
-    this.logger.debug(`${name} event repository initialized`);
+    });
   };
 
   save = async (entity: Entity) => {
@@ -116,7 +121,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     const lastPersistedEvent = await this.getLastEventOfStream(streamId);
     let eventNumber = (lastPersistedEvent && lastPersistedEvent.eventNumber) || 0;
     if (lastPersistedEvent && entity.lastPersistedEventId !== lastPersistedEvent.id) {
-      // FIXME retry once (issue: command handler has to retry, not save)
+      // FIXME retry once (issue: command handler has to retry, not save)... maybe send response to gateway with { retry: true }
       throw new Error('concurrency issue!');
     }
 
@@ -160,8 +165,8 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
 
   // FIXME create projection db when this gets to intense
   listAll = async (): Promise<Entity[]> => {
-    const start = new Date();
     await this.waitUntilInitialized();
+    const start = new Date();
     const ids: string[] = await this.eventCollection.distinct('aggregateId', {});
     const ideas = await Promise.all(ids.map(id => this.findById(id, false)));
     const end = new Date();
@@ -256,11 +261,16 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     return true;
   };
 
-  private waitUntilInitialized = async (): Promise<boolean> => {
-    if (!this.hasInitializedBeenCalled) {
-      throw new Error(`You need to call ${this.initialize.name} in the constructor of the EventRepository`);
-    }
-    await retry(async () => this.initialize);
-    return true;
+  private waitUntilInitialized = (): Promise<boolean> => {
+    return new Promise(async res => {
+      if (!this.hasInitializedBeenCalled) {
+        throw new Error(`You need to call ${this.initialize.name} in the constructor of the EventRepository`);
+      }
+      if (this.hasInitialized) {
+        return res(true);
+      }
+      await retry(async () => await this.initialize);
+      res(true);
+    });
   };
 }
