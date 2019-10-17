@@ -1,5 +1,3 @@
-# // FIXME automate creation of those files
-
 FROM node:lts-alpine
 
 WORKDIR /usr/app/src

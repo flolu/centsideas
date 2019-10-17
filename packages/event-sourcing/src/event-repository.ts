@@ -163,7 +163,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     return entity.confirmEvents();
   };
 
-  // FIXME create projection db when this gets to intense
+  // TODO create projection db for this
   listAll = async (): Promise<Entity[]> => {
     await this.waitUntilInitialized();
     const start = new Date();

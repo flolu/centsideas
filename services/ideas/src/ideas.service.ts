@@ -149,7 +149,7 @@ export class IdeasService {
       }
     });
 
-  // FIXME error handling or move to projection database
+  // TODO  move to projection database
   getAllIdeas = (_req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async resolve => {
       const _loggerName = 'get all';

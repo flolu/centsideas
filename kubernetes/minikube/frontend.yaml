@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: registry.hub.docker.com/flolu/cents-ideas_frontend:0.2.3
+          image: registry.hub.docker.com/flolu/cents-ideas_frontend:0.2.4
           envFrom:
             - configMapRef:
                 name: global-config
