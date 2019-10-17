@@ -4,7 +4,10 @@
 
 ## Environment Variables
 
+> Example for local development with docker-compose
+
 ```
+NODE_ENV=dev
 IDEAS_SERVICE_HOST=ideas:3000
 ```
 

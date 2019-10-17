@@ -6,7 +6,7 @@
 ⏳ Time
 🌍 Scale
 
-## Requirements
+## Claims
 
 | Requirement             | Keywords                            | Importance | Status |
 | ----------------------- | ----------------------------------- | ---------- | ------ |
@@ -51,12 +51,24 @@
 
 ## Requirements
 
+### Required
+
 - node.js
 - docker
 - docker-compose
 - yarn
-- _minikube_
-- _kubectl_
+
+### Optional
+
+- minikube
+- kubectl
+
+### Recommended VSCode Plugins
+
+- [Todo Tree](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree)
+- [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
+- [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools)
+- [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter)
 
 ## Setup
 
@@ -71,13 +83,26 @@ yarn start:dev
 > Starts `minikube` for development of container orchestration with Kubernetes
 
 ```
-not configured yet
+minikube start
+kubectl apply -f ./kubernetes/common
+kubectl apply -f ./kubernetes/minikube
+
+# get ip
+minikube ip
+
+# open browser http://<IP>:30001
 ```
 
 ## Testing
 
 ```
 yarn test
+```
+
+## Release new Version
+
+```
+lerna version
 ```
 
 ## Deployment

@@ -2,7 +2,10 @@
 
 ## Environment Variables
 
+> Example for local development with docker-compose
+
 ```
+NODE_ENV=dev
 IDEAS_DATABASE_URL=mongodb://ideas-event-store:27017
 ```
 
