@@ -12,8 +12,6 @@
     "@cents-ideas/models": "^0.3.0",
     "express": "^4.17.1",
     "inversify": "^5.0.1",
-    "pino": "^5.13.2",
-    "pino-pretty": "^3.2.1",
     "sanitize-html": "^1.20.1",
     "shortid": "^2.2.15"
   },
