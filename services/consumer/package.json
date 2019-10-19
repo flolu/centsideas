@@ -13,10 +13,13 @@
     "clean": "rimraf dist && rimraf coverage && rimraf node_modules"
   },
   "dependencies": {
+    "@cents-ideas/enums": "^0.3.0",
     "@cents-ideas/event-sourcing": "^0.3.0",
     "@cents-ideas/utils": "^0.3.0",
+    "async-retry": "^1.2.3",
     "inversify": "^5.0.1",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "mongodb": "^3.3.2"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
@@ -24,7 +27,8 @@
     "nodemon": "^1.19.1",
     "rimraf": "^3.0.0",
     "ts-node": "^8.3.0",
-    "typescript": "^3.6.2"
+    "typescript": "^3.6.2",
+    "@types/mongodb": "^3.3.1"
   },
   "jest": {
     "moduleFileExtensions": [

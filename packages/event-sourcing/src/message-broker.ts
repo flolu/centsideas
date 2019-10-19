@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 import { logLevel, Kafka, Producer, Consumer, KafkaConfig, Message, RecordMetadata } from 'kafkajs';
 
 import { Logger } from '@cents-ideas/utils';
+import { IEvent } from '.';
 
 @injectable()
 export class MessageBroker {
@@ -32,10 +33,12 @@ export class MessageBroker {
       this.producer = this.kafka.producer();
     }
     await this.producer.connect();
+    this.logger.debug('send a message to topic', topic);
     return this.producer.send({ topic, messages });
   };
 
-  subscribe = async (topic: string = 'test-topic') => {
+  // FIXME use rxjs
+  subscribe = async (topic: string = 'test-topic', callback: (event: IEvent) => void) => {
     if (!this.consumer) {
       if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
       this.consumer = this.kafka.consumer({
@@ -47,8 +50,9 @@ export class MessageBroker {
     await this.consumer.subscribe({ topic });
     await this.consumer.run({
       eachMessage: async ({ message }) => {
-        const payload = JSON.parse(message.value.toString());
-        this.logger.info(`consumed ${payload.name} event`);
+        const event: IEvent = JSON.parse(message.value.toString());
+        this.logger.debug(`consumed ${event.name} event`);
+        callback(event);
       },
     });
   };

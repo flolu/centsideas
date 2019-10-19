@@ -1,6 +1,8 @@
 import * as pino from 'pino';
 import { injectable } from 'inversify';
 
+// TODO colors like gltf-converter
+
 @injectable()
 export class Logger {
   private logger: pino.Logger;

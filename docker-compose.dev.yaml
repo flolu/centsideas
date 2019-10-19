@@ -1,5 +1,18 @@
 version: "3"
 services:
+  # kafka
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper:latest
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka:2.11-1.1.0
+    ports:
+      - 9092:9092
+    env_file: ./env/.env.dev
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   # gateway
   gateway:
     container_name: gateway
@@ -25,6 +38,9 @@ services:
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
     env_file: ./env/.env.dev
+  projection-database:
+    container_name: projection-database
+    image: mongo:4.2
 
   # ideas
   ideas:
@@ -40,20 +56,3 @@ services:
   ideas-event-store:
     container_name: ideas-event-store
     image: mongo:4.2
-    ports:
-      - 27017:27017
-
-  # kafka
-  zookeeper:
-    container_name: zookeeper
-    image: wurstmeister/zookeeper:latest
-    ports:
-      - 2181:2181
-  kafka:
-    container_name: kafka
-    image: wurstmeister/kafka:2.11-1.1.0
-    ports:
-      - 9092:9092
-    env_file: ./env/.env.dev
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock

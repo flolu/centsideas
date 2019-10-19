@@ -1,4 +1,5 @@
 import { Event } from '@cents-ideas/event-sourcing';
+import { IdeaEvents } from '@cents-ideas/enums';
 
 import { IIdeaState } from '../idea.entity';
 
@@ -6,7 +7,7 @@ export class IdeaUpdatedEvent extends Event<{
   title?: string;
   description?: string;
 }> {
-  static readonly eventName: string = 'idea-updated';
+  static readonly eventName: string = IdeaEvents.IdeaUpdated;
 
   constructor(ideaId: string, title?: string, description?: string) {
     super(IdeaUpdatedEvent.eventName, { title, description }, ideaId);

@@ -1,9 +1,10 @@
 import { Event } from '@cents-ideas/event-sourcing';
+import { IdeaEvents } from '@cents-ideas/enums';
 
 import { IIdeaState } from '../idea.entity';
 
 export class IdeaCreatedEvent extends Event<{ ideaId: string }> {
-  static readonly eventName: string = 'idea-crated';
+  static readonly eventName: string = IdeaEvents.IdeaCreated;
 
   constructor(ideaId: string) {
     super(IdeaCreatedEvent.eventName, { ideaId }, ideaId);

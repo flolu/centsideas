@@ -5,6 +5,7 @@ import { getProvider, registerProviders, Logger } from '@cents-ideas/utils';
 
 import { ConsumerServer } from './consumer.server';
 import env from './environment';
+import { ProjectionDatabase } from './projection-database';
 
 // TODO convert consumer service into aggregate db service
 /**
@@ -12,7 +13,7 @@ import env from './environment';
  */
 const bootstrap = () => {
   process.env.LOGGER_PREFIX = '🍝';
-  registerProviders(Logger, MessageBroker, ConsumerServer);
+  registerProviders(Logger, MessageBroker, ConsumerServer, ProjectionDatabase);
   const server: ConsumerServer = getProvider(ConsumerServer);
   server.start(env);
 };

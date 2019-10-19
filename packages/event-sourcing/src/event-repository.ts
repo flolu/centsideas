@@ -137,7 +137,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       } event store`,
     );
 
-    await Promise.all(appendedEvents.map(e => this.messageBroker.send('test-topic', [{ value: JSON.stringify(e) }])));
+    await Promise.all(appendedEvents.map(e => this.messageBroker.send(this.namespace, [{ value: JSON.stringify(e) }])));
 
     for (const event of appendedEvents) {
       if (event.eventNumber % this.snapshotThreshold === 0) {
