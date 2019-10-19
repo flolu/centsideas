@@ -20,10 +20,13 @@ export class GatewayServer implements IServer {
     const { port } = env;
     const ideasApiRoot = env.api.ideas.root;
     const ideasHost = env.hosts.ideas;
+    const consumerHost = env.hosts.consumer;
 
     this.app.use(bodyParser.json());
     // FIXME whitelist in prod mode
     this.app.use(cors());
+
+    this.app.get('/consumer', this.expressAdapter.makeJsonAdapter(`${consumerHost}`));
 
     this.app.post(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/create`));
     this.app.put(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/update`));

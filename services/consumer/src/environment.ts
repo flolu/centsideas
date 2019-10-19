@@ -7,6 +7,7 @@ export interface IConsumerEnvironment extends IServerEnvironment {
   database: {
     url: string;
   };
+  port: number;
 }
 
 const env: IConsumerEnvironment = {
@@ -17,6 +18,7 @@ const env: IConsumerEnvironment = {
   database: {
     url: process.env.PROJECTION_DATABASE_URL || 'mongodb://projection-database:27017',
   },
+  port: 3000,
 };
 
 export default env;
