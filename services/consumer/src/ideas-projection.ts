@@ -1,3 +1,4 @@
+import { Collection } from 'mongodb';
 import { injectable } from 'inversify';
 
 import { Logger, renameObjectProperty } from '@cents-ideas/utils';
@@ -12,163 +13,187 @@ import {
   IIdeaUnpublishedEvent,
   IIdeaDeletedEvent,
   IIdeaUpdatedEvent,
+  IIdeaViewModel,
 } from '@cents-ideas/models';
 
 import { ProjectionDatabase } from './projection-database';
 
 @injectable()
 export class IdeasProjection {
-  constructor(private logger: Logger, private projectionDatabase: ProjectionDatabase) {}
+  private ideasCollection!: Collection;
+
+  constructor(private logger: Logger, private projectionDatabase: ProjectionDatabase) {
+    this.initialize();
+  }
+
+  private initialize = async () => {
+    this.ideasCollection = await this.projectionDatabase.ideas();
+  };
 
   // FIXME maybe utilize same reducer as in ideas service??!?!?!?
-  // TODO update timestamps, too
-  // TODO types
-  // TODO typedEvent.id does not exist but is called _id
   handleEvent = async (event: IEvent) => {
+    if (!this.ideasCollection) {
+      this.ideasCollection = await this.projectionDatabase.ideas();
+    }
     this.logger.debug('handle incoming ideas event', event);
-    const ideas = await this.projectionDatabase.ideas();
     switch (event.name) {
-      case IdeaEvents.IdeaCreated: {
-        const typedEvent: IEvent<IIdeaCreatedEvent> = event;
-        const idea = {
-          id: event.aggregateId,
-          title: '',
-          description: '',
-          createdAt: typedEvent.timestamp,
-          published: false,
-          publishedAt: null,
-          unpublishedAt: null,
-          updatedAt: null,
-          deleted: false,
-          deletedAt: null,
+      case IdeaEvents.IdeaCreated:
+        return this.ideaCreated(event);
+      case IdeaEvents.IdeaDraftSaved:
+        return this.ideaDraftSaved(event);
+      case IdeaEvents.IdeaDraftDiscarded:
+        return this.ideaDraftDiscarded(event);
+      case IdeaEvents.IdeaDraftCommitted:
+        return this.ideaDraftCommitted(event);
+      case IdeaEvents.IdeaPublished:
+        return this.ideaPublished(event);
+      case IdeaEvents.IdeaUnpublished:
+        return this.ideaUnpublished(event);
+      case IdeaEvents.IdeaDeleted:
+        return this.ideaDeleted(event);
+      case IdeaEvents.IdeaUpdated:
+        return this.ideaUpdated(event);
+    }
+  };
+
+  private ideaCreated = async (event: IEvent<IIdeaCreatedEvent>) => {
+    const idea: IIdeaViewModel = {
+      id: event.aggregateId,
+      title: '',
+      description: '',
+      createdAt: event.timestamp,
+      published: false,
+      publishedAt: null,
+      unpublishedAt: null,
+      updatedAt: null,
+      deleted: false,
+      deletedAt: null,
+      draft: null,
+      lastEvent: {
+        number: event.eventNumber,
+        id: event.id,
+      },
+    };
+    await this.ideasCollection.insertOne(renameObjectProperty(idea, 'id', '_id'));
+  };
+
+  private ideaDraftSaved = async (event: IEvent<IIdeaDraftSavedEvent>) => {
+    const current: IIdeaViewModel | null = await this.ideasCollection.findOne({ _id: event.aggregateId });
+    if (!current) return;
+    await this.ideasCollection.findOneAndUpdate(
+      { _id: event.aggregateId },
+      {
+        $set: {
+          draft: {
+            ...current.draft,
+            title: event.data.title || (current.draft && current.draft.title) || '',
+            description: event.data.description || (current.draft && current.draft.description) || '',
+          },
+          lastEvent: {
+            number: event.eventNumber,
+            id: event.id,
+          },
+        },
+      },
+    );
+  };
+
+  private ideaDraftCommitted = async (event: IEvent<IIdeaDraftCommittedEvent>) => {
+    const current: IIdeaViewModel | null = await this.ideasCollection.findOne({ _id: event.aggregateId });
+    if (!current) return;
+    await this.ideasCollection.findOneAndUpdate(
+      { _id: event.aggregateId },
+      {
+        $set: {
+          draft: null,
+          title: (current.draft && current.draft.title) || '',
+          description: (current.draft && current.draft.description) || '',
+          updatedAt: event.timestamp,
+          lastEvent: {
+            number: event.eventNumber,
+            id: event.id,
+          },
+        },
+      },
+    );
+  };
+
+  private ideaDraftDiscarded = async (event: IEvent<IIdeaDraftDiscardedEvent>) => {
+    await this.ideasCollection.findOneAndUpdate(
+      { _id: event.aggregateId },
+      {
+        $set: {
           draft: null,
           lastEvent: {
-            number: typedEvent.eventNumber,
-            id: typedEvent.id,
+            number: event.eventNumber,
+            id: event.id,
           },
-        };
-        await ideas.insertOne(renameObjectProperty(idea, 'id', '_id'));
-        break;
-      }
-      case IdeaEvents.IdeaDraftSaved: {
-        const typedEvent: IEvent<IIdeaDraftSavedEvent> = event;
-        await ideas.findOneAndUpdate(
-          { _id: typedEvent.aggregateId },
-          {
-            $set: {
-              draft: typedEvent.data,
-              lastEvent: {
-                number: typedEvent.eventNumber,
-                id: typedEvent.id,
-              },
-            },
-          },
-        );
-        break;
-      }
-      case IdeaEvents.IdeaDraftDiscarded: {
-        const typedEvent: IEvent<IIdeaDraftDiscardedEvent> = event;
-        await ideas.findOneAndUpdate(
-          { _id: typedEvent.aggregateId },
-          {
-            $set: {
-              draft: null,
-              lastEvent: {
-                number: typedEvent.eventNumber,
-                id: typedEvent.id,
-              },
-            },
-          },
-        );
-        break;
-      }
-      case IdeaEvents.IdeaDraftCommitted: {
-        const typedEvent: IEvent<IIdeaDraftCommittedEvent> = event;
-        const current = await ideas.findOne({ _id: typedEvent.aggregateId });
-        await ideas.findOneAndUpdate(
-          { _id: typedEvent.aggregateId },
-          {
-            $set: {
-              draft: null,
-              title: current.draft.title,
-              description: current.draft.description,
-              lastEvent: {
-                number: typedEvent.eventNumber,
-                id: typedEvent.id,
-              },
-            },
-          },
-        );
-        break;
-      }
-      case IdeaEvents.IdeaPublished: {
-        const typedEvent: IEvent<IIdeaPublishedEvent> = event;
-        await ideas.findOneAndUpdate(
-          { _id: typedEvent.aggregateId },
-          {
-            $set: {
-              published: true,
-              unpublishedAt: typedEvent.timestamp,
-              lastEvent: {
-                number: typedEvent.eventNumber,
-                id: typedEvent.id,
-              },
-            },
-          },
-        );
-        break;
-      }
-      case IdeaEvents.IdeaUnpublished: {
-        const typedEvent: IEvent<IIdeaUnpublishedEvent> = event;
-        await ideas.findOneAndUpdate(
-          { _id: typedEvent.aggregateId },
-          {
-            $set: {
-              published: false,
-              publishedAt: typedEvent.timestamp,
-              lastEvent: {
-                number: typedEvent.eventNumber,
-                id: typedEvent.id,
-              },
-            },
-          },
-        );
-        break;
-      }
-      case IdeaEvents.IdeaDeleted: {
-        const typedEvent: IEvent<IIdeaDeletedEvent> = event;
-        await ideas.findOneAndUpdate(
-          { _id: typedEvent.aggregateId },
-          {
-            $set: {
-              deleted: true,
-              deletedAt: typedEvent.timestamp,
-              lastEvent: {
-                number: typedEvent.eventNumber,
-                id: typedEvent.id,
-              },
-            },
-          },
-        );
-        break;
-      }
-      case IdeaEvents.IdeaUpdated: {
-        const typedEvent: IEvent<IIdeaUpdatedEvent> = event;
-        let update: any = {
+        },
+      },
+    );
+  };
+
+  private ideaUnpublished = async (event: IEvent<IIdeaUnpublishedEvent>) => {
+    await this.ideasCollection.findOneAndUpdate(
+      { _id: event.aggregateId },
+      {
+        $set: {
+          published: false,
+          publishedAt: event.timestamp,
           lastEvent: {
-            number: typedEvent.eventNumber,
-            id: typedEvent.id,
+            number: event.eventNumber,
+            id: event.id,
           },
-        };
-        if (typedEvent.data.title) {
-          update['title'] = typedEvent.data.title;
-        }
-        if (typedEvent.data.description) {
-          update['description'] = typedEvent.data.description;
-        }
-        await ideas.findOneAndUpdate({ _id: typedEvent.aggregateId }, { $set: update });
-        break;
-      }
-    }
+        },
+      },
+    );
+  };
+
+  private ideaPublished = async (event: IEvent<IIdeaPublishedEvent>) => {
+    await this.ideasCollection.findOneAndUpdate(
+      { _id: event.aggregateId },
+      {
+        $set: {
+          published: true,
+          unpublishedAt: event.timestamp,
+          lastEvent: {
+            number: event.eventNumber,
+            id: event.id,
+          },
+        },
+      },
+    );
+  };
+
+  private ideaDeleted = async (event: IEvent<IIdeaDeletedEvent>) => {
+    await this.ideasCollection.findOneAndUpdate(
+      { _id: event.aggregateId },
+      {
+        $set: {
+          deleted: true,
+          deletedAt: event.timestamp,
+          lastEvent: {
+            number: event.eventNumber,
+            id: event.id,
+          },
+        },
+      },
+    );
+  };
+
+  private ideaUpdated = async (event: IEvent<IIdeaUpdatedEvent>) => {
+    const current: IIdeaViewModel | null = await this.ideasCollection.findOne({ _id: event.aggregateId });
+    if (!current) return;
+
+    await this.ideasCollection.findOneAndUpdate(
+      { _id: event.aggregateId },
+      {
+        $set: {
+          title: event.data.title || current.title,
+          description: event.data.description || current.description,
+          updatedAt: event.timestamp,
+        },
+      },
+    );
   };
 }
