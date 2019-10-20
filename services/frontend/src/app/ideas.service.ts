@@ -15,7 +15,7 @@ export class IdeasService {
     console.log('fetch all ideas from ', `${this.url}/ideas`);
     return this.http
       .get(`${this.url}/ideas`)
-      .pipe(map(response => (response as any).found.filter(idea => !idea.deleted && idea.published)));
+      .pipe(map(response => (response as any).found /* .filter(idea => !idea.deleted && idea.published)*/));
   };
 
   create = (payload: any) => {

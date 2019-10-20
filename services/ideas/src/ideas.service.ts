@@ -2,10 +2,9 @@ import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@cents-ideas/enums';
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
-import { Logger } from '@cents-ideas/utils';
+import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { IQueryIdeaDto, ISaveIdeaDto, IUpdateIdeaDraftDto } from './dtos/ideas.dto';
-import { handleHttpResponseError } from './errors/http-response-error-handler';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
 
@@ -141,40 +140,6 @@ export class IdeasService {
         resolve({
           status: HttpStatusCodes.Accepted,
           body: { deleted: idea.persistedState },
-          headers: {},
-        });
-      } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
-        resolve(handleHttpResponseError(error));
-      }
-    });
-
-  // TODO  move to projection database
-  getAllIdeas = (_req: HttpRequest): Promise<HttpResponse> =>
-    new Promise(async resolve => {
-      const _loggerName = 'get all';
-      try {
-        this.logger.info(_loggerName);
-        const ideas = await this.repository.listAll();
-        resolve({
-          status: HttpStatusCodes.Accepted,
-          body: { found: ideas.map(i => i.persistedState) },
-          headers: {},
-        });
-      } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
-        resolve(handleHttpResponseError(error));
-      }
-    });
-  getIdeaById = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
-    new Promise(async resolve => {
-      const _loggerName = 'get all';
-      try {
-        this.logger.info(_loggerName);
-        const idea = await this.repository.findById(req.params.id);
-        resolve({
-          status: HttpStatusCodes.Accepted,
-          body: { found: idea.persistedState },
           headers: {},
         });
       } catch (error) {

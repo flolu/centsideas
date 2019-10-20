@@ -2,12 +2,12 @@ version: "3"
 services:
   # kafka
   zookeeper:
-    container_name: zookeeper
+    # container_name: zookeeper
     image: wurstmeister/zookeeper:latest
     logging:
       driver: none
   kafka:
-    container_name: kafka
+    # container_name: kafka
     image: wurstmeister/kafka:2.11-1.1.0
     ports:
       - 9092:9092
@@ -19,7 +19,7 @@ services:
 
   # gateway
   gateway:
-    container_name: gateway
+    # container_name: gateway
     build:
       context: ./
       dockerfile: ./docker/gateway/dev.Dockerfile
@@ -33,7 +33,7 @@ services:
 
   # consumer
   consumer:
-    container_name: consumer
+    # container_name: consumer
     build:
       context: ./
       dockerfile: ./docker/consumer/dev.Dockerfile
@@ -43,14 +43,14 @@ services:
       - ./node_modules:/usr/app/src/node_modules
     env_file: ./env/.env.dev
   projection-database:
-    container_name: projection-database
+    # container_name: projection-database
     image: mongo:4.2
     logging:
       driver: none
 
   # ideas
   ideas:
-    container_name: ideas
+    # container_name: ideas
     build:
       context: ./
       dockerfile: ./docker/ideas/dev.Dockerfile
@@ -60,7 +60,7 @@ services:
       - ./node_modules:/usr/app/src/node_modules
     env_file: ./env/.env.dev
   ideas-event-store:
-    container_name: ideas-event-store
+    # container_name: ideas-event-store
     image: mongo:4.2
     logging:
       driver: none

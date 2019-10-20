@@ -29,9 +29,6 @@ export class IdeasServer implements IServer {
     this.app.post('/unpublish', this.expressAdapter.json(this.ideasService.unpublish));
     this.app.post('/delete', this.expressAdapter.json(this.ideasService.delete));
 
-    this.app.post('/queries/get-all', this.expressAdapter.json(this.ideasService.getAllIdeas));
-    this.app.post('/queries/get-by-id', this.expressAdapter.json(this.ideasService.getIdeaById));
-
     this.app.listen(port, () => this.logger.info('ideas service listening on internal port', port));
   };
 }

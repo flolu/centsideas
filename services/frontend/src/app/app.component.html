@@ -30,11 +30,10 @@
     <p>
         Found
         <strong>{{ ideas.length }}</strong>
-        public
         {{ ideas.length === 1 ? 'idea' : 'ideas' }}
     </p>
     <pre *ngFor='let idea of ideas'>{{ idea | json }}</pre>
 </ng-container>
 <ng-container *ngIf='!(ideas$ | async)'>
-    <p>Couldn't find any public ideas</p>
+    <p>Couldn't find any ideas</p>
 </ng-container>

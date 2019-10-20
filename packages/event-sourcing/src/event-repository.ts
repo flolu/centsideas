@@ -8,6 +8,7 @@ import { Identifier, renameObjectProperty, Logger } from '@cents-ideas/utils';
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
 import { IEvent, MessageBroker } from '.';
+import { rename } from 'fs';
 
 export interface IEntityConstructor<Entity> {
   new (snapshot?: ISnapshot): Entity;
@@ -22,7 +23,6 @@ export interface IEventRepository<Entity> {
   ) => void;
   save: (entity: Entity) => Promise<Entity>;
   findById: (id: string) => Promise<Entity>;
-  listAll: () => Promise<Entity[]>;
   generateUniqueId: () => Promise<string>;
 }
 
@@ -163,17 +163,6 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     return entity.confirmEvents();
   };
 
-  // TODO create projection db for this
-  listAll = async (): Promise<Entity[]> => {
-    await this.waitUntilInitialized();
-    const start = new Date();
-    const ids: string[] = await this.eventCollection.distinct('aggregateId', {});
-    const ideas = await Promise.all(ids.map(id => this.findById(id, false)));
-    const end = new Date();
-    this.logger.debug(`Fetching all ideas took ${Math.abs(Number(start) - Number(end))} ms`);
-    return ideas;
-  };
-
   generateUniqueId = (): Promise<string> => {
     const checkAvailability = async (resolve: Function) => {
       await this.waitUntilInitialized();
@@ -215,7 +204,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
 
     const payload = renameObjectProperty(event, 'id', '_id');
     const result = await this.eventCollection.insertOne({ ...payload, position: seq });
-    return result.ops[0];
+    return renameObjectProperty(result.ops[0], '_id', 'id');
   };
 
   private getSnapshot = async (streamId: string): Promise<ISnapshot | null> => {

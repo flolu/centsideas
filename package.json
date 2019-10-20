@@ -22,8 +22,7 @@
     "tsc": "tsc",
     "start:docker:dev": "docker-compose -f docker-compose.dev.yaml up --build --no-color",
     "start:docker:dev:up": "docker-compose -f docker-compose.dev.yaml up --no-color",
-    "start:docker": "docker-compose up --build",
-    "start:docker:frontend": "docker-compose up --build frontend"
+    "start:docker": "docker-compose -f docker-compose.prod.yaml up --build"
   },
   "devDependencies": {
     "lerna": "^3.16.4",

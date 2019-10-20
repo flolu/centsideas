@@ -26,7 +26,8 @@ export class GatewayServer implements IServer {
     // FIXME whitelist in prod mode
     this.app.use(cors());
 
-    this.app.get('/consumer', this.expressAdapter.makeJsonAdapter(`${consumerHost}`));
+    this.app.get(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${consumerHost}/ideas/get-all`));
+    this.app.get(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${consumerHost}/ideas/get-by-id`));
 
     this.app.post(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/create`));
     this.app.put(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/update`));
@@ -35,9 +36,6 @@ export class GatewayServer implements IServer {
     this.app.put(`${ideasApiRoot}/publish/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/publish`));
     this.app.put(`${ideasApiRoot}/unpublish/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/unpublish`));
     this.app.delete(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/delete`));
-
-    this.app.get(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-all`));
-    this.app.get(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/queries/get-by-id`));
 
     this.app.listen(port, () => this.logger.info('gateway listening on internal port', port));
   };
