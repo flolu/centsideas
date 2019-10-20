@@ -22,7 +22,7 @@ export class Logger {
   private readonly fatalColor = '\x1b[41m';
   private prefix = '● ';
   private level: number;
-  private includeTimestamp = false;
+  private includeTimestamp = true;
 
   constructor() {
     this.level = this.getLogLevel(process.env.LEVEL || 'debug');

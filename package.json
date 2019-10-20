@@ -20,8 +20,8 @@
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
     "tsc": "tsc",
-    "start:docker:dev": "docker-compose -f docker-compose.dev.yaml up --build --no-color",
-    "start:docker:dev:up": "docker-compose -f docker-compose.dev.yaml up --no-color",
+    "start:docker:dev": "docker-compose -f docker-compose.dev.yaml up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "start:docker:dev:up": "docker-compose -f docker-compose.dev.yaml up --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "start:docker": "docker-compose -f docker-compose.prod.yaml up --build"
   },
   "devDependencies": {
