@@ -37,6 +37,10 @@ export class GatewayServer implements IServer {
     this.app.put(`${ideasApiRoot}/unpublish/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/unpublish`));
     this.app.delete(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/delete`));
 
+    this.app.get('**', (req, res) => {
+      this.logger.info('wildcard route requested from ', req.ip);
+      res.send('cents-ideas gateway is healthy');
+    });
     this.app.listen(port, () => this.logger.info('gateway listening on internal port', port));
   };
 }

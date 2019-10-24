@@ -60,7 +60,7 @@
 
 ### Optional
 
-- minikube
+- microk8s or minikube
 - kubectl
 
 ### Recommended VSCode Plugins
@@ -122,4 +122,7 @@ ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ pr
 
 # stop all docker containers
 docker container stop $(docker container ls -aq)
+
+# get microk8s cluster info
+microk8s.kubectl cluster-info
 ```

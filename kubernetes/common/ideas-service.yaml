@@ -40,6 +40,8 @@ spec:
       port: 3000
   type: ClusterIP
 
+# // TODO projection database
+
 ---
 apiVersion: apps/v1
 kind: Deployment
