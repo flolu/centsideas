@@ -9,14 +9,12 @@ spec:
   resources:
     requests:
       storage: 2Gi
-
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: local-storage
 spec:
-  storageClassName: local-storage
   capacity:
     storage: 2Gi
   accessModes:

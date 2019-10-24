@@ -24,6 +24,7 @@ export class ConsumerServer implements IServer {
   ) {}
 
   start = (env: IConsumerEnvironment) => {
+    this.logger.debug('initialized with env: ', env);
     this.env = env;
 
     this.messageBroker.initialize({ brokers: this.env.kafka.brokers });

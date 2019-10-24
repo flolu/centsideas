@@ -8,7 +8,7 @@ data:
   # general
   NODE_ENV: dev
   LEVEL: debug
-  API_URL: http://flolu:30000 # // TODO get ip of minikube / microk8s cluster... use ingress
+  API_URL: http://api.cents-ideas.com
 
   # kafka
   KAFKA_ADVERTISED_PORT: "9092"

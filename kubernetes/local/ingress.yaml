@@ -1,16 +1,16 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: gateway-ingress
+  name: cents-ideas-ingress
 spec:
   rules:
-    - host: gateway.10.240.70.85
+    - host: api.cents-ideas.com
       http:
         paths:
           - backend:
               serviceName: cents-ideas-gateway
               servicePort: 3000
-    - host: frontend.10.240.70.85
+    - host: cents-ideas.com
       http:
         paths:
           - backend:

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: consumer
-          image: registry.hub.docker.com/flolu/cents-ideas_consumer:0.2.1
+          image: registry.hub.docker.com/flolu/cents-ideas_consumer:0.3.1
           envFrom:
             - configMapRef:
                 name: global-config
@@ -25,6 +25,19 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "200m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cents-ideas-consumer
+spec:
+  selector:
+    app: consumer
+  ports:
+    - name: http
+      port: 3000
+  type: ClusterIP
 
 ---
 apiVersion: apps/v1
@@ -50,7 +63,7 @@ spec:
       volumes:
         - name: persistent-db-storage
           persistentVolumeClaim:
-            claimName: database-pvc
+            claimName: projection-database-pvc
 
 ---
 apiVersion: v1

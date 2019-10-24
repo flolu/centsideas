@@ -1,16 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: gateway-ingress
+  name: cents-ideas-ingress
 spec:
   rules:
-    - host: gateway.cents-ideas.drakery.com
+    - host: api.cents-ideas.drakery.com
       http:
         paths:
           - backend:
               serviceName: cents-ideas-gateway
               servicePort: 3000
-    - host: frontend.cents-ideas.drakery.com
+    - host: cents-ideas.drakery.com
       http:
         paths:
           - backend:

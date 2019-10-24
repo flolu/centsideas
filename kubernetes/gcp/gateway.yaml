@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: registry.hub.docker.com/flolu/cents-ideas_gateway:0.2.2
+          image: registry.hub.docker.com/flolu/cents-ideas_gateway:0.3.1
           envFrom:
             - configMapRef:
                 name: global-config
@@ -22,6 +22,7 @@ spec:
             requests:
               memory: "64Mi"
               cpu: "50m"
+            # // TODO remove limits?!
             limits:
               memory: "256Mi"
               cpu: "200m"
@@ -32,6 +33,7 @@ kind: Service
 metadata:
   name: cents-ideas-gateway
 spec:
+  type: NodePort
   selector:
     app: gateway
   ports:
@@ -39,4 +41,3 @@ spec:
       port: 3000
       targetPort: 3000
       nodePort: 30000
-  type: NodePort

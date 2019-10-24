@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: registry.hub.docker.com/flolu/cents-ideas_gateway:0.2.2
+          image: registry.hub.docker.com/flolu/cents-ideas_gateway:0.3.1
           envFrom:
             - configMapRef:
                 name: global-config

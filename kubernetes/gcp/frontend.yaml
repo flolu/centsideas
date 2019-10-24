@@ -32,6 +32,7 @@ kind: Service
 metadata:
   name: cents-ideas-frontend
 spec:
+  type: NodePort
   selector:
     app: frontend
   ports:
@@ -39,4 +40,3 @@ spec:
       port: 80
       targetPort: 4000
       nodePort: 30001
-  type: NodePort
