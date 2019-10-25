@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: ideas
-          image: registry.hub.docker.com/flolu/cents-ideas_ideas:0.2.1
+          image: registry.hub.docker.com/flolu/cents-ideas_ideas:0.3.1
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
@@ -39,8 +39,6 @@ spec:
     - name: http
       port: 3000
   type: ClusterIP
-
-# // TODO projection database
 
 ---
 apiVersion: apps/v1

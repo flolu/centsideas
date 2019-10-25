@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: cents-ideas-ingress
 spec:
+  tls:
+    - secretName: tls-secret
+      hosts:
+        - drakery.com
+        - cents-ideas.drakery.com
+        - cents-ideas-api.drakery.com
   rules:
-    - host: api.cents-ideas.drakery.com
+    - host: cents-ideas-api.drakery.com
       http:
         paths:
           - backend:

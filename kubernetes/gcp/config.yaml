@@ -1,4 +1,6 @@
-# // FIXME readiness and liveness probes
+# // TODO readiness and liveness probes
+# // TODO automatic deployments and rollbacks if needed
+# // TODO rename k8s names (are there any conventions... like call service: gateway-svc)
 
 apiVersion: v1
 kind: ConfigMap
@@ -8,7 +10,7 @@ data:
   # general
   NODE_ENV: prod
   LEVEL: debug
-  API_URL: http://api.cents-ideas.drakery.com
+  API_URL: https://cents-ideas-api.drakery.com
 
   # kafka
   KAFKA_ADVERTISED_PORT: "9092"

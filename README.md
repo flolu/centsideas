@@ -125,4 +125,15 @@ docker container stop $(docker container ls -aq)
 
 # get microk8s cluster info
 microk8s.kubectl cluster-info
+
+# issue an ssl certificate
+sudo apt-get install letsencrypt
+sudo certbot certonly --manual -d *.drakery.com
+# then follow steps
+
+# make file readable without sudo
+sudo chown username ./file
+
+# create k8s secret containing ssl certificate and key
+kubectl create secret tls tls-secret --key privateKey.pem --cert certificate.pem
 ```
