@@ -2,10 +2,8 @@ version: "3"
 services:
   # kafka
   zookeeper:
-    container_name: zookeeper
     image: wurstmeister/zookeeper:latest
   kafka:
-    container_name: kafka
     image: wurstmeister/kafka:2.11-1.1.0
     ports:
       - 9092:9092
@@ -14,8 +12,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   # frontend
+  # // TODO fix Http failure response for http://localhost:3000/ideas: 0 Unknown Error', on angular server side
   frontend:
-    container_name: frontend
     ports:
       - 4000:4000
     build:
@@ -25,7 +23,6 @@ services:
 
   # gateway
   gateway:
-    container_name: gateway
     build:
       context: ./
       dockerfile: ./docker/gateway/Dockerfile
@@ -35,7 +32,6 @@ services:
 
   # consumer
   consumer:
-    container_name: consumer
     build:
       context: ./
       dockerfile: ./docker/consumer/Dockerfile
@@ -46,7 +42,6 @@ services:
 
   # ideas
   ideas:
-    container_name: ideas
     build:
       context: ./
       dockerfile: ./docker/ideas/Dockerfile

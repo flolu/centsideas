@@ -136,4 +136,11 @@ sudo chown username ./file
 
 # create k8s secret containing ssl certificate and key
 kubectl create secret tls tls-secret --key privateKey.pem --cert certificate.pem
+
+# remove all docker images with tag <none>
+docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+
+# get size of docker image (last table row)
+docker images
+docker images <image-name>
 ```
