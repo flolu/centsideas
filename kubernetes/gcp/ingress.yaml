@@ -1,9 +1,13 @@
+# // TODO switch from google ingress to nginx ingress https://stackoverflow.com/a/42923210/8586803
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: cents-ideas-ingress
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
 spec:
   tls:
+    # // TODO redirect http to https
     - secretName: tls-secret
       hosts:
         - drakery.com

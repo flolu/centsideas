@@ -18,6 +18,18 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 4000
+            initialDelaySeconds: 15
+            periodSeconds: 20
 
 ---
 apiVersion: v1

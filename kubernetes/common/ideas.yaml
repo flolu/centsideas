@@ -14,11 +14,23 @@ spec:
     spec:
       containers:
         - name: ideas
-          image: registry.hub.docker.com/flolu/cents-ideas_ideas:0.3.2
+          image: registry.hub.docker.com/flolu/cents-ideas_ideas:0.3.3
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: global-config
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
 
 ---
 apiVersion: v1

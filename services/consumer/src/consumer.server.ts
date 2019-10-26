@@ -35,6 +35,10 @@ export class ConsumerServer implements IServer {
     this.app.post('/ideas/get-all', this.expressAdapter.json(this.queryService.getAllIdeas));
     this.app.post('/ideas/get-by-id', this.expressAdapter.json(this.queryService.getIdeaById));
 
+    this.app.get('/alive', (_req, res) => {
+      return res.status(200).send();
+    });
+
     this.app.listen(this.env.port, () =>
       this.logger.info('consumer service listening on internal port', this.env.port),
     );

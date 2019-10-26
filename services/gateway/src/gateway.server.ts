@@ -23,7 +23,6 @@ export class GatewayServer implements IServer {
     const consumerHost = env.hosts.consumer;
 
     this.app.use(bodyParser.json());
-    // FIXME whitelist in prod mode
     this.app.use(cors());
 
     this.app.get(`${ideasApiRoot}`, this.expressAdapter.makeJsonAdapter(`${consumerHost}/ideas/get-all`));
@@ -37,10 +36,10 @@ export class GatewayServer implements IServer {
     this.app.put(`${ideasApiRoot}/unpublish/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/unpublish`));
     this.app.delete(`${ideasApiRoot}/:id`, this.expressAdapter.makeJsonAdapter(`${ideasHost}/delete`));
 
-    this.app.get('**', (req, res) => {
-      this.logger.info('wildcard route requested from ', req.ip);
-      res.send('cents-ideas gateway is healthy');
+    this.app.get('/alive', (_req, res) => {
+      return res.status(200).send();
     });
+
     this.app.listen(port, () => this.logger.info('gateway listening on internal port', port));
   };
 }

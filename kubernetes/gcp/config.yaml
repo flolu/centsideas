@@ -1,6 +1,4 @@
-# // TODO readiness and liveness probes
 # // TODO automatic deployments and rollbacks if needed
-# // TODO rename k8s names (are there any conventions... like call service: gateway-svc)
 
 apiVersion: v1
 kind: ConfigMap

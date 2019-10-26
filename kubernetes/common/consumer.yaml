@@ -14,10 +14,22 @@ spec:
     spec:
       containers:
         - name: consumer
-          image: registry.hub.docker.com/flolu/cents-ideas_consumer:0.3.2
+          image: registry.hub.docker.com/flolu/cents-ideas_consumer:0.3.3
           envFrom:
             - configMapRef:
                 name: global-config
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
 
 ---
 apiVersion: v1
