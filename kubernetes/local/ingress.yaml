@@ -1,8 +1,13 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: cents-ideas-ingress
 spec:
+  tls:
+    - secretName: tls-secret
+      hosts:
+        - cents-ideas.com
+        - api.cents-ideas.com
   rules:
     - host: api.cents-ideas.com
       http:

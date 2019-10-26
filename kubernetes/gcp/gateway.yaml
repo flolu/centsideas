@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway
+  name: gateway-deployment
 spec:
   selector:
     matchLabels:
@@ -14,18 +14,10 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: registry.hub.docker.com/flolu/cents-ideas_gateway:0.3.1
+          image: registry.hub.docker.com/flolu/cents-ideas_gateway:0.3.2
           envFrom:
             - configMapRef:
                 name: global-config
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "50m"
-            # // TODO remove limits?!
-            limits:
-              memory: "256Mi"
-              cpu: "200m"
 
 ---
 apiVersion: v1

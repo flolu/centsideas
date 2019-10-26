@@ -13,8 +13,8 @@ data:
   # kafka
   KAFKA_ADVERTISED_PORT: "9092"
   KAFKA_ADVERTISED_HOST_NAME: flolu
-  KAFKA_BROKER_HOST: kafka-1-ip-service:9092
-  KAFKA_ZOOKEEPER_CONNECT: zookeeper-ip-service:2181
+  KAFKA_BROKER_HOST: kafka-service:9092
+  KAFKA_ZOOKEEPER_CONNECT: zookeeper-service:2181
 
   # ideas service
   IDEAS_DATABASE_URL: mongodb://cents-ideas-ideas-event-store:27017

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: database-pvc
+  name: ideas-event-store-pvc
 spec:
   storageClassName: cloud-ssd
   accessModes:
@@ -9,6 +9,7 @@ spec:
   resources:
     requests:
       storage: 7Gi
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

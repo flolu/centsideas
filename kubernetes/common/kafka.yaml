@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-1-deployment
+  name: kafka-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      component: kafka-1
+      component: kafka
   template:
     metadata:
       labels:
-        component: kafka-1
+        component: kafka
     spec:
       containers:
-        - name: kafka-1
+        - name: kafka
           image: wurstmeister/kafka
           ports:
             - containerPort: 9092
@@ -27,23 +27,16 @@ spec:
                   fieldPath: status.podIP
             - name: KAFKA_ADVERTISED_HOST_NAME
               value: $(MY_POD_IP)
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "50m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka-1-ip-service
+  name: kafka-service
 spec:
   type: ClusterIP
   selector:
-    component: kafka-1
+    component: kafka
   ports:
     - name: kafka
       port: 9092
