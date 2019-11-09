@@ -7,7 +7,7 @@ RUN yarn install
 COPY ./packages ./packages
 COPY ./services/frontend ./services/frontend
 COPY ./tsconfig.settings.json ./
-COPY ./docker/frontend/tsconfig.json ./
+ADD ./services/frontend/global-tsconfig.json ./tsconfig.json
 WORKDIR /usr/app/src/services/frontend
 RUN yarn build:ssr
 

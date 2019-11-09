@@ -3,9 +3,9 @@ WORKDIR /usr/app/src
 COPY package.json .
 COPY yarn.lock .
 COPY ./packages ./packages
-COPY ./services/ideas ./services/ideas
+COPY ./services/gateway ./services/gateway
 RUN yarn install
 COPY ./tsconfig.settings.json ./
-COPY ./docker/ideas/tsconfig.json ./
-WORKDIR /usr/app/src/services/ideas
+ADD ./services/gateway/global-tsconfig.json ./tsconfig.json
+WORKDIR /usr/app/src/services/gateway
 CMD yarn start

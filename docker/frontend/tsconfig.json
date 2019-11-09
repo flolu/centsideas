@@ -1,8 +1,0 @@
-{
-  "files": [],
-  "references": [
-    // packages
-    // services
-    { "path": "services/frontend" }
-  ]
-}

@@ -18,14 +18,14 @@ services:
       - 4000:4000
     build:
       context: ./
-      dockerfile: ./docker/frontend/Dockerfile
+      dockerfile: ./services/frontend/prod.Dockerfile
     env_file: ./env/.env.prod
 
   # gateway
   gateway:
     build:
       context: ./
-      dockerfile: ./docker/gateway/Dockerfile
+      dockerfile: ./services/gateway/prod.Dockerfile
     ports:
       - 3000:3000
     env_file: ./env/.env.prod
@@ -34,7 +34,7 @@ services:
   consumer:
     build:
       context: ./
-      dockerfile: ./docker/consumer/Dockerfile
+      dockerfile: ./services/consumer/prod.Dockerfile
     env_file: ./env/.env.dev
   projection-database:
     container_name: projection-database
@@ -44,7 +44,7 @@ services:
   ideas:
     build:
       context: ./
-      dockerfile: ./docker/ideas/Dockerfile
+      dockerfile: ./services/ideas/prod.Dockerfile
     env_file: ./env/.env.prod
   ideas-event-store:
     container_name: ideas-event-store

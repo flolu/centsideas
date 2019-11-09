@@ -6,6 +6,6 @@ COPY ./packages ./packages
 COPY ./services/consumer ./services/consumer
 RUN yarn install
 COPY ./tsconfig.settings.json ./
-COPY ./docker/consumer/tsconfig.json ./
+ADD ./services/consumer/global-tsconfig.json ./tsconfig.json
 WORKDIR /usr/app/src/services/consumer
 CMD yarn start

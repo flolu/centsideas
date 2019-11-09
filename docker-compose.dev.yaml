@@ -19,7 +19,7 @@ services:
   gateway:
     build:
       context: ./
-      dockerfile: ./docker/gateway/dev.Dockerfile
+      dockerfile: ./services/gateway/dev.Dockerfile
     ports:
       - 3000:3000
     volumes:
@@ -32,7 +32,7 @@ services:
   consumer:
     build:
       context: ./
-      dockerfile: ./docker/consumer/dev.Dockerfile
+      dockerfile: ./services/consumer/dev.Dockerfile
     volumes:
       - ./services/consumer:/usr/app/src/services/consumer
       - ./packages:/usr/app/src/packages
@@ -47,7 +47,7 @@ services:
   ideas:
     build:
       context: ./
-      dockerfile: ./docker/ideas/dev.Dockerfile
+      dockerfile: ./services/ideas/dev.Dockerfile
     volumes:
       - ./services/ideas:/usr/app/src/services/ideas
       - ./packages:/usr/app/src/packages
