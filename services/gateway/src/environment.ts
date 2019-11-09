@@ -10,6 +10,9 @@ export interface IGatewayEnvironment extends IServerEnvironment {
     ideas: {
       root: string;
     };
+    reviews: {
+      root: string;
+    };
   };
 }
 
@@ -23,6 +26,9 @@ const env: IGatewayEnvironment = {
   api: {
     ideas: {
       root: '/ideas',
+    },
+    reviews: {
+      root: '/reviews',
     },
   },
 };

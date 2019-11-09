@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviews-event-store-deployment
+spec:
+  selector:
+    matchLabels:
+      app: reviews-event-store
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: reviews-event-store
+    spec:
+      containers:
+        - name: reviews-event-store
+          image: mongo:4.0
+          volumeMounts:
+            - name: persistent-db-storage
+              mountPath: /data/db
+      volumes:
+        - name: persistent-db-storage
+          persistentVolumeClaim:
+            claimName: reviews-event-store-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cents-reviews-reviews-event-store
+spec:
+  selector:
+    app: reviews-event-store
+  ports:
+    - name: mongo
+      port: 27017
+  type: ClusterIP

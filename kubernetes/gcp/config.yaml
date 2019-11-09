@@ -21,6 +21,10 @@ data:
   IDEAS_DATABASE_URL: mongodb://cents-ideas-ideas-event-store:27017
   IDEAS_SERVICE_HOST: cents-ideas-ideas:3000
 
+  # reviews service
+  REVIEWS_DATABASE_URL: mongodb://cents-ideas-reviews-event-store:27017
+  REVIEWS_SERVICE_HOST: cents-ideas-reviews:3000
+
   # consumer service
   PROJECTION_DATABASE_URL: mongodb://cents-ideas-projection-database:27017
   CONSUMER_SERVICE_HOST: cents-ideas-consumer:3000

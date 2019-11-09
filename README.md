@@ -22,6 +22,7 @@
 | Redux                   | Reactive, Actions, Effects          | 🔥         | ❌     |
 | GDPR                    | Legal, Privacy                      | 🔥         | ❌     |
 | SEO                     | Marketing                           | 🔥         | ❌     |
+| Authentication          | Passwordless                        | 🔥         | ❌     |
 | Typescript              | Types                               | 🙂         | ✔️     |
 | Node.js                 | Javascript,Best Practices           | 🙂         | ⏳     |
 | Local Development       | Nodemon, Docker, VSCode             | 🙂         | ✅     |
@@ -35,6 +36,7 @@
 | Caching                 | Performance                         | 🌳         | ❌     |
 | Logging                 | Debugging                           | 🌳         | ✅     |
 | μFrontends              | Composition, Independent            | 🌳         | ❌     |
+| Static Pages            | Homepage, Content                   | 🌳         | ❌     |
 
 ### Status
 
