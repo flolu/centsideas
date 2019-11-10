@@ -20,9 +20,9 @@ export class ReviewsServer implements IServer {
 
     this.app.use(bodyParser.json());
 
-    /* this.app.post('/create', this.expressAdapter.json(this.reviewsService.createEmptyIdea));
+    this.app.post('/create', this.expressAdapter.json(this.reviewsService.createEmptyReview));
     this.app.post('/save-draft', this.expressAdapter.json(this.reviewsService.saveDraft));
-    this.app.post('/publish', this.expressAdapter.json(this.reviewsService.publish));
+    /*this.app.post('/publish', this.expressAdapter.json(this.reviewsService.publish));
     this.app.post('/update', this.expressAdapter.json(this.reviewsService.update));
     this.app.post('/unpublish', this.expressAdapter.json(this.reviewsService.unpublish)); */
 

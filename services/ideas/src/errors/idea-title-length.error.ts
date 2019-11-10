@@ -7,8 +7,7 @@ export class IdeaTitleLengthError extends IdeaError {
   static readonly min: number = 3;
 
   static validate = (title?: string, onlyMaxLength: boolean = false): void => {
-    // FIXME will this return if title is ''? !.... could cause issues
-    if (!title) {
+    if (title === undefined) {
       return;
     }
     if (title.length > IdeaTitleLengthError.max) {

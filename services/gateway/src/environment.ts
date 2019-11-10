@@ -5,6 +5,7 @@ export interface IGatewayEnvironment extends IServerEnvironment {
   hosts: {
     ideas: string;
     consumer: string;
+    reviews: string;
   };
   api: {
     ideas: {
@@ -20,8 +21,9 @@ const env: IGatewayEnvironment = {
   environment: process.env.NODE_ENV || 'dev',
   port: 3000,
   hosts: {
-    ideas: `http://${process.env.IDEAS_SERVICE_HOST}` || 'http://ideas:3000',
-    consumer: `http://${process.env.CONSUMER_SERVICE_HOST}` || 'http://consumer:3000',
+    ideas: `http://${process.env.IDEAS_SERVICE_HOST || 'ideas:3000'}`,
+    consumer: `http://${process.env.CONSUMER_SERVICE_HOST || 'consumer:3000'}`,
+    reviews: `http://${process.env.REVIEWS_SERVICE_HOST || 'reviews:3000'}`,
   },
   api: {
     ideas: {

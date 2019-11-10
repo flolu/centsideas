@@ -6,6 +6,7 @@ import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { ReviewCommandHandler } from './review.command-handler';
 import { ReviewRepository } from './review.repository';
+import { ICreateReviewDto, IQueryReviewDto, ISaveReviewDto } from './dtos';
 
 @injectable()
 export class ReviewsService {
@@ -14,4 +15,37 @@ export class ReviewsService {
     private logger: Logger,
     private repository: ReviewRepository,
   ) {}
+
+  createEmptyReview = (req: HttpRequest<ICreateReviewDto>): Promise<HttpResponse> =>
+    new Promise(async resolve => {
+      const _loggerName = 'create';
+      try {
+        this.logger.info(_loggerName, req.body);
+        const review = await this.commandHandler.create(req.body.ideaId);
+        resolve({
+          status: HttpStatusCodes.Accepted,
+          body: { created: review.persistedState },
+          headers: {},
+        });
+      } catch (error) {
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        resolve(handleHttpResponseError(error));
+      }
+    });
+
+  saveDraft = (req: HttpRequest<ISaveReviewDto, IQueryReviewDto>): Promise<HttpResponse> =>
+    new Promise(async resolve => {
+      const _loggerName = 'save draft';
+      try {
+        const review = await this.commandHandler.saveDraft(req.params.id, req.body.content, req.body.scores);
+        resolve({
+          status: HttpStatusCodes.Accepted,
+          body: { saved: review.persistedState },
+          headers: {},
+        });
+      } catch (error) {
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        resolve(handleHttpResponseError(error));
+      }
+    });
 }

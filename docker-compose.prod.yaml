@@ -57,5 +57,5 @@ services:
       dockerfile: ./services/reviews/prod.Dockerfile
     env_file: ./env/.env.prod
   reviews-event-store:
-    container_name: ideas-event-store
+    container_name: reviews-event-store
     image: mongo:4.2
