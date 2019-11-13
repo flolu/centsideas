@@ -1835,6 +1835,26 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@ngrx/effects@^8.5.1":
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-8.5.1.tgz#d8ffca66d77db678f6fcdd6a11bc38a433c7bede"
+  integrity sha512-xb5GfXCN13wEUhe5YUN5t9GeP+DzCJYKwtB2pMR94gqMOU2eQdE3qmglRZIMLjsENSAtnFO7i11FPrwG31Jkyw==
+
+"@ngrx/entity@^8.5.1":
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/entity/-/entity-8.5.1.tgz#8d9d281ff6a9e45b471dd39a46c707e82ed10456"
+  integrity sha512-v8h0O0sCYSEsbthfGHEFtKX4Sf/tU9dAQz/MtxG2DHL/UDzX47nS9+YmAEtnk+iRNzOlTFTFtoVtQAuCJONHUg==
+
+"@ngrx/store-devtools@^8.5.1":
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-8.5.1.tgz#17ad7b605ff85d30d7ffbee9bf43f928583cf010"
+  integrity sha512-Eml2tV1GkGA7ctnCH7DGKSaQEKtqbFPdnGjgyVyZilKC1oSonsw6U5+vfG3t11CgGSTyZQvi+wQLbmNiKuqQ/g==
+
+"@ngrx/store@^8.5.1":
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-8.5.1.tgz#5141610bfd67675f5bc7d31edd1fc996c330675a"
+  integrity sha512-KIQ9Ooro0tl3+ohTpSXvvVUlo40TTLWAWFx2Ys8pI1Yqr39O9da3PNWecLA/2q4YmFf1bO072lYmcBTp1+Shvg==
+
 "@ngtools/webpack@8.3.5":
   version "8.3.5"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-8.3.5.tgz#700e9bd686334399276fa434122c4bd77d8658d5"

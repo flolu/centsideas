@@ -1,12 +1,10 @@
 {
   "files": [],
   "references": [
-    // packages
     { "path": "packages/enums" },
     { "path": "packages/event-sourcing" },
     { "path": "packages/models" },
     { "path": "packages/utils" },
-    // services
     { "path": "services/consumer" },
     { "path": "services/frontend" },
     { "path": "services/gateway" },

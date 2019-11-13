@@ -1,29 +1,23 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 
-import { IdeasService } from './ideas.service';
+import { IIdeaViewModel } from '@cents-ideas/models';
+import { selectIdeas } from './ideas/ideas.selectors';
+import { Store } from '@ngrx/store';
+import { AppState } from './app.state';
+import { getIdeas } from './ideas/ideas.actions';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: 'ci-root',
+  template: `
+    <router-outlet></router-outlet>
+  `,
 })
 export class AppComponent {
-  title = 'CENTS Ideas';
+  ideas$: Observable<IIdeaViewModel[]> = this.store.select(selectIdeas);
 
-  form = new FormGroup({
-    title: new FormControl(''),
-    description: new FormControl(''),
-  });
-  ideas$: Observable<any[]>;
-
-  constructor(private service: IdeasService) {
-    this.ideas$ = this.service.fetchAll();
+  constructor(private store: Store<AppState>) {
+    this.store.dispatch(getIdeas());
   }
-
-  onCreate = () => {
-    this.service.create(this.form.value);
-  };
 }

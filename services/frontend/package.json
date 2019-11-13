@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@cents-ideas/frontend",
   "version": "0.3.0",
   "scripts": {
     "ng": "ng",
@@ -17,6 +17,7 @@
   },
   "private": true,
   "dependencies": {
+    "@cents-ideas/models": "^0.3.0",
     "@angular/animations": "~8.2.7",
     "@angular/common": "~8.2.7",
     "@angular/compiler": "~8.2.7",
@@ -40,6 +41,10 @@
     "@angular/cli": "~8.3.5",
     "@angular/compiler-cli": "~8.2.7",
     "@angular/language-service": "~8.2.7",
+    "@ngrx/effects": "^8.5.1",
+    "@ngrx/entity": "^8.5.1",
+    "@ngrx/store": "^8.5.1",
+    "@ngrx/store-devtools": "^8.5.1",
     "@types/jest": "^24.0.18",
     "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",

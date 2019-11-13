@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
     "CQRS",
+    "Devtools",
     "Florian",
     "Frontends",
     "GDPR",
@@ -35,6 +36,7 @@
     "mongodb",
     "ngfactory",
     "nginx",
+    "ngrx",
     "ngsw",
     "nguniversal",
     "parens",

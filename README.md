@@ -19,7 +19,7 @@
 | Encryption              | HTTPs, Hashing, Safety              | 🔥         | ❌     |
 | Database(s)             | Storage, Event-Store                | 🔥         | ⏳     |
 | File Storage            | Storage                             | 🔥         | ❌     |
-| Redux                   | Reactive, Actions, Effects          | 🔥         | ❌     |
+| Redux                   | Reactive, Actions, Effects          | 🔥         | ✅     |
 | GDPR                    | Legal, Privacy                      | 🔥         | ❌     |
 | SEO                     | Marketing                           | 🔥         | ❌     |
 | Authentication          | Passwordless                        | 🔥         | ❌     |

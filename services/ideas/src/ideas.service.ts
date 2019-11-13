@@ -105,7 +105,7 @@ export class IdeasService {
         const idea = await this.commandHandler.update(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { unpublish: idea.persistedState },
+          body: { updated: idea.persistedState },
           headers: {},
         });
       } catch (error) {
@@ -122,7 +122,7 @@ export class IdeasService {
         const idea = await this.commandHandler.unpublish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { unpublish: idea.persistedState },
+          body: { unpublished: idea.persistedState },
           headers: {},
         });
       } catch (error) {

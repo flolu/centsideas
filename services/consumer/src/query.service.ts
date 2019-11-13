@@ -15,7 +15,7 @@ export class QueryService {
       const _loggerName = 'get all ideas';
       try {
         const ideasCollection = await this.projectionDatabase.ideas();
-        const ideas = await ideasCollection.find({}).toArray();
+        const ideas = await ideasCollection.find({ published: true, deleted: false }).toArray();
         res({
           status: HttpStatusCodes.Ok,
           body: { found: ideas.map(i => renameObjectProperty(i, '_id', 'id')) },
