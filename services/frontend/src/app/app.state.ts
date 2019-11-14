@@ -1,8 +1,13 @@
-import { IdeasState } from './ideas/ideas.reducer';
 import { createFeatureSelector } from '@ngrx/store';
+
+import { IdeasState } from '@ci-frontend/ideas/ideas.state';
 
 export interface AppState {
   ideas: IdeasState;
 }
 
-export const selectIdeasState = createFeatureSelector<IdeasState>('ideas');
+const selectIdeasState = createFeatureSelector<IdeasState>('ideas');
+
+export const AppSelectors = {
+  selectIdeasState,
+};

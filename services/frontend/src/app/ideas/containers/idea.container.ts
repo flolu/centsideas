@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { Store } from '@ngrx/store';
 
-import { AppState } from '../../app.state';
+import { AppState } from '@ci-frontend/app';
 
 @Component({
   selector: 'ci-idea',

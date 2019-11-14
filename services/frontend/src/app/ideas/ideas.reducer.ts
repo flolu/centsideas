@@ -1,14 +1,9 @@
 import { createReducer, on, Action } from '@ngrx/store';
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 import { IIdeaViewModel } from '@cents-ideas/models';
-import { getIdeas, getIdeasDone, getIdeasFail, createIdea, publishIdeaDone } from './ideas.actions';
-
-export interface IdeasState extends EntityState<IIdeaViewModel> {
-  loading: boolean;
-  loaded: boolean;
-  error: string;
-}
+import { IdeasState } from './ideas.state';
+import * as IdeasActions from './ideas.actions';
 
 const adapter: EntityAdapter<IIdeaViewModel> = createEntityAdapter({
   selectId: (i: IIdeaViewModel) => i.id,
@@ -21,14 +16,14 @@ const initialState: IdeasState = adapter.getInitialState({
 
 const ideasReducer = createReducer(
   initialState,
-  on(getIdeas, state => ({ ...state, loading: true, loaded: false, error: '' })),
-  on(getIdeasDone, (state, action) =>
+  on(IdeasActions.getIdeas, state => ({ ...state, loading: true, loaded: false, error: '' })),
+  on(IdeasActions.getIdeasDone, (state, action) =>
     adapter.addMany(action.ideas, { ...state, loaded: true, loading: false, error: '' }),
   ),
-  on(getIdeasFail, (state, action) => ({ ...state, loaded: false, loading: false, error: action.error })),
+  on(IdeasActions.getIdeasFail, (state, action) => ({ ...state, loaded: false, loading: false, error: action.error })),
   // FIXME more sophisticated handling of actions
-  on(createIdea, state => ({ ...state, loading: true, loaded: false, error: '' })),
-  on(publishIdeaDone, (state, action) =>
+  on(IdeasActions.createIdea, state => ({ ...state, loading: true, loaded: false, error: '' })),
+  on(IdeasActions.publishIdeaDone, (state, action) =>
     adapter.upsertOne(action.published, { ...state, loading: false, loaded: true, error: '' }),
   ),
 );

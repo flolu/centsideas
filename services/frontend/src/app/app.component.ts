@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { IIdeaViewModel } from '@cents-ideas/models';
-import { selectIdeas } from './ideas/ideas.selectors';
-import { Store } from '@ngrx/store';
-import { AppState } from './app.state';
-import { getIdeas } from './ideas/ideas.actions';
+import { AppState } from '@ci-frontend/app';
+import { IdeasSelectors, IdeasActions } from '@ci-frontend/ideas';
 
 @Component({
   selector: 'ci-root',
@@ -15,9 +14,10 @@ import { getIdeas } from './ideas/ideas.actions';
   `,
 })
 export class AppComponent {
-  ideas$: Observable<IIdeaViewModel[]> = this.store.select(selectIdeas);
+  ideas$: Observable<IIdeaViewModel[]> = this.store.select(IdeasSelectors.selectIdeas);
 
   constructor(private store: Store<AppState>) {
-    this.store.dispatch(getIdeas());
+    // TODO move
+    this.store.dispatch(IdeasActions.getIdeas());
   }
 }

@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
-import { selectIdeasState } from '../app.state';
-import * as fromIdeas from './ideas.reducer';
+import { AppSelectors } from '@ci-frontend/app';
+import * as ideas from './ideas.reducer';
 
-export const selectIdeas = createSelector(selectIdeasState, fromIdeas.selectAllIdeas);
-export const selectLoading = createSelector(selectIdeasState, state => state.loading);
+export const selectIdeas = createSelector(AppSelectors.selectIdeasState, ideas.selectAllIdeas);
+export const selectLoading = createSelector(AppSelectors.selectIdeasState, state => state.loading);

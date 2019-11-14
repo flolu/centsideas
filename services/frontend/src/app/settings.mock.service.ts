@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { IAppSettings } from './settings.service';
+import { IAppSettings } from '@ci-frontend/app';
 
 @Injectable()
 export class SettingsMockService {

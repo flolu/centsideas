@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { IIdeaViewModel } from '@cents-ideas/models';
-
-import { SettingsService } from '../settings.service';
+import { SettingsService } from '@ci-frontend/app';
 
 @Injectable()
 export class IdeasService {
@@ -14,6 +13,7 @@ export class IdeasService {
 
   getIdeas = (): Observable<IIdeaViewModel[]> => {
     // FIXME share type for response in backend and frontend
+    // TODO share backend endpoints between frontend and backend
     return this.http
       .get<{ found: IIdeaViewModel[] }>(`${this.settingsService.settings.apiUrl}/ideas`)
       .pipe(map(res => res.found));

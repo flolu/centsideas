@@ -5,10 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { provideMockStore } from '@ngrx/store/testing';
 
+import { SettingsService, SettingsMockService } from '@ci-frontend/app';
+import { IdeasService } from '@ci-frontend/ideas/ideas.service';
 import { AppComponent } from './app.component';
-import { IdeasService } from './ideas/ideas.service';
-import { SettingsService } from './settings.service';
-import { SettingsMockService } from './settings.mock.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {

@@ -1,15 +1,13 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 
 import { IIdeaViewModel } from '@cents-ideas/models';
-
-import { AppState } from '../../app.state';
-import { selectIdeas, selectLoading } from '../ideas.selectors';
-import { getIdeas, createIdea } from '../ideas.actions';
-import { Router } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
+import { AppState } from '@ci-frontend/app';
+import { IdeasSelectors, IdeasActions } from '@ci-frontend/ideas';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'ci-ideas',
@@ -35,8 +33,8 @@ import { FormGroup, FormControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdeasContainer {
-  ideas$ = this.store.select(selectIdeas);
-  loading$ = this.store.select(selectLoading);
+  ideas$ = this.store.select(IdeasSelectors.selectIdeas);
+  loading$ = this.store.select(IdeasSelectors.selectLoading);
 
   form = new FormGroup({
     title: new FormControl(''),
@@ -44,16 +42,17 @@ export class IdeasContainer {
   });
 
   constructor(private store: Store<AppState>, private router: Router) {
-    this.store.dispatch(getIdeas());
+    this.store.dispatch(IdeasActions.getIdeas());
   }
 
   onIdeaTitleClicked = (idea: IIdeaViewModel): void => {
-    // TODO use global constant for 'ideas' string
-    this.router.navigate(['ideas', idea.id]);
+    this.router.navigate([environment.routing.ideas.name, idea.id]);
   };
 
   onCreate = (): void => {
-    this.store.dispatch(createIdea({ title: this.form.value.title, description: this.form.value.description }));
+    this.store.dispatch(
+      IdeasActions.createIdea({ title: this.form.value.title, description: this.form.value.description }),
+    );
     this.form.reset();
   };
 }

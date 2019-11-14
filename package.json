@@ -15,7 +15,7 @@
     "start": "yarn start:docker",
     "release": "lerna version",
     "---": "---",
-    "start:frontend": "lerna exec --scope frontend -- yarn start",
+    "start:frontend": "lerna exec --scope @cents-ideas/frontend -- yarn start",
     "clean": "lerna run clean && rimraf node_modules",
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",

@@ -4,21 +4,8 @@ import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 
+import { IdeasActions } from '@ci-frontend/ideas';
 import { IdeasService } from './ideas.service';
-import {
-  getIdeas,
-  getIdeasDone,
-  getIdeasFail,
-  createIdea,
-  createIdeaDone,
-  createIdeaFail,
-  updateIdea,
-  updateIdeaDone,
-  updateIdeaFail,
-  publishIdea,
-  publishIdeaDone,
-  publishIdeaFail,
-} from './ideas.actions';
 
 @Injectable()
 export class IdeasEffects {
@@ -26,11 +13,11 @@ export class IdeasEffects {
 
   getIdeas$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(getIdeas),
+      ofType(IdeasActions.getIdeas),
       switchMap(() =>
         this.ideasService.getIdeas().pipe(
-          map(found => getIdeasDone({ ideas: found })),
-          catchError(error => of(getIdeasFail({ error }))),
+          map(found => IdeasActions.getIdeasDone({ ideas: found })),
+          catchError(error => of(IdeasActions.getIdeasFail({ error }))),
         ),
       ),
     ),
@@ -38,11 +25,14 @@ export class IdeasEffects {
 
   createIdea$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(createIdea),
+      ofType(IdeasActions.createIdea),
       switchMap(({ title, description }) =>
         this.ideasService.createIdea().pipe(
-          switchMap(created => [createIdeaDone({ created }), updateIdea({ id: created.id, title, description })]),
-          catchError(error => of(createIdeaFail({ error }))),
+          switchMap(created => [
+            IdeasActions.createIdeaDone({ created }),
+            IdeasActions.updateIdea({ id: created.id, title, description }),
+          ]),
+          catchError(error => of(IdeasActions.createIdeaFail({ error }))),
         ),
       ),
     ),
@@ -50,11 +40,14 @@ export class IdeasEffects {
 
   updateIdea$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(updateIdea),
+      ofType(IdeasActions.updateIdea),
       switchMap(({ id, title, description }) =>
         this.ideasService.updateIdea(id, title, description).pipe(
-          switchMap(updated => [updateIdeaDone({ updated }), publishIdea({ id: updated.id })]),
-          catchError(error => of(updateIdeaFail({ error }))),
+          switchMap(updated => [
+            IdeasActions.updateIdeaDone({ updated }),
+            IdeasActions.publishIdea({ id: updated.id }),
+          ]),
+          catchError(error => of(IdeasActions.updateIdeaFail({ error }))),
         ),
       ),
     ),
@@ -62,11 +55,11 @@ export class IdeasEffects {
 
   publishIdea$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(publishIdea),
+      ofType(IdeasActions.publishIdea),
       switchMap(({ id }) =>
         this.ideasService.publishIdea(id).pipe(
-          map(published => publishIdeaDone({ published })),
-          catchError(error => of(publishIdeaFail({ error }))),
+          map(published => IdeasActions.publishIdeaDone({ published })),
+          catchError(error => of(IdeasActions.publishIdeaFail({ error }))),
         ),
       ),
     ),
