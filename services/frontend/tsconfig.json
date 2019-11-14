@@ -24,5 +24,4 @@
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }
-  // TODO path aliases
 }
