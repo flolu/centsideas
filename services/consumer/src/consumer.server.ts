@@ -5,6 +5,7 @@ import * as bodyParser from 'body-parser';
 import { IServer } from '@cents-ideas/models';
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
+import { IdeasApiInternalRoutes, ApiEndpoints } from '@cents-ideas/enums';
 
 import { IConsumerEnvironment } from './environment';
 import { QueryService } from './query.service';
@@ -32,8 +33,14 @@ export class ConsumerServer implements IServer {
 
     this.app.use(bodyParser.json());
 
-    this.app.post('/ideas/get-all', this.expressAdapter.json(this.queryService.getAllIdeas));
-    this.app.post('/ideas/get-by-id', this.expressAdapter.json(this.queryService.getIdeaById));
+    this.app.post(
+      `/${ApiEndpoints.Ideas}/${IdeasApiInternalRoutes.GetAll}`,
+      this.expressAdapter.json(this.queryService.getAllIdeas),
+    );
+    this.app.post(
+      `/${ApiEndpoints.Ideas}/${IdeasApiInternalRoutes.GetById}`,
+      this.expressAdapter.json(this.queryService.getIdeaById),
+    );
 
     this.app.get('/alive', (_req, res) => {
       return res.status(200).send();

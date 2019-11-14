@@ -7,14 +7,6 @@ export interface IGatewayEnvironment extends IServerEnvironment {
     consumer: string;
     reviews: string;
   };
-  api: {
-    ideas: {
-      root: string;
-    };
-    reviews: {
-      root: string;
-    };
-  };
 }
 
 const env: IGatewayEnvironment = {
@@ -24,14 +16,6 @@ const env: IGatewayEnvironment = {
     ideas: `http://${process.env.IDEAS_SERVICE_HOST || 'ideas:3000'}`,
     consumer: `http://${process.env.CONSUMER_SERVICE_HOST || 'consumer:3000'}`,
     reviews: `http://${process.env.REVIEWS_SERVICE_HOST || 'reviews:3000'}`,
-  },
-  api: {
-    ideas: {
-      root: '/ideas',
-    },
-    reviews: {
-      root: '/reviews',
-    },
   },
 };
 

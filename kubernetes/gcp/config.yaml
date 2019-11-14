@@ -1,5 +1,3 @@
-# // TODO automatic deployments and rollbacks if needed
-
 apiVersion: v1
 kind: ConfigMap
 metadata:

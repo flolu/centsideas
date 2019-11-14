@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
 import { IIdeaViewModel } from '@cents-ideas/models';
-// TODO use global interface
+// TODO use global interfaces
 
 const PREFIX = '[ideas]';
 const FAIL = 'fail';

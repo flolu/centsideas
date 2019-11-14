@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
+import { IdeasApiInternalRoutes } from '@cents-ideas/enums';
 
 import { IIdeasServiceEnvironment } from './environment';
 import { IdeasService } from './ideas.service';
@@ -21,15 +22,15 @@ export class IdeasServer implements IServer {
     this.app.use(bodyParser.json());
 
     // FIXME don't use http for internal service communication (instead use protobuf, kafka or other message broker)
-    this.app.post('/create', this.expressAdapter.json(this.ideasService.createEmptyIdea));
-    this.app.post('/save-draft', this.expressAdapter.json(this.ideasService.saveDraft));
-    this.app.post('/commit-draft', this.expressAdapter.json(this.ideasService.commitDraft));
-    this.app.post('/publish', this.expressAdapter.json(this.ideasService.publish));
-    this.app.post('/update', this.expressAdapter.json(this.ideasService.update));
-    this.app.post('/unpublish', this.expressAdapter.json(this.ideasService.unpublish));
-    this.app.post('/delete', this.expressAdapter.json(this.ideasService.delete));
+    this.app.post(`/${IdeasApiInternalRoutes.Create}`, this.expressAdapter.json(this.ideasService.createEmptyIdea));
+    this.app.post(`/${IdeasApiInternalRoutes.SaveDraft}`, this.expressAdapter.json(this.ideasService.saveDraft));
+    this.app.post(`/${IdeasApiInternalRoutes.CommitDraft}`, this.expressAdapter.json(this.ideasService.commitDraft));
+    this.app.post(`/${IdeasApiInternalRoutes.Publish}`, this.expressAdapter.json(this.ideasService.publish));
+    this.app.post(`/${IdeasApiInternalRoutes.Update}`, this.expressAdapter.json(this.ideasService.update));
+    this.app.post(`/${IdeasApiInternalRoutes.Unpublish}`, this.expressAdapter.json(this.ideasService.unpublish));
+    this.app.post(`/${IdeasApiInternalRoutes.Delete}`, this.expressAdapter.json(this.ideasService.delete));
 
-    this.app.get('/alive', (_req, res) => {
+    this.app.get(`${IdeasApiInternalRoutes.Alive}`, (_req, res) => {
       return res.status(200).send();
     });
 

@@ -4,6 +4,7 @@ import * as bodyParser from 'body-parser';
 
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
 import { IServer } from '@cents-ideas/models';
+import { ReviewsApiInternalRoutes } from '@cents-ideas/enums';
 
 import { IIdeasServiceEnvironment } from './environment';
 import { ReviewsService } from './reviews.service';
@@ -20,8 +21,11 @@ export class ReviewsServer implements IServer {
 
     this.app.use(bodyParser.json());
 
-    this.app.post('/create', this.expressAdapter.json(this.reviewsService.createEmptyReview));
-    this.app.post('/save-draft', this.expressAdapter.json(this.reviewsService.saveDraft));
+    this.app.post(
+      `/${ReviewsApiInternalRoutes.Create}`,
+      this.expressAdapter.json(this.reviewsService.createEmptyReview),
+    );
+    this.app.post(`/${ReviewsApiInternalRoutes.SaveDraft}`, this.expressAdapter.json(this.reviewsService.saveDraft));
     /*this.app.post('/publish', this.expressAdapter.json(this.reviewsService.publish));
     this.app.post('/update', this.expressAdapter.json(this.reviewsService.update));
     this.app.post('/unpublish', this.expressAdapter.json(this.reviewsService.unpublish)); */

@@ -19,9 +19,9 @@ REVIEWS_DATABASE_URL=mongodb://reviews-event-store:27017
 | ------ | ----------------------- |
 | POST   | /reviews                |
 | PUT    | /reviews/:id            |
-| PUT    | /reviews/save-draft/:id |
-| PUT    | /reviews/publish/:id    |
-| PUT    | /reviews/unpublish/:id  |
+| PUT    | /reviews/:id/save-draft |
+| PUT    | /reviews/:id/publish    |
+| PUT    | /reviews/:id/unpublish  |
 | GET    | /reviews                |
 | GET    | /reviews/:ideaId        |
 
@@ -36,5 +36,5 @@ curl --header "Content-Type: application/json" --request POST --data '{"ideaId":
 #### Save draft
 
 ```
-curl --header "Content-Type: application/json" --request PUT --data '{"content":"This is an draft", "scores":{ "control":5, "entry":4, "need":3, "time":2, "scale":1 }}' http://localhost:3000/reviews/save-draft/id
+curl --header "Content-Type: application/json" --request PUT --data '{"content":"This is an draft", "scores":{ "control":5, "entry":4, "need":3, "time":2, "scale":1 }}' http://localhost:3000/reviews/id/save-draft
 ```
