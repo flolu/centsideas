@@ -3,16 +3,34 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { AppState } from '@ci-frontend/app';
+import { IdeasSelectors, IdeasActions } from '..';
+import { Router } from 'express';
+import { ActivatedRoute } from '@angular/router';
+import { take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ci-idea',
   template: `
-    idea container
+    <ci-ideas-card [idea]="idea$ | async" (clickedTitle)="onIdeaTitleClicked(i)"></ci-ideas-card>
+    <p>{{ (idea$ | async)?.description }}</p>
+    <p>Published at: {{ (idea$ | async)?.publishedAt | date }}</p>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdeaContainer {
-  constructor(private store: Store<AppState>) {
-    // TODO load idea if not already fetched
+  ideaId: string = this.route.snapshot.params.id;
+  idea$ = this.store.select(IdeasSelectors.selectIdea(this.ideaId));
+
+  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+    this.idea$
+      .pipe(
+        take(1),
+        tap(idea => {
+          if (!idea) {
+            this.store.dispatch(IdeasActions.getIdeaById({ id: this.ideaId }));
+          }
+        }),
+      )
+      .subscribe();
   }
 }

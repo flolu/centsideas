@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import { ApiEndpoints } from '@cents-ideas/enums';
+import { ApiEndpoints, IdeasApiRoutes } from '@cents-ideas/enums';
 import { IIdeaViewModel, IIdeaState } from '@cents-ideas/models';
 import { SettingsService } from '@ci-frontend/app';
 
@@ -15,6 +15,10 @@ export class IdeasService {
 
   getIdeas = (): Observable<IIdeaViewModel[]> => {
     return this.http.get<IIdeaViewModel[]>(`${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}`);
+  };
+
+  getIdeaById = (id: string): Observable<IIdeaViewModel> => {
+    return this.http.get<IIdeaViewModel>(`${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}/${id}`);
   };
 
   createIdea = (): Observable<IIdeaViewModel> => {
@@ -30,7 +34,7 @@ export class IdeasService {
 
   publishIdea = (ideaId: string): Observable<IIdeaViewModel> => {
     return this.http.put<IIdeaViewModel>(
-      `${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}/${ideaId}/publish`,
+      `${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}/${ideaId}/${IdeasApiRoutes.Publish}`,
       {},
     );
   };

@@ -23,6 +23,18 @@ export class IdeasEffects {
     ),
   );
 
+  getIdeaById$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(IdeasActions.getIdeaById),
+      switchMap(action =>
+        this.ideasService.getIdeaById(action.id).pipe(
+          map(found => IdeasActions.getIdeaByIdDone({ idea: found })),
+          catchError(error => of(IdeasActions.getIdeaByIdFail({ error }))),
+        ),
+      ),
+    ),
+  );
+
   createIdea$ = createEffect(() =>
     this.actions$.pipe(
       ofType(IdeasActions.createIdea),

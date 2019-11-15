@@ -29,6 +29,16 @@ const ideasReducer = createReducer(
       { ...state, loading: false, loaded: true, error: '' },
     ),
   ),
+  on(IdeasActions.getIdeaById, state => ({ ...state, loading: true, loaded: false, error: '' })),
+  on(IdeasActions.getIdeaByIdDone, (state, action) =>
+    adapter.upsertOne(action.idea, { ...state, loaded: true, loading: false, error: '' }),
+  ),
+  on(IdeasActions.getIdeaByIdFail, (state, action) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error: action.error,
+  })),
 );
 
 export function reducer(state: IdeasState | undefined, action: Action) {
@@ -36,3 +46,4 @@ export function reducer(state: IdeasState | undefined, action: Action) {
 }
 
 export const selectAllIdeas = adapter.getSelectors().selectAll;
+export const selectIdeaEntities = adapter.getSelectors().selectEntities;

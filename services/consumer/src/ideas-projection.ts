@@ -139,7 +139,7 @@ export class IdeasProjection {
       {
         $set: {
           published: false,
-          publishedAt: event.timestamp,
+          unpublishedAt: event.timestamp,
           lastEvent: {
             number: event.eventNumber,
             id: event.id,
@@ -155,7 +155,7 @@ export class IdeasProjection {
       {
         $set: {
           published: true,
-          unpublishedAt: event.timestamp,
+          publishedAt: event.timestamp,
           lastEvent: {
             number: event.eventNumber,
             id: event.id,

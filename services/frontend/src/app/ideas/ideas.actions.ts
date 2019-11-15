@@ -8,8 +8,14 @@ const DONE = 'done';
 
 const GET = 'get';
 export const getIdeas = createAction(`${PREFIX} ${GET}`);
+// FIXME maybe only fetch gist and not full view model?
 export const getIdeasDone = createAction(`${PREFIX} ${GET} ${DONE}`, props<{ ideas: IIdeaViewModel[] }>());
 export const getIdeasFail = createAction(`${PREFIX} ${GET} ${FAIL}`, props<{ error: string }>());
+
+const GET_BY_ID = 'get-by-id';
+export const getIdeaById = createAction(`${PREFIX} ${GET_BY_ID}`, props<{ id: string }>());
+export const getIdeaByIdDone = createAction(`${PREFIX} ${GET_BY_ID} ${DONE}`, props<{ idea: IIdeaViewModel }>());
+export const getIdeaByIdFail = createAction(`${PREFIX} ${GET_BY_ID} ${FAIL}`, props<{ error: string }>());
 
 const CREATE = 'create';
 export const createIdea = createAction(`${PREFIX} ${CREATE}`, props<{ title: string; description: string }>());
