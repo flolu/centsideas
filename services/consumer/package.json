@@ -1,6 +1,6 @@
 {
   "name": "@cents-ideas/consumer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "license": "MIT",
   "private": true,
@@ -13,26 +13,26 @@
     "clean": "rimraf dist && rimraf coverage && rimraf node_modules"
   },
   "dependencies": {
-    "@cents-ideas/enums": "^0.3.0",
-    "@cents-ideas/event-sourcing": "^0.3.0",
-    "@cents-ideas/utils": "^0.3.0",
+    "@cents-ideas/enums": "^0.4.0",
+    "@cents-ideas/event-sourcing": "^0.4.0",
+    "@cents-ideas/utils": "^0.4.0",
     "async-retry": "^1.2.3",
-    "inversify": "^5.0.1",
-    "express": "^4.17.1",
-    "reflect-metadata": "^0.1.13",
     "body-parser": "^1.19.0",
-    "mongodb": "^3.3.2"
+    "express": "^4.17.1",
+    "inversify": "^5.0.1",
+    "mongodb": "^3.3.2",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/express": "^4.17.1",
-    "jest": "^24.9.0",
     "@types/body-parser": "^1.17.1",
+    "@types/express": "^4.17.1",
+    "@types/jest": "^24.0.18",
+    "@types/mongodb": "^3.3.1",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.1",
     "rimraf": "^3.0.0",
     "ts-node": "^8.3.0",
-    "typescript": "^3.6.2",
-    "@types/mongodb": "^3.3.1"
+    "typescript": "^3.6.2"
   },
   "jest": {
     "moduleFileExtensions": [
