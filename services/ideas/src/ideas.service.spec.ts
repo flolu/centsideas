@@ -21,13 +21,15 @@ describe('Ideas Service', () => {
   it('should create an idea', async () => {
     const request = makeFakeHttpRequest();
     const response = await service.createEmptyIdea(request);
+
     // FIXME find a better way! (maybe I need to mock whole idea entity with all events?!)
     const createdAt = new Date().toISOString();
-    response.body.created.createdAt = createdAt;
+    response.body.createdAt = createdAt;
+    response.body.lastEventId = '';
 
     expect(response).toEqual({
       status: HttpStatusCodes.Accepted,
-      body: { created: { ...Idea.initialState, id: fakeIdeaId, createdAt } },
+      body: { ...Idea.initialState, id: fakeIdeaId, createdAt },
       headers: {},
     });
   });

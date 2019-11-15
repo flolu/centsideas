@@ -18,6 +18,7 @@ export class Event<IData> implements IEvent<IData> {
   readonly eventNumber: number;
 
   constructor(name: string, data: IData, aggregateId: string) {
+    // TODO use longer ids for events (safer, doesn't matter if look ugly)
     this.id = Identifier.makeUniqueId();
     this.aggregateId = aggregateId;
     this.name = name;

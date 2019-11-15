@@ -1,4 +1,4 @@
-import { IIdeaState } from '../idea.entity';
+import { IIdeaState } from '@cents-ideas/models';
 
 export const fakeEventId = '2WEKaVNO';
 export const fakeIdeaId = 'PPBqWA9';
@@ -21,4 +21,5 @@ export const fakeIdeaState: IIdeaState = {
   deleted: false,
   deletedAt: new Date().toISOString(),
   draft: null,
+  lastEventId: '',
 };

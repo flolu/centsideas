@@ -1,3 +1,6 @@
+import { IEventCommitFunctions } from '@cents-ideas/event-sourcing';
+import { IIdeaState } from '@cents-ideas/models';
+
 import { IdeaCreatedEvent } from './idea-created.event';
 import { IdeaDeletedEvent } from './idea-deleted.event';
 import { IdeaDraftCommittedEvent } from './idea-draft-committed.event';
@@ -6,8 +9,6 @@ import { IdeaDraftSavedEvent } from './idea-draft-saved.event';
 import { IdeaPublishedEvent } from './idea-published.event';
 import { IdeaUnpublishedEvent } from './idea-unpublished.events';
 import { IdeaUpdatedEvent } from './idea-updated.event';
-import { IEventCommitFunctions } from '@cents-ideas/event-sourcing';
-import { IIdeaState } from '../idea.entity';
 
 export const commitFunctions: IEventCommitFunctions<IIdeaState> = {
   [IdeaCreatedEvent.eventName]: IdeaCreatedEvent.commit,

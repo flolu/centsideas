@@ -69,10 +69,10 @@ export class IdeasProjection {
       deleted: false,
       deletedAt: null,
       draft: null,
-      lastEvent: {
-        number: event.eventNumber,
-        id: event.id,
-      },
+      lastEventId: '',
+      reviews: [],
+      user: null,
+      scores: null,
     };
     await this.ideasCollection.insertOne(renameObjectProperty(idea, 'id', '_id'));
   };

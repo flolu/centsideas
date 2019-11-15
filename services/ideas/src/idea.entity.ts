@@ -1,4 +1,5 @@
 import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
+import { IIdeaState } from '@cents-ideas/models';
 
 import {
   IdeaCreatedEvent,
@@ -13,20 +14,6 @@ import {
 } from './events';
 import { IdeaNotFoundError } from './errors';
 
-export interface IIdeaState {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: string | null;
-  published: boolean;
-  publishedAt: string | null;
-  unpublishedAt: string | null;
-  updatedAt: string | null;
-  deleted: boolean;
-  deletedAt: string | null;
-  draft: { title: string; description: string } | null;
-}
-
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
     id: '',
@@ -40,6 +27,7 @@ export class Idea extends EventEntity<IIdeaState> {
     deleted: false,
     deletedAt: null,
     draft: null,
+    lastEventId: '',
   };
 
   constructor(snapshot?: ISnapshot<IIdeaState>) {

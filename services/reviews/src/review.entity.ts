@@ -1,22 +1,9 @@
 import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
-import { IReviewScores } from '@cents-ideas/models';
+import { IReviewScores, IReviewState } from '@cents-ideas/models';
 
 import { commitFunctions, ReviewCreatedEvent } from './events';
 import { ReviewNotFoundError } from './errors';
 import { ReviewDraftSavedEvent } from './events/review-draft-saved.event';
-
-export interface IReviewState {
-  id: string;
-  ideaId: string;
-  content: string;
-  scores: IReviewScores;
-  createdAt: string | null;
-  published: boolean;
-  publishedAt: string | null;
-  unpublishedAt: string | null;
-  updatedAt: string | null;
-  draft: { content: string; scores: IReviewScores } | null;
-}
 
 export class Review extends EventEntity<IReviewState> {
   static initialState: IReviewState = {

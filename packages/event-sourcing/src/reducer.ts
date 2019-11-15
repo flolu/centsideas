@@ -5,7 +5,8 @@ export class Reducer<IEntityState> {
 
   reduce = (state: IEntityState, events: IEvent[]): IEntityState => {
     return events.reduce<IEntityState>((state: IEntityState, event: IEvent) => {
-      return this.knownEvents[event.name]({ ...state }, event);
+      const eventHandler = this.knownEvents[event.name];
+      return eventHandler({ ...state, lastEventId: event.id }, event);
     }, state);
   };
 }

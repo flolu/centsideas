@@ -24,7 +24,10 @@ const ideasReducer = createReducer(
   // FIXME more sophisticated handling of actions
   on(IdeasActions.createIdea, state => ({ ...state, loading: true, loaded: false, error: '' })),
   on(IdeasActions.publishIdeaDone, (state, action) =>
-    adapter.upsertOne(action.published, { ...state, loading: false, loaded: true, error: '' }),
+    adapter.upsertOne(
+      { ...action.published, reviews: [], user: null, scores: null },
+      { ...state, loading: false, loaded: true, error: '' },
+    ),
   ),
 );
 

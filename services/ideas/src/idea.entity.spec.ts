@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 
 import { ISnapshot } from '@cents-ideas/event-sourcing';
+import { IIdeaState } from '@cents-ideas/models';
 
-import { Idea, IIdeaState } from './idea.entity';
+import { Idea } from './idea.entity';
 import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeEventId, fakeIdeaState } from './test';
 
 describe('Idea Entity', () => {

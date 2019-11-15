@@ -18,7 +18,7 @@ export class QueryService {
         const ideas = await ideasCollection.find({ published: true, deleted: false }).toArray();
         res({
           status: HttpStatusCodes.Ok,
-          body: { found: ideas.map(i => renameObjectProperty(i, '_id', 'id')) },
+          body: ideas.map(i => renameObjectProperty(i, '_id', 'id')),
           headers: {},
         });
       } catch (error) {
@@ -35,7 +35,7 @@ export class QueryService {
         const idea = await ideasCollection.findOne({ _id: req.params.id });
         res({
           status: HttpStatusCodes.Ok,
-          body: { found: renameObjectProperty(idea, '_id', 'id') },
+          body: renameObjectProperty(idea, '_id', 'id'),
           headers: {},
         });
       } catch (error) {

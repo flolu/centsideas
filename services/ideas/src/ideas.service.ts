@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import { HttpRequest, HttpResponse } from '@cents-ideas/models';
+import { HttpRequest, HttpResponse, IIdeaState } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { IQueryIdeaDto, ISaveIdeaDto, IUpdateIdeaDraftDto } from './dtos/ideas.dto';
@@ -12,7 +12,7 @@ import { IdeaRepository } from './idea.repository';
 export class IdeasService {
   constructor(private commandHandler: IdeaCommandHandler, private logger: Logger, private repository: IdeaRepository) {}
 
-  createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse> =>
+  createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'create';
       try {
@@ -20,7 +20,7 @@ export class IdeasService {
         const idea = await this.commandHandler.create();
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { created: idea.persistedState },
+          body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
@@ -29,7 +29,7 @@ export class IdeasService {
       }
     });
 
-  saveDraft = (req: HttpRequest<ISaveIdeaDto, IQueryIdeaDto>): Promise<HttpResponse> =>
+  saveDraft = (req: HttpRequest<ISaveIdeaDto, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'save draft';
       try {
@@ -37,7 +37,7 @@ export class IdeasService {
         const idea = await this.commandHandler.saveDraft(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { saved: idea.persistedState },
+          body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
@@ -46,7 +46,7 @@ export class IdeasService {
       }
     });
 
-  discardDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
+  discardDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'discard draft';
       try {
@@ -54,7 +54,7 @@ export class IdeasService {
         const idea = await this.commandHandler.discardDraft(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { updated: idea.persistedState },
+          body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
@@ -63,7 +63,7 @@ export class IdeasService {
       }
     });
 
-  commitDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
+  commitDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'commit draft';
       try {
@@ -71,7 +71,7 @@ export class IdeasService {
         const idea = await this.commandHandler.commitDraft(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { updated: idea.persistedState },
+          body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
@@ -80,7 +80,7 @@ export class IdeasService {
       }
     });
 
-  publish = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
+  publish = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'publish';
       try {
@@ -88,7 +88,7 @@ export class IdeasService {
         const idea = await this.commandHandler.publish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { published: idea.persistedState },
+          body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
@@ -97,7 +97,7 @@ export class IdeasService {
       }
     });
 
-  update = (req: HttpRequest<IUpdateIdeaDraftDto>): Promise<HttpResponse> =>
+  update = (req: HttpRequest<IUpdateIdeaDraftDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'update';
       try {
@@ -105,7 +105,7 @@ export class IdeasService {
         const idea = await this.commandHandler.update(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { updated: idea.persistedState },
+          body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
@@ -114,7 +114,7 @@ export class IdeasService {
       }
     });
 
-  unpublish = (req: HttpRequest): Promise<HttpResponse> =>
+  unpublish = (req: HttpRequest): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'unpublish';
       try {
@@ -122,7 +122,7 @@ export class IdeasService {
         const idea = await this.commandHandler.unpublish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { unpublished: idea.persistedState },
+          body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
@@ -131,7 +131,7 @@ export class IdeasService {
       }
     });
 
-  delete = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse> =>
+  delete = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'delete';
       try {
@@ -139,7 +139,7 @@ export class IdeasService {
         const idea = await this.commandHandler.delete(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { deleted: idea.persistedState },
+          body: idea.persistedState,
           headers: {},
         });
       } catch (error) {

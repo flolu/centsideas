@@ -1,7 +1,4 @@
-import * as pino from 'pino';
 import { injectable } from 'inversify';
-
-// FIXME refactor all logs to fit new logger
 
 @injectable()
 export class Logger {

@@ -1,8 +1,6 @@
 import { Event } from '@cents-ideas/event-sourcing';
 import { IdeaEvents } from '@cents-ideas/enums';
-import { IIdeaDraftSavedEvent } from '@cents-ideas/models';
-
-import { IIdeaState } from '../idea.entity';
+import { IIdeaDraftSavedEvent, IIdeaState } from '@cents-ideas/models';
 
 export class IdeaDraftSavedEvent extends Event<IIdeaDraftSavedEvent> {
   static readonly eventName: string = IdeaEvents.IdeaDraftSaved;

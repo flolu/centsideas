@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import { HttpRequest, HttpResponse } from '@cents-ideas/models';
+import { HttpRequest, HttpResponse, IReviewState } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { ReviewCommandHandler } from './review.command-handler';
@@ -16,7 +16,7 @@ export class ReviewsService {
     private repository: ReviewRepository,
   ) {}
 
-  createEmptyReview = (req: HttpRequest<ICreateReviewDto>): Promise<HttpResponse> =>
+  createEmptyReview = (req: HttpRequest<ICreateReviewDto>): Promise<HttpResponse<IReviewState>> =>
     new Promise(async resolve => {
       const _loggerName = 'create';
       try {
@@ -24,7 +24,7 @@ export class ReviewsService {
         const review = await this.commandHandler.create(req.body.ideaId);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { created: review.persistedState },
+          body: review.persistedState,
           headers: {},
         });
       } catch (error) {
@@ -33,14 +33,14 @@ export class ReviewsService {
       }
     });
 
-  saveDraft = (req: HttpRequest<ISaveReviewDto, IQueryReviewDto>): Promise<HttpResponse> =>
+  saveDraft = (req: HttpRequest<ISaveReviewDto, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
     new Promise(async resolve => {
       const _loggerName = 'save draft';
       try {
         const review = await this.commandHandler.saveDraft(req.params.id, req.body.content, req.body.scores);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { saved: review.persistedState },
+          body: review.persistedState,
           headers: {},
         });
       } catch (error) {
