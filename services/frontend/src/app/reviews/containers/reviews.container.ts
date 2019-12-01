@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { ActivatedRoute } from '@angular/router';
+
+import { AppState } from '@ci-frontend/app';
+
+import { ReviewsActions } from '..';
 
 @Component({
   selector: 'ci-reviews',
@@ -8,7 +14,7 @@ import { FormControl, FormGroup } from '@angular/forms';
     <form [formGroup]="form">
       <label>
         Rate this idea
-        <input type="text" formControlName="description" />
+        <input type="text" formControlName="content" />
       </label>
       <br />
       <label>
@@ -62,7 +68,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class ReviewsContainer {
   form = new FormGroup({
-    description: new FormControl(''),
+    content: new FormControl(''),
     control: new FormControl(1),
     entry: new FormControl(1),
     need: new FormControl(1),
@@ -71,7 +77,21 @@ export class ReviewsContainer {
   });
   states = [1, 2, 3, 4, 5];
 
+  constructor(private store: Store<AppState>, private route: ActivatedRoute) {}
+
   onSubmit = () => {
-    console.log('submit review', this.form.value);
+    this.store.dispatch(
+      ReviewsActions.createReview({
+        ideaId: this.route.snapshot.params.id,
+        content: this.form.value.content,
+        scores: {
+          control: this.form.value.control,
+          entry: this.form.value.entry,
+          need: this.form.value.need,
+          time: this.form.value.time,
+          scale: this.form.value.scale,
+        },
+      }),
+    );
   };
 }

@@ -1,3 +1,6 @@
+import { IReviewViewModel } from './review.view-model';
+import { IReviewScores } from '../entities';
+
 export interface IIdeaViewModel {
   id: string;
   title: string;
@@ -10,8 +13,8 @@ export interface IIdeaViewModel {
   deleted: boolean;
   deletedAt: string | null;
   draft: null | { title: string; description: string };
-  reviews: any[];
+  reviews: IReviewViewModel[];
+  scores: IReviewScores;
   user: any;
-  scores: any;
   lastEventId: string;
 }

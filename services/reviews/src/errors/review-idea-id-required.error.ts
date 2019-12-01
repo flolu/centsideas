@@ -9,6 +9,6 @@ export class ReviewIdeaIdRequiredError extends ReviewError {
   };
 
   constructor() {
-    super(`Idea id required`, HttpStatusCodes.BadRequest);
+    super(`Review id required`, HttpStatusCodes.BadRequest);
   }
 }

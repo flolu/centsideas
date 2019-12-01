@@ -76,6 +76,14 @@ export class GatewayServer implements IServer {
       `/${ApiEndpoints.Reviews}/:id/${ReviewsApiRoutes.SaveDraft}`,
       this.expressAdapter.makeJsonAdapter(`${reviewsHost}/${ReviewsApiInternalRoutes.SaveDraft}`),
     );
+    this.app.put(
+      `/${ApiEndpoints.Reviews}/:id/${ReviewsApiRoutes.Update}`,
+      this.expressAdapter.makeJsonAdapter(`${reviewsHost}/${ReviewsApiInternalRoutes.Update}`),
+    );
+    this.app.put(
+      `/${ApiEndpoints.Reviews}/:id/${ReviewsApiRoutes.Publish}`,
+      this.expressAdapter.makeJsonAdapter(`${reviewsHost}/${ReviewsApiInternalRoutes.Publish}`),
+    );
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
       return res.status(200).send();
