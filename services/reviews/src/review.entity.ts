@@ -1,9 +1,10 @@
 import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 import { IReviewScores, IReviewState } from '@cents-ideas/models';
 
-import { commitFunctions, ReviewCreatedEvent } from './events';
+import { commitFunctions, ReviewCreatedEvent, ReviewUnpublishedEvent, ReviewUpdatedEvent } from './events';
 import { ReviewNotFoundError } from './errors';
 import { ReviewDraftSavedEvent } from './events/review-draft-saved.event';
+import { ReviewPublishedEvent } from './events/review-published.event';
 
 export class Review extends EventEntity<IReviewState> {
   static initialState: IReviewState = {
@@ -40,6 +41,21 @@ export class Review extends EventEntity<IReviewState> {
 
   saveDraft(content?: string, scores?: IReviewScores) {
     this.pushEvents(new ReviewDraftSavedEvent(this.persistedState.id, content, scores));
+    return this;
+  }
+
+  publish() {
+    this.pushEvents(new ReviewPublishedEvent(this.persistedState.id));
+    return this;
+  }
+
+  unpublish() {
+    this.pushEvents(new ReviewUnpublishedEvent(this.persistedState.id));
+    return this;
+  }
+
+  update(content?: string, scores?: IReviewScores) {
+    this.pushEvents(new ReviewUpdatedEvent(this.persistedState.id, content, scores));
     return this;
   }
 }

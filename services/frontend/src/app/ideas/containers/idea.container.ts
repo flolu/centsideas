@@ -4,16 +4,16 @@ import { Store } from '@ngrx/store';
 
 import { AppState } from '@ci-frontend/app';
 import { IdeasSelectors, IdeasActions } from '..';
-import { Router } from 'express';
 import { ActivatedRoute } from '@angular/router';
 import { take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ci-idea',
   template: `
-    <ci-ideas-card [idea]="idea$ | async" (clickedTitle)="onIdeaTitleClicked(i)"></ci-ideas-card>
+    <ci-ideas-card [idea]="idea$ | async"></ci-ideas-card>
     <p>{{ (idea$ | async)?.description }}</p>
     <p>Published at: {{ (idea$ | async)?.publishedAt | date }}</p>
+    <ci-reviews></ci-reviews>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppStoreModule } from './app-store.module';
 import { AppComponent } from './app.component';
+import { ReviewsModule } from './review/reviews.module';
 
 @NgModule({
   declarations: [AppComponent],

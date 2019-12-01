@@ -77,10 +77,10 @@ export class IdeaCommandHandler implements IIdeaCommandHandler {
     const idea = await this.repository.findById(ideaId);
     IdeaDeletedError.validate(ideaId, idea.persistedState.deleted);
     IdeaAlreadyPublishedError.validate(idea.persistedState.published);
-    idea.publish();
     SaveIdeaPayloadRequiredError.validate(idea.persistedState.title, idea.persistedState.description);
     IdeaTitleLengthError.validate(idea.persistedState.title);
     IdeaDescriptionLengthError.validate(idea.persistedState.description);
+    idea.publish();
     return this.repository.save(idea);
   };
 

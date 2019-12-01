@@ -3,4 +3,5 @@ export enum ReviewEvents {
   ReviewDraftSaved = 'review-draft-saved',
   ReviewPublished = 'review-published',
   ReviewUnpublished = 'review-unpublished',
+  ReviewUpdated = 'review-updated',
 }

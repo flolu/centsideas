@@ -26,9 +26,9 @@ export class ReviewsServer implements IServer {
       this.expressAdapter.json(this.reviewsService.createEmptyReview),
     );
     this.app.post(`/${ReviewsApiInternalRoutes.SaveDraft}`, this.expressAdapter.json(this.reviewsService.saveDraft));
-    /*this.app.post('/publish', this.expressAdapter.json(this.reviewsService.publish));
-    this.app.post('/update', this.expressAdapter.json(this.reviewsService.update));
-    this.app.post('/unpublish', this.expressAdapter.json(this.reviewsService.unpublish)); */
+    this.app.post(`/${ReviewsApiInternalRoutes.Publish}`, this.expressAdapter.json(this.reviewsService.publish));
+    this.app.post(`/${ReviewsApiInternalRoutes.Update}`, this.expressAdapter.json(this.reviewsService.update));
+    this.app.post(`/${ReviewsApiInternalRoutes.Unpublish}`, this.expressAdapter.json(this.reviewsService.unpublish));
 
     this.app.get('/alive', (_req, res) => {
       return res.status(200).send();

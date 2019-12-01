@@ -6,9 +6,10 @@ import { IdeasService } from './ideas.service';
 import { IdeasEffects } from './ideas.effects';
 import { IdeasContainers } from './containers';
 import { IdeasComponents } from './components';
+import { ReviewsModule } from '../review/reviews.module';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ReviewsModule],
   declarations: [...IdeasContainers, ...IdeasComponents],
   providers: [IdeasService, IdeasEffects],
 })

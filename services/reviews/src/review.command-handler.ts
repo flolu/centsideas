@@ -2,10 +2,17 @@ import { injectable } from 'inversify';
 
 import { sanitizeHtml } from '@cents-ideas/utils';
 
-import { ReviewIdeaIdRequiredError, ReviewContentLengthError, ReviewScoresRangeError } from './errors';
+import {
+  ReviewIdeaIdRequiredError,
+  ReviewContentLengthError,
+  ReviewScoresRangeError,
+  ReviewAlreadyPublishedError,
+  SaveReviewPayloadRequiredError,
+} from './errors';
 import { Review } from './review.entity';
 import { ReviewRepository } from './review.repository';
 import { IReviewScores } from '@cents-ideas/models';
+import { ReviewAlreadyUnpublishedError } from './errors/review-already-unpublished.error';
 
 export interface IIdeaCommandHandler {}
 
@@ -31,6 +38,36 @@ export class ReviewCommandHandler implements IIdeaCommandHandler {
     }
     const review = await this.repository.findById(reviewId);
     review.saveDraft(content, scores);
+    return this.repository.save(review);
+  };
+
+  publish = async (reviewId: string): Promise<Review> => {
+    ReviewIdeaIdRequiredError.validate(reviewId);
+    const review = await this.repository.findById(reviewId);
+    ReviewAlreadyPublishedError.validate(review.persistedState.published, review.persistedState.id);
+    SaveReviewPayloadRequiredError.validate(review.persistedState.content, review.persistedState.scores);
+    ReviewContentLengthError.validate(review.persistedState.content);
+    ReviewScoresRangeError.validate(review.persistedState.scores);
+    review.publish();
+    return this.repository.save(review);
+  };
+
+  unpublish = async (reviewId: string): Promise<Review> => {
+    ReviewIdeaIdRequiredError.validate(reviewId);
+    const review = await this.repository.findById(reviewId);
+    ReviewAlreadyUnpublishedError.validate(review.persistedState.published, review.persistedState.id);
+    review.unpublish();
+    return this.repository.save(review);
+  };
+
+  update = async (reviewId: string, content: string, scores: IReviewScores): Promise<Review> => {
+    ReviewIdeaIdRequiredError.validate(reviewId);
+    content = sanitizeHtml(content || '');
+    SaveReviewPayloadRequiredError.validate(content, scores);
+    ReviewContentLengthError.validate(content);
+    ReviewScoresRangeError.validate(scores);
+    const review = await this.repository.findById(reviewId);
+    review.update(content, scores);
     return this.repository.save(review);
   };
 }

@@ -9,6 +9,11 @@ export interface ISaveReviewDto {
   scores?: IReviewScores;
 }
 
+export interface IUpdateReviewDto {
+  content: string;
+  scores: IReviewScores;
+}
+
 export interface IQueryReviewDto {
   id: string;
 }

@@ -11,7 +11,7 @@
 | Requirement             | Keywords                            | Importance | Status |
 | ----------------------- | ----------------------------------- | ---------- | ------ |
 | Event Sourcing          | CQRS, Event-Driven, Commands, Kafka | 🔥         | ⏳     |
-| Deployment              | CI, CD, Build Pipeline, Rollback    | 🔥         | ❌     |
+| Deployment              | CI, CD, Build Pipeline, Rollback    | 🔥         | ⏳     |
 | Test Driven Development | Unit Tests, Integration Tests       | 🔥         | ⏳     |
 | Microservices           | Small, Independent                  | 🔥         | ✅     |
 | Docker                  | Container                           | 🔥         | ✅     |

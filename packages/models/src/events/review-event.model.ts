@@ -10,4 +10,9 @@ export interface IReviewDraftSavedEvent {
   scores?: IReviewScores;
 }
 
+export interface IReviewUpdatedEvent {
+  content?: string;
+  scores?: IReviewScores;
+}
+
 export interface IReviewPublishedEvent {}

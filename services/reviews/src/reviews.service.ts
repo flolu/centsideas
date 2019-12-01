@@ -6,7 +6,7 @@ import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { ReviewCommandHandler } from './review.command-handler';
 import { ReviewRepository } from './review.repository';
-import { ICreateReviewDto, IQueryReviewDto, ISaveReviewDto } from './dtos';
+import { ICreateReviewDto, IQueryReviewDto, ISaveReviewDto, IUpdateReviewDto } from './dtos';
 
 @injectable()
 export class ReviewsService {
@@ -38,6 +38,54 @@ export class ReviewsService {
       const _loggerName = 'save draft';
       try {
         const review = await this.commandHandler.saveDraft(req.params.id, req.body.content, req.body.scores);
+        resolve({
+          status: HttpStatusCodes.Accepted,
+          body: review.persistedState,
+          headers: {},
+        });
+      } catch (error) {
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        resolve(handleHttpResponseError(error));
+      }
+    });
+
+  publish = (req: HttpRequest<{}, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
+    new Promise(async resolve => {
+      const _loggerName = 'publish';
+      try {
+        const review = await this.commandHandler.publish(req.params.id);
+        resolve({
+          status: HttpStatusCodes.Accepted,
+          body: review.persistedState,
+          headers: {},
+        });
+      } catch (error) {
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        resolve(handleHttpResponseError(error));
+      }
+    });
+
+  unpublish = (req: HttpRequest<{}, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
+    new Promise(async resolve => {
+      const _loggerName = 'unpublish';
+      try {
+        const review = await this.commandHandler.unpublish(req.params.id);
+        resolve({
+          status: HttpStatusCodes.Accepted,
+          body: review.persistedState,
+          headers: {},
+        });
+      } catch (error) {
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        resolve(handleHttpResponseError(error));
+      }
+    });
+
+  update = (req: HttpRequest<IUpdateReviewDto, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
+    new Promise(async resolve => {
+      const _loggerName = 'update';
+      try {
+        const review = await this.commandHandler.update(req.params.id, req.body.content, req.body.scores);
         resolve({
           status: HttpStatusCodes.Accepted,
           body: review.persistedState,
