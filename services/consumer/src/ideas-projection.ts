@@ -72,7 +72,7 @@ export class IdeasProjection {
       lastEventId: '',
       reviews: [],
       user: null,
-      scores: null,
+      scores: { control: 0, entry: 0, need: 0, time: 0, scale: 0 },
     };
     await this.ideasCollection.insertOne(renameObjectProperty(idea, 'id', '_id'));
   };

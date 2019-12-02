@@ -7,9 +7,9 @@ export interface IReviewViewModel {
   scores: IReviewScores;
   createdAt: string;
   published: boolean;
-  publishedAt: string;
-  unpublishedAt: string;
-  updatedAt: string;
+  publishedAt: string | null;
+  unpublishedAt: string | null;
+  updatedAt: string | null;
   draft: {
     content: string;
     scores: IReviewScores;

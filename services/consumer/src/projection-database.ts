@@ -11,6 +11,7 @@ export class ProjectionDatabase {
   private client!: MongoClient;
   private db!: Db;
   private ideasCollection!: Collection;
+  private reviewsCollection!: Collection;
   private hasInitialized = false;
 
   constructor(private logger: Logger) {
@@ -42,6 +43,7 @@ export class ProjectionDatabase {
         });
         this.db = this.client.db('projection-database');
         this.ideasCollection = this.db.collection('ideas');
+        this.reviewsCollection = this.db.collection('reviews');
         this.logger.debug('projection database initialized');
         this.hasInitialized = true;
         res();
@@ -54,6 +56,11 @@ export class ProjectionDatabase {
   ideas = async (): Promise<Collection> => {
     await this.waitUntilInitialized();
     return this.ideasCollection;
+  };
+
+  reviews = async (): Promise<Collection> => {
+    await this.waitUntilInitialized();
+    return this.reviewsCollection;
   };
 
   private waitUntilInitialized = (): Promise<boolean> =>

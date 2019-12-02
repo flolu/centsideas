@@ -8,7 +8,6 @@ import { Identifier, renameObjectProperty, Logger } from '@cents-ideas/utils';
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
 import { IEvent, MessageBroker } from '.';
-import { rename } from 'fs';
 
 export interface IEntityConstructor<Entity> {
   new (snapshot?: ISnapshot): Entity;

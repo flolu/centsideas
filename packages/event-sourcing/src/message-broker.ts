@@ -17,7 +17,6 @@ export class MessageBroker {
   };
   private kafka: Kafka | undefined;
   private producer: Producer | undefined;
-  private consumer: Consumer | undefined;
 
   constructor(private logger: Logger) {}
 
@@ -38,20 +37,22 @@ export class MessageBroker {
   };
 
   // FIXME use rxjs
-  subscribe = async (topic: string = 'test-topic', callback: (event: IEvent) => void) => {
-    if (!this.consumer) {
-      if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
-      this.consumer = this.kafka.consumer({
-        groupId: 'test-group' + Number(Date.now()).toString(),
-        rebalanceTimeout: 1000,
-      });
-    }
-    await this.consumer.connect();
-    await this.consumer.subscribe({ topic });
-    await this.consumer.run({
+  subscribe = async (topic: string, callback: (event: IEvent) => void) => {
+    if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
+    const consumer: Consumer = this.kafka.consumer({
+      groupId:
+        'test-group' +
+        Math.random()
+          .toString(36)
+          .substr(2, 9),
+      rebalanceTimeout: 1000,
+    });
+    await consumer.connect();
+    await consumer.subscribe({ topic });
+    await consumer.run({
       eachMessage: async ({ message }) => {
         const event: IEvent = JSON.parse(message.value.toString());
-        this.logger.debug(`consumed ${event.name} event`);
+        this.logger.debug(`consumed ${event.name} event from topic: ${topic}`);
         callback(event);
       },
     });

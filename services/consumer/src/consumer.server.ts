@@ -10,6 +10,7 @@ import { IdeasApiInternalRoutes, ApiEndpoints } from '@cents-ideas/enums';
 import { IConsumerEnvironment } from './environment';
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas-projection';
+import { ReviewsProjection } from './reviews.projection';
 
 @injectable()
 export class ConsumerServer implements IServer {
@@ -22,6 +23,7 @@ export class ConsumerServer implements IServer {
     private expressAdapter: ExpressAdapter,
     private queryService: QueryService,
     private ideasProjection: IdeasProjection,
+    private reviewsProjection: ReviewsProjection,
   ) {}
 
   start = (env: IConsumerEnvironment) => {
@@ -29,7 +31,9 @@ export class ConsumerServer implements IServer {
     this.env = env;
 
     this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
+    // TODO put topics names into enums
     this.messageBroker.subscribe('ideas', this.ideasProjection.handleEvent);
+    this.messageBroker.subscribe('reviews', this.reviewsProjection.handleEvent);
 
     this.app.use(bodyParser.json());
 

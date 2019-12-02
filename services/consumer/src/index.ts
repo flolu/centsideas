@@ -8,6 +8,7 @@ import env from './environment';
 import { ProjectionDatabase } from './projection-database';
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas-projection';
+import { ReviewsProjection } from './reviews.projection';
 
 const bootstrap = () => {
   process.env.LOGGER_PREFIX = '🍝';
@@ -19,6 +20,7 @@ const bootstrap = () => {
     ExpressAdapter,
     QueryService,
     IdeasProjection,
+    ReviewsProjection,
   );
   const server: ConsumerServer = getProvider(ConsumerServer);
   server.start(env);
