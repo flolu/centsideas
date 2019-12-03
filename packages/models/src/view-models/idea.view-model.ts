@@ -16,5 +16,6 @@ export interface IIdeaViewModel {
   reviews: IReviewViewModel[];
   scores: IReviewScores;
   user: any;
+  // TODO frontend receives lastEvent: { ... } in frontend, but should be lastEventId: "..."
   lastEventId: string;
 }

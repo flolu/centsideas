@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AppState } from '@ci-frontend/app';
 
 import { ReviewsActions } from '..';
+import { IReviewViewModel } from '@cents-ideas/models';
 
 @Component({
   selector: 'ci-reviews',
@@ -18,7 +19,7 @@ import { ReviewsActions } from '..';
       </label>
       <br />
       <label>
-        Control
+        🎚 Control
         <select formControlName="control">
           <option *ngFor="let state of states" [ngValue]="state">
             {{ state }}
@@ -27,7 +28,7 @@ import { ReviewsActions } from '..';
       </label>
       <br />
       <label>
-        Entry
+        🚪 Entry
         <select formControlName="entry">
           <option *ngFor="let state of states" [ngValue]="state">
             {{ state }}
@@ -36,7 +37,7 @@ import { ReviewsActions } from '..';
       </label>
       <br />
       <label>
-        Need
+        🙏 Need
         <select formControlName="need">
           <option *ngFor="let state of states" [ngValue]="state">
             {{ state }}
@@ -45,7 +46,7 @@ import { ReviewsActions } from '..';
       </label>
       <br />
       <label>
-        Time
+        ⏰ Time
         <select formControlName="time">
           <option *ngFor="let state of states" [ngValue]="state">
             {{ state }}
@@ -54,7 +55,7 @@ import { ReviewsActions } from '..';
       </label>
       <br />
       <label>
-        Scale
+        🐘 Scale
         <select formControlName="scale">
           <option *ngFor="let state of states" [ngValue]="state">
             {{ state }}
@@ -64,9 +65,13 @@ import { ReviewsActions } from '..';
       <br />
       <button (click)="onSubmit()">Submit</button>
     </form>
+    <span>Reviews: </span>
+    <ci-review *ngFor="let r of reviews" [review]="r"></ci-review>
   `,
 })
 export class ReviewsContainer {
+  @Input() reviews: IReviewViewModel[];
+
   form = new FormGroup({
     content: new FormControl(''),
     control: new FormControl(1),
@@ -75,7 +80,7 @@ export class ReviewsContainer {
     time: new FormControl(1),
     scale: new FormControl(1),
   });
-  states = [1, 2, 3, 4, 5];
+  states = [0, 1, 2, 3, 4, 5];
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {}
 

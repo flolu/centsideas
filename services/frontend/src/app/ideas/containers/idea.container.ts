@@ -13,7 +13,7 @@ import { take, tap } from 'rxjs/operators';
     <ci-ideas-card [idea]="idea$ | async"></ci-ideas-card>
     <p>{{ (idea$ | async)?.description }}</p>
     <p>Published at: {{ (idea$ | async)?.publishedAt | date }}</p>
-    <ci-reviews></ci-reviews>
+    <ci-reviews [reviews]="(idea$ | async)?.reviews"></ci-reviews>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,8 +26,8 @@ export class IdeaContainer {
       .pipe(
         take(1),
         tap(idea => {
+          this.store.dispatch(IdeasActions.getIdeaById({ id: this.ideaId }));
           if (!idea) {
-            this.store.dispatch(IdeasActions.getIdeaById({ id: this.ideaId }));
           }
         }),
       )

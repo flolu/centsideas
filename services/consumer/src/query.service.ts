@@ -15,6 +15,7 @@ export class QueryService {
       const _loggerName = 'get all ideas';
       try {
         const ideasCollection = await this.projectionDatabase.ideas();
+        const reviewsCollection = await this.projectionDatabase.reviews();
         const ideas = await ideasCollection.find({ published: true, deleted: false }).toArray();
         res({
           status: HttpStatusCodes.Ok,
@@ -32,10 +33,20 @@ export class QueryService {
       const _loggerName = 'get one idea by id';
       try {
         const ideasCollection = await this.projectionDatabase.ideas();
+        const reviewsCollection = await this.projectionDatabase.reviews();
         const idea = await ideasCollection.findOne({ _id: req.params.id });
+        const reviews = await reviewsCollection.find({ ideaId: req.params.id }).toArray();
+        const renamedReviews = reviews.map(r => renameObjectProperty(r, '_id', 'id'));
         res({
           status: HttpStatusCodes.Ok,
-          body: renameObjectProperty(idea, '_id', 'id'),
+          body: renameObjectProperty(
+            {
+              ...idea,
+              reviews: renamedReviews,
+            },
+            '_id',
+            'id',
+          ),
           headers: {},
         });
       } catch (error) {

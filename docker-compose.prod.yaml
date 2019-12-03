@@ -12,7 +12,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   # frontend
-  # // TODO fix Http failure response for http://localhost:3000/ideas: 0 Unknown Error', on angular server side
+  # // FIXME fix Http failure response for http://localhost:3000/ideas: 0 Unknown Error', on angular server side
   frontend:
     ports:
       - 4000:4000
