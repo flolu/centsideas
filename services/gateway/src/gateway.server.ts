@@ -5,22 +5,17 @@ import { injectable } from 'inversify';
 
 import { IServer } from '@cents-ideas/models';
 import { Logger } from '@cents-ideas/utils';
-import {
-  ApiEndpoints,
-  IdeasApiRoutes,
-  IdeasApiInternalRoutes,
-  ReviewsApiRoutes,
-  ReviewsApiInternalRoutes,
-} from '@cents-ideas/enums';
+import { ApiEndpoints } from '@cents-ideas/enums';
 
 import { IGatewayEnvironment } from './environment';
-import { ExpressAdapter } from './express-adapter';
+import { ReviewsRoutes } from './reviews.routes';
+import { IdeasRoutes } from './ideas.routes';
 
 @injectable()
 export class GatewayServer implements IServer {
   private app = express();
 
-  constructor(private logger: Logger, private expressAdapter: ExpressAdapter) {}
+  constructor(private logger: Logger, private ideasRoutes: IdeasRoutes, private reviewsRoutes: ReviewsRoutes) {}
 
   start = (env: IGatewayEnvironment) => {
     this.logger.debug('initialized with env: ', env);
@@ -31,60 +26,8 @@ export class GatewayServer implements IServer {
     this.app.use(bodyParser.json());
     this.app.use(cors());
 
-    // FIXME structure this ugly stuff below
-    this.app.post(
-      `/${ApiEndpoints.Ideas}`,
-      this.expressAdapter.makeJsonAdapter(`${ideasHost}/${IdeasApiInternalRoutes.Create}`),
-    );
-    this.app.put(
-      `/${ApiEndpoints.Ideas}/:id`,
-      this.expressAdapter.makeJsonAdapter(`${ideasHost}/${IdeasApiInternalRoutes.Update}`),
-    );
-    this.app.put(
-      `/${ApiEndpoints.Ideas}/:id/${IdeasApiRoutes.SaveDraft}`,
-      this.expressAdapter.makeJsonAdapter(`${ideasHost}/${IdeasApiInternalRoutes.SaveDraft}`),
-    );
-    this.app.put(
-      `/${ApiEndpoints.Ideas}/:id/${IdeasApiRoutes.CommitDraft}`,
-      this.expressAdapter.makeJsonAdapter(`${ideasHost}/${IdeasApiInternalRoutes.CommitDraft}`),
-    );
-    this.app.put(
-      `/${ApiEndpoints.Ideas}/:id/${IdeasApiRoutes.Publish}`,
-      this.expressAdapter.makeJsonAdapter(`${ideasHost}/${IdeasApiInternalRoutes.Publish}`),
-    );
-    this.app.put(
-      `/${ApiEndpoints.Ideas}/:id/${IdeasApiRoutes.Unpublish}`,
-      this.expressAdapter.makeJsonAdapter(`${ideasHost}/${IdeasApiInternalRoutes.Unpublish}`),
-    );
-    this.app.delete(
-      `/${ApiEndpoints.Ideas}/:id`,
-      this.expressAdapter.makeJsonAdapter(`${ideasHost}/${IdeasApiInternalRoutes.Delete}`),
-    );
-    this.app.get(
-      `/${ApiEndpoints.Ideas}`,
-      this.expressAdapter.makeJsonAdapter(`${consumerHost}/${ApiEndpoints.Ideas}/${IdeasApiInternalRoutes.GetAll}`),
-    );
-    this.app.get(
-      `/${ApiEndpoints.Ideas}/:id`,
-      this.expressAdapter.makeJsonAdapter(`${consumerHost}/${ApiEndpoints.Ideas}/${IdeasApiInternalRoutes.GetById}`),
-    );
-
-    this.app.post(
-      `/${ApiEndpoints.Reviews}`,
-      this.expressAdapter.makeJsonAdapter(`${reviewsHost}/${ReviewsApiInternalRoutes.Create}`),
-    );
-    this.app.put(
-      `/${ApiEndpoints.Reviews}/:id/${ReviewsApiRoutes.SaveDraft}`,
-      this.expressAdapter.makeJsonAdapter(`${reviewsHost}/${ReviewsApiInternalRoutes.SaveDraft}`),
-    );
-    this.app.put(
-      `/${ApiEndpoints.Reviews}/:id/${ReviewsApiRoutes.Update}`,
-      this.expressAdapter.makeJsonAdapter(`${reviewsHost}/${ReviewsApiInternalRoutes.Update}`),
-    );
-    this.app.put(
-      `/${ApiEndpoints.Reviews}/:id/${ReviewsApiRoutes.Publish}`,
-      this.expressAdapter.makeJsonAdapter(`${reviewsHost}/${ReviewsApiInternalRoutes.Publish}`),
-    );
+    this.app.use(`/${ApiEndpoints.Ideas}`, this.ideasRoutes.setup(ideasHost, consumerHost));
+    this.app.use(`/${ApiEndpoints.Reviews}`, this.reviewsRoutes.setup(reviewsHost));
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
       return res.status(200).send();

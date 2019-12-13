@@ -30,7 +30,6 @@ export class IdeasProjection {
     this.ideasCollection = await this.projectionDatabase.ideas();
   };
 
-  // FIXME maybe utilize same reducer as in ideas service??!?!?!?
   handleEvent = async (event: IEvent) => {
     if (!this.ideasCollection) {
       this.ideasCollection = await this.projectionDatabase.ideas();

@@ -4,11 +4,13 @@ import { registerProviders, Logger, getProvider } from '@cents-ideas/utils';
 
 import { GatewayServer } from './gateway.server';
 import { ExpressAdapter } from './express-adapter';
+import { IdeasRoutes } from './ideas.routes';
+import { ReviewsRoutes } from './reviews.routes';
 import env from './environment';
 
 const bootstrap = () => {
   process.env.LOGGER_PREFIX = '⛩️';
-  registerProviders(Logger, ExpressAdapter, GatewayServer);
+  registerProviders(Logger, ExpressAdapter, GatewayServer, IdeasRoutes, ReviewsRoutes);
   const server: GatewayServer = getProvider(GatewayServer);
   server.start(env);
 };

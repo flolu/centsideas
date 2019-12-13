@@ -36,7 +36,6 @@ export class MessageBroker {
     return this.producer.send({ topic, messages });
   };
 
-  // FIXME use rxjs
   subscribe = async (topic: string, callback: (event: IEvent) => void) => {
     if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
     const consumer: Consumer = this.kafka.consumer({

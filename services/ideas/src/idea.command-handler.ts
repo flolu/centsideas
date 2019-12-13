@@ -58,7 +58,6 @@ export class IdeaCommandHandler implements IIdeaCommandHandler {
     return this.repository.save(idea);
   };
 
-  // FIXME should commit draft override current title and description? ... probably yes but frontend needs to warn
   commitDraft = async (ideaId: string): Promise<Idea> => {
     IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);

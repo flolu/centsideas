@@ -1,4 +1,3 @@
-// FIXME rename
 export interface IIdeaState {
   id: string;
   title: string;

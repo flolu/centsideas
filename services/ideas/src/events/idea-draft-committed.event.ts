@@ -10,8 +10,8 @@ export class IdeaDraftCommittedEvent extends Event<IIdeaDraftCommittedEvent> {
   }
 
   static commit(state: IIdeaState): IIdeaState {
-    state.title = (state.draft && state.draft.title) || '';
-    state.description = (state.draft && state.draft.description) || '';
+    state.title = (state.draft && state.draft.title) || state.title;
+    state.description = (state.draft && state.draft.description) || state.description;
     state.draft = null;
     state.updatedAt = new Date().toISOString();
     return state;
