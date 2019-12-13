@@ -31,6 +31,7 @@ export class GatewayServer implements IServer {
     this.app.use(bodyParser.json());
     this.app.use(cors());
 
+    // FIXME structure this ugly stuff below
     this.app.post(
       `/${ApiEndpoints.Ideas}`,
       this.expressAdapter.makeJsonAdapter(`${ideasHost}/${IdeasApiInternalRoutes.Create}`),

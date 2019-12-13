@@ -14,6 +14,5 @@ export interface IReviewViewModel {
     content: string;
     scores: IReviewScores;
   } | null;
-  // TODO lastEventId is empty string
   lastEventId: string;
 }

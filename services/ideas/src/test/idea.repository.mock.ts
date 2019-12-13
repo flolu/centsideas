@@ -8,6 +8,6 @@ import { Idea } from '../idea.entity';
 export class IdeaRepositoryMock extends EventRepositoryMock<Idea> {
   constructor() {
     super();
-    this.initialize(Idea, '', '');
+    this.initialize(Idea, '', '', '');
   }
 }

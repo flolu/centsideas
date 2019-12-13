@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 
 import { EventRepository, MessageBroker } from '@cents-ideas/event-sourcing';
 import { Logger } from '@cents-ideas/utils';
+import { EventTopics } from '@cents-ideas/enums';
 
 import { Review } from './review.entity';
 import env from './environment';
@@ -10,6 +11,6 @@ import env from './environment';
 export class ReviewRepository extends EventRepository<Review> {
   constructor(private _messageBroker: MessageBroker, private _logger: Logger) {
     super(_messageBroker, _logger);
-    this.initialize(Review, env.database.url, env.database.name);
+    this.initialize(Review, env.database.url, env.database.name, EventTopics.Reviews);
   }
 }

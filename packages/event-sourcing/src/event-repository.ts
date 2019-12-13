@@ -18,6 +18,7 @@ export interface IEventRepository<Entity> {
     entity: IEntityConstructor<Entity>,
     url: string,
     name: string,
+    topicName: string,
     minNumberOfEventsToCreateSnapshot: number,
   ) => void;
   save: (entity: Entity) => Promise<Entity>;
@@ -36,8 +37,8 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   private snapshotCollection!: Collection;
   private counterCollection!: Collection;
   private namespace!: string;
+  private topicName!: string;
   private snapshotThreshold!: number;
-
   private hasInitializedBeenCalled: boolean = false;
   private hasInitialized: boolean = false;
 
@@ -50,6 +51,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
     entity: IEntityConstructor<Entity>,
     url: string,
     name: string,
+    topicName: string,
     minNumberOfEventsToCreateSnapshot: number = 100,
   ): Promise<any> => {
     return new Promise(async (res, rej) => {
@@ -60,6 +62,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
         this.snapshotThreshold = minNumberOfEventsToCreateSnapshot;
         this._Entity = entity;
         this.namespace = name;
+        this.topicName = topicName;
 
         this.client = await retry(async () => {
           this.logger.debug(`retry to connect to ${name} database`);
@@ -136,7 +139,7 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
       } event store`,
     );
 
-    await Promise.all(appendedEvents.map(e => this.messageBroker.send(this.namespace, [{ value: JSON.stringify(e) }])));
+    await Promise.all(appendedEvents.map(e => this.messageBroker.send(this.topicName, [{ value: JSON.stringify(e) }])));
 
     for (const event of appendedEvents) {
       if (event.eventNumber % this.snapshotThreshold === 0) {

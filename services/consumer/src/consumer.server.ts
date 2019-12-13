@@ -5,7 +5,7 @@ import * as bodyParser from 'body-parser';
 import { IServer } from '@cents-ideas/models';
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { IdeasApiInternalRoutes, ApiEndpoints } from '@cents-ideas/enums';
+import { IdeasApiInternalRoutes, ApiEndpoints, EventTopics } from '@cents-ideas/enums';
 
 import { IConsumerEnvironment } from './environment';
 import { QueryService } from './query.service';
@@ -31,9 +31,8 @@ export class ConsumerServer implements IServer {
     this.env = env;
 
     this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
-    // TODO put topics names into enums
-    this.messageBroker.subscribe('ideas', this.ideasProjection.handleEvent);
-    this.messageBroker.subscribe('reviews', this.reviewsProjection.handleEvent);
+    this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
+    this.messageBroker.subscribe(EventTopics.Reviews, this.reviewsProjection.handleEvent);
 
     this.app.use(bodyParser.json());
 

@@ -17,6 +17,7 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
     entity: IEntityConstructor<Entity>,
     url: string,
     name: string,
+    topicName: string,
     minNumberOfEventsToCreateSnapshot: number = 100,
   ) => {
     this._Entity = entity;
