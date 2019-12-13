@@ -9,6 +9,8 @@ export interface IReviewState {
   unpublishedAt: string | null;
   updatedAt: string | null;
   draft: { content: string; scores: IReviewScores } | null;
+  // TODO add lastEventId!
+  lastEventId: string;
 }
 
 export interface IReviewScores {

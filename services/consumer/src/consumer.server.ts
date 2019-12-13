@@ -9,7 +9,7 @@ import { IdeasApiInternalRoutes, ApiEndpoints } from '@cents-ideas/enums';
 
 import { IConsumerEnvironment } from './environment';
 import { QueryService } from './query.service';
-import { IdeasProjection } from './ideas-projection';
+import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
 
 @injectable()

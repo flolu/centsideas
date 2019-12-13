@@ -10,7 +10,9 @@ import { IReviewViewModel, IReviewCreatedEvent } from '@cents-ideas/models';
 export class ReviewsProjection {
   private reviewsCollection!: Collection;
 
-  constructor(private logger: Logger, private projectionDatabase: ProjectionDatabase) {}
+  constructor(private logger: Logger, private projectionDatabase: ProjectionDatabase) {
+    this.initialize();
+  }
 
   private initialize = async () => {
     this.reviewsCollection = await this.projectionDatabase.reviews();
@@ -43,6 +45,7 @@ export class ReviewsProjection {
       unpublishedAt: null,
       updatedAt: null,
       draft: null,
+      lastEventId: '',
     };
     await this.reviewsCollection.insertOne(renameObjectProperty(review, 'id', '_id'));
   };
@@ -57,6 +60,7 @@ export class ReviewsProjection {
           content: event.data.content || current.content,
           scores: event.data.scores || current.scores,
           updatedAt: event.timestamp,
+          lastEventId: event.id,
         },
       },
     );
@@ -69,10 +73,7 @@ export class ReviewsProjection {
         $set: {
           published: true,
           publishedAt: event.timestamp,
-          lastEvent: {
-            number: event.eventNumber,
-            id: event.id,
-          },
+          lastEventId: event.id,
         },
       },
     );

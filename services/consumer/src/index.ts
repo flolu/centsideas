@@ -7,7 +7,7 @@ import { ConsumerServer } from './consumer.server';
 import env from './environment';
 import { ProjectionDatabase } from './projection-database';
 import { QueryService } from './query.service';
-import { IdeasProjection } from './ideas-projection';
+import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
 
 const bootstrap = () => {

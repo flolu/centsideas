@@ -23,6 +23,7 @@ export class Review extends EventEntity<IReviewState> {
     publishedAt: null,
     unpublishedAt: null,
     updatedAt: null,
+    lastEventId: '',
     draft: null,
   };
 

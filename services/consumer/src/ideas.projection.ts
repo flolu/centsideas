@@ -89,10 +89,7 @@ export class IdeasProjection {
             title: event.data.title || (current.draft && current.draft.title) || '',
             description: event.data.description || (current.draft && current.draft.description) || '',
           },
-          lastEvent: {
-            number: event.eventNumber,
-            id: event.id,
-          },
+          lastEventId: event.id,
         },
       },
     );
@@ -109,10 +106,7 @@ export class IdeasProjection {
           title: (current.draft && current.draft.title) || '',
           description: (current.draft && current.draft.description) || '',
           updatedAt: event.timestamp,
-          lastEvent: {
-            number: event.eventNumber,
-            id: event.id,
-          },
+          lastEventId: event.id,
         },
       },
     );
@@ -124,10 +118,7 @@ export class IdeasProjection {
       {
         $set: {
           draft: null,
-          lastEvent: {
-            number: event.eventNumber,
-            id: event.id,
-          },
+          lastEventId: event.id,
         },
       },
     );
@@ -140,10 +131,7 @@ export class IdeasProjection {
         $set: {
           published: false,
           unpublishedAt: event.timestamp,
-          lastEvent: {
-            number: event.eventNumber,
-            id: event.id,
-          },
+          lastEventId: event.id,
         },
       },
     );
@@ -156,10 +144,7 @@ export class IdeasProjection {
         $set: {
           published: true,
           publishedAt: event.timestamp,
-          lastEvent: {
-            number: event.eventNumber,
-            id: event.id,
-          },
+          lastEventId: event.id,
         },
       },
     );
@@ -172,10 +157,7 @@ export class IdeasProjection {
         $set: {
           deleted: true,
           deletedAt: event.timestamp,
-          lastEvent: {
-            number: event.eventNumber,
-            id: event.id,
-          },
+          lastEventId: event.id,
         },
       },
     );
@@ -192,6 +174,7 @@ export class IdeasProjection {
           title: event.data.title || current.title,
           description: event.data.description || current.description,
           updatedAt: event.timestamp,
+          lastEventId: event.id,
         },
       },
     );
