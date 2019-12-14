@@ -24,6 +24,10 @@ import { IIdeaViewModel } from '@cents-ideas/models';
         flex-direction: row;
         align-items: center;
         padding: 5px;
+        background: var(--light-grey);
+        border: 1.5px solid var(--grey);
+        border-radius: var(--border-radius);
+        margin: 10px 0;
       }
 
       .score {
@@ -42,10 +46,11 @@ import { IIdeaViewModel } from '@cents-ideas/models';
       }
 
       .tags > span {
-        background: lightblue;
+        background: var(--secondary);
         margin-right: 5px;
         padding: 2px 5px;
-        color: darkblue;
+        color: var(--secondary-dark);
+        border-radius: var(--border-radius);
       }
     `,
   ],

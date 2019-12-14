@@ -11,63 +11,78 @@ import { IReviewViewModel } from '@cents-ideas/models';
 @Component({
   selector: 'ci-reviews',
   template: `
-    <h3>Reviews</h3>
+    <h1>Post a Review</h1>
     <form [formGroup]="form">
-      <label>
+      <label for="content">
         Rate this idea
-        <input type="text" formControlName="content" />
       </label>
       <br />
-      <label>
-        🎚 Control
-        <select formControlName="control">
-          <option *ngFor="let state of states" [ngValue]="state">
-            {{ state }}
-          </option>
-        </select>
-      </label>
+      <textarea name="content" type="text" formControlName="content"></textarea>
       <br />
-      <label>
-        🚪 Entry
-        <select formControlName="entry">
-          <option *ngFor="let state of states" [ngValue]="state">
-            {{ state }}
-          </option>
-        </select>
-      </label>
-      <br />
-      <label>
-        🙏 Need
-        <select formControlName="need">
-          <option *ngFor="let state of states" [ngValue]="state">
-            {{ state }}
-          </option>
-        </select>
-      </label>
-      <br />
-      <label>
-        ⏰ Time
-        <select formControlName="time">
-          <option *ngFor="let state of states" [ngValue]="state">
-            {{ state }}
-          </option>
-        </select>
-      </label>
-      <br />
-      <label>
-        🐘 Scale
-        <select formControlName="scale">
-          <option *ngFor="let state of states" [ngValue]="state">
-            {{ state }}
-          </option>
-        </select>
-      </label>
+      <div class="scores">
+        <div>
+          <label>
+            🎚 Control
+          </label>
+          <br />
+          <input class="number" formControlName="control" min="0" max="5" step="1" type="number" />
+        </div>
+        <div>
+          <label>
+            🚪 Entry
+          </label>
+          <br />
+          <input class="number" formControlName="entry" min="0" max="5" step="1" type="number" />
+        </div>
+        <div>
+          <label>
+            🙏 Need
+          </label>
+          <br />
+          <input class="number" formControlName="need" min="0" max="5" step="1" type="number" />
+        </div>
+        <div>
+          <label>
+            ⏰ Time
+          </label>
+          <br />
+          <input class="number" formControlName="time" min="0" max="5" step="1" type="number" />
+        </div>
+        <div>
+          <label>
+            🐘 Scale
+          </label>
+          <br />
+          <input class="number" formControlName="scale" min="0" max="5" step="1" type="number" />
+        </div>
+      </div>
       <br />
       <button (click)="onSubmit()">Submit</button>
     </form>
-    <span>Reviews: </span>
+    <h1>Reviews</h1>
     <ci-review *ngFor="let r of reviews" [review]="r"></ci-review>
   `,
+  styles: [
+    `
+      textarea {
+        max-width: 500px;
+        width: 100%;
+        resize: vertical;
+        max-height: 500px;
+      }
+      input.number {
+        max-width: 50px;
+      }
+      .scores {
+        display: flex;
+        flex-direction: row;
+        max-width: 500px;
+      }
+      .scores > div {
+        flex: 1;
+      }
+    `,
+  ],
 })
 export class ReviewsContainer {
   @Input() reviews: IReviewViewModel[];

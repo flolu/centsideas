@@ -10,11 +10,22 @@ import { take, tap } from 'rxjs/operators';
 @Component({
   selector: 'ci-idea',
   template: `
-    <ci-ideas-card [idea]="idea$ | async"></ci-ideas-card>
-    <p>{{ (idea$ | async)?.description }}</p>
-    <p>Published at: {{ (idea$ | async)?.publishedAt | date }}</p>
-    <ci-reviews [reviews]="(idea$ | async)?.reviews"></ci-reviews>
+    <div class="container">
+      <ci-ideas-card [idea]="idea$ | async"></ci-ideas-card>
+      <p>{{ (idea$ | async)?.description }}</p>
+      <p>Published at: {{ (idea$ | async)?.publishedAt | date }}</p>
+      <ci-reviews [reviews]="(idea$ | async)?.reviews"></ci-reviews>
+    </div>
   `,
+  styles: [
+    `
+      .container {
+        margin: 10px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdeaContainer {

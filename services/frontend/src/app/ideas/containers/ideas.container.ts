@@ -12,24 +12,38 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'ci-ideas',
   template: `
-    <div *ngIf="loading$ | async">Loading...</div>
-    <h1>Create Idea</h1>
-    <form [formGroup]="form">
-      <label>
-        Title:
-        <input type="text" formControlName="title" />
-      </label>
-      <br />
-      <label>
-        Description:
-        <input type="text" formControlName="description" />
-      </label>
-      <button (click)="onCreate()">Create</button>
-    </form>
-    <h1>All Ideas</h1>
-    <ci-ideas-card *ngFor="let i of ideas$ | async" [idea]="i" (clickedTitle)="onIdeaTitleClicked(i)"></ci-ideas-card>
-    <div *ngIf="!(ideas$ | async)?.length">No ideas found</div>
+    <div class="container">
+      <div *ngIf="loading$ | async">Loading...</div>
+      <h1>Create Idea</h1>
+      <form [formGroup]="form">
+        <label for="title">
+          Title
+        </label>
+        <br />
+        <input name="title" type="text" formControlName="title" />
+        <br />
+        <label for="description">
+          Description
+        </label>
+        <br />
+        <input name="description" type="text" formControlName="description" />
+        <br />
+        <button (click)="onCreate()">Create</button>
+      </form>
+      <h1>All Ideas</h1>
+      <ci-ideas-card *ngFor="let i of ideas$ | async" [idea]="i" (clickedTitle)="onIdeaTitleClicked(i)"></ci-ideas-card>
+      <div *ngIf="!(ideas$ | async)?.length">No ideas found</div>
+    </div>
   `,
+  styles: [
+    `
+      .container {
+        margin: 10px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdeasContainer {
