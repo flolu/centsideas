@@ -1,17 +1,17 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { Store } from '@ngrx/store';
+import { ActivatedRoute } from '@angular/router';
+import { take, tap } from 'rxjs/operators';
 
 import { AppState } from '@ci-frontend/app';
 import { IdeasSelectors, IdeasActions } from '..';
-import { ActivatedRoute } from '@angular/router';
-import { take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ci-idea',
   template: `
     <div class="container">
-      <ci-ideas-card [idea]="idea$ | async"></ci-ideas-card>
+      <ci-ideas-card *ngIf="idea$ | async" [idea]="idea$ | async"></ci-ideas-card>
       <p>{{ (idea$ | async)?.description }}</p>
       <p>Published at: {{ (idea$ | async)?.publishedAt | date }}</p>
       <ci-reviews [reviews]="(idea$ | async)?.reviews"></ci-reviews>
@@ -20,7 +20,7 @@ import { take, tap } from 'rxjs/operators';
   styles: [
     `
       .container {
-        margin: 10px;
+        padding: 10px;
         max-width: 1000px;
         margin: 0 auto;
       }

@@ -25,7 +25,7 @@ const ideasReducer = createReducer(
   on(IdeasActions.createIdea, state => ({ ...state, loading: true, loaded: false, error: null })),
   on(IdeasActions.publishIdeaDone, (state, action) =>
     adapter.upsertOne(
-      { ...action.published, reviews: [], user: null, scores: null },
+      { ...action.published, reviews: [], user: null, scores: null, reviewCount: -1 },
       { ...state, loading: false, loaded: true, error: null },
     ),
   ),

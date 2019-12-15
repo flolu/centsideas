@@ -17,4 +17,5 @@ export interface IIdeaViewModel {
   scores: IReviewScores;
   user: any;
   lastEventId: string;
+  reviewCount: number;
 }

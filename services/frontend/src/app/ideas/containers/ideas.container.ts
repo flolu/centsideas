@@ -38,7 +38,7 @@ import { environment } from 'src/environments/environment';
   styles: [
     `
       .container {
-        margin: 10px;
+        padding: 10px;
         max-width: 1000px;
         margin: 0 auto;
       }

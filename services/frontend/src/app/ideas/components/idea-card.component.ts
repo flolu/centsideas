@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { IIdeaViewModel } from '@cents-ideas/models';
 
@@ -6,12 +6,15 @@ import { IIdeaViewModel } from '@cents-ideas/models';
   selector: 'ci-ideas-card',
   template: `
     <div class="card">
-      <div class="score">{{ score }}</div>
+      <div class="score" [style.opacity]="opacity" [style.color]="color">
+        {{ score | number: '1.0-0' }}
+      </div>
       <div class="preview">
         <span class="title" (click)="onTitleClick()">{{ idea?.title }}</span>
+        <!-- TODO tags -->
         <div class="tags">
           <span>some</span>
-          <span>test</span>
+          <span>random</span>
           <span>tags</span>
         </div>
       </div>
@@ -32,6 +35,7 @@ import { IIdeaViewModel } from '@cents-ideas/models';
 
       .score {
         font-size: 2.5em;
+        font-weight: bold;
         margin-right: 20px;
       }
 
@@ -55,12 +59,29 @@ import { IIdeaViewModel } from '@cents-ideas/models';
     `,
   ],
 })
-export class IdeaCardComponent {
+export class IdeaCardComponent implements OnInit {
   @Input() idea: IIdeaViewModel;
 
   @Output() clickedTitle = new EventEmitter<void>();
 
-  score = Math.floor(Math.random() * 100);
+  opacity: number;
+  color: string;
+  score: number;
+
+  ngOnInit() {
+    this.opacity = 0.05 * this.idea.reviewCount + 0.5;
+
+    this.score =
+      (this.idea.scores.control +
+        this.idea.scores.entry +
+        this.idea.scores.need +
+        this.idea.scores.time +
+        this.idea.scores.scale) *
+      4;
+
+    const strength = (1 / 30) * this.score - 5 / 3;
+    this.color = `rgb(${255 * strength}, ${100 * strength}, ${0})`;
+  }
 
   onTitleClick = () => this.clickedTitle.emit();
 }
