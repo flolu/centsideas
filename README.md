@@ -6,44 +6,44 @@
 ⏳ Time
 🌍 Scale
 
-## Claims
+# Goals
 
-| Requirement             | Keywords                            | Importance | Status |
-| ----------------------- | ----------------------------------- | ---------- | ------ |
-| Event Sourcing          | CQRS, Event-Driven, Commands, Kafka | 🔥         | ⏳     |
-| Deployment              | CI, CD, Build Pipeline, Rollback    | 🔥         | ⏳     |
-| Test Driven Development | Unit Tests, Integration Tests       | 🔥         | ⏳     |
-| Microservices           | Small, Independent                  | 🔥         | ✅     |
-| Docker                  | Container                           | 🔥         | ✅     |
-| Kubernetes              | Container Orchestration             | 🔥         | ⏳     |
-| Encryption              | HTTPs, Hashing, Safety              | 🔥         | ❌     |
-| Database(s)             | Storage, Event-Store                | 🔥         | ⏳     |
-| File Storage            | Storage                             | 🔥         | ❌     |
-| Redux                   | Reactive, Actions, Effects          | 🔥         | ✅     |
-| GDPR                    | Legal, Privacy                      | 🔥         | ❌     |
-| SEO                     | Marketing                           | 🔥         | ❌     |
-| Authentication          | Passwordless                        | 🔥         | ❌     |
-| Typescript              | Types                               | 🙂         | ✔️     |
-| Node.js                 | Javascript,Best Practices           | 🙂         | ⏳     |
-| Local Development       | Nodemon, Docker, VSCode             | 🙂         | ✅     |
-| Monorepo                | Lerna, Yarn Workspaces              | 🙂         | ⏳     |
-| Monitoring              | Logs, Alarms, Dashboard             | 🙂         | ❌     |
-| Git Flow                | Branching, Rebase                   | 🙂         | ⏳     |
-| Gateway                 | Discovery, Entry, Auth              | 🙂         | ⏳     |
-| Linting                 | Formatting                          | 🌳         | ❌     |
-| RxJs                    | Reactive                            | 🌳         | ❌     |
-| Cross Platform          | Electron, Nativescript              | 🌳         | ❌     |
-| Caching                 | Performance                         | 🌳         | ❌     |
-| Logging                 | Debugging                           | 🌳         | ✅     |
-| μFrontends              | Composition, Independent            | 🌳         | ❌     |
-| Static Pages            | Homepage, Content                   | 🌳         | ❌     |
+| Requirement             | Keywords                              | Importance | Status |
+| ----------------------- | ------------------------------------- | ---------- | ------ |
+| Event Sourcing          | CQRS, Event-Driven, Commands, Kafka   | 🔥         | ⏳     |
+| Deployment              | CI/CD, Build Automation, Bazel        | 🔥         | ⏳     |
+| Test Driven Development | Unit Tests, Integration Tests         | 🔥         | ⏳     |
+| Microservices           | Small, Independent                    | 🔥         | ✔️     |
+| Docker                  | Container                             | 🔥         | ✔️     |
+| Kubernetes              | Container Orchestration               | 🔥         | ⏳     |
+| Encryption              | HTTPs, Hashing, Safety                | 🔥         | ❌     |
+| Database(s)             | Storage, Event-Store                  | 🔥         | ⏳     |
+| File Storage            | Storage                               | 🔥         | ❌     |
+| Redux                   | Reactive, Actions, Effects            | 🔥         | ✅     |
+| GDPR                    | Legal, Privacy                        | 🔥         | ❌     |
+| SEO                     | Marketing                             | 🔥         | ❌     |
+| Authentication          | Passwordless                          | 🔥         | ❌     |
+| Monorepo                | All packages and services in one repo | 🔥         | ⏳     |
+| Local Development       | Realtime code rebuild, Testing        | 🙂         | ⏳     |
+| Typescript              | Types                                 | 🙂         | ✔️     |
+| Node.js                 | Javascript,Best Practices             | 🙂         | ✅     |
+| Local Development       | Nodemon, Docker, VSCode               | 🙂         | ✅     |
+| Monitoring              | Logs, Alarms, Dashboard               | 🙂         | ❌     |
+| Git Flow                | Branching, Rebase                     | 🙂         | ⏳     |
+| Gateway                 | Discovery, Entry, Auth                | 🙂         | ✅     |
+| Linting                 | Formatting                            | 🌳         | ❌     |
+| Cross Platform          | Electron, Nativescript                | 🌳         | ❌     |
+| Caching                 | Performance                           | 🌳         | ❌     |
+| Logging                 | Debugging                             | 🌳         | ✅     |
+| μFrontends              | Composition, Independent              | 🌳         | ❌     |
+| Static Pages            | Homepage, Content                     | 🌳         | ❌     |
 
 ### Status
 
 ✔️ Completely implemented
 ✅ Implemented in certain parts
 ⏳ Figuring out how to implement
-❌ Not implemented
+❌ Not (yet) implemented
 
 ### Importance
 
@@ -51,7 +51,7 @@
 🙂 Moderately important
 🌳 Not really important
 
-## Requirements
+# Requirements
 
 ### Required
 
@@ -59,6 +59,7 @@
 - docker
 - docker-compose
 - yarn
+- bazel
 
 ### Optional
 
@@ -72,7 +73,7 @@
 - [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools)
 - [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter)
 
-## Setup
+# Setup
 
 ### For Development
 
@@ -95,25 +96,44 @@ minikube ip
 # open browser http://<IP>:30001
 ```
 
-## Testing
+# Testing
 
 ```
 yarn test
 ```
 
-## Release new Version
+# Release new Version
 
 ```
 lerna version
 ```
 
-## Deployment
+# Deployment
 
 ```
 not configured yet
 ```
 
-## Some Useful Commands for Development
+# Services
+
+List of all microservices inside this monorepo (services depend on packages)
+
+- ⛩️ [gateway](https://github.com/flolude/cents-ideas/tree/develop/services/gateway)
+- 💡 [ideas](https://github.com/flolude/cents-ideas/tree/develop/services/ideas)
+- 📱 [frontend](https://github.com/flolude/cents-ideas/blob/develop/services/frontend)
+- ⭐ [reviews](https://github.com/flolude/cents-ideas/tree/develop/services/reviews)
+- 🍝 [consumer](https://github.com/flolude/cents-ideas/tree/develop/services/consumer)
+
+# Packages
+
+List of all packages inside this monorepo (packages are dependencies of services)
+
+- [enums](https://github.com/flolude/cents-ideas/tree/master/packages/enums)
+- [event-sourcing](https://github.com/flolude/cents-ideas/tree/master/packages/event-sourcing)
+- [models](https://github.com/flolude/cents-ideas/tree/master/packages/models)
+- [utils](https://github.com/flolude/cents-ideas/tree/master/packages/utils)
+
+# Some Useful Commands for Development
 
 ```
 # open command line of a docker container
