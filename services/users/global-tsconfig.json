@@ -5,10 +5,6 @@
     { "path": "packages/event-sourcing" },
     { "path": "packages/models" },
     { "path": "packages/utils" },
-    { "path": "services/consumer" },
-    { "path": "services/frontend" },
-    { "path": "services/gateway" },
-    { "path": "services/ideas" },
     { "path": "services/users" }
   ]
 }

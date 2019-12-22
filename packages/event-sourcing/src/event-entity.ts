@@ -23,6 +23,7 @@ export abstract class EventEntity<IEntityState> implements IEventEntity {
 
   protected reducer: Reducer<IEntityState>;
 
+  // FIXME do i really need @param NotFoundError
   constructor(knownEvents: IEventCommitFunctions<IEntityState>, initialState: IEntityState, public NotFoundError: any) {
     this.reducer = new Reducer<IEntityState>(knownEvents);
     this.persistedState = initialState;

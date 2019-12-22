@@ -4,7 +4,6 @@ import { Identifier } from '@cents-ideas/utils/src';
 
 import { IEventRepository, IEntityConstructor } from '../event-repository';
 import { IEventEntity, IEvent, ISnapshot } from '..';
-import { throwStatement } from '@babel/types';
 
 @injectable()
 export class EventRepositoryMock<Entity extends IEventEntity> implements IEventRepository<Entity> {

@@ -5,16 +5,11 @@ import { HttpRequest, HttpResponse, IReviewState } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { ReviewCommandHandler } from './review.command-handler';
-import { ReviewRepository } from './review.repository';
 import { ICreateReviewDto, IQueryReviewDto, ISaveReviewDto, IUpdateReviewDto } from './dtos';
 
 @injectable()
 export class ReviewsService {
-  constructor(
-    private commandHandler: ReviewCommandHandler,
-    private logger: Logger,
-    private repository: ReviewRepository,
-  ) {}
+  constructor(private commandHandler: ReviewCommandHandler, private logger: Logger) {}
 
   createEmptyReview = (req: HttpRequest<ICreateReviewDto>): Promise<HttpResponse<IReviewState>> =>
     new Promise(async resolve => {

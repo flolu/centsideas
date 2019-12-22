@@ -14,10 +14,8 @@ import { ReviewRepository } from './review.repository';
 import { IReviewScores } from '@cents-ideas/models';
 import { ReviewAlreadyUnpublishedError } from './errors/review-already-unpublished.error';
 
-export interface IIdeaCommandHandler {}
-
 @injectable()
-export class ReviewCommandHandler implements IIdeaCommandHandler {
+export class ReviewCommandHandler {
   constructor(private repository: ReviewRepository) {}
 
   create = async (ideaId: string): Promise<Review> => {
