@@ -1,7 +1,6 @@
 import * as retry from 'async-retry';
 import { injectable } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
-import { EventEmitter } from 'events';
 
 import { Identifier, renameObjectProperty, Logger } from '@cents-ideas/utils';
 
@@ -26,9 +25,10 @@ export interface IEventRepository<Entity> {
   generateUniqueId: () => Promise<string>;
 }
 
+// TODO cleaner solution when implementing into drakery
+
 @injectable()
-export abstract class EventRepository<Entity extends IEventEntity> extends EventEmitter
-  implements IEventRepository<Entity> {
+export abstract class EventRepository<Entity extends IEventEntity> implements IEventRepository<Entity> {
   protected _Entity!: IEntityConstructor<Entity>;
 
   private client!: MongoClient;
@@ -43,7 +43,6 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
   private hasInitialized: boolean = false;
 
   constructor(private messageBroker: MessageBroker, private logger: Logger) {
-    super();
     this.messageBroker.initialize({ brokers: [process.env.KAFKA_BROKER_HOST || '172.18.0.1:9092'] });
   }
 
@@ -74,7 +73,6 @@ export abstract class EventRepository<Entity extends IEventEntity> extends Event
 
         this.db.on('close', () => {
           this.logger.info(`disconnected from ${name} database`);
-          this.emit('disconnect');
         });
 
         this.eventCollection = this.db.collection(`${name}_events`);

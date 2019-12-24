@@ -30,7 +30,7 @@ export class IdeasServer implements IServer {
     this.app.post(`/${IdeasApiInternalRoutes.Unpublish}`, this.expressAdapter.json(this.ideasService.unpublish));
     this.app.post(`/${IdeasApiInternalRoutes.Delete}`, this.expressAdapter.json(this.ideasService.delete));
 
-    this.app.get(`${IdeasApiInternalRoutes.Alive}`, (_req, res) => {
+    this.app.get(`/${IdeasApiInternalRoutes.Alive}`, (_req, res) => {
       return res.status(200).send();
     });
 

@@ -21,7 +21,14 @@ export class UsersServer implements IServer {
 
     this.app.use(bodyParser.json());
 
-    this.app.get(`${UsersApiInternalRoutes.Alive}`, (_req, res) => {
+    this.app.put(
+      `${UsersApiInternalRoutes.ReAuthenticate}`,
+      this.expressAdapter.json(this.usersService.reAuthenticate),
+    );
+    this.app.put(`${UsersApiInternalRoutes.Login}`, this.expressAdapter.json(this.usersService.login));
+    this.app.put(`${UsersApiInternalRoutes.ConfirmLogin}`, this.expressAdapter.json(this.usersService.confirmLogin));
+
+    this.app.get(`/${UsersApiInternalRoutes.Alive}`, (_req, res) => {
       return res.status(200).send();
     });
 
