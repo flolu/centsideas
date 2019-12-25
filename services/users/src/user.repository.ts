@@ -11,6 +11,6 @@ import { User } from './user.entity';
 export class UserRepository extends EventRepository<User> {
   constructor(private _messageBroker: MessageBroker, private _logger: Logger) {
     super(_messageBroker, _logger);
-    this.initialize(User, env.database.url, env.database.name, EventTopics.Users);
+    this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users);
   }
 }
