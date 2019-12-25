@@ -71,7 +71,6 @@ export class ReviewsProjection {
         },
       },
     );
-    // TODO test if this works
     const idea: IIdeaViewModel | null = await this.ideasCollection.findOne({ _id: currentReview.ideaId });
     if (!idea) throw new Error(`didn't ind idea, although it must exist!`);
 
@@ -84,21 +83,11 @@ export class ReviewsProjection {
         scale: idea.scores.scale * idea.reviewCount,
       };
       const updatedScores: IReviewScores = {
-        control:
-          (scoreTotals.control - (scoreTotals.control + (currentReview.scores.control - newReviewScores.control))) /
-          idea.reviewCount,
-        entry:
-          (scoreTotals.entry - (scoreTotals.entry + (currentReview.scores.entry - newReviewScores.entry))) /
-          idea.reviewCount,
-        need:
-          (scoreTotals.need - (scoreTotals.need + (currentReview.scores.need - newReviewScores.need))) /
-          idea.reviewCount,
-        time:
-          (scoreTotals.time - (scoreTotals.time + (currentReview.scores.time - newReviewScores.time))) /
-          idea.reviewCount,
-        scale:
-          (scoreTotals.scale - (scoreTotals.scale + (currentReview.scores.scale - newReviewScores.scale))) /
-          idea.reviewCount,
+        control: (scoreTotals.control + (newReviewScores.control - currentReview.scores.control)) / idea.reviewCount,
+        entry: (scoreTotals.entry + (newReviewScores.entry - currentReview.scores.entry)) / idea.reviewCount,
+        need: (scoreTotals.need + (newReviewScores.need - currentReview.scores.need)) / idea.reviewCount,
+        time: (scoreTotals.time + (newReviewScores.time - currentReview.scores.time)) / idea.reviewCount,
+        scale: (scoreTotals.scale + (newReviewScores.scale - currentReview.scores.scale)) / idea.reviewCount,
       };
       await this.ideasCollection.findOneAndUpdate(
         { _id: currentReview.ideaId },
@@ -128,6 +117,13 @@ export class ReviewsProjection {
     const idea: IIdeaViewModel | null = await this.ideasCollection.findOne({ _id: review.ideaId });
     if (!idea) throw new Error(`didn't ind idea, although it must exist!`);
 
+    const scoreTotals: IReviewScores = {
+      control: idea.scores.control * idea.reviewCount,
+      entry: idea.scores.entry * idea.reviewCount,
+      need: idea.scores.need * idea.reviewCount,
+      time: idea.scores.time * idea.reviewCount,
+      scale: idea.scores.scale * idea.reviewCount,
+    };
     await this.ideasCollection.findOneAndUpdate(
       { _id: review.ideaId },
       {
@@ -136,11 +132,11 @@ export class ReviewsProjection {
         },
         $set: {
           scores: {
-            control: idea.scores.control + review.scores.control / (idea.reviewCount + 1),
-            entry: idea.scores.entry + review.scores.entry / (idea.reviewCount + 1),
-            need: idea.scores.need + review.scores.need / (idea.reviewCount + 1),
-            time: idea.scores.time + review.scores.time / (idea.reviewCount + 1),
-            scale: idea.scores.scale + review.scores.scale / (idea.reviewCount + 1),
+            control: (scoreTotals.control + review.scores.control) / (idea.reviewCount + 1),
+            entry: (scoreTotals.entry + review.scores.entry) / (idea.reviewCount + 1),
+            need: (scoreTotals.need + review.scores.need) / (idea.reviewCount + 1),
+            time: (scoreTotals.time + review.scores.time) / (idea.reviewCount + 1),
+            scale: (scoreTotals.scale + review.scores.scale) / (idea.reviewCount + 1),
           },
         },
       },
