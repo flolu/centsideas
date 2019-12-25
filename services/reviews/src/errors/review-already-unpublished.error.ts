@@ -1,8 +1,7 @@
 import { HttpStatusCodes } from '@cents-ideas/enums';
+import { EntityError } from '@cents-ideas/utils';
 
-import { ReviewError } from './review.error';
-
-export class ReviewAlreadyUnpublishedError extends ReviewError {
+export class ReviewAlreadyUnpublishedError extends EntityError {
   static validate = (published: boolean, reviewId: string): void => {
     if (!published) {
       throw new ReviewAlreadyUnpublishedError(`Review with id: ${reviewId} has already been unpublished`);

@@ -1,5 +1,12 @@
 import { IServerEnvironment } from '@cents-ideas/models';
 
+export interface IUsersServiceEnvironment extends IServerEnvironment {
+  port: number;
+  databaseUrl: string;
+  userDatabaseName: string;
+  loginDatabaseName: string;
+}
+
 const env = {
   environment: process.env.NODE_ENV || 'dev',
   port: 3000,

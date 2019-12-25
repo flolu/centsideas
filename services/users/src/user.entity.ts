@@ -9,6 +9,7 @@ export class User extends EventEntity<IUserState> {
     id: '',
     username: '',
     email: '',
+    pendingEmail: null,
     createdAt: null,
     updatedAt: null,
     lastEventId: '',

@@ -1,9 +1,8 @@
 import { IReviewScores } from '@cents-ideas/models';
-
-import { ReviewError } from './review.error';
+import { EntityError } from '@cents-ideas/utils';
 import { HttpStatusCodes } from '@cents-ideas/enums';
 
-export class ReviewScoresRangeError extends ReviewError {
+export class ReviewScoresRangeError extends EntityError {
   static min: number = 0;
   static max: number = 5;
 

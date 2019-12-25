@@ -1,8 +1,7 @@
 import { HttpStatusCodes } from '@cents-ideas/enums';
+import { EntityError } from '@cents-ideas/utils';
 
-import { IdeaError } from './idea.error';
-
-export class IdeaDescriptionLengthError extends IdeaError {
+export class IdeaDescriptionLengthError extends EntityError {
   static max: number = 3000;
   static min: number = 0;
 

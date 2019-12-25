@@ -1,7 +1,7 @@
+import { EntityError } from '@cents-ideas/utils';
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import { IdeaError } from './idea.error';
 
-export class IdeaIdRequiredError extends IdeaError {
+export class IdeaIdRequiredError extends EntityError {
   static validate = (ideaId: string): void => {
     if (!ideaId) {
       throw new IdeaIdRequiredError();

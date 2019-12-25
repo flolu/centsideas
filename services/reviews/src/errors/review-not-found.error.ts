@@ -1,8 +1,7 @@
 import { HttpStatusCodes } from '@cents-ideas/enums';
+import { EntityError } from '@cents-ideas/utils';
 
-import { ReviewError } from './review.error';
-
-export class ReviewNotFoundError extends ReviewError {
+export class ReviewNotFoundError extends EntityError {
   constructor(id: string) {
     super(`Review with id: ${id} was not found`, HttpStatusCodes.NotFound);
   }

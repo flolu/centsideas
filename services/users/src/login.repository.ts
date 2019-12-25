@@ -11,6 +11,6 @@ import env from './environment';
 export class LoginRepository extends EventRepository<Login> {
   constructor(private _messageBroker: MessageBroker, private _logger: Logger) {
     super(_messageBroker, _logger);
-    this.initialize(Login, env.database.url, env.loginDatabaseName, EventTopics.Logins);
+    this.initialize(Login, env.databaseUrl, env.loginDatabaseName, EventTopics.Logins);
   }
 }

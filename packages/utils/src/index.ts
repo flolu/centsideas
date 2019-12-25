@@ -6,3 +6,4 @@ export { sanitizeHtml } from './sanitize-html';
 export { renameObjectProperty } from './rename-object-property';
 export * from './test';
 export { handleHttpResponseError } from './http-error-response-handler';
+export { EntityError } from './entity.error';

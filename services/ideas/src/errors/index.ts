@@ -6,4 +6,3 @@ export { IdeaDescriptionLengthError } from './idea-description-length.error';
 export { IdeaAlreadyPublishedError } from './idea-already-published.error';
 export { IdeaAlreadyUnpublishedError } from './idea-already-unpublished.error';
 export { IdeaAlreadyDeletedError } from './idea-already-deleted.error';
-export { IdeaError } from './idea.error';

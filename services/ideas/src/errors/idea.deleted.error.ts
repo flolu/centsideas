@@ -1,7 +1,7 @@
-import { IdeaError } from './idea.error';
+import { EntityError } from '@cents-ideas/utils';
 import { HttpStatusCodes } from '@cents-ideas/enums';
 
-export class IdeaDeletedError extends IdeaError {
+export class IdeaDeletedError extends EntityError {
   static validate = (ideaId: string, deleted: boolean): void => {
     if (deleted) {
       throw new IdeaDeletedError(ideaId);
