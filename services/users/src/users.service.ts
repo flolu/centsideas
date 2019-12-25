@@ -5,7 +5,14 @@ import { HttpRequest, HttpResponse } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
-import { ILoginDto, IConfirmLoginDto, IAuthenticationDto } from './dtos/login.dto';
+import {
+  ILoginDto,
+  IConfirmLoginDto,
+  IAuthenticationDto,
+  IConfirmEmailChangeDto,
+  IUpdateUserDto,
+  IUserQueryDto,
+} from './dtos';
 
 @injectable()
 export class UsersService {
@@ -30,11 +37,27 @@ export class UsersService {
        */
     });
 
-  reAuthenticate = (req: HttpRequest<null, IAuthenticationDto>): Promise<HttpResponse<IAuthenticationDto>> =>
+  updateUser = (req: HttpRequest<IUpdateUserDto, IUserQueryDto>): Promise<HttpResponse<any>> =>
+    new Promise(async resolve => {
+      const _loggerName = 'update user';
+      try {
+        this.logger.info(_loggerName);
+        const updatedUser = await this.commandHandler.updateUser(req.params.id, req.body.username, req.body.email);
+        resolve({
+          status: HttpStatusCodes.Accepted,
+          body: updatedUser.persistedState,
+          headers: {},
+        });
+      } catch (error) {
+        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        resolve(handleHttpResponseError(error));
+      }
+    });
+
+  confirmEmailChange = (req: HttpRequest<IConfirmEmailChangeDto>): Promise<HttpResponse<any>> =>
     new Promise(async resolve => {
       /**
-       * check token valid?
-       * send new token if ok
+       * validate token, send success or fail response
        */
     });
 }

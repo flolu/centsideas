@@ -4,7 +4,7 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 import { HttpRequest, HttpResponse, IIdeaState } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
-import { IQueryIdeaDto, ISaveIdeaDto, IUpdateIdeaDraftDto } from './dtos/ideas.dto';
+import { IIdeaQueryDto, ISaveIdeaDto, IUpdateIdeaDraftDto } from './dtos/ideas.dto';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
 
@@ -29,7 +29,7 @@ export class IdeasService {
       }
     });
 
-  saveDraft = (req: HttpRequest<ISaveIdeaDto, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  saveDraft = (req: HttpRequest<ISaveIdeaDto, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'save draft';
       try {
@@ -46,7 +46,7 @@ export class IdeasService {
       }
     });
 
-  discardDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  discardDraft = (req: HttpRequest<{}, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'discard draft';
       try {
@@ -63,7 +63,7 @@ export class IdeasService {
       }
     });
 
-  commitDraft = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  commitDraft = (req: HttpRequest<{}, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'commit draft';
       try {
@@ -80,7 +80,7 @@ export class IdeasService {
       }
     });
 
-  publish = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  publish = (req: HttpRequest<{}, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'publish';
       try {
@@ -131,7 +131,7 @@ export class IdeasService {
       }
     });
 
-  delete = (req: HttpRequest<{}, IQueryIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  delete = (req: HttpRequest<{}, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'delete';
       try {

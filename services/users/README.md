@@ -1,5 +1,7 @@
 # 👥 Users Service
 
+// TODO update readme
+
 ## Environment Variables
 
 > Example for local development with docker-compose

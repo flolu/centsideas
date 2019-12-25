@@ -3,6 +3,7 @@ import { IUserState } from '@cents-ideas/models';
 
 import { UserNotFoundError } from './errors';
 import { commitFunctions } from './events';
+import { UserUpdatedEvent } from './events/user-updated.event';
 
 export class User extends EventEntity<IUserState> {
   static initialState: IUserState = {
@@ -20,5 +21,10 @@ export class User extends EventEntity<IUserState> {
     if (snapshot) {
       this.lastPersistedEventId = snapshot.lastEventId;
     }
+  }
+
+  update(username: string, pendingEmail: string | null) {
+    this.pushEvents(new UserUpdatedEvent(this.persistedState.id, username, pendingEmail));
+    return this;
   }
 }

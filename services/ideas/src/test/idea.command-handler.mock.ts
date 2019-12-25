@@ -1,17 +1,10 @@
 import { injectable } from 'inversify';
 
-import { IIdeaCommandHandler } from '../idea.command-handler';
 import { Idea } from '../idea.entity';
-import {
-  fakeIdeaId,
-  fakeIdeaTitle,
-  fakeIdeaDescription,
-  fakeIdeaTitle2,
-  fakeIdeaDescription2,
-} from './idea.entity.fake';
+import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription } from './idea.entity.fake';
 
 @injectable()
-export class IdeaCommandHandlerMock implements IIdeaCommandHandler {
+export class IdeaCommandHandlerMock {
   create = async (): Promise<Idea> => {
     const idea = Idea.create(fakeIdeaId);
     idea.confirmEvents();

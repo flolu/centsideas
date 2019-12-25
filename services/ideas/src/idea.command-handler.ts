@@ -15,19 +15,8 @@ import { Idea } from './idea.entity';
 import { IdeaRepository } from './idea.repository';
 import { IdeaDeletedError } from './errors/idea.deleted.error';
 
-export interface IIdeaCommandHandler {
-  create: () => Promise<Idea>;
-  saveDraft: (ideaId: string, title?: string, description?: string) => Promise<Idea>;
-  discardDraft: (ideaId: string) => Promise<Idea>;
-  commitDraft: (ideaId: string, title?: string, description?: string) => Promise<Idea>;
-  publish: (ideaId: string) => Promise<Idea>;
-  update: (ideaId: string, title?: string, description?: string) => Promise<Idea>;
-  unpublish: (ideaId: string) => Promise<Idea>;
-  delete: (ideaId: string) => Promise<Idea>;
-}
-
 @injectable()
-export class IdeaCommandHandler implements IIdeaCommandHandler {
+export class IdeaCommandHandler {
   constructor(private repository: IdeaRepository) {}
 
   create = async (): Promise<Idea> => {

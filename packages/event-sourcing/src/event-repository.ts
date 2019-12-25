@@ -25,7 +25,7 @@ export interface IEventRepository<Entity> {
   generateUniqueId: () => Promise<string>;
 }
 
-// TODO cleaner solution when implementing into drakery
+// FIXME cleaner solution when implementing into drakery
 
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> implements IEventRepository<Entity> {

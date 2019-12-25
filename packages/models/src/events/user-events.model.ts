@@ -8,7 +8,7 @@ export interface IEmailChangeRequestedEvent {
 
 export interface IUserUpdatedEvent {
   username: string;
-  email: string;
+  pendingEmail: string | null;
 }
 
 export interface IUserAuthenticatedEvent {}
