@@ -3,19 +3,18 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { IServer } from '@cents-ideas/models';
 import { ReviewsApiInternalRoutes } from '@cents-ideas/enums';
 
-import { IIdeasServiceEnvironment } from './environment';
 import { ReviewsService } from './reviews.service';
+import env from './environment';
 
 @injectable()
-export class ReviewsServer implements IServer {
+export class ReviewsServer {
   private app = express();
 
   constructor(private logger: Logger, private reviewsService: ReviewsService, private expressAdapter: ExpressAdapter) {}
 
-  start = (env: IIdeasServiceEnvironment) => {
+  start = () => {
     this.logger.debug('initialized with env: ', env);
     const { port } = env;
 

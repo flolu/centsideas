@@ -145,9 +145,6 @@ ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ pr
 # stop all docker containers
 docker container stop $(docker container ls -aq)
 
-# kill all docker containers
-docker container kill $(docker ps -q)
-
 # get microk8s cluster info
 microk8s.kubectl cluster-info
 

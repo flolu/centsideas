@@ -1,17 +1,4 @@
-import { IServerEnvironment } from '@cents-ideas/models';
-
-// TODO clean up environments
-export interface IGatewayEnvironment extends IServerEnvironment {
-  port: number;
-  hosts: {
-    ideas: string;
-    consumer: string;
-    reviews: string;
-    users: string;
-  };
-}
-
-const env: IGatewayEnvironment = {
+export default {
   environment: process.env.NODE_ENV || 'dev',
   port: 3000,
   hosts: {
@@ -21,5 +8,3 @@ const env: IGatewayEnvironment = {
     users: `http://${process.env.USERS_SERVICE_HOST || 'users:3000'}`,
   },
 };
-
-export default env;

@@ -2,7 +2,6 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { IServer } from '@cents-ideas/models';
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
 import { UsersApiInternalRoutes } from '@cents-ideas/enums';
 
@@ -10,7 +9,7 @@ import env from './environment';
 import { UsersService } from './users.service';
 
 @injectable()
-export class UsersServer implements IServer {
+export class UsersServer {
   private app = express();
 
   constructor(private logger: Logger, private usersService: UsersService, private expressAdapter: ExpressAdapter) {}

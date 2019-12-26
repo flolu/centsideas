@@ -8,6 +8,7 @@ import { UserCommandHandler } from './user.command-handler';
 import { UserRepository } from './user.repository';
 
 process.env.LOGGER_PREFIX = '👥';
+
 registerProviders(Logger, UsersServer, UserCommandHandler, UserRepository, MessageBroker, ExpressAdapter);
 
 const server: UsersServer = getProvider(UsersServer);

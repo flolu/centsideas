@@ -3,17 +3,16 @@ import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import { injectable } from 'inversify';
 
-import { IServer } from '@cents-ideas/models';
 import { Logger } from '@cents-ideas/utils';
 import { ApiEndpoints } from '@cents-ideas/enums';
 
-import { IGatewayEnvironment } from './environment';
+import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';
 import { IdeasRoutes } from './ideas.routes';
 import { UsersRoutes } from './users.routes';
 
 @injectable()
-export class GatewayServer implements IServer {
+export class GatewayServer {
   private app = express();
 
   constructor(
@@ -23,7 +22,7 @@ export class GatewayServer implements IServer {
     private usersRoutes: UsersRoutes,
   ) {}
 
-  start = (env: IGatewayEnvironment) => {
+  start = () => {
     this.logger.debug('initialized with env: ', env);
 
     this.app.use(bodyParser.json());

@@ -2,19 +2,17 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { IServer } from '@cents-ideas/models';
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
 import { IdeasApiInternalRoutes, ApiEndpoints, EventTopics } from '@cents-ideas/enums';
 
-import { IConsumerEnvironment } from './environment';
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
+import env from './environment';
 
 @injectable()
-export class ConsumerServer implements IServer {
-  private env!: IConsumerEnvironment;
+export class ConsumerServer {
   private app = express();
 
   constructor(
@@ -26,11 +24,10 @@ export class ConsumerServer implements IServer {
     private reviewsProjection: ReviewsProjection,
   ) {}
 
-  start = (env: IConsumerEnvironment) => {
+  start = () => {
     this.logger.debug('initialized with env: ', env);
-    this.env = env;
 
-    this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
+    this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
     this.messageBroker.subscribe(EventTopics.Reviews, this.reviewsProjection.handleEvent);
 
@@ -49,8 +46,6 @@ export class ConsumerServer implements IServer {
       return res.status(200).send();
     });
 
-    this.app.listen(this.env.port, () =>
-      this.logger.info('consumer service listening on internal port', this.env.port),
-    );
+    this.app.listen(env.port, () => this.logger.info('consumer service listening on internal port', env.port));
   };
 }
