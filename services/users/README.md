@@ -1,27 +1,29 @@
 # 👥 Users Service
 
-// TODO update readme
-
-## Environment Variables
-
-> Example for local development with docker-compose
-
-```
-NODE_ENV=dev
-USERS_DATABASE_URL=mongodb://users-event-store:27017
-```
-
 ## API
 
 ### Endpoints
 
 > All those endpoints are only accessible through the `gateway` service
 
-! not yet created!
-
-| Method | Endpoint   |
-| ------ | ---------- |
-| POST   | /users     |
-| PUT    | /users/:id |
+| Method | Endpoint                              |
+| ------ | ------------------------------------- |
+| POST   | /users/login                          |
+| POST   | /users/confirm-sign-up?token=XXX      |
+| POST   | /users/authenticate?token=XXX         |
+| PUT    | /users/:id                            |
+| PUT    | /users/confirm-email-change?token=XXX |
 
 ### Examples
+
+#### Login
+
+```
+curl --header "Content-Type: application/json" --request PUT --data '{"email":"example@email.com"}' http://localhost:3000/users/login
+```
+
+#### Update user
+
+```
+curl --header "Content-Type: application/json" --request PUT --data '{"username":"new_username"}' http://localhost:3000/users/id
+```
