@@ -1,6 +1,8 @@
 import { injectable } from 'inversify';
+import * as jwt from 'jsonwebtoken';
 
-import { sanitizeHtml } from '@cents-ideas/utils/src';
+import { sanitizeHtml } from '@cents-ideas/utils';
+import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -11,10 +13,69 @@ import {
   EmailRequiredError,
   EmailInvalidError,
 } from './errors';
+import env from './environment';
+import { ISignUpTokenData, ILoginTokenData } from './models';
+import { TokenInvalidError } from './errors/token-invalid.error';
 
 @injectable()
 export class UserCommandHandler {
   constructor(private repository: UserRepository) {}
+
+  login = async (email: string): Promise<any> => {
+    EmailRequiredError.validate(email);
+    EmailInvalidError.validate(email);
+    const existing = await this.repository.getUserIdEmailMapping(email);
+    // TODO instead of returning url send email with link
+    if (existing && existing.userId) {
+      const token = this.createAuthToken(existing.userId);
+      return {
+        existingAccount: true,
+        activationRoute: `/${ApiEndpoints.Users}/${UsersApiRoutes.Authenticate}`,
+        token,
+      };
+    } else {
+      const data: ISignUpTokenData = { email };
+      const token = jwt.sign(data, env.jwtSecret, { expiresIn: '1h' });
+      return {
+        existingAccount: false,
+        activationRoute: `/${ApiEndpoints.Users}/${UsersApiRoutes.ConfirmSignUp}`,
+        token,
+      };
+    }
+  };
+
+  confirmSignUp = async (token: string): Promise<User> => {
+    let decoded: any;
+    try {
+      decoded = jwt.verify(token, env.jwtSecret);
+    } catch (err) {
+      throw new TokenInvalidError(token);
+    }
+    const email: string = decoded.email;
+    EmailRequiredError.validate(email);
+    EmailInvalidError.validate(email);
+    const userId = await this.repository.generateUniqueId();
+    const user = User.create(userId, email);
+    return this.repository.save(user);
+  };
+
+  authenticate = async (token: string): Promise<string> => {
+    let decoded: any;
+    try {
+      decoded = jwt.verify(token, env.jwtSecret);
+    } catch (err) {
+      throw new TokenInvalidError(token);
+    }
+
+    const userId: string = decoded.userId;
+    if (!userId) throw new TokenInvalidError(token, 'No userId in token payload');
+
+    const user = await this.repository.findById(userId);
+    if (!user) throw new TokenInvalidError(token, 'Invalid userId in token payload');
+
+    const updatedToken = this.createAuthToken(userId);
+    return updatedToken;
+  };
 
   // TODO make sure only authenticated user can do this (for its own data)
   updateUser = async (userId: string, username: string, email: string): Promise<User> => {
@@ -32,5 +93,12 @@ export class UserCommandHandler {
     }
     user.update(username, pendingEmail);
     return this.repository.save(user);
+  };
+
+  confirmEmailChange = () => {};
+
+  private createAuthToken = (userId: string): string => {
+    const data: ILoginTokenData = { userId };
+    return jwt.sign(data, env.jwtSecret, { expiresIn: '7d' });
   };
 }

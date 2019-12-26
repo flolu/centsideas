@@ -10,24 +10,28 @@ import { ApiEndpoints } from '@cents-ideas/enums';
 import { IGatewayEnvironment } from './environment';
 import { ReviewsRoutes } from './reviews.routes';
 import { IdeasRoutes } from './ideas.routes';
+import { UsersRoutes } from './users.routes';
 
 @injectable()
 export class GatewayServer implements IServer {
   private app = express();
 
-  constructor(private logger: Logger, private ideasRoutes: IdeasRoutes, private reviewsRoutes: ReviewsRoutes) {}
+  constructor(
+    private logger: Logger,
+    private ideasRoutes: IdeasRoutes,
+    private reviewsRoutes: ReviewsRoutes,
+    private usersRoutes: UsersRoutes,
+  ) {}
 
   start = (env: IGatewayEnvironment) => {
     this.logger.debug('initialized with env: ', env);
-    const ideasHost = env.hosts.ideas;
-    const consumerHost = env.hosts.consumer;
-    const reviewsHost = env.hosts.reviews;
 
     this.app.use(bodyParser.json());
     this.app.use(cors());
 
-    this.app.use(`/${ApiEndpoints.Ideas}`, this.ideasRoutes.setup(ideasHost, consumerHost));
-    this.app.use(`/${ApiEndpoints.Reviews}`, this.reviewsRoutes.setup(reviewsHost));
+    this.app.use(`/${ApiEndpoints.Ideas}`, this.ideasRoutes.setup(env.hosts.ideas, env.hosts.consumer));
+    this.app.use(`/${ApiEndpoints.Reviews}`, this.reviewsRoutes.setup(env.hosts.reviews));
+    this.app.use(`/${ApiEndpoints.Users}`, this.usersRoutes.setup(env.hosts.users));
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
       return res.status(200).send();

@@ -1,11 +1,13 @@
 import { IServerEnvironment } from '@cents-ideas/models';
 
+// TODO clean up environments
 export interface IGatewayEnvironment extends IServerEnvironment {
   port: number;
   hosts: {
     ideas: string;
     consumer: string;
     reviews: string;
+    users: string;
   };
 }
 
@@ -16,6 +18,7 @@ const env: IGatewayEnvironment = {
     ideas: `http://${process.env.IDEAS_SERVICE_HOST || 'ideas:3000'}`,
     consumer: `http://${process.env.CONSUMER_SERVICE_HOST || 'consumer:3000'}`,
     reviews: `http://${process.env.REVIEWS_SERVICE_HOST || 'reviews:3000'}`,
+    users: `http://${process.env.USERS_SERVICE_HOST || 'users:3000'}`,
   },
 };
 

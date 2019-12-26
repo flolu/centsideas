@@ -4,6 +4,7 @@ import { IUserState } from '@cents-ideas/models';
 import { UserNotFoundError } from './errors';
 import { commitFunctions } from './events';
 import { UserUpdatedEvent } from './events/user-updated.event';
+import { UserCreatedEvent } from './events/user-created.event';
 
 export class User extends EventEntity<IUserState> {
   static initialState: IUserState = {
@@ -21,6 +22,12 @@ export class User extends EventEntity<IUserState> {
     if (snapshot) {
       this.lastPersistedEventId = snapshot.lastEventId;
     }
+  }
+
+  static create(userId: string, email: string): User {
+    const user = new User();
+    user.pushEvents(new UserCreatedEvent(userId, email));
+    return user;
   }
 
   update(username: string, pendingEmail: string | null) {

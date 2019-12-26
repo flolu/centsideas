@@ -56,28 +56,28 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     return new Promise(async (res, rej) => {
       try {
         this.hasInitializedBeenCalled = true;
-        this.logger.debug(`initialize ${name} event repository (${url})`);
-
         this.snapshotThreshold = minNumberOfEventsToCreateSnapshot;
         this._Entity = entity;
         this.namespace = name;
         this.topicName = topicName;
 
+        this.logger.debug(`initialize ${this.namespace} event repository (${url})`);
+
         this.client = await retry(async () => {
-          this.logger.debug(`retry to connect to ${name} database`);
+          this.logger.debug(`retry to connect to ${this.namespace} database`);
           const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true, useUnifiedTopology: true });
           return connection;
         });
-        this.db = this.client.db(name);
-        this.logger.debug(`connected to ${name} database`);
+        this.db = this.client.db(this.namespace);
+        this.logger.debug(`connected to ${this.namespace} database`);
 
         this.db.on('close', () => {
-          this.logger.info(`disconnected from ${name} database`);
+          this.logger.info(`disconnected from ${this.namespace} database`);
         });
 
-        this.eventCollection = this.db.collection(`${name}_events`);
-        this.snapshotCollection = this.db.collection(`${name}_snapshots`);
-        this.counterCollection = this.db.collection(`${name}_counters`);
+        this.eventCollection = this.db.collection(`${this.namespace}_events`);
+        this.snapshotCollection = this.db.collection(`${this.namespace}_snapshots`);
+        this.counterCollection = this.db.collection(`${this.namespace}_counters`);
 
         await this.eventCollection.createIndexes([
           {
@@ -113,6 +113,11 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
         rej(error);
       }
     });
+  };
+
+  getDatabase = async (): Promise<Db> => {
+    await this.waitUntilInitialized();
+    return this.client.db(this.namespace);
   };
 
   save = async (entity: Entity) => {

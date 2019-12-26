@@ -6,7 +6,7 @@ import { IServer } from '@cents-ideas/models';
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
 import { UsersApiInternalRoutes } from '@cents-ideas/enums';
 
-import { IUsersServiceEnvironment } from './environment';
+import env from './environment';
 import { UsersService } from './users.service';
 
 @injectable()
@@ -15,17 +15,20 @@ export class UsersServer implements IServer {
 
   constructor(private logger: Logger, private usersService: UsersService, private expressAdapter: ExpressAdapter) {}
 
-  start = (env: IUsersServiceEnvironment) => {
+  start = () => {
     this.logger.debug('initialized with env: ', env);
-    const { port } = env;
 
     this.app.use(bodyParser.json());
 
-    this.app.put(`${UsersApiInternalRoutes.Login}`, this.expressAdapter.json(this.usersService.login));
-    this.app.put(`${UsersApiInternalRoutes.ConfirmLogin}`, this.expressAdapter.json(this.usersService.confirmLogin));
-    this.app.put(`${UsersApiInternalRoutes.Update}`, this.expressAdapter.json(this.usersService.updateUser));
-    this.app.put(
-      `${UsersApiInternalRoutes.ConfirmEmailChange}`,
+    this.app.post(`/${UsersApiInternalRoutes.Login}`, this.expressAdapter.json(this.usersService.login));
+    this.app.post(
+      `/${UsersApiInternalRoutes.ConfirmSignUp}`,
+      this.expressAdapter.json(this.usersService.confirmSignUp),
+    );
+    this.app.post(`/${UsersApiInternalRoutes.Authenticate}`, this.expressAdapter.json(this.usersService.authenticate));
+    this.app.post(`/${UsersApiInternalRoutes.Update}`, this.expressAdapter.json(this.usersService.updateUser));
+    this.app.post(
+      `/${UsersApiInternalRoutes.ConfirmEmailChange}`,
       this.expressAdapter.json(this.usersService.confirmEmailChange),
     );
 
@@ -33,6 +36,6 @@ export class UsersServer implements IServer {
       return res.status(200).send();
     });
 
-    this.app.listen(port, () => this.logger.info('users service listening on internal port', port));
+    this.app.listen(env.port, () => this.logger.info('users service listening on internal port', env.port));
   };
 }

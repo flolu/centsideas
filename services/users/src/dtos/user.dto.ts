@@ -14,3 +14,7 @@ export interface IUpdateUserDto {
 export interface IUserQueryDto {
   id: string;
 }
+
+export interface IConfirmSignUpDto {
+  token: string;
+}

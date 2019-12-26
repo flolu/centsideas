@@ -2,7 +2,6 @@ export interface ILoginDto {
   email: string;
 }
 
-export interface IConfirmLoginDto {
+export interface IAuthenticateDto {
   token: string;
-  key: string;
 }

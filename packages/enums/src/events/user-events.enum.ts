@@ -4,4 +4,5 @@ export enum UserEvents {
   UserAuthenticated = 'user-authenticated',
   UserLoggedIn = 'user-logged-in',
   UserUpdated = 'user-updated',
+  UserCreated = 'user-created',
 }

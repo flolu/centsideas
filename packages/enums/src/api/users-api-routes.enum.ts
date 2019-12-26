@@ -1,14 +1,17 @@
+// TODO maybe remove "internal routes"??? .... they are the same
 export enum UsersApiRoutes {
   Login = 'login',
-  ConfirmLogin = 'confirm-login',
   Update = 'update',
   ConfirmEmailChange = 'confirm-email-change',
+  ConfirmSignUp = 'confirm-sign-up',
+  Authenticate = 'authenticate',
 }
 
 export enum UsersApiInternalRoutes {
   Login = 'login',
   Update = 'update',
-  ConfirmLogin = 'confirm-login',
   ConfirmEmailChange = 'confirm-email-change',
+  ConfirmSignUp = 'confirm-sign-up',
+  Authenticate = 'authenticate',
   Alive = 'alive',
 }
