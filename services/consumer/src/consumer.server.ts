@@ -4,7 +4,7 @@ import * as bodyParser from 'body-parser';
 
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { IdeasApiInternalRoutes, ApiEndpoints, EventTopics } from '@cents-ideas/enums';
+import { ApiEndpoints, EventTopics, IdeasApiRoutes } from '@cents-ideas/enums';
 
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
@@ -34,11 +34,11 @@ export class ConsumerServer {
     this.app.use(bodyParser.json());
 
     this.app.post(
-      `/${ApiEndpoints.Ideas}/${IdeasApiInternalRoutes.GetAll}`,
+      `/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetAll}`,
       this.expressAdapter.json(this.queryService.getAllIdeas),
     );
     this.app.post(
-      `/${ApiEndpoints.Ideas}/${IdeasApiInternalRoutes.GetById}`,
+      `/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetById}`,
       this.expressAdapter.json(this.queryService.getIdeaById),
     );
 

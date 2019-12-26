@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { IdeasApiInternalRoutes } from '@cents-ideas/enums';
+import { IdeasApiRoutes } from '@cents-ideas/enums';
 
 import { IdeasService } from './ideas.service';
 import env from './environment';
@@ -21,15 +21,15 @@ export class IdeasServer {
     this.app.use(bodyParser.json());
 
     // FIXME don't use http for internal service communication (instead use protobuf, kafka or other message broker)
-    this.app.post(`/${IdeasApiInternalRoutes.Create}`, this.expressAdapter.json(this.ideasService.createEmptyIdea));
-    this.app.post(`/${IdeasApiInternalRoutes.SaveDraft}`, this.expressAdapter.json(this.ideasService.saveDraft));
-    this.app.post(`/${IdeasApiInternalRoutes.CommitDraft}`, this.expressAdapter.json(this.ideasService.commitDraft));
-    this.app.post(`/${IdeasApiInternalRoutes.Publish}`, this.expressAdapter.json(this.ideasService.publish));
-    this.app.post(`/${IdeasApiInternalRoutes.Update}`, this.expressAdapter.json(this.ideasService.update));
-    this.app.post(`/${IdeasApiInternalRoutes.Unpublish}`, this.expressAdapter.json(this.ideasService.unpublish));
-    this.app.post(`/${IdeasApiInternalRoutes.Delete}`, this.expressAdapter.json(this.ideasService.delete));
+    this.app.post(`/${IdeasApiRoutes.Create}`, this.expressAdapter.json(this.ideasService.createEmptyIdea));
+    this.app.post(`/${IdeasApiRoutes.SaveDraft}`, this.expressAdapter.json(this.ideasService.saveDraft));
+    this.app.post(`/${IdeasApiRoutes.CommitDraft}`, this.expressAdapter.json(this.ideasService.commitDraft));
+    this.app.post(`/${IdeasApiRoutes.Publish}`, this.expressAdapter.json(this.ideasService.publish));
+    this.app.post(`/${IdeasApiRoutes.Update}`, this.expressAdapter.json(this.ideasService.update));
+    this.app.post(`/${IdeasApiRoutes.Unpublish}`, this.expressAdapter.json(this.ideasService.unpublish));
+    this.app.post(`/${IdeasApiRoutes.Delete}`, this.expressAdapter.json(this.ideasService.delete));
 
-    this.app.get(`/${IdeasApiInternalRoutes.Alive}`, (_req, res) => {
+    this.app.get(`/${IdeasApiRoutes.Alive}`, (_req, res) => {
       return res.status(200).send();
     });
 
