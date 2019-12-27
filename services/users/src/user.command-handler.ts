@@ -25,7 +25,7 @@ export class UserCommandHandler {
     EmailRequiredError.validate(email);
     EmailInvalidError.validate(email);
     const existing = await this.repository.getUserIdEmailMapping(email);
-    // TODO instead of returning url send email with link
+    // FIXME instead of returning url send email with link
     if (existing && existing.userId) {
       const token = this.createAuthToken(existing.userId);
       return {
@@ -56,6 +56,8 @@ export class UserCommandHandler {
     EmailInvalidError.validate(email);
     const userId = await this.repository.generateUniqueId();
     const user = User.create(userId, email);
+    // FIXME remove email if something went wrong with creating user
+    this.repository.insertEmail(userId, email);
     return this.repository.save(user);
   };
 
@@ -88,8 +90,8 @@ export class UserCommandHandler {
     const user = await this.repository.findById(userId);
     const pendingEmail = user.persistedState.email !== email ? email : null;
     if (pendingEmail) {
-      // TODO check if email already exists and return error if necessary
-      // TODO dispatch email change request (and also send sth to the client, so it knows that the request has been sent)
+      // FIXME check if email already exists and return error if necessary
+      // FIXME dispatch email change request (and also send sth to the client, so it knows that the request has been sent)
     }
     user.update(username, pendingEmail);
     return this.repository.save(user);

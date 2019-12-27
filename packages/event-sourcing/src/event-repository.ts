@@ -18,7 +18,7 @@ export interface IEventRepository<Entity> {
     url: string,
     name: string,
     topicName: string,
-    initFunctions: Function[],
+    initFunctions: any[],
     minNumberOfEventsToCreateSnapshot: number,
   ) => void;
   save: (entity: Entity) => Promise<Entity>;
@@ -52,7 +52,7 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     url: string,
     name: string,
     topicName: string,
-    initFunctions: Function[] = [],
+    initFunctions: any[] = [],
     minNumberOfEventsToCreateSnapshot: number = 100,
   ): Promise<any> => {
     return new Promise(async (res, rej) => {

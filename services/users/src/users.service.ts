@@ -36,12 +36,11 @@ export class UsersService {
       }
     });
 
-  // TODO better logging in services
   confirmSignUp = (req: HttpRequest<null, null, null, IAuthenticateDto>): Promise<HttpResponse<User>> =>
     new Promise(async resolve => {
       const _loggerName = 'confirm sign up';
       try {
-        this.logger.info(_loggerName, req);
+        this.logger.info(_loggerName);
         const user = await this.commandHandler.confirmSignUp(req.headers.authorization);
         resolve({
           status: HttpStatusCodes.Created,
@@ -90,6 +89,6 @@ export class UsersService {
 
   confirmEmailChange = (req: HttpRequest<IConfirmEmailChangeDto>): Promise<HttpResponse<any>> =>
     new Promise(async resolve => {
-      // TODO email change
+      // FIXME email change
     });
 }

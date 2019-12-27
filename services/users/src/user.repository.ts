@@ -18,9 +18,15 @@ export class UserRepository extends EventRepository<User> {
     this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, [this.initializeEmailCollection]);
   }
 
-  private initializeEmailCollection = async () => {
-    const collection = await this.getEmailCollection();
-    collection.createIndex({ email: 1 }, { unique: true });
+  private initializeEmailCollection = async (): Promise<boolean> => {
+    try {
+      const collection = await this.getEmailCollection();
+      collection.createIndex({ email: 1 }, { unique: true });
+      return true;
+    } catch (error) {
+      this._logger.error('Error while initializing email collection', error);
+      return false;
+    }
   };
 
   private getEmailCollection = async (): Promise<mongodb.Collection> => {
@@ -30,17 +36,17 @@ export class UserRepository extends EventRepository<User> {
 
   insertEmail = async (userId: string, email: string): Promise<IUserIdEmailMapping> => {
     const db = await this.getDatabase();
-    // TODO try what happens when i insert an email twice
     const inserted = await db.collection(this.emailCollectionName).insertOne({ userId, email });
+    this._logger.debug('inserted email into emails collection', { userId, email });
     return inserted.ops[0];
   };
 
   updateEmail = async (userId: string, newEmail: string): Promise<IUserIdEmailMapping> => {
     const db = await this.getDatabase();
-    // TODO try what happens when i insert an email twice
     const updated = await db
       .collection(this.emailCollectionName)
       .findOneAndUpdate({ userId }, { $set: { email: newEmail } });
+    this._logger.debug('updated email in emails collection', { userId, newEmail });
     return updated.value;
   };
 

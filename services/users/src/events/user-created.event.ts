@@ -1,3 +1,5 @@
+import * as faker from 'faker';
+
 import { Event } from '@cents-ideas/event-sourcing';
 import { UserEvents } from '@cents-ideas/enums';
 import { IUserState, IUserCreatedEvent } from '@cents-ideas/models';
@@ -13,8 +15,7 @@ export class UserCreatedEvent extends Event<IUserCreatedEvent> {
     state.id = event.aggregateId;
     state.updatedAt = new Date().toISOString();
     state.email = event.data.email;
-    // TODO generate random username based on email address
-    state.username = 'default-username';
+    state.username = faker.internet.userName().toLowerCase();
     return state;
   }
 }
