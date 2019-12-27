@@ -18,6 +18,7 @@ export interface IEventRepository<Entity> {
     url: string,
     name: string,
     topicName: string,
+    initFunctions: Function[],
     minNumberOfEventsToCreateSnapshot: number,
   ) => void;
   save: (entity: Entity) => Promise<Entity>;
@@ -51,6 +52,7 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     url: string,
     name: string,
     topicName: string,
+    initFunctions: Function[] = [],
     minNumberOfEventsToCreateSnapshot: number = 100,
   ): Promise<any> => {
     return new Promise(async (res, rej) => {
@@ -105,6 +107,8 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
             throw error;
           }
         }
+
+        await Promise.all(initFunctions.map(f => f()));
 
         this.logger.debug(`${name} event repository initialized`);
         this.hasInitialized = true;

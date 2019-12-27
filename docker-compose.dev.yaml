@@ -72,3 +72,18 @@ services:
     image: mongo:4.2
     logging:
       driver: none
+
+  # users
+  users:
+    build:
+      context: ./
+      dockerfile: ./services/users/dev.Dockerfile
+    volumes:
+      - ./services/users:/usr/app/src/services/reviews
+      - ./packages:/usr/app/src/packages
+      - ./node_modules:/usr/app/src/node_modules
+    env_file: ./env/.env.dev
+  users-event-store:
+    image: mongo:4.2
+    logging:
+      driver: none

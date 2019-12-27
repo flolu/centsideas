@@ -3,5 +3,9 @@ export interface ILoginDto {
 }
 
 export interface IAuthenticateDto {
+  authorization: string;
+}
+
+export interface IAuthenticatedDto {
   token: string;
 }

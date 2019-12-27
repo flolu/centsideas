@@ -28,6 +28,7 @@ export class GatewayServer {
     this.app.use(bodyParser.json());
     this.app.use(cors());
 
+    // TODO fix all http request types https://stackoverflow.com/a/612035/8586803
     this.app.use(`/${ApiEndpoints.Ideas}`, this.ideasRoutes.setup(env.hosts.ideas, env.hosts.consumer));
     this.app.use(`/${ApiEndpoints.Reviews}`, this.reviewsRoutes.setup(env.hosts.reviews));
     this.app.use(`/${ApiEndpoints.Users}`, this.usersRoutes.setup(env.hosts.users));

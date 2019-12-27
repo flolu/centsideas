@@ -5,8 +5,8 @@ export class EmailInvalidError extends EntityError {
   static readonly regex = new RegExp(`^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`);
 
   static validate = (email: string): void => {
-    if (!EmailInvalidError.regex.test(email)) {
-      throw new EmailInvalidError(`Invalid email address`);
+    if (EmailInvalidError.regex.test(email)) {
+      throw new EmailInvalidError(`Invalid email address (${email})`);
     }
   };
 

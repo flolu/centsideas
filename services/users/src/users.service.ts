@@ -11,7 +11,7 @@ import {
   IConfirmEmailChangeDto,
   IUpdateUserDto,
   IUserQueryDto,
-  IConfirmSignUpDto,
+  IAuthenticatedDto,
 } from './dtos';
 import { User } from './user.entity';
 
@@ -36,12 +36,13 @@ export class UsersService {
       }
     });
 
-  confirmSignUp = (req: HttpRequest<null, IConfirmSignUpDto>): Promise<HttpResponse<User>> =>
+  // TODO better logging in services
+  confirmSignUp = (req: HttpRequest<null, null, null, IAuthenticateDto>): Promise<HttpResponse<User>> =>
     new Promise(async resolve => {
       const _loggerName = 'confirm sign up';
       try {
-        this.logger.info(_loggerName);
-        const user = await this.commandHandler.confirmSignUp(req.params.token);
+        this.logger.info(_loggerName, req);
+        const user = await this.commandHandler.confirmSignUp(req.headers.authorization);
         resolve({
           status: HttpStatusCodes.Created,
           body: user,
@@ -53,12 +54,12 @@ export class UsersService {
       }
     });
 
-  authenticate = (req: HttpRequest<null, IAuthenticateDto>): Promise<HttpResponse<IAuthenticateDto>> =>
+  authenticate = (req: HttpRequest<null, null, null, IAuthenticateDto>): Promise<HttpResponse<IAuthenticatedDto>> =>
     new Promise(async resolve => {
       const _loggerName = 'authenticate';
       try {
         this.logger.info(_loggerName);
-        const updatedToken = await this.commandHandler.authenticate(req.params.token);
+        const updatedToken = await this.commandHandler.authenticate(req.headers.authorization);
         resolve({
           status: HttpStatusCodes.Accepted,
           body: { token: updatedToken },

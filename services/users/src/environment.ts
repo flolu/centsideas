@@ -5,5 +5,5 @@ export default {
   userDatabaseName: 'users',
   loginDatabaseName: 'logins',
   // TODO set a real secret from env vars for jwt signing
-  jwtSecret: 'käsebrot mit kuchen',
+  jwtSecret: process.env.JWT_SECRET,
 };

@@ -59,3 +59,13 @@ services:
   reviews-event-store:
     container_name: reviews-event-store
     image: mongo:4.2
+
+  # users
+  users:
+    build:
+      context: ./
+      dockerfile: ./services/users/prod.Dockerfile
+    env_file: ./env/.env.prod
+  reviews-event-store:
+    container_name: users-event-store
+    image: mongo:4.2

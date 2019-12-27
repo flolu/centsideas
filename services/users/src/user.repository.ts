@@ -15,8 +15,7 @@ export class UserRepository extends EventRepository<User> {
 
   constructor(private _messageBroker: MessageBroker, private _logger: Logger) {
     super(_messageBroker, _logger);
-    this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users);
-    this.initializeEmailCollection();
+    this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, [this.initializeEmailCollection]);
   }
 
   private initializeEmailCollection = async () => {
