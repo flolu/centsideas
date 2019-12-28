@@ -1,25 +1,26 @@
 import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import { HttpRequest, HttpResponse } from '@cents-ideas/models';
+import {
+  HttpRequest,
+  HttpResponse,
+  ILoginResponseDto,
+  ILoginDto,
+  IAuthenticateDto,
+  IAuthenticatedDto,
+  IUserState,
+} from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
-import {
-  ILoginDto,
-  IAuthenticateDto,
-  IConfirmEmailChangeDto,
-  IUpdateUserDto,
-  IUserQueryDto,
-  IAuthenticatedDto,
-} from './dtos';
+import { IConfirmEmailChangeDto, IUpdateUserDto, IUserQueryDto } from './dtos';
 import { User } from './user.entity';
 
 @injectable()
 export class UsersService {
   constructor(private commandHandler: UserCommandHandler, private logger: Logger) {}
 
-  login = (req: HttpRequest<ILoginDto>): Promise<HttpResponse> =>
+  login = (req: HttpRequest<ILoginDto>): Promise<HttpResponse<ILoginResponseDto>> =>
     new Promise(async resolve => {
       const _loggerName = 'login';
       try {
@@ -36,7 +37,7 @@ export class UsersService {
       }
     });
 
-  confirmSignUp = (req: HttpRequest<null, null, null, IAuthenticateDto>): Promise<HttpResponse<User>> =>
+  confirmSignUp = (req: HttpRequest<null, null, null, IAuthenticateDto>): Promise<HttpResponse<IUserState>> =>
     new Promise(async resolve => {
       const _loggerName = 'confirm sign up';
       try {
@@ -44,7 +45,7 @@ export class UsersService {
         const user = await this.commandHandler.confirmSignUp(req.headers.authorization);
         resolve({
           status: HttpStatusCodes.Created,
-          body: user,
+          body: user.persistedState,
           headers: {},
         });
       } catch (error) {

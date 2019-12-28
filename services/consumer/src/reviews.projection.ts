@@ -101,7 +101,7 @@ export class ReviewsProjection {
   };
 
   private reviewPublished = async (event: IEvent<any>) => {
-    // TODO transactional update
+    // FIXME transactional update
     await this.reviewsCollection.findOneAndUpdate(
       { _id: event.aggregateId },
       {

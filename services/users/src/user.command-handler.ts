@@ -3,6 +3,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { sanitizeHtml } from '@cents-ideas/utils';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
+import { ILoginResponseDto } from '@cents-ideas/models';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -21,7 +22,7 @@ import { TokenInvalidError } from './errors/token-invalid.error';
 export class UserCommandHandler {
   constructor(private repository: UserRepository) {}
 
-  login = async (email: string): Promise<any> => {
+  login = async (email: string): Promise<ILoginResponseDto> => {
     EmailRequiredError.validate(email);
     EmailInvalidError.validate(email);
     const existing = await this.repository.getUserIdEmailMapping(email);
