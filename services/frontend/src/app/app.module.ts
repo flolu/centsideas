@@ -6,11 +6,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { SettingsService } from '@ci-frontend/app';
 import { IdeasModule } from '@ci-frontend/ideas/ideas.module';
+
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppStoreModule } from './app-store.module';
 import { AppComponent } from './app.component';
-import { ReviewsModule } from './reviews/reviews.module';
+import { UsersModule } from './users/users.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     BrowserModule.withServerTransition({ appId: 'cents-ideas' }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     IdeasModule,
+    UsersModule,
     AppStoreModule,
   ],
   providers: [

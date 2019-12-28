@@ -3,7 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
-import { ILoginResponseDto, ILoginDto, IAuthenticatedDto, IAuthenticateDto, IUserState } from '@cents-ideas/models';
+import {
+  ILoginResponseDto,
+  ILoginDto,
+  IAuthenticatedDto,
+  IAuthenticateDto,
+  IUserState,
+  IConfirmSignUpResponseDto,
+} from '@cents-ideas/models';
 
 import { SettingsService } from '../settings.service';
 
@@ -28,11 +35,11 @@ export class UsersService {
     return this.http.post<IAuthenticatedDto>(url, {}, { headers });
   };
 
-  confirmSignUp = (token: string): Observable<IUserState> => {
+  confirmSignUp = (token: string): Observable<IConfirmSignUpResponseDto> => {
     const payload: IAuthenticateDto = { authorization: token };
     const headers = new HttpHeaders({ ...payload });
     const url = `${this.baseUrl}/${UsersApiRoutes.ConfirmSignUp}`;
-    return this.http.post<IUserState>(url, {}, { headers });
+    return this.http.post<IConfirmSignUpResponseDto>(url, {}, { headers });
   };
 
   logout = () => {

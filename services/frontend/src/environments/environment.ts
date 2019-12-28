@@ -4,5 +4,16 @@ export const environment = {
     ideas: {
       name: 'ideas',
     },
+    auth: {
+      login: {
+        name: 'login',
+      },
+      confirmSignUp: {
+        name: 'confirm-sign-up',
+      },
+      confirmLogin: {
+        name: 'confirm-login',
+      },
+    },
   },
 };

@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { sanitizeHtml } from '@cents-ideas/utils';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
-import { ILoginResponseDto } from '@cents-ideas/models';
+import { ILoginResponseDto, IConfirmSignUpResponseDto } from '@cents-ideas/models';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -45,7 +45,7 @@ export class UserCommandHandler {
     }
   };
 
-  confirmSignUp = async (token: string): Promise<User> => {
+  confirmSignUp = async (token: string): Promise<IConfirmSignUpResponseDto> => {
     let decoded: any;
     try {
       decoded = jwt.verify(token, env.jwtSecret);
@@ -59,7 +59,9 @@ export class UserCommandHandler {
     const user = User.create(userId, email);
     // FIXME remove email if something went wrong with creating user
     this.repository.insertEmail(userId, email);
-    return this.repository.save(user);
+    const userState = await this.repository.save(user);
+    const authToken = this.createAuthToken(userId);
+    return { user: userState, token: authToken };
   };
 
   authenticate = async (token: string): Promise<string> => {

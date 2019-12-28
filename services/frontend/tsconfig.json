@@ -18,7 +18,9 @@
       "@ci-frontend/ideas": ["./src/app/ideas"],
       "@ci-frontend/ideas/*": ["./src/app/ideas/*"],
       "@ci-frontend/reviews": ["./src/app/reviews"],
-      "@ci-frontend/reviews/*": ["./src/app/reviews/*"]
+      "@ci-frontend/reviews/*": ["./src/app/reviews/*"],
+      "@ci-frontend/users": ["./src/app/users"],
+      "@ci-frontend/users/*": ["./src/app/users/*"]
     }
   },
   "references": [{ "path": "../../packages/models" }],

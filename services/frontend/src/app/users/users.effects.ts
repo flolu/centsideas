@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { switchMap, catchError, map } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import { UsersService } from './users.service';
 import { UsersActions } from '.';
-import { switchMap, catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs';
 
 @Injectable()
 export class UsersEffects {
@@ -21,6 +21,18 @@ export class UsersEffects {
               : UsersActions.signUpRequested(loginResponse),
           ),
           catchError(error => of(UsersActions.loginFail({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  confirmSignUp$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UsersActions.confirmSignUp),
+      switchMap(({ token }) =>
+        this.usersService.confirmSignUp(token).pipe(
+          map(data => UsersActions.confirmSignUpDone(data)),
+          catchError(error => of(UsersActions.confirmSignUpFail({ error }))),
         ),
       ),
     ),

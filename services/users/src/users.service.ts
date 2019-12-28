@@ -9,12 +9,12 @@ import {
   IAuthenticateDto,
   IAuthenticatedDto,
   IUserState,
+  IConfirmSignUpResponseDto,
 } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
 import { IConfirmEmailChangeDto, IUpdateUserDto, IUserQueryDto } from './dtos';
-import { User } from './user.entity';
 
 @injectable()
 export class UsersService {
@@ -26,6 +26,7 @@ export class UsersService {
       try {
         this.logger.info(_loggerName);
         const result = await this.commandHandler.login(req.body.email);
+        // TODO dont send token back!... instead send email to user
         resolve({
           status: HttpStatusCodes.Accepted,
           body: result,
@@ -37,15 +38,17 @@ export class UsersService {
       }
     });
 
-  confirmSignUp = (req: HttpRequest<null, null, null, IAuthenticateDto>): Promise<HttpResponse<IUserState>> =>
+  confirmSignUp = (
+    req: HttpRequest<null, null, null, IAuthenticateDto>,
+  ): Promise<HttpResponse<IConfirmSignUpResponseDto>> =>
     new Promise(async resolve => {
       const _loggerName = 'confirm sign up';
       try {
         this.logger.info(_loggerName);
-        const user = await this.commandHandler.confirmSignUp(req.headers.authorization);
+        const { user, token } = await this.commandHandler.confirmSignUp(req.headers.authorization);
         resolve({
           status: HttpStatusCodes.Created,
-          body: user.persistedState,
+          body: { user, token },
           headers: {},
         });
       } catch (error) {
