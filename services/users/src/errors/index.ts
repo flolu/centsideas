@@ -5,3 +5,4 @@ export { UsernameRequiredError } from './username-required.error';
 export { UsernameInvalidError } from './username-invalid.error';
 export { EmailRequiredError } from './email-required.error';
 export { EmailInvalidError } from './email-invalid.error';
+export { EmailAlreadySignedUpError } from './email-already-signed-up.error';

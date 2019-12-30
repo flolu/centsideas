@@ -13,6 +13,7 @@ import {
   UsernameInvalidError,
   EmailRequiredError,
   EmailInvalidError,
+  EmailAlreadySignedUpError,
 } from './errors';
 import env from './environment';
 import { ISignUpTokenData, ILoginTokenData } from './models';
@@ -55,13 +56,17 @@ export class UserCommandHandler {
     const email: string = decoded.email;
     EmailRequiredError.validate(email);
     EmailInvalidError.validate(email);
+    const emailUserMapping = await this.repository.getUserIdEmailMapping(email);
+    if (emailUserMapping) {
+      throw new EmailAlreadySignedUpError(email);
+    }
     const userId = await this.repository.generateUniqueId();
     const user = User.create(userId, email);
     // FIXME remove email if something went wrong with creating user
     this.repository.insertEmail(userId, email);
-    const userState = await this.repository.save(user);
+    const updatedUser: User = await this.repository.save(user);
     const authToken = this.createAuthToken(userId);
-    return { user: userState, token: authToken };
+    return { user: updatedUser.persistedState, token: authToken };
   };
 
   authenticate = async (token: string): Promise<string> => {

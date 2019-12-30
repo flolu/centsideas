@@ -32,6 +32,14 @@ const usersReducer = createReducer(
     loaded: true,
     error: null,
   })),
+  on(UsersActions.confirmSignUpDone, (state, action) => ({
+    ...state,
+    loading: false,
+    loaded: true,
+    error: null,
+    user: action.user,
+    token: action.token,
+  })),
 );
 
 export function reducer(state: IUsersState | undefined, action: Action) {

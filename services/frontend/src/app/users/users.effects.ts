@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { switchMap, catchError, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { UsersService } from './users.service';
@@ -36,5 +36,14 @@ export class UsersEffects {
         ),
       ),
     ),
+  );
+
+  confirmSignUpDone$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(UsersActions.confirmSignUpDone),
+        tap(action => this.usersService.saveToken(action.token)),
+      ),
+    { dispatch: false },
   );
 }

@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '.';
+import { UsersSelectors } from './users';
 
 @Component({
   selector: 'ci-root',
@@ -6,7 +9,8 @@ import { Component } from '@angular/core';
     <nav>
       <a class="icon" [routerLink]="['']"><span>💡</span></a>
       <div style="width: 100%;"></div>
-      <a class="icon"><span>👤</span></a>
+      <a [routerLink]="['/login']" class="icon"><span>👤</span></a>
+      <h3 class="user" *ngIf="user$ | async">{{ (user$ | async)?.username }}</h3>
     </nav>
     <router-outlet></router-outlet>
   `,
@@ -24,7 +28,14 @@ import { Component } from '@angular/core';
         font-size: 1.5em;
         text-decoration: none;
       }
+      .user {
+        margin: 10px;
+      }
     `,
   ],
 })
-export class AppComponent {}
+export class AppComponent {
+  user$ = this.store.select(UsersSelectors.selectUser);
+
+  constructor(private store: Store<AppState>) {}
+}
