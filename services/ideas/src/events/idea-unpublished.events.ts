@@ -9,9 +9,9 @@ export class IdeaUnpublishedEvent extends Event<IIdeaUnpublishedEvent> {
     super(IdeaUnpublishedEvent.eventName, {}, ideaId);
   }
 
-  static commit(state: IIdeaState, _event: IdeaUnpublishedEvent): IIdeaState {
+  static commit(state: IIdeaState, event: IdeaUnpublishedEvent): IIdeaState {
     state.published = false;
-    state.unpublishedAt = new Date().toISOString();
+    state.unpublishedAt = event.timestamp;
     return state;
   }
 }

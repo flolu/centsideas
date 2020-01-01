@@ -61,10 +61,10 @@ export class UsersService {
       const _loggerName = 'authenticate';
       try {
         this.logger.info(_loggerName);
-        const updatedToken = await this.commandHandler.authenticate(req.headers.authorization);
+        const { token, user } = await this.commandHandler.authenticate(req.headers.authorization);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: { token: updatedToken },
+          body: { token, user },
           headers: {},
         });
       } catch (error) {

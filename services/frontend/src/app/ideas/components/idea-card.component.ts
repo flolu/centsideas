@@ -71,13 +71,14 @@ export class IdeaCardComponent implements OnInit {
   ngOnInit() {
     this.opacity = 0.05 * this.idea.reviewCount + 0.5;
 
-    this.score =
-      (this.idea.scores.control +
-        this.idea.scores.entry +
-        this.idea.scores.need +
-        this.idea.scores.time +
-        this.idea.scores.scale) *
-      4;
+    this.score = this.idea.scores
+      ? (this.idea.scores.control +
+          this.idea.scores.entry +
+          this.idea.scores.need +
+          this.idea.scores.time +
+          this.idea.scores.scale) *
+        4
+      : 0;
 
     const strength = (1 / 30) * this.score - 5 / 3;
     this.color = `rgb(${255 * strength}, ${100 * strength}, ${0})`;

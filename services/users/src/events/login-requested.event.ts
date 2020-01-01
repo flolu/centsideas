@@ -11,7 +11,7 @@ export class LoginRequestedEvent extends Event<ILoginRequestedEvent> {
 
   static commit(state: ILoginState, event: LoginRequestedEvent): ILoginState {
     state.id = event.aggregateId;
-    state.createdAt = new Date().toISOString();
+    state.createdAt = event.timestamp;
     state.email = event.data.email;
     return state;
   }

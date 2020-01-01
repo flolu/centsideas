@@ -1,3 +1,5 @@
+import { IUserState } from '../entities';
+
 export interface ILoginResponseDto {
   existingAccount: boolean;
   activationRoute: string;
@@ -14,4 +16,5 @@ export interface IAuthenticateDto {
 
 export interface IAuthenticatedDto {
   token: string;
+  user: IUserState;
 }

@@ -40,6 +40,14 @@ const usersReducer = createReducer(
     user: action.user,
     token: action.token,
   })),
+  on(UsersActions.authenticateDone, (state, action) => ({
+    ...state,
+    loading: false,
+    loaded: true,
+    error: null,
+    user: action.user,
+    token: action.token,
+  })),
 );
 
 export function reducer(state: IUsersState | undefined, action: Action) {

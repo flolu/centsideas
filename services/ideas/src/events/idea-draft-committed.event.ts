@@ -9,11 +9,11 @@ export class IdeaDraftCommittedEvent extends Event<IIdeaDraftCommittedEvent> {
     super(IdeaDraftCommittedEvent.eventName, {}, ideaId);
   }
 
-  static commit(state: IIdeaState): IIdeaState {
+  static commit(state: IIdeaState, event: IdeaDraftCommittedEvent): IIdeaState {
     state.title = (state.draft && state.draft.title) || state.title;
     state.description = (state.draft && state.draft.description) || state.description;
     state.draft = null;
-    state.updatedAt = new Date().toISOString();
+    state.updatedAt = event.timestamp;
     return state;
   }
 }

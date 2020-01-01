@@ -9,10 +9,10 @@ export class ReviewCreatedEvent extends Event<IReviewCreatedEvent> {
     super(ReviewCreatedEvent.eventName, { reviewId, ideaId }, reviewId);
   }
 
-  static commit(state: IReviewState, { aggregateId, data }: ReviewCreatedEvent): IReviewState {
-    state.id = aggregateId;
-    state.ideaId = data.ideaId;
-    state.createdAt = new Date().toISOString();
+  static commit(state: IReviewState, event: ReviewCreatedEvent): IReviewState {
+    state.id = event.aggregateId;
+    state.ideaId = event.data.ideaId;
+    state.createdAt = event.timestamp;
     state.published = false;
     return state;
   }

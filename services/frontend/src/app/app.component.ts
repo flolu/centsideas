@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '.';
-import { UsersSelectors } from './users';
+import { UsersSelectors, UsersActions } from './users';
 
 @Component({
   selector: 'ci-root',
@@ -29,13 +29,17 @@ import { UsersSelectors } from './users';
         text-decoration: none;
       }
       .user {
-        margin: 10px;
+        margin: 10px;token
       }
     `,
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   user$ = this.store.select(UsersSelectors.selectUser);
 
   constructor(private store: Store<AppState>) {}
+
+  ngOnInit() {
+    this.store.dispatch(UsersActions.authenticate());
+  }
 }

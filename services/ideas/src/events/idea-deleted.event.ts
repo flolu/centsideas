@@ -9,9 +9,9 @@ export class IdeaDeletedEvent extends Event<IIdeaDeletedEvent> {
     super(IdeaDeletedEvent.eventName, {}, ideaId);
   }
 
-  static commit(state: IIdeaState, _event: IdeaDeletedEvent): IIdeaState {
+  static commit(state: IIdeaState, event: IdeaDeletedEvent): IIdeaState {
     state.deleted = true;
-    state.deletedAt = new Date().toISOString();
+    state.deletedAt = event.timestamp;
     return state;
   }
 }

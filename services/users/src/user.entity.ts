@@ -24,9 +24,9 @@ export class User extends EventEntity<IUserState> {
     }
   }
 
-  static create(userId: string, email: string): User {
+  static create(userId: string, email: string, username: string): User {
     const user = new User();
-    user.pushEvents(new UserCreatedEvent(userId, email));
+    user.pushEvents(new UserCreatedEvent(userId, email, username));
     return user;
   }
 

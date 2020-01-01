@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 import {
@@ -8,7 +8,6 @@ import {
   ILoginDto,
   IAuthenticatedDto,
   IAuthenticateDto,
-  IUserState,
   IConfirmSignUpResponseDto,
 } from '@cents-ideas/models';
 
@@ -27,8 +26,8 @@ export class UsersService {
     return this.http.post<ILoginResponseDto>(url, payload);
   };
 
-  authenticate = (token: string): Observable<IAuthenticatedDto> => {
-    const payload: IAuthenticateDto = { authorization: token };
+  authenticate = (): Observable<IAuthenticatedDto> => {
+    const payload: IAuthenticateDto = { authorization: this.token };
     const headers = new HttpHeaders({ ...payload });
     const url = `${this.baseUrl}/${UsersApiRoutes.Authenticate}`;
     // TODO create http interceptor to send token via header https://stackoverflow.com/questions/34464108
@@ -56,5 +55,9 @@ export class UsersService {
 
   get baseUrl() {
     return `${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}`;
+  }
+
+  get token() {
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 }

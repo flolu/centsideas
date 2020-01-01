@@ -1,9 +1,10 @@
 import { injectable } from 'inversify';
+import * as faker from 'faker';
 import * as jwt from 'jsonwebtoken';
 
 import { sanitizeHtml } from '@cents-ideas/utils';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
-import { ILoginResponseDto, IConfirmSignUpResponseDto } from '@cents-ideas/models';
+import { ILoginResponseDto, IConfirmSignUpResponseDto, IAuthenticatedDto } from '@cents-ideas/models';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -61,7 +62,12 @@ export class UserCommandHandler {
       throw new EmailAlreadySignedUpError(email);
     }
     const userId = await this.repository.generateUniqueId();
-    const user = User.create(userId, email);
+    const username: string = faker.internet
+      .userName()
+      .toLowerCase()
+      .toString();
+    // FIXME check if username is unique (same stuff as with email)
+    const user = User.create(userId, email, username);
     // FIXME remove email if something went wrong with creating user
     this.repository.insertEmail(userId, email);
     const updatedUser: User = await this.repository.save(user);
@@ -69,7 +75,7 @@ export class UserCommandHandler {
     return { user: updatedUser.persistedState, token: authToken };
   };
 
-  authenticate = async (token: string): Promise<string> => {
+  authenticate = async (token: string): Promise<IAuthenticatedDto> => {
     let decoded: any;
     try {
       decoded = jwt.verify(token, env.jwtSecret);
@@ -84,7 +90,7 @@ export class UserCommandHandler {
     if (!user) throw new TokenInvalidError(token, 'Invalid userId in token payload');
 
     const updatedToken = this.createAuthToken(userId);
-    return updatedToken;
+    return { user: user.persistedState, token: updatedToken };
   };
 
   // TODO make sure only authenticated user can do this (for its own data)

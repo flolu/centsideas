@@ -9,9 +9,9 @@ export class IdeaPublishedEvent extends Event<IIdeaPublishedEvent> {
     super(IdeaPublishedEvent.eventName, {}, ideaId);
   }
 
-  static commit(state: IIdeaState, _event: IdeaPublishedEvent): IIdeaState {
+  static commit(state: IIdeaState, event: IdeaPublishedEvent): IIdeaState {
     state.published = true;
-    state.publishedAt = new Date().toISOString();
+    state.publishedAt = event.timestamp;
     return state;
   }
 }

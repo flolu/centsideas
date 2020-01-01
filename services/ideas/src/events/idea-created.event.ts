@@ -11,7 +11,7 @@ export class IdeaCreatedEvent extends Event<IIdeaCreatedEvent> {
 
   static commit(state: IIdeaState, event: IdeaCreatedEvent): IIdeaState {
     state.id = event.aggregateId;
-    state.createdAt = new Date().toISOString();
+    state.createdAt = event.timestamp;
     state.deleted = false;
     state.published = false;
     return state;

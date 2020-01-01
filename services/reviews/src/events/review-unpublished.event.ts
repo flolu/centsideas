@@ -9,9 +9,9 @@ export class ReviewUnpublishedEvent extends Event<IReviewPublishedEvent> {
     super(ReviewUnpublishedEvent.eventName, {}, reviewId);
   }
 
-  static commit(state: IReviewState, _event: ReviewUnpublishedEvent): IReviewState {
+  static commit(state: IReviewState, event: ReviewUnpublishedEvent): IReviewState {
     state.published = false;
-    state.unpublishedAt = new Date().toISOString();
+    state.unpublishedAt = event.timestamp;
     return state;
   }
 }

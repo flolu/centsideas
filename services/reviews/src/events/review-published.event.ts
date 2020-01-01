@@ -9,9 +9,9 @@ export class ReviewPublishedEvent extends Event<IReviewPublishedEvent> {
     super(ReviewPublishedEvent.eventName, {}, reviewId);
   }
 
-  static commit(state: IReviewState, _event: ReviewPublishedEvent): IReviewState {
+  static commit(state: IReviewState, event: ReviewPublishedEvent): IReviewState {
     state.published = true;
-    state.publishedAt = new Date().toISOString();
+    state.publishedAt = event.timestamp;
     return state;
   }
 }

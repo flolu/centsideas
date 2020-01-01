@@ -16,4 +16,5 @@ export interface IUserAuthenticatedEvent {}
 export interface IUserCreatedEvent {
   userId: string;
   email: string;
+  username: string;
 }

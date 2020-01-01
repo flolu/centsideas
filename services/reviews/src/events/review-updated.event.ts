@@ -9,11 +9,11 @@ export class ReviewUpdatedEvent extends Event<IReviewUpdatedEvent> {
     super(ReviewUpdatedEvent.eventName, { content, scores }, reviewId);
   }
 
-  static commit(state: IReviewState, { data }: ReviewUpdatedEvent): IReviewState {
-    const { content, scores } = data;
+  static commit(state: IReviewState, event: ReviewUpdatedEvent): IReviewState {
+    const { content, scores } = event.data;
     state.content = content || state.content;
     state.scores = scores || state.scores;
-    state.updatedAt = new Date().toISOString();
+    state.updatedAt = event.timestamp;
     return state;
   }
 }
