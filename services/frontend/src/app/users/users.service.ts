@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, from } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
+import { ApiEndpoints, UsersApiRoutes, HeaderKeys } from '@cents-ideas/enums';
 import {
   ILoginResponseDto,
   ILoginDto,
@@ -12,11 +12,11 @@ import {
 } from '@cents-ideas/models';
 
 import { SettingsService } from '../settings.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class UsersService {
   private readonly API_ENDPOINT = ApiEndpoints.Users;
-  private readonly TOKEN_KEY = 'token';
 
   constructor(private http: HttpClient, private settingsService: SettingsService) {}
 
@@ -27,15 +27,12 @@ export class UsersService {
   };
 
   authenticate = (): Observable<IAuthenticatedDto> => {
-    const payload: IAuthenticateDto = { authorization: this.token };
-    const headers = new HttpHeaders({ ...payload });
     const url = `${this.baseUrl}/${UsersApiRoutes.Authenticate}`;
-    // TODO create http interceptor to send token via header https://stackoverflow.com/questions/34464108
-    return this.http.post<IAuthenticatedDto>(url, {}, { headers });
+    return this.http.post<IAuthenticatedDto>(url, {});
   };
 
   confirmSignUp = (token: string): Observable<IConfirmSignUpResponseDto> => {
-    const payload: IAuthenticateDto = { authorization: token };
+    const payload: IAuthenticateDto = { [HeaderKeys.Auth]: token };
     const headers = new HttpHeaders({ ...payload });
     const url = `${this.baseUrl}/${UsersApiRoutes.ConfirmSignUp}`;
     return this.http.post<IConfirmSignUpResponseDto>(url, {}, { headers });
@@ -46,11 +43,11 @@ export class UsersService {
   };
 
   saveToken = (token: string) => {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(environment.tokenKey, token);
   };
 
   removeToken = () => {
-    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(environment.tokenKey);
   };
 
   get baseUrl() {
@@ -58,6 +55,6 @@ export class UsersService {
   }
 
   get token() {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return localStorage.getItem(environment.tokenKey);
   }
 }

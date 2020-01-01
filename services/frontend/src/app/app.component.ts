@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '.';
 import { UsersSelectors, UsersActions } from './users';
+import { UsersService } from './users/users.service';
 
 @Component({
   selector: 'ci-root',
@@ -37,9 +38,11 @@ import { UsersSelectors, UsersActions } from './users';
 export class AppComponent implements OnInit {
   user$ = this.store.select(UsersSelectors.selectUser);
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>, private usersService: UsersService) {}
 
   ngOnInit() {
-    this.store.dispatch(UsersActions.authenticate());
+    if (this.usersService.token) {
+      this.store.dispatch(UsersActions.authenticate());
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { HttpStatusCodes, HeaderKeys } from '@cents-ideas/enums';
 import {
   HttpRequest,
   HttpResponse,
@@ -46,7 +46,7 @@ export class UsersService {
       const _loggerName = 'confirm sign up';
       try {
         this.logger.info(_loggerName);
-        const { user, token } = await this.commandHandler.confirmSignUp(req.headers.authorization);
+        const { user, token } = await this.commandHandler.confirmSignUp(req.headers[HeaderKeys.Auth]);
         resolve({
           status: HttpStatusCodes.Created,
           body: { user, token },
@@ -63,7 +63,7 @@ export class UsersService {
       const _loggerName = 'authenticate';
       try {
         this.logger.info(_loggerName);
-        const { token, user } = await this.commandHandler.authenticate(req.headers.authorization);
+        const { token, user } = await this.commandHandler.authenticate(req.headers[HeaderKeys.Auth]);
         resolve({
           status: HttpStatusCodes.Accepted,
           body: { token, user },

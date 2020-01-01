@@ -8,13 +8,14 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { SettingsService, SettingsMockService } from '@ci-frontend/app';
 import { IdeasService } from '@ci-frontend/ideas/ideas.service';
 import { AppComponent } from './app.component';
+import { UsersService } from './users/users.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientModule],
       declarations: [AppComponent],
-      providers: [IdeasService, SettingsService, provideMockStore({})],
+      providers: [IdeasService, SettingsService, provideMockStore({}), UsersService],
     }).compileComponents();
     TestBed.overrideProvider(SettingsService, { useValue: new SettingsMockService() });
   }));

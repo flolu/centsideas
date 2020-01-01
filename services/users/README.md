@@ -25,7 +25,7 @@ curl --header "Content-Type: application/json" --request POST --data '{"email":"
 #### Confirm sign up
 
 ```
-curl -H "Authorization: TOKEN" http://localhost:3000/users/confirm-sign-up --request POST
+curl -H "authorization: TOKEN" http://localhost:3000/users/confirm-sign-up --request POST
 ```
 
 #### Update user

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SettingsService } from '@ci-frontend/app';
@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppStoreModule } from './app-store.module';
 import { AppComponent } from './app.component';
 import { UsersModule } from './users/users.module';
+import { AuthTokenInterceptor } from './auth-token.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { UsersModule } from './users/users.module';
   ],
   providers: [
     SettingsService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
     {
       provide: APP_INITIALIZER,
       useFactory: (settingsHttpService: SettingsService) => () => settingsHttpService.initializeApp(),

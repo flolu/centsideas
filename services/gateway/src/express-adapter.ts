@@ -3,7 +3,7 @@ import axios from 'axios';
 import { injectable } from 'inversify';
 
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { HttpStatusCodes, HeaderKeys } from '@cents-ideas/enums';
 import { Logger } from '@cents-ideas/utils';
 
 @injectable()
@@ -15,6 +15,7 @@ export class ExpressAdapter {
       try {
         const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);
         this.logger.info(`${httpRequest.method} request to ${url}`);
+        this.logger.debug(`auth header: ${httpRequest.headers[HeaderKeys.Auth]}`);
         const response = await axios.post(url, httpRequest);
         const httpResponse: HttpResponse = response.data;
         this.handleExpressHttpResponse(res, httpResponse);
