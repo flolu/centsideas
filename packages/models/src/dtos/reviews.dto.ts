@@ -1,4 +1,4 @@
-import { IReviewScores } from '@cents-ideas/models';
+import { IReviewScores } from '../';
 
 export interface ICreateReviewDto {
   ideaId: string;

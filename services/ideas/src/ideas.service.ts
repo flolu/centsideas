@@ -1,10 +1,16 @@
 import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import { HttpRequest, HttpResponse, IIdeaState } from '@cents-ideas/models';
+import {
+  HttpRequest,
+  HttpResponse,
+  IIdeaState,
+  IIdeaQueryDto,
+  ISaveIdeaDto,
+  IUpdateIdeaDraftDto,
+} from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
-import { IIdeaQueryDto, ISaveIdeaDto, IUpdateIdeaDraftDto } from './dtos/ideas.dto';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
 

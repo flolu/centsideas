@@ -9,11 +9,13 @@ import {
   IAuthenticateDto,
   IAuthenticatedDto,
   IConfirmSignUpResponseDto,
+  IConfirmEmailChangeDto,
+  IUpdateUserDto,
+  IUserQueryDto,
 } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
-import { IConfirmEmailChangeDto, IUpdateUserDto, IUserQueryDto } from './dtos';
 
 @injectable()
 export class UsersService {

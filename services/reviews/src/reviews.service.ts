@@ -1,11 +1,18 @@
 import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import { HttpRequest, HttpResponse, IReviewState } from '@cents-ideas/models';
+import {
+  HttpRequest,
+  HttpResponse,
+  IReviewState,
+  ICreateReviewDto,
+  IQueryReviewDto,
+  ISaveReviewDto,
+  IUpdateReviewDto,
+} from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { ReviewCommandHandler } from './review.command-handler';
-import { ICreateReviewDto, IQueryReviewDto, ISaveReviewDto, IUpdateReviewDto } from './dtos';
 
 @injectable()
 export class ReviewsService {
