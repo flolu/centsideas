@@ -30,6 +30,8 @@ export class ConsumerServer {
     this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
     this.messageBroker.subscribe(EventTopics.Reviews, this.reviewsProjection.handleEvent);
+    // TODO users projection
+    // TODO maybe separate out reviews projection (currently there is a reviews array on ideas)
 
     this.app.use(bodyParser.json());
 

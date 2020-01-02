@@ -36,11 +36,9 @@ export class GatewayServer {
       try {
         decoded = jwt.verify(token, env.jwtSecret);
         const payload: IAuthTokenData = { userId: decoded.userId };
-        res.locals.authenticated = true;
         res.locals.userId = payload.userId;
         this.logger.debug(`found valid auth token (${payload.userId} is authenticated)`);
       } catch (err) {
-        res.locals.authenticated = false;
         res.locals.userId = null;
         this.logger.debug(`found no valid auth token (user is not authenticated)`);
       }

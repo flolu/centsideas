@@ -9,21 +9,22 @@ import {
   ISaveIdeaDto,
   IUpdateIdeaDraftDto,
 } from '@cents-ideas/models';
-import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
+import { Logger, handleHttpResponseError, NotAuthenticatedError } from '@cents-ideas/utils';
 
 import { IdeaCommandHandler } from './idea.command-handler';
-import { IdeaRepository } from './idea.repository';
 
 @injectable()
 export class IdeasService {
-  constructor(private commandHandler: IdeaCommandHandler, private logger: Logger, private repository: IdeaRepository) {}
+  constructor(private commandHandler: IdeaCommandHandler, private logger: Logger) {}
 
-  createEmptyIdea = (_req: HttpRequest): Promise<HttpResponse<IIdeaState>> =>
+  createEmptyIdea = (req: HttpRequest): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
       const _loggerName = 'create';
       try {
         this.logger.info(_loggerName);
-        const idea = await this.commandHandler.create();
+        const userId: string = req.locals.userId || '';
+        NotAuthenticatedError.validate(userId);
+        const idea = await this.commandHandler.create(userId);
         resolve({
           status: HttpStatusCodes.Accepted,
           body: idea.persistedState,

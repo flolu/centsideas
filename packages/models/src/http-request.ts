@@ -8,5 +8,5 @@ export interface HttpRequest<Body = any, Params = any, Query = any, Headers = an
   params: Params;
   query: Query;
   headers: Headers;
-  locals: { authenticated: boolean; userId: string | null };
+  locals: { userId: string | null };
 }

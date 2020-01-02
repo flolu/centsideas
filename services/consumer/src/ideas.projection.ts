@@ -59,6 +59,7 @@ export class IdeasProjection {
     const idea: IIdeaViewModel = {
       id: event.aggregateId,
       title: '',
+      userId: event.data.userId,
       description: '',
       createdAt: event.timestamp,
       published: false,

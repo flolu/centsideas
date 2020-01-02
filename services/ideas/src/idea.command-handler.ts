@@ -19,9 +19,9 @@ import { IdeaDeletedError } from './errors/idea.deleted.error';
 export class IdeaCommandHandler {
   constructor(private repository: IdeaRepository) {}
 
-  create = async (): Promise<Idea> => {
+  create = async (userId: string): Promise<Idea> => {
     const ideaId = await this.repository.generateUniqueId();
-    const idea = Idea.create(ideaId);
+    const idea = Idea.create(ideaId, userId);
     return this.repository.save(idea);
   };
 

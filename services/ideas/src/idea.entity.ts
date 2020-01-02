@@ -16,6 +16,7 @@ import {
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
     id: '',
+    userId: '',
     title: '',
     description: '',
     createdAt: null,
@@ -36,9 +37,9 @@ export class Idea extends EventEntity<IIdeaState> {
     }
   }
 
-  static create(ideaId: string): Idea {
+  static create(ideaId: string, userId: string): Idea {
     const idea = new Idea();
-    idea.pushEvents(new IdeaCreatedEvent(ideaId));
+    idea.pushEvents(new IdeaCreatedEvent(ideaId, userId));
     return idea;
   }
 

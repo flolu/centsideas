@@ -18,6 +18,7 @@ import {
   insaneIdeaDescription,
   fakeIdeaTitle2,
   fakeIdeaDescription2,
+  fakeUserId,
 } from './test';
 import { IdeaIdRequiredError, IdeaTitleLengthError, IdeaDescriptionLengthError } from './errors';
 
@@ -29,7 +30,7 @@ describe('Idea Command Handler', () => {
 
   describe('create', () => {
     it('should work', async () => {
-      const created = await commandHandler.create();
+      const created = await commandHandler.create(fakeUserId);
 
       expect(created.lastPersistedEventId).toBeDefined();
     });
@@ -37,14 +38,14 @@ describe('Idea Command Handler', () => {
 
   describe('save draft', () => {
     it('should work', async () => {
-      const created = await commandHandler.create();
+      const created = await commandHandler.create(fakeUserId);
       const saved = await commandHandler.saveDraft(created.persistedState.id, fakeIdeaTitle, fakeIdeaDescription);
 
       expect(saved.persistedState.draft).toEqual({ title: fakeIdeaTitle, description: fakeIdeaDescription });
     });
 
     it('should override old draft', async () => {
-      const created = await commandHandler.create();
+      const created = await commandHandler.create(fakeUserId);
       const saved1 = await commandHandler.saveDraft(created.persistedState.id, fakeIdeaTitle, fakeIdeaDescription);
       const saved2 = await commandHandler.saveDraft(created.persistedState.id, fakeIdeaTitle2, fakeIdeaDescription2);
 
@@ -56,7 +57,7 @@ describe('Idea Command Handler', () => {
     });
 
     it('should sanitize title and description', async () => {
-      const created = await commandHandler.create();
+      const created = await commandHandler.create(fakeUserId);
       const saved = await commandHandler.saveDraft(
         created.persistedState.id,
         insaneIdeaTitle + fakeIdeaTitle,
@@ -68,7 +69,7 @@ describe('Idea Command Handler', () => {
     });
 
     it('should validate length of title and description', async () => {
-      const created = await commandHandler.create();
+      const created = await commandHandler.create(fakeUserId);
       const toLongTitle = 'A'.repeat(IdeaTitleLengthError.max + 1);
       const toLongDescription = 'A'.repeat(IdeaDescriptionLengthError.max + 1);
 
@@ -86,7 +87,7 @@ describe('Idea Command Handler', () => {
 
   describe('discard draft', () => {
     it('should work', async () => {
-      const created = await commandHandler.create();
+      const created = await commandHandler.create(fakeUserId);
       const saved = await commandHandler.saveDraft(created.persistedState.id, fakeIdeaTitle, fakeIdeaDescription);
       const discarded = await commandHandler.discardDraft(created.persistedState.id);
 
@@ -100,7 +101,7 @@ describe('Idea Command Handler', () => {
 
   describe('commit draft', () => {
     it('should work', async () => {
-      const created = await commandHandler.create();
+      const created = await commandHandler.create(fakeUserId);
       const saved = await commandHandler.saveDraft(created.persistedState.id, fakeIdeaTitle, fakeIdeaDescription);
       const committed = await commandHandler.commitDraft(saved.persistedState.id);
 

@@ -1,5 +1,6 @@
 export interface IIdeaCreatedEvent {
   ideaId: string;
+  userId: string;
 }
 
 export interface IIdeaDraftSavedEvent {

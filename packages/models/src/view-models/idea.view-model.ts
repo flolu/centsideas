@@ -4,6 +4,7 @@ import { IReviewScores } from '../entities';
 export interface IIdeaViewModel {
   id: string;
   title: string;
+  userId: string;
   description: string;
   createdAt: string;
   published: boolean;

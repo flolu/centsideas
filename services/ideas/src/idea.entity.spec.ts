@@ -4,7 +4,7 @@ import { ISnapshot } from '@cents-ideas/event-sourcing';
 import { IIdeaState } from '@cents-ideas/models';
 
 import { Idea } from './idea.entity';
-import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeEventId, fakeIdeaState } from './test';
+import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeEventId, fakeIdeaState, fakeUserId } from './test';
 
 describe('Idea Entity', () => {
   it('should initialize correctly', () => {
@@ -19,13 +19,13 @@ describe('Idea Entity', () => {
   });
 
   it('should create an idea', () => {
-    const idea = Idea.create(fakeIdeaId);
+    const idea = Idea.create(fakeIdeaId, fakeUserId);
 
     expect(idea.currentState.id).toEqual(fakeIdeaId);
   });
 
   it('should save a draft', () => {
-    const idea = Idea.create(fakeIdeaId);
+    const idea = Idea.create(fakeIdeaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
 
     expect(idea.currentState.draft && idea.currentState.draft.title).toEqual(fakeIdeaTitle);
@@ -33,7 +33,7 @@ describe('Idea Entity', () => {
   });
 
   it('should discard a draft', () => {
-    const idea = Idea.create(fakeIdeaId);
+    const idea = Idea.create(fakeIdeaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.discardDraft();
 
@@ -42,7 +42,7 @@ describe('Idea Entity', () => {
   });
 
   it('should commit a draft', () => {
-    const idea = Idea.create(fakeIdeaId);
+    const idea = Idea.create(fakeIdeaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
 
@@ -53,7 +53,7 @@ describe('Idea Entity', () => {
   });
 
   it('should publish an idea', () => {
-    const idea = Idea.create(fakeIdeaId);
+    const idea = Idea.create(fakeIdeaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.publish();
@@ -63,7 +63,7 @@ describe('Idea Entity', () => {
   });
 
   it('should unpublish an idea', () => {
-    const idea = Idea.create(fakeIdeaId);
+    const idea = Idea.create(fakeIdeaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.unpublish();
@@ -72,7 +72,7 @@ describe('Idea Entity', () => {
   });
 
   it('should delete an idea', () => {
-    const idea = Idea.create(fakeIdeaId);
+    const idea = Idea.create(fakeIdeaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.unpublish();

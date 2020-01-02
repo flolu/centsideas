@@ -1,25 +1,25 @@
 import { injectable } from 'inversify';
 
 import { Idea } from '../idea.entity';
-import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription } from './idea.entity.fake';
+import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeUserId } from './idea.entity.fake';
 
 @injectable()
 export class IdeaCommandHandlerMock {
   create = async (): Promise<Idea> => {
-    const idea = Idea.create(fakeIdeaId);
+    const idea = Idea.create(fakeIdeaId, fakeUserId);
     idea.confirmEvents();
     return idea;
   };
 
   saveDraft = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
-    const idea = Idea.create(ideaId);
+    const idea = Idea.create(ideaId, fakeUserId);
     idea.saveDraft(title, description);
     idea.confirmEvents();
     return idea;
   };
 
   discardDraft = async (ideaId: string): Promise<Idea> => {
-    const idea = Idea.create(ideaId);
+    const idea = Idea.create(ideaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.discardDraft();
     idea.confirmEvents();
@@ -27,7 +27,7 @@ export class IdeaCommandHandlerMock {
   };
 
   commitDraft = async (ideaId: string): Promise<Idea> => {
-    const idea = Idea.create(ideaId);
+    const idea = Idea.create(ideaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.confirmEvents();
@@ -35,7 +35,7 @@ export class IdeaCommandHandlerMock {
   };
 
   publish = async (ideaId: string): Promise<Idea> => {
-    const idea = Idea.create(ideaId);
+    const idea = Idea.create(ideaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.publish();
@@ -44,7 +44,7 @@ export class IdeaCommandHandlerMock {
   };
 
   update = async (ideaId: string, title?: string, description?: string): Promise<Idea> => {
-    const idea = Idea.create(ideaId);
+    const idea = Idea.create(ideaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.publish();
@@ -54,7 +54,7 @@ export class IdeaCommandHandlerMock {
   };
 
   unpublish = async (ideaId: string): Promise<Idea> => {
-    const idea = Idea.create(ideaId);
+    const idea = Idea.create(ideaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.publish();
@@ -64,7 +64,7 @@ export class IdeaCommandHandlerMock {
   };
 
   delete = async (ideaId: string): Promise<Idea> => {
-    const idea = Idea.create(ideaId);
+    const idea = Idea.create(ideaId, fakeUserId);
     idea.saveDraft(fakeIdeaTitle, fakeIdeaDescription);
     idea.commitDraft();
     idea.publish();

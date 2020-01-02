@@ -80,7 +80,7 @@ export class UsersService {
       const _loggerName = 'update user';
       try {
         this.logger.info(_loggerName);
-        NotAuthenticatedError.validate(req.locals.authenticated);
+        NotAuthenticatedError.validate(req.locals.userId);
         NoPermissionError.validate(req.locals.userId, req.params.id);
         const updatedUser = await this.commandHandler.updateUser(req.params.id, req.body.username, req.body.email);
         resolve({
