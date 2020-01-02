@@ -3,7 +3,7 @@ import axios from 'axios';
 import { injectable } from 'inversify';
 
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
-import { HttpStatusCodes, HeaderKeys } from '@cents-ideas/enums';
+import { HttpStatusCodes } from '@cents-ideas/enums';
 import { Logger } from '@cents-ideas/utils';
 
 @injectable()
@@ -13,9 +13,8 @@ export class ExpressAdapter {
   public makeJsonAdapter = (url: string): express.RequestHandler => {
     return async (req: express.Request, res: express.Response) => {
       try {
-        const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req);
+        const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req, res);
         this.logger.info(`${httpRequest.method} request to ${url}`);
-        this.logger.debug(`auth header: ${httpRequest.headers[HeaderKeys.Auth]}`);
         const response = await axios.post(url, httpRequest);
         const httpResponse: HttpResponse = response.data;
         this.handleExpressHttpResponse(res, httpResponse);
@@ -36,17 +35,18 @@ export class ExpressAdapter {
     res.status(httpResponse.status).send(httpResponse.body);
   };
 
-  private makeHttpRequestFromExpressRequest = (expressRequest: express.Request): HttpRequest => {
+  private makeHttpRequestFromExpressRequest = (req: express.Request, res: express.Response): HttpRequest => {
     return {
-      body: expressRequest.body,
-      ip: expressRequest.ip,
-      method: expressRequest.method,
-      path: expressRequest.path,
-      url: expressRequest.url,
-      cookies: expressRequest.cookies,
-      query: expressRequest.query,
-      params: expressRequest.params,
-      headers: expressRequest.headers,
+      body: req.body,
+      ip: req.ip,
+      method: req.method,
+      path: req.path,
+      url: req.url,
+      cookies: req.cookies,
+      query: req.query,
+      params: req.params,
+      headers: req.headers,
+      locals: res.locals,
     };
   };
 }

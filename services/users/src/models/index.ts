@@ -1,2 +1,2 @@
 export { IUserIdEmailMapping } from './email-collection';
-export { ILoginTokenData, ISignUpTokenData } from './token-data';
+export { ISignUpTokenData } from './token-data';

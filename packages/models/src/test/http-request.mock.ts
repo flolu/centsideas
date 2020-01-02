@@ -10,5 +10,6 @@ export const makeFakeHttpRequest = (overrides: Partial<HttpRequest> = {}): HttpR
   params: {},
   query: {},
   headers: {},
+  locals: { authenticated: false, userId: '' },
   ...overrides,
 });

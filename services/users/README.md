@@ -31,5 +31,5 @@ curl -H "authorization: TOKEN" http://localhost:3000/users/confirm-sign-up --req
 #### Update user
 
 ```
-curl --header "Content-Type: application/json" --request PUT --data '{"username":"new_username"}' http://localhost:3000/users/id
+curl -H "Content-Type: application/json" -H "authorization: TOKEN" --request PUT --data '{"username":"new_username", "email":"new@email.com"}' http://localhost:3000/users/id
 ```

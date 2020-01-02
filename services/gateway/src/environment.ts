@@ -7,4 +7,5 @@ export default {
     reviews: `http://${process.env.REVIEWS_SERVICE_HOST || 'reviews:3000'}`,
     users: `http://${process.env.USERS_SERVICE_HOST || 'users:3000'}`,
   },
+  jwtSecret: process.env.JWT_SECRET || 'default-jwt-secret',
 };

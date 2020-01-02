@@ -25,3 +25,7 @@ export interface IUserQueryDto {
 export interface IConfirmSignUpDto {
   token: string;
 }
+
+export interface IAuthTokenData {
+  userId: string;
+}

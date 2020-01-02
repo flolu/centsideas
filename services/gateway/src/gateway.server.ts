@@ -1,10 +1,12 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
+import * as jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';
 
 import { Logger } from '@cents-ideas/utils';
-import { ApiEndpoints } from '@cents-ideas/enums';
+import { ApiEndpoints, HeaderKeys } from '@cents-ideas/enums';
+import { IAuthTokenData } from '@cents-ideas/models';
 
 import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';
@@ -27,6 +29,23 @@ export class GatewayServer {
 
     this.app.use(bodyParser.json());
     this.app.use(cors());
+
+    this.app.use((req, res, next) => {
+      let decoded: any;
+      const token: string = req.headers[HeaderKeys.Auth] || '';
+      try {
+        decoded = jwt.verify(token, env.jwtSecret);
+        const payload: IAuthTokenData = { userId: decoded.userId };
+        res.locals.authenticated = true;
+        res.locals.userId = payload.userId;
+        this.logger.debug(`found valid auth token (${payload.userId} is authenticated)`);
+      } catch (err) {
+        res.locals.authenticated = false;
+        res.locals.userId = null;
+        this.logger.debug(`found no valid auth token (user is not authenticated)`);
+      }
+      next();
+    });
 
     // FIXME fix all http request types https://stackoverflow.com/a/612035/8586803
     this.app.use(`/${ApiEndpoints.Ideas}`, this.ideasRoutes.setup(env.hosts.ideas, env.hosts.consumer));

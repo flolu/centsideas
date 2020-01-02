@@ -7,7 +7,6 @@ import { ExpressAdapter } from './express-adapter';
 import { IdeasRoutes } from './ideas.routes';
 import { ReviewsRoutes } from './reviews.routes';
 import { UsersRoutes } from './users.routes';
-import env from './environment';
 
 process.env.LOGGER_PREFIX = '⛩️';
 

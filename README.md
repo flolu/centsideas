@@ -148,6 +148,9 @@ docker container stop $(docker container ls -aq)
 # remove all docker images with tag <none>
 docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 
+# clean up all docker resources
+docker system prune --volumes
+
 # get microk8s cluster info
 microk8s.kubectl cluster-info
 
@@ -161,7 +164,6 @@ sudo chown username ./file
 
 # create k8s secret containing ssl certificate and key
 kubectl create secret tls tls-secret --key privateKey.pem --cert certificate.pem
-
 
 # get size of docker image (last table row)
 docker images

@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { sanitizeHtml } from '@cents-ideas/utils';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
-import { ILoginResponseDto, IConfirmSignUpResponseDto, IAuthenticatedDto } from '@cents-ideas/models';
+import { ILoginResponseDto, IConfirmSignUpResponseDto, IAuthenticatedDto, IAuthTokenData } from '@cents-ideas/models';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -17,7 +17,7 @@ import {
   EmailAlreadySignedUpError,
 } from './errors';
 import env from './environment';
-import { ISignUpTokenData, ILoginTokenData } from './models';
+import { ISignUpTokenData } from './models';
 import { TokenInvalidError } from './errors/token-invalid.error';
 
 @injectable()
@@ -93,7 +93,6 @@ export class UserCommandHandler {
     return { user: user.persistedState, token: updatedToken };
   };
 
-  // TODO make sure only authenticated user can do this (for its own data)
   updateUser = async (userId: string, username: string, email: string): Promise<User> => {
     UserIdRequiredError.validate(userId);
     username = sanitizeHtml(username);
@@ -111,10 +110,11 @@ export class UserCommandHandler {
     return this.repository.save(user);
   };
 
+  // FIXME confirm email change
   confirmEmailChange = () => {};
 
   private createAuthToken = (userId: string): string => {
-    const data: ILoginTokenData = { userId };
+    const data: IAuthTokenData = { userId };
     return jwt.sign(data, env.jwtSecret, { expiresIn: '7d' });
   };
 }
