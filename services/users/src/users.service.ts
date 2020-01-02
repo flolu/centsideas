@@ -27,7 +27,7 @@ export class UsersService {
       try {
         this.logger.info(_loggerName);
         const result = await this.commandHandler.login(req.body.email);
-        // TODO don't send token back!... instead send email to user
+        // FIXME don't send token back!... instead send email to user
         resolve({
           status: HttpStatusCodes.Accepted,
           body: result,

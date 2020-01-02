@@ -2,7 +2,8 @@ import * as retry from 'async-retry';
 import { injectable } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 
-import { Identifier, renameObjectProperty, Logger } from '@cents-ideas/utils';
+import { Identifier, renameObjectProperty, Logger, EntityError } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@cents-ideas/enums';
 
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
@@ -25,8 +26,6 @@ export interface IEventRepository<Entity> {
   findById: (id: string) => Promise<Entity>;
   generateUniqueId: () => Promise<string>;
 }
-
-// FIXME cleaner solution when implementing into drakery
 
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> implements IEventRepository<Entity> {
@@ -165,7 +164,7 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     const entity = new this._Entity(snapshot || undefined);
     entity.pushEvents(...events);
     if (!entity.currentState.id) {
-      throw entity.NotFoundError(id);
+      throw new EntityError(`Event repository couldn't find entity with id: ${id}`, HttpStatusCodes.NotFound);
     }
 
     log && this.logger.debug(`found entity with id: ${id}`);

@@ -9,7 +9,6 @@ export interface IEventEntity {
   pushEvents(...events: IEvent[]): any;
   confirmEvents(): any;
   currentState: any;
-  NotFoundError: any;
 }
 
 export interface IEventCommitFunctions<IEntityState> {
@@ -23,8 +22,7 @@ export abstract class EventEntity<IEntityState> implements IEventEntity {
 
   protected reducer: Reducer<IEntityState>;
 
-  // FIXME do i really need @param NotFoundError
-  constructor(knownEvents: IEventCommitFunctions<IEntityState>, initialState: IEntityState, public NotFoundError: any) {
+  constructor(knownEvents: IEventCommitFunctions<IEntityState>, initialState: IEntityState) {
     this.reducer = new Reducer<IEntityState>(knownEvents);
     this.persistedState = initialState;
   }

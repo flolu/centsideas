@@ -19,3 +19,4 @@ export { ReviewCreatedEvent } from './review-created.event';
 export { ReviewDraftSavedEvent } from './review-draft-saved.event';
 export { ReviewUnpublishedEvent } from './review-unpublished.event';
 export { ReviewUpdatedEvent } from './review-updated.event';
+export { ReviewPublishedEvent } from './review-published.event';

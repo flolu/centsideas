@@ -12,7 +12,6 @@ import {
   IdeaDeletedEvent,
   commitFunctions,
 } from './events';
-import { IdeaNotFoundError } from './errors';
 
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
@@ -31,7 +30,7 @@ export class Idea extends EventEntity<IIdeaState> {
   };
 
   constructor(snapshot?: ISnapshot<IIdeaState>) {
-    super(commitFunctions, (snapshot && snapshot.state) || Idea.initialState, IdeaNotFoundError);
+    super(commitFunctions, (snapshot && snapshot.state) || Idea.initialState);
     if (snapshot) {
       this.lastPersistedEventId = snapshot.lastEventId;
     }

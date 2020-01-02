@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 
-import { Identifier } from '@cents-ideas/utils/src';
+import { Identifier, EntityError } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@cents-ideas/enums';
 
 import { IEventRepository, IEntityConstructor } from '../event-repository';
 import { IEventEntity, IEvent, ISnapshot } from '..';
@@ -56,7 +57,7 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
     const entity = new this._Entity(snapshot || undefined);
     entity.pushEvents(...events);
     if (!entity.currentState.id) {
-      throw entity.NotFoundError(id);
+      throw new EntityError(`Event repository couldn't find entity with id: ${id}`, HttpStatusCodes.NotFound);
     }
 
     return entity.confirmEvents();

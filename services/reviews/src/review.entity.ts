@@ -2,9 +2,7 @@ import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 import { IReviewScores, IReviewState } from '@cents-ideas/models';
 
 import { commitFunctions, ReviewCreatedEvent, ReviewUnpublishedEvent, ReviewUpdatedEvent } from './events';
-import { ReviewNotFoundError } from './errors';
-import { ReviewDraftSavedEvent } from './events/review-draft-saved.event';
-import { ReviewPublishedEvent } from './events/review-published.event';
+import { ReviewDraftSavedEvent, ReviewPublishedEvent } from './events';
 
 export class Review extends EventEntity<IReviewState> {
   static initialState: IReviewState = {
@@ -28,7 +26,7 @@ export class Review extends EventEntity<IReviewState> {
   };
 
   constructor(snapshot?: ISnapshot<IReviewState>) {
-    super(commitFunctions, (snapshot && snapshot.state) || Review.initialState, ReviewNotFoundError);
+    super(commitFunctions, (snapshot && snapshot.state) || Review.initialState);
     if (snapshot) {
       this.lastPersistedEventId = snapshot.lastEventId;
     }

@@ -1,7 +1,6 @@
 import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 import { IUserState } from '@cents-ideas/models';
 
-import { UserNotFoundError } from './errors';
 import { commitFunctions } from './events';
 import { UserUpdatedEvent } from './events/user-updated.event';
 import { UserCreatedEvent } from './events/user-created.event';
@@ -18,7 +17,7 @@ export class User extends EventEntity<IUserState> {
   };
 
   constructor(snapshot?: ISnapshot<IUserState>) {
-    super(commitFunctions, (snapshot && snapshot.state) || User.initialState, UserNotFoundError);
+    super(commitFunctions, (snapshot && snapshot.state) || User.initialState);
     if (snapshot) {
       this.lastPersistedEventId = snapshot.lastEventId;
     }
