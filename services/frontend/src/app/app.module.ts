@@ -13,6 +13,7 @@ import { AppStoreModule } from './app-store.module';
 import { AppComponent } from './app.component';
 import { UsersModule } from './users/users.module';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
+import { AuthGuard } from './auth.guard';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,7 @@ import { AuthTokenInterceptor } from './auth-token.interceptor';
       deps: [SettingsService],
       multi: true,
     },
+    AuthGuard,
   ],
   bootstrap: [AppComponent],
 })

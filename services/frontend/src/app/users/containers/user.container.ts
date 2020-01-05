@@ -1,12 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { tap, take, takeWhile } from 'rxjs/operators';
-
-import { IUserState } from '@cents-ideas/models';
+import { tap, takeWhile } from 'rxjs/operators';
 
 import { AppState } from '@ci-frontend/app';
-import { UsersSelectors } from '..';
+import { UsersSelectors, UsersActions } from '..';
 
 @Component({
   selector: 'ci-user',
@@ -63,5 +61,7 @@ export class UserContainer {
       .subscribe();
   }
 
-  onUpdate = () => {};
+  onUpdate = () => {
+    this.store.dispatch(UsersActions.updateUser({ email: this.form.value.email, username: this.form.value.username }));
+  };
 }
