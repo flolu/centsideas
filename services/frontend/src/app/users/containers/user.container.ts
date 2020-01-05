@@ -1,7 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { tap, takeWhile } from 'rxjs/operators';
+import { tap, take, takeWhile } from 'rxjs/operators';
+
+import { IUserState } from '@cents-ideas/models';
 
 import { AppState } from '@ci-frontend/app';
 import { UsersSelectors, UsersActions } from '..';
