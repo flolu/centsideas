@@ -10,8 +10,9 @@ import { UsersService } from './users/users.service';
     <nav>
       <a class="icon" [routerLink]="['']"><span>💡</span></a>
       <div style="width: 100%;"></div>
-      <a [routerLink]="['/login']" class="icon"><span>👤</span></a>
       <h3 class="user" *ngIf="user$ | async">{{ (user$ | async)?.username }}</h3>
+      <a *ngIf="!(user$ | async)?.id" [routerLink]="['/login']" class="icon"><span>👤</span></a>
+      <a *ngIf="(user$ | async)?.id" [routerLink]="['/user']" class="icon"><span>👤</span></a>
     </nav>
     <router-outlet></router-outlet>
   `,

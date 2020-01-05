@@ -15,6 +15,9 @@ export const environment = {
         name: 'confirm-login',
       },
     },
+    user: {
+      name: 'user',
+    },
   },
   tokenKey: 'token',
 };
