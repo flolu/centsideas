@@ -40,8 +40,6 @@ import { UsersSelectors, UsersActions } from '..';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserContainer {
-  // TODO not logged in guard
-
   form = new FormGroup({
     username: new FormControl(''),
     email: new FormControl(''),

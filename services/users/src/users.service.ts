@@ -12,6 +12,7 @@ import {
   IConfirmEmailChangeDto,
   IUpdateUserDto,
   IUserQueryDto,
+  IUserState,
 } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError, NotAuthenticatedError, NoPermissionError } from '@cents-ideas/utils';
 
@@ -75,7 +76,7 @@ export class UsersService {
       }
     });
 
-  updateUser = (req: HttpRequest<IUpdateUserDto, IUserQueryDto>): Promise<HttpResponse<any>> =>
+  updateUser = (req: HttpRequest<IUpdateUserDto, IUserQueryDto>): Promise<HttpResponse<IUserState>> =>
     new Promise(async resolve => {
       const _loggerName = 'update user';
       try {

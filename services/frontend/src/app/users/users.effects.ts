@@ -88,4 +88,16 @@ export class UsersEffects {
       ),
     { dispatch: false },
   );
+
+  updateUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UsersActions.updateUser),
+      switchMap(payload =>
+        this.usersService.updateUser(payload).pipe(
+          map(updated => UsersActions.updateUserDone({ updated })),
+          catchError(error => of(UsersActions.updateUserFail({ error }))),
+        ),
+      ),
+    ),
+  );
 }

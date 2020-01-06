@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-// TODO improve logging (console output is a total mess)
+// FIXME improve logging (console output is a total mess)
 
 @injectable()
 export class Logger {

@@ -9,6 +9,8 @@ import {
   IAuthenticatedDto,
   IAuthenticateDto,
   IConfirmSignUpResponseDto,
+  IUpdateUserDto,
+  IUserState,
 } from '@cents-ideas/models';
 
 import { SettingsService } from '../settings.service';
@@ -36,6 +38,11 @@ export class UsersService {
     const headers = new HttpHeaders({ ...payload });
     const url = `${this.baseUrl}/${UsersApiRoutes.ConfirmSignUp}`;
     return this.http.post<IConfirmSignUpResponseDto>(url, {}, { headers });
+  };
+
+  updateUser = (payload: IUpdateUserDto): Observable<IUserState> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.Update}`;
+    return this.http.post<IUserState>(url, payload);
   };
 
   logout = () => {

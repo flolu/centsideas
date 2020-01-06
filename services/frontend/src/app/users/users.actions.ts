@@ -1,6 +1,12 @@
 import { createAction, props } from '@ngrx/store';
 
-import { ILoginResponseDto, IConfirmSignUpResponseDto, IAuthenticatedDto, IUpdateUserDto } from '@cents-ideas/models';
+import {
+  ILoginResponseDto,
+  IConfirmSignUpResponseDto,
+  IAuthenticatedDto,
+  IUpdateUserDto,
+  IUserState,
+} from '@cents-ideas/models';
 
 const PREFIX = '[users]';
 const FAIL = 'fail';
@@ -30,5 +36,5 @@ export const logout = createAction(`${PREFIX}j ${LOGOUT}`);
 
 const UPDATE = 'update';
 export const updateUser = createAction(`${PREFIX} ${UPDATE}`, props<IUpdateUserDto>());
-export const updateUserDone = createAction(`${PREFIX} ${UPDATE} ${DONE}`);
-export const updateUserFail = createAction(`${PREFIX} ${UPDATE} ${FAIL}`);
+export const updateUserDone = createAction(`${PREFIX} ${UPDATE} ${DONE}`, props<{ updated: IUserState }>());
+export const updateUserFail = createAction(`${PREFIX} ${UPDATE} ${FAIL}`, props<{ error: string }>());
