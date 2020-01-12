@@ -1,9 +1,0 @@
-{
-  "files": [],
-  "references": [
-    { "path": "packages/enums" },
-    { "path": "packages/models" },
-    { "path": "packages/utils" },
-    { "path": "services/gateway" }
-  ]
-}

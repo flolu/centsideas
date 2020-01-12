@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.settings.json",
-  "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist",
-    "types": ["reflect-metadata", "jest"]
-  },
-  "references": [{ "path": "../../packages/models" }]
-}

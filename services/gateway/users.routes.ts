@@ -1,0 +1,33 @@
+import { injectable } from 'inversify';
+import * as express from 'express';
+
+import { ExpressAdapter } from './express-adapter';
+import { UsersApiRoutes } from '@cents-ideas/enums';
+
+@injectable()
+export class UsersRoutes {
+  private router = express.Router();
+
+  constructor(private expressAdapter: ExpressAdapter) {}
+
+  setup = (host: string): express.Router => {
+    this.router.post(
+      `/${UsersApiRoutes.Login}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Login}`),
+    );
+    this.router.post(
+      `/${UsersApiRoutes.ConfirmSignUp}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmSignUp}`),
+    );
+    this.router.post(
+      `/${UsersApiRoutes.Authenticate}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Authenticate}`),
+    );
+    this.router.put(`/:id`, this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`));
+    this.router.put(
+      `/${UsersApiRoutes.ConfirmEmailChange}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmEmailChange}`),
+    );
+    return this.router;
+  };
+}
