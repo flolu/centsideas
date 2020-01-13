@@ -1,6 +1,8 @@
 {
   "name": "cents-ideas",
   "scripts": {
+    "start:gateway": "ts-node services/gateway/index.ts",
+    "----": "----",
     "fire": "yarn install && yarn build",
     "refire": "yarn clean && yarn fire",
     "start:dev": "npm-run-all --parallel build:watch start:docker:dev start:frontend",
