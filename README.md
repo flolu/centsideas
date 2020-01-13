@@ -169,3 +169,14 @@ kubectl create secret tls tls-secret --key privateKey.pem --cert certificate.pem
 docker images
 docker images <image-name>
 ```
+
+# // TODO: fix those kafka errors:
+
+```
+{"level":"ERROR","timestamp":"2020-01-13T06:44:41.239Z","logger":"kafkajs","message":"[Connection] Response GroupCoordinator(key: 10, version: 1)","broker":"172.18.0.1:9092","clientId":"cents-ideas","error":"The group coordinator is not available","correlationId":5,"size":22}
+{"level":"ERROR","timestamp":"2020-01-13T06:44:41.298Z","logger":"kafkajs","message":"[Connection] Response GroupCoordinator(key: 10, version: 1)","broker":"172.18.0.1:9092","clientId":"cents-ideas","error":"The group coordinator is not available","correlationId":5,"size":22}
+```
+
+# // TODO: fix nodejs container not terminating on CTRL + C
+
+# // TODO: manually set tsconfig-paths (set that it reloads faster)

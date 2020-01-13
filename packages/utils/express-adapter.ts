@@ -6,7 +6,7 @@ import { HttpRequest, HttpResponse } from '@cents-ideas/models';
 @injectable()
 export class ExpressAdapter {
   json(controller: (request: HttpRequest) => Promise<HttpResponse>): any {
-    async (req: Request, res: Response) => {
+    return async (req: Request, res: Response) => {
       const httpRequest: HttpRequest = req.body;
       const response: HttpResponse = await controller(httpRequest);
       return res.json(response);

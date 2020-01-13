@@ -1,7 +1,10 @@
-FROM node:10-alpine
+FROM node:alpine
+
 WORKDIR /usr/app/src
 COPY ./packages ./packages
+COPY ./tsconfig.json ./
+COPY ./package.json ./
 COPY ./services/reviews ./services/reviews
-COPY ./tsconfig.settings.json ./
-WORKDIR /usr/app/src/services/reviews
-CMD yarn start:dev
+WORKDIR /usr/app/src
+
+CMD yarn start:reviews

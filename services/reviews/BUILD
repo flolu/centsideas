@@ -30,3 +30,20 @@ ts_library(
       "@npm//typescript",
     ],
 )
+
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+nodejs_image(
+    name = "image",
+    data = [":lib"],
+    entry_point = ":index.ts",
+)
+
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+container_push(
+   name = "push",
+   image = ":image",
+   format = "Docker",
+   registry = "gcr.io",
+   repository = "cents-ideas/reviews",
+   tag = "experimenting",
+)

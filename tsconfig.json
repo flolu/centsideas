@@ -1,22 +1,16 @@
 {
-  "exclude": ["bazel-*", "node_modules"],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@cents-ideas/enums": ["packages/enums"],
-      "@cents-ideas/utils": ["packages/utils"],
-      "@cents-ideas/event-sourcing": ["packages/event-sourcing"],
-      "@cents-ideas/models": ["packages/models"]
-    },
+    "baseUrl": "./",
     "strict": true,
-    "target": "es5",
-    "lib": ["es6"],
-    "module": "commonjs",
-    "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declarationMap": true,
-    "composite": true,
+    "paths": {
+      "@cents-ideas/enums": ["./packages/enums"],
+      "@cents-ideas/utils": ["./packages/utils"],
+      "@cents-ideas/event-sourcing": ["./packages/event-sourcing"],
+      "@cents-ideas/models": ["./packages/models"]
+    },
     "types": ["reflect-metadata", "node", "jest"]
-  }
+  },
+  "exclude": ["bazel-*", "node_modules"]
 }
