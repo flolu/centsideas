@@ -9,7 +9,7 @@ import { IdeasRoutes } from './ideas.routes';
 import { ReviewsRoutes } from './reviews.routes';
 import { UsersRoutes } from './users.routes';
 
-process.env.LOGGER_PREFIX = '⛩️';
+process.env.LOGGER_PREFIX = '⛩️  gateway';
 
 registerProviders(Logger, ExpressAdapter, GatewayServer, IdeasRoutes, ReviewsRoutes, UsersRoutes);
 

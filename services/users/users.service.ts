@@ -26,7 +26,7 @@ export class UsersService {
     new Promise(async resolve => {
       const _loggerName = 'login';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const result = await this.commandHandler.login(req.body.email);
         // FIXME don't send token back!... instead send email to user
         resolve({
@@ -46,7 +46,7 @@ export class UsersService {
     new Promise(async resolve => {
       const _loggerName = 'confirm sign up';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const { user, token } = await this.commandHandler.confirmSignUp(req.headers[HeaderKeys.Auth]);
         resolve({
           status: HttpStatusCodes.Created,
@@ -63,7 +63,7 @@ export class UsersService {
     new Promise(async resolve => {
       const _loggerName = 'authenticate';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const { token, user } = await this.commandHandler.authenticate(req.headers[HeaderKeys.Auth]);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -80,7 +80,7 @@ export class UsersService {
     new Promise(async resolve => {
       const _loggerName = 'update user';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         NotAuthenticatedError.validate(req.locals.userId);
         NoPermissionError.validate(req.locals.userId, req.params.id);
         const updatedUser = await this.commandHandler.updateUser(req.params.id, req.body.username, req.body.email);

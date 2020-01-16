@@ -34,6 +34,6 @@ export class UsersServer {
       return res.status(200).send();
     });
 
-    this.app.listen(env.port, () => this.logger.info('users service listening on internal port', env.port));
+    this.app.listen(env.port, () => this.logger.debug('users service listening on internal port', env.port));
   };
 }

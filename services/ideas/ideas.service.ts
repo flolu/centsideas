@@ -21,7 +21,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'create';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const userId: string = req.locals.userId || '';
         NotAuthenticatedError.validate(userId);
         const idea = await this.commandHandler.create(userId);
@@ -40,7 +40,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'save draft';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const idea = await this.commandHandler.saveDraft(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -57,7 +57,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'discard draft';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const idea = await this.commandHandler.discardDraft(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -74,7 +74,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'commit draft';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const idea = await this.commandHandler.commitDraft(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -91,7 +91,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'publish';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const idea = await this.commandHandler.publish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -108,7 +108,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'update';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const idea = await this.commandHandler.update(req.params.id, req.body.title, req.body.description);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -125,7 +125,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'unpublish';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const idea = await this.commandHandler.unpublish(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -142,7 +142,7 @@ export class IdeasService {
     new Promise(async resolve => {
       const _loggerName = 'delete';
       try {
-        this.logger.info(_loggerName);
+        this.logger.debug(_loggerName);
         const idea = await this.commandHandler.delete(req.params.id);
         resolve({
           status: HttpStatusCodes.Accepted,

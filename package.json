@@ -2,7 +2,7 @@
   "name": "cents-ideas",
   "license": "MIT",
   "scripts": {
-    "_dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "start:gateway": "ts-node-dev services/gateway/index.ts",
     "start:ideas": "ts-node-dev services/ideas/index.ts",
     "start:users": "ts-node-dev services/users/index.ts",

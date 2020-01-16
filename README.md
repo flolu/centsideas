@@ -178,5 +178,3 @@ docker images <image-name>
 ```
 
 # // TODO: fix nodejs container not terminating on CTRL + C
-
-# // TODO: manually set tsconfig-paths (set that it reloads faster)

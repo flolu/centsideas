@@ -22,7 +22,7 @@ export class ReviewsService {
     new Promise(async resolve => {
       const _loggerName = 'create';
       try {
-        this.logger.info(_loggerName, req.body);
+        this.logger.debug(_loggerName, req.body);
         const review = await this.commandHandler.create(req.body.ideaId);
         resolve({
           status: HttpStatusCodes.Accepted,

@@ -30,6 +30,6 @@ export class ReviewsServer {
       return res.status(200).send();
     });
 
-    this.app.listen(port, () => this.logger.info('reviews service listening on internal port', port));
+    this.app.listen(port, () => this.logger.debug('reviews service listening on internal port', port));
   };
 }

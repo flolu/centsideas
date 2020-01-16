@@ -33,6 +33,6 @@ export class IdeasServer {
       return res.status(200).send();
     });
 
-    this.app.listen(port, () => this.logger.info('ideas service listening on internal port', port));
+    this.app.listen(port, () => this.logger.debug('ideas service listening on internal port', port));
   };
 }

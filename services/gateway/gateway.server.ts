@@ -53,6 +53,6 @@ export class GatewayServer {
       return res.status(200).send('gateway alive');
     });
 
-    this.app.listen(env.port, () => this.logger.info('gateway listening on internal port', env.port));
+    this.app.listen(env.port, () => this.logger.debug('gateway listening on internal port', env.port));
   };
 }

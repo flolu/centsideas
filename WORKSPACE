@@ -24,7 +24,6 @@ install_bazel_dependencies()
 load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
 ts_setup_workspace()
 
-# docker
 http_archive(
     name = "io_bazel_rules_docker",
     sha256 = "df13123c44b4a4ff2c2f337b906763879d94871d16411bf82dcfeba892b58607",
@@ -36,7 +35,6 @@ container_repositories()
 load("@io_bazel_rules_docker//nodejs:image.bzl", _nodejs_image_repos = "repositories")
 _nodejs_image_repos()
 
-# kubernetes
 http_archive(
     name = "io_bazel_rules_k8s",
     sha256 = "cc75cf0d86312e1327d226e980efd3599704e01099b58b3c2fc4efe5e321fcd9",

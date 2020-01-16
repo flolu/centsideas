@@ -73,7 +73,7 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
         this.logger.debug(`connected to ${this.namespace} database`);
 
         this.db.on('close', () => {
-          this.logger.info(`disconnected from ${this.namespace} database`);
+          this.logger.debug(`disconnected from ${this.namespace} database`);
         });
 
         this.eventCollection = this.db.collection(`${this.namespace}_events`);
