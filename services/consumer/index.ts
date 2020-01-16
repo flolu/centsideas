@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import 'reflect-metadata';
 
 import { MessageBroker } from '@cents-ideas/event-sourcing';

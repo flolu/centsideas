@@ -2,29 +2,12 @@
   "name": "cents-ideas",
   "license": "MIT",
   "scripts": {
-    "dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
-    "start:gateway": "nodemon --ext ts --watch ./**/*.ts --exec \"ts-node -r tsconfig-paths/register services/gateway/index.ts\"",
-    "start:ideas": "nodemon --ext ts --watch ./**/*.ts --exec \"ts-node -r tsconfig-paths/register services/ideas/index.ts\"",
-    "start:users": "nodemon --ext ts --watch ./**/*.ts --exec \"ts-node -r tsconfig-paths/register services/users/index.ts\"",
-    "start:consumer": "nodemon --ext ts --watch ./**/*.ts --exec \"ts-node -r tsconfig-paths/register services/consumer/index.ts\"",
-    "start:reviews": "nodemon --ext ts --watch ./**/*.ts --exec \"ts-node -r tsconfig-paths/register services/reviews/index.ts\"",
-    "----": "----",
-    "fire": "yarn install && yarn build",
-    "refire": "yarn clean && yarn fire",
-    "start:dev": "npm-run-all --parallel build:watch start:docker:dev start:frontend",
-    "start:dev:up": "npm-run-all --parallel build:watch start:docker:dev:up start:frontend",
-    "test": "lerna run test",
-    "start": "yarn start:docker",
-    "release": "lerna version",
-    "---": "---",
-    "start:frontend": "lerna exec --scope @cents-ideas/frontend -- yarn start",
-    "clean": "lerna run clean && rimraf node_modules",
-    "build": "tsc --build",
-    "build:watch": "tsc --build --watch",
-    "tsc": "tsc",
-    "start:docker:dev": "docker-compose -f docker-compose.dev.yaml up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
-    "start:docker:dev:up": "docker-compose -f docker-compose.dev.yaml up --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
-    "start:docker": "docker-compose -f docker-compose.prod.yaml up --build"
+    "_dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "start:gateway": "ts-node-dev services/gateway/index.ts",
+    "start:ideas": "ts-node-dev services/ideas/index.ts",
+    "start:users": "ts-node-dev services/users/index.ts",
+    "start:consumer": "ts-node-dev services/consumer/index.ts",
+    "start:reviews": "ts-node-dev services/reviews/index.ts"
   },
   "dependencies": {
     "@types/uuid": "^3.4.6",
@@ -46,7 +29,6 @@
   "devDependencies": {
     "@bazel/bazel": "^1.2.0",
     "@bazel/buildifier": "^0.29.0",
-    "@bazel/ibazel": "^0.11.1",
     "@bazel/typescript": "^1.0.1",
     "@types/async-retry": "^1.4.1",
     "@types/body-parser": "^1.17.1",
@@ -61,13 +43,11 @@
     "@types/sanitize-html": "^1.20.1",
     "@types/shortid": "^0.0.29",
     "jest": "^24.9.0",
-    "lerna": "^3.16.4",
-    "nodemon": "^1.19.1",
+    "module-alias": "^2.2.2",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.0",
     "ts-jest": "^24.1.0",
-    "ts-node": "^8.3.0",
-    "tsconfig-paths": "^3.9.0",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.6.2"
   },
   "prettier": {
@@ -76,5 +56,11 @@
     "singleQuote": true,
     "printWidth": 120,
     "bracketSpacing": true
+  },
+  "_moduleAliases": {
+    "@cents-ideas/enums": "./packages/enums",
+    "@cents-ideas/utils": "./packages/utils",
+    "@cents-ideas/event-sourcing": "./packages/event-sourcing",
+    "@cents-ideas/models": "./packages/models"
   }
 }

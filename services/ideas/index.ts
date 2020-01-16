@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import 'reflect-metadata';
 
 import { registerProviders, Logger, getProvider, ExpressAdapter } from '@cents-ideas/utils';

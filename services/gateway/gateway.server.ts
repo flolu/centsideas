@@ -50,7 +50,7 @@ export class GatewayServer {
     this.app.use(`/${ApiEndpoints.Users}`, this.usersRoutes.setup(env.hosts.users));
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
-      return res.status(200).send();
+      return res.status(200).send('gateway alive');
     });
 
     this.app.listen(env.port, () => this.logger.info('gateway listening on internal port', env.port));
