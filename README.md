@@ -80,38 +80,13 @@
 > Starts all services with `docker-compose` and simoultaniously watches for code changes
 
 ```
-yarn start:dev
-```
-
-> Starts `minikube` for development of container orchestration with Kubernetes
-
-```
-minikube start
-kubectl apply -f ./kubernetes/common
-kubectl apply -f ./kubernetes/minikube
-
-# get ip
-minikube ip
-
-# open browser http://<IP>:30001
+yarn dev
 ```
 
 # Testing
 
 ```
-yarn test
-```
-
-# Release new Version
-
-```
-lerna version
-```
-
-# Deployment
-
-```
-not configured yet
+bazel test //...
 ```
 
 # Services
@@ -136,12 +111,6 @@ List of all packages inside this monorepo (packages are dependencies of services
 # Some Useful Commands for Development
 
 ```
-# open command line of a docker container
-docker exec -ti <container> /bin/bash
-
-# fetch docker host ip address
-ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1
-
 # stop all docker containers
 docker container stop $(docker container ls -aq)
 
@@ -159,15 +128,8 @@ sudo apt-get install letsencrypt
 sudo certbot certonly --manual -d *.drakery.com
 # then follow steps
 
-# make file readable without sudo
-sudo chown username ./file
-
 # create k8s secret containing ssl certificate and key
 kubectl create secret tls tls-secret --key privateKey.pem --cert certificate.pem
-
-# get size of docker image (last table row)
-docker images
-docker images <image-name>
 ```
 
 # // TODO: fix those kafka errors:
@@ -178,3 +140,16 @@ docker images <image-name>
 ```
 
 # // TODO: fix nodejs container not terminating on CTRL + C
+
+> Starts `minikube` for development of container orchestration with Kubernetes
+
+```
+minikube start
+kubectl apply -f ./kubernetes/common
+kubectl apply -f ./kubernetes/minikube
+
+# get ip
+minikube ip
+
+# open browser http://<IP>:30001
+```

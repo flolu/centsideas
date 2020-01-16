@@ -3,13 +3,14 @@ import 'reflect-metadata';
 
 import { registerProviders, Logger, getProvider, ExpressAdapter } from '@cents-ideas/utils';
 import { MessageBroker } from '@cents-ideas/event-sourcing';
+import { LoggerPrefixes } from '@cents-ideas/enums';
 
 import { ReviewsServer } from './reviews.server';
 import { ReviewCommandHandler } from './review.command-handler';
 import { ReviewRepository } from './review.repository';
 import { ReviewsService } from './reviews.service';
 
-process.env.LOGGER_PREFIX = '⭐';
+process.env.LOGGER_PREFIX = LoggerPrefixes.Reviews;
 
 registerProviders(
   Logger,

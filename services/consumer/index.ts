@@ -2,6 +2,7 @@ import 'module-alias/register';
 import 'reflect-metadata';
 
 import { MessageBroker } from '@cents-ideas/event-sourcing';
+import { LoggerPrefixes } from '@cents-ideas/enums';
 import { getProvider, registerProviders, Logger, ExpressAdapter } from '@cents-ideas/utils';
 
 import { ConsumerServer } from './consumer.server';
@@ -10,7 +11,7 @@ import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
 
-process.env.LOGGER_PREFIX = '🍝';
+process.env.LOGGER_PREFIX = LoggerPrefixes.Consumer;
 
 registerProviders(
   Logger,

@@ -22,7 +22,9 @@ ts_library(
       "@npm//@types/shortid",
       "@npm//rimraf",
       "@npm//typescript",
-      "@npm//@types/jest"
+      "@npm//@types/jest",
+      "@npm//@types/module-alias",
+      "@npm//module-alias",
     ],
     module_name = "@cents-ideas/utils",
 )

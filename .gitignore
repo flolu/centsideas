@@ -13,4 +13,7 @@ globalConfigMongo.json
 secrets.yml
 coverage
 tsconfig.tsbuildinfo
-bazel-*
+bazel-bin
+bazel-cents-ideas
+bazel-out
+bazel-testlogs

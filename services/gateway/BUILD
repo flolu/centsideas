@@ -12,30 +12,27 @@ ts_library(
       "//packages/enums:lib",
       "//packages/models:lib",
       "//packages/utils:lib",
+
+      "@npm//@types/express",
+      "@npm//@types/body-parser",
+      "@npm//@types/jsonwebtoken",
+      "@npm//@types/cors",
+
       "@npm//axios",
       "@npm//body-parser",
       "@npm//cors",
       "@npm//express",
       "@npm//inversify",
       "@npm//jsonwebtoken",
-      "@npm//@types/jsonwebtoken",
       "@npm//reflect-metadata",
-      "@npm//@types/body-parser",
-      "@npm//@types/cors",
-      "@npm//@types/express",
-      "@npm//@types/jest",
-      "@npm//jest",
-      "@npm//nodemon",
-      "@npm//rimraf",
-      "@npm//ts-node",
-      "@npm//typescript",
+      "@npm//module-alias",
     ],
 )
 
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [":lib", "//:package.json"],
     entry_point = ":index.ts",
 )
 

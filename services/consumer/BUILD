@@ -13,29 +13,25 @@ ts_library(
       "//packages/event-sourcing:lib",
       "//packages/utils:lib",
       "//packages/models:lib",
-      "@npm//async-retry",
+
+      "@npm//@types/body-parser",
+      "@npm//@types/express",
+      "@npm//@types/mongodb",
       "@npm//@types/async-retry",
+
+      "@npm//async-retry",
       "@npm//body-parser",
       "@npm//express",
       "@npm//inversify",
       "@npm//mongodb",
       "@npm//reflect-metadata",
-      "@npm//@types/body-parser",
-      "@npm//@types/express",
-      "@npm//@types/jest",
-      "@npm//@types/mongodb",
-      "@npm//jest",
-      "@npm//nodemon",
-      "@npm//rimraf",
-      "@npm//ts-node",
-      "@npm//typescript",
     ],
 )
 
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [":lib", "//:package.json"],
     entry_point = ":index.ts",
 )
 

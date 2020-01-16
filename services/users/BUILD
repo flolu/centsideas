@@ -13,34 +13,32 @@ ts_library(
       "//packages/models:lib",
       "//packages/utils:lib",
       "//packages/event-sourcing:lib",
+
+      "@npm//@types/body-parser",
+      "@npm//@types/express",
+      "@npm//@types/mongodb",
+      "@npm//@types/jsonwebtoken",
+      "@npm//@types/faker",
+
       "@npm//body-parser",
       "@npm//express",
       "@npm//inversify",
       "@npm//reflect-metadata",
       "@npm//shortid",
-      "@npm//@types/body-parser",
-      "@npm//@types/express",
-      "@npm//@types/jest",
-      "@npm//@types/shortid",
-      "@npm//jest",
-      "@npm//nodemon",
-      "@npm//rimraf",
-      "@npm//ts-jest",
-      "@npm//ts-node",
-      "@npm//typescript",
       "@npm//mongodb",
-      "@npm//@types/mongodb",
       "@npm//jsonwebtoken",
       "@npm//faker",
-      "@npm//@types/jsonwebtoken",
-      "@npm//@types/faker",
     ],
 )
 
+# // TODO implement bazel tests
+# // TODO add nodejs_binary dev servers
+
+# // TODO maybe replace nodejs_image with nodejs_binary
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [":lib", "//:package.json"],
     entry_point = ":index.ts",
 )
 
