@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   zookeeper:
     image: wurstmeister/zookeeper:latest
@@ -25,20 +25,6 @@ services:
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
     env_file: ./env/.env.dev
-
-  consumer:
-    build:
-      context: ./
-      dockerfile: ./services/consumer/Dockerfile
-    volumes:
-      - ./services/consumer:/usr/app/src/services/consumer
-      - ./packages:/usr/app/src/packages
-      - ./node_modules:/usr/app/src/node_modules
-    env_file: ./env/.env.dev
-  projection-database:
-    image: mongo:4.2
-    logging:
-      driver: none
 
   ideas:
     build:
@@ -78,6 +64,20 @@ services:
       - ./node_modules:/usr/app/src/node_modules
     env_file: ./env/.env.dev
   users-event-store:
+    image: mongo:4.2
+    logging:
+      driver: none
+
+  consumer:
+    build:
+      context: ./
+      dockerfile: ./services/consumer/Dockerfile
+    volumes:
+      - ./services/consumer:/usr/app/src/services/consumer
+      - ./packages:/usr/app/src/packages
+      - ./node_modules:/usr/app/src/node_modules
+    env_file: ./env/.env.dev
+  projection-database:
     image: mongo:4.2
     logging:
       driver: none

@@ -28,6 +28,13 @@ ts_library(
     deps = lib_deps,
 )
 
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+nodejs_binary(
+    name = "dev",
+    data = [":lib", "//:package.json"],
+    entry_point = ":index.ts",
+)
+
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 nodejs_image(
     name = "image",

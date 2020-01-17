@@ -31,10 +31,13 @@ ts_library(
     ],
 )
 
-# // TODO implement bazel tests
-# // TODO add nodejs_binary dev servers
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+nodejs_binary(
+    name = "dev",
+    data = [":lib", "//:package.json"],
+    entry_point = ":index.ts",
+)
 
-# // TODO maybe replace nodejs_image with nodejs_binary
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 nodejs_image(
     name = "image",
