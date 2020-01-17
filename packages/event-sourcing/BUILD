@@ -11,14 +11,16 @@ ts_library(
     deps = [
       "//packages/utils:lib",
       "//packages/enums:lib",
-      "@npm//inversify",
+
       "@npm//@types/inversify",
-      "@npm//async-retry",
       "@npm//@types/async-retry",
-      "@npm//mongodb",
       "@npm//@types/mongodb",
-      "@npm//kafkajs",
       "@npm//@types/kafkajs",
+
+      "@npm//inversify",
+      "@npm//async-retry",
+      "@npm//mongodb",
+      "@npm//kafkajs",
     ],
     module_name = "@cents-ideas/event-sourcing",
 )

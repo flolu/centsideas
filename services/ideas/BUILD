@@ -1,30 +1,31 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@npm_bazel_typescript//:index.bzl", "ts_library")
+lib_deps = [
+    "//packages/enums:lib",
+    "//packages/models:lib",
+    "//packages/utils:lib",
+    "//packages/event-sourcing:lib",
 
+    "@npm//@types/body-parser",
+    "@npm//@types/express",
+    "@npm//@types/jest",
+
+    "@npm//body-parser",
+    "@npm//express",
+    "@npm//inversify",
+    "@npm//reflect-metadata",
+    "@npm//shortid",
+    "@npm//module-alias",
+]
+
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
 ts_library(
     name = "lib",
     srcs = glob(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"]
     ),
-    deps = [
-      "//packages/enums:lib",
-      "//packages/models:lib",
-      "//packages/utils:lib",
-      "//packages/event-sourcing:lib",
-
-      "@npm//@types/body-parser",
-      "@npm//@types/express",
-      "@npm//@types/jest",
-
-      "@npm//body-parser",
-      "@npm//express",
-      "@npm//inversify",
-      "@npm//reflect-metadata",
-      "@npm//shortid",
-      "@npm//module-alias",
-    ],
+    deps = lib_deps,
 )
 
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
@@ -42,4 +43,27 @@ container_push(
    registry = "gcr.io",
    repository = "cents-ideas/ideas",
    tag = "experimenting",
+)
+
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+lib_deps.insert(0, ":lib")
+ts_library(
+    name = "test_lib",
+    srcs = glob(include = ["**/*.spec.ts"]),
+    tsconfig = "//:tsconfig.jest.json",
+    deps = lib_deps
+)
+
+filegroup(
+    name = "test_lib.js",
+    srcs = [":test_lib"],
+    output_group = "es5_sources",
+)
+load("@cents_ideas//:jest.bzl", "jest_test")
+
+jest_test(
+    name = "test",
+    srcs = [":test_lib.js"],
+    jest_config = "//:jest.config.js",
+    deps = [":lib"],
 )
