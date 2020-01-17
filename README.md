@@ -51,6 +51,18 @@
 🙂 Moderately important
 🌳 Not really important
 
+# Development
+
+```
+yarn dev
+```
+
+# Testing
+
+```
+bazel test //...
+```
+
 # Requirements
 
 ### Required
@@ -72,22 +84,6 @@
 - [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
 - [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools)
 - [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter)
-
-# Setup
-
-### For Development
-
-> Starts all services with `docker-compose` and simoultaniously watches for code changes
-
-```
-yarn dev
-```
-
-# Testing
-
-```
-bazel test //...
-```
 
 # Services
 
