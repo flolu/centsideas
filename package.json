@@ -3,6 +3,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "test": "bazel test //...",
     "start:gateway": "ts-node-dev services/gateway/index.ts",
     "start:ideas": "ts-node-dev services/ideas/index.ts",
     "start:users": "ts-node-dev services/users/index.ts",
@@ -29,9 +30,9 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@bazel/bazel": "^1.2.0",
+    "@bazel/bazel": "^2.0.0",
     "@bazel/buildifier": "^0.29.0",
-    "@bazel/typescript": "^1.0.1",
+    "@bazel/typescript": "^1.1.0",
     "@types/async-retry": "^1.4.1",
     "@types/body-parser": "^1.17.1",
     "@types/cors": "^2.8.6",

@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 
 import { ExpressAdapter } from './express-adapter';
-import { UsersApiRoutes } from '@cents-ideas/enums';
+import { UsersApiRoutes, ApiEndpoints } from '@cents-ideas/enums';
 
 @injectable()
 export class UsersRoutes {
@@ -10,7 +10,15 @@ export class UsersRoutes {
 
   constructor(private expressAdapter: ExpressAdapter) {}
 
-  setup = (host: string): express.Router => {
+  setup = (host: string, consumerHost: string): express.Router => {
+    this.router.get(
+      `/`,
+      this.expressAdapter.makeJsonAdapter(`${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`),
+    );
+    this.router.get(
+      `/:id`,
+      this.expressAdapter.makeJsonAdapter(`${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`),
+    );
     this.router.post(
       `/${UsersApiRoutes.Login}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Login}`),
@@ -28,6 +36,7 @@ export class UsersRoutes {
       `/${UsersApiRoutes.ConfirmEmailChange}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmEmailChange}`),
     );
+
     return this.router;
   };
 }

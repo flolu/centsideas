@@ -4,12 +4,13 @@ import * as bodyParser from 'body-parser';
 
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { ApiEndpoints, EventTopics, IdeasApiRoutes } from '@cents-ideas/enums';
+import { ApiEndpoints, EventTopics, IdeasApiRoutes, UsersApiRoutes } from '@cents-ideas/enums';
 
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
 import env from './environment';
+import { UsersProjection } from './users.projection';
 
 @injectable()
 export class ConsumerServer {
@@ -22,6 +23,7 @@ export class ConsumerServer {
     private queryService: QueryService,
     private ideasProjection: IdeasProjection,
     private reviewsProjection: ReviewsProjection,
+    private usersProjection: UsersProjection,
   ) {}
 
   start = () => {
@@ -30,7 +32,7 @@ export class ConsumerServer {
     this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
     this.messageBroker.subscribe(EventTopics.Reviews, this.reviewsProjection.handleEvent);
-    // TODO users projection
+    this.messageBroker.subscribe(EventTopics.Users, this.usersProjection.handleEvent);
     // TODO maybe separate out reviews projection (currently there is a reviews array on ideas)
 
     this.app.use(bodyParser.json());
@@ -42,6 +44,15 @@ export class ConsumerServer {
     this.app.post(
       `/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetById}`,
       this.expressAdapter.json(this.queryService.getIdeaById),
+    );
+
+    this.app.post(
+      `/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
+      this.expressAdapter.json(this.queryService.getUserById),
+    );
+    this.app.post(
+      `/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
+      this.expressAdapter.json(this.queryService.getAllUsers),
     );
 
     this.app.get('/alive', (_req, res) => {

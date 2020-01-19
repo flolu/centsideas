@@ -32,7 +32,7 @@ export class IdeasProjection {
 
   handleEvent = async (event: IEvent) => {
     if (!this.ideasCollection) {
-      this.ideasCollection = await this.projectionDatabase.ideas();
+      await this.initialize();
     }
     this.logger.debug('handle incoming ideas event', event);
     switch (event.name) {

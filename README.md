@@ -68,7 +68,7 @@ yarn start
 ## Testing
 
 ```
-bazel test //...
+yarn test
 ```
 
 ## Git Flow
@@ -168,6 +168,9 @@ List of all packages inside this monorepo (packages are dependencies of services
 # Some Useful Commands for Development
 
 ```
+# update all your @bazel-scoped npm packages to the latest versions
+yarn upgrade --scope @bazel
+
 # stop all docker containers
 docker container stop $(docker container ls -aq)
 

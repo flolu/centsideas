@@ -47,7 +47,7 @@ export class GatewayServer {
 
     this.app.use(`/${ApiEndpoints.Ideas}`, this.ideasRoutes.setup(env.hosts.ideas, env.hosts.consumer));
     this.app.use(`/${ApiEndpoints.Reviews}`, this.reviewsRoutes.setup(env.hosts.reviews));
-    this.app.use(`/${ApiEndpoints.Users}`, this.usersRoutes.setup(env.hosts.users));
+    this.app.use(`/${ApiEndpoints.Users}`, this.usersRoutes.setup(env.hosts.users, env.hosts.consumer));
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
       return res.status(200).send('gateway alive');
