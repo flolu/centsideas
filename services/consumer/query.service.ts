@@ -75,7 +75,7 @@ export class QueryService {
       const _loggerName = 'get all users';
       try {
         const usersCollection = await this.projectionDatabase.users();
-        // FIXME fields is deprecated, but i don;t know what the alternative is!?!!?!?
+        // FIXME "fields" is deprecated, but i don't know what the alternative is!?!!?!?
         const users = await usersCollection.find({}, { fields: { private: 0 } });
         const renamedUsers: IUserViewModel[] = await users
           .map((user: any) => renameObjectProperty(user, '_id', 'id'))

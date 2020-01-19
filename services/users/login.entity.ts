@@ -3,7 +3,7 @@ import { IUserState, ILoginState } from '@cents-ideas/models';
 
 import { loginCommitFunctions } from './events';
 
-// TODO i am not sure if i event need login entity anymore
+// FIXME i am not sure if i event need login entity anymore
 export class Login extends EventEntity<ILoginState> {
   static initialState: ILoginState = {
     id: '',

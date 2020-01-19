@@ -40,9 +40,9 @@ export class UsersService {
     return this.http.post<IConfirmSignUpResponseDto>(url, {}, { headers });
   };
 
-  updateUser = (payload: IUpdateUserDto): Observable<IUserState> => {
-    const url = `${this.baseUrl}/${UsersApiRoutes.Update}`;
-    return this.http.post<IUserState>(url, payload);
+  updateUser = (payload: IUpdateUserDto, userId: string): Observable<IUserState> => {
+    const url = `${this.baseUrl}/${userId}`;
+    return this.http.put<IUserState>(url, payload);
   };
 
   logout = () => {

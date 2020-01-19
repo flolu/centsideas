@@ -14,8 +14,6 @@ export class UsersServer {
 
   constructor(private logger: Logger, private usersService: UsersService, private expressAdapter: ExpressAdapter) {}
 
-  // FIXME all microservices should only accept requests from gateway (or maybe some specific other microservices)
-
   start = () => {
     this.logger.debug('initialized with env: ', env);
 

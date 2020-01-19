@@ -80,9 +80,10 @@ export class UsersService {
     new Promise(async resolve => {
       const _loggerName = 'update user';
       try {
-        this.logger.debug(_loggerName);
+        this.logger.debug(_loggerName, req.body, req.params);
         NotAuthenticatedError.validate(req.locals.userId);
         NoPermissionError.validate(req.locals.userId, req.params.id);
+        // TODO email field disappears when changing it
         const updatedUser = await this.commandHandler.updateUser(req.params.id, req.body.username, req.body.email);
         resolve({
           status: HttpStatusCodes.Accepted,

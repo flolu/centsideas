@@ -32,9 +32,6 @@ export class User extends EventEntity<IUserState> {
 
   update(username: string, pendingEmail: string | null) {
     this.pushEvents(new UserUpdatedEvent(this.persistedState.id, username, pendingEmail));
-    if (pendingEmail) {
-      this.pushEvents(new EmailChangeRequestedEvent(this.persistedState.id, pendingEmail));
-    }
     return this;
   }
 }

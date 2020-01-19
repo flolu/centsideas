@@ -1,15 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { switchMap, catchError, map, tap } from 'rxjs/operators';
+import { switchMap, catchError, map, tap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { UsersService } from './users.service';
-import { UsersActions } from '.';
+import { UsersActions, UsersSelectors } from '.';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { AppState } from '..';
 
 @Injectable()
 export class UsersEffects {
-  constructor(private actions$: Actions, private usersService: UsersService, private router: Router) {}
+  constructor(
+    private actions$: Actions,
+    private usersService: UsersService,
+    private router: Router,
+    private store: Store<AppState>,
+  ) {}
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -44,8 +52,7 @@ export class UsersEffects {
       this.actions$.pipe(
         ofType(UsersActions.confirmSignUpDone),
         tap(action => this.usersService.saveToken(action.token)),
-        // FIXME navigate to user settings or user profile
-        tap(() => this.router.navigate([''])),
+        tap(() => this.router.navigate([environment.routing.user.name])),
       ),
     { dispatch: false },
   );
@@ -92,8 +99,9 @@ export class UsersEffects {
   updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UsersActions.updateUser),
-      switchMap(payload =>
-        this.usersService.updateUser(payload).pipe(
+      withLatestFrom(this.store.select(UsersSelectors.selectUser)),
+      switchMap(([payload, user]) =>
+        this.usersService.updateUser(payload, user.id).pipe(
           map(updated => UsersActions.updateUserDone({ updated })),
           catchError(error => of(UsersActions.updateUserFail({ error }))),
         ),
