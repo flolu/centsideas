@@ -59,7 +59,7 @@ services:
       context: ./
       dockerfile: ./services/users/Dockerfile
     volumes:
-      - ./services/users:/usr/app/src/services/reviews
+      - ./services/users:/usr/app/src/services/users
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
     env_file: ./env/.env.dev
