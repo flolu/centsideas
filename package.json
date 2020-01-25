@@ -2,7 +2,9 @@
   "name": "cents-ideas",
   "license": "MIT",
   "scripts": {
-    "dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "setup": "ts-node setup",
+    "docker:dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "dev": "yarn setup && yarn docker:dev",
     "test": "bazel test //...",
     "start:gateway": "ts-node-dev services/gateway/index.ts",
     "start:ideas": "ts-node-dev services/ideas/index.ts",
@@ -28,6 +30,7 @@
     "reflect-metadata": "^0.1.13",
     "sanitize-html": "^1.20.1",
     "shortid": "^2.2.15",
+    "ts-node": "^8.6.2",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
