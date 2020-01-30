@@ -18,7 +18,9 @@ export class MessageBroker {
   private kafka: Kafka | undefined;
   private producer: Producer | undefined;
 
-  constructor(private logger: Logger) {}
+  constructor(private logger: Logger) {
+    this.initialize();
+  }
 
   initialize = (overrides: Partial<KafkaConfig> = {}) => {
     const config = { ...this.defaultConfig, ...overrides };
