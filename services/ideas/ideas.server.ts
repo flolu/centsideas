@@ -20,7 +20,6 @@ export class IdeasServer {
 
     this.app.use(bodyParser.json());
 
-    // FIXME don't use http for internal service communication (instead use protobuf, kafka or other message broker)
     this.app.post(`/${IdeasApiRoutes.Create}`, this.expressAdapter.json(this.ideasService.createEmptyIdea));
     this.app.post(`/${IdeasApiRoutes.SaveDraft}`, this.expressAdapter.json(this.ideasService.saveDraft));
     this.app.post(`/${IdeasApiRoutes.CommitDraft}`, this.expressAdapter.json(this.ideasService.commitDraft));

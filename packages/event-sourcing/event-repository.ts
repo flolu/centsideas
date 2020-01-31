@@ -129,7 +129,6 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     const lastPersistedEvent = await this.getLastEventOfStream(streamId);
     let eventNumber = (lastPersistedEvent && lastPersistedEvent.eventNumber) || 0;
     if (lastPersistedEvent && entity.lastPersistedEventId !== lastPersistedEvent.id) {
-      // FIXME retry once (issue: command handler has to retry, not save)... maybe send response to gateway with { retry: true }
       throw new Error('concurrency issue!');
     }
 

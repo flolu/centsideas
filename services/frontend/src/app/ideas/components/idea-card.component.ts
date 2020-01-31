@@ -11,12 +11,6 @@ import { IIdeaViewModel } from '@cents-ideas/models';
       </div>
       <div class="preview">
         <span class="title" (click)="onTitleClick()">{{ idea?.title }}</span>
-        <!-- FIXME idea tags -->
-        <div class="tags">
-          <span>some</span>
-          <span>random</span>
-          <span>tags</span>
-        </div>
       </div>
     </div>
   `,

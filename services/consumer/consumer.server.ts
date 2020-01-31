@@ -33,7 +33,6 @@ export class ConsumerServer {
     this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
     this.messageBroker.subscribe(EventTopics.Reviews, this.reviewsProjection.handleEvent);
     this.messageBroker.subscribe(EventTopics.Users, this.usersProjection.handleEvent);
-    // TODO maybe separate out reviews projection (currently there is a reviews array on ideas)
 
     this.app.use(bodyParser.json());
 

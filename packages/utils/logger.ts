@@ -1,8 +1,5 @@
 import { injectable } from 'inversify';
 
-// FIXME prod logging
-// FIXME save logs (especially errors in prod mode)
-
 @injectable()
 export class Logger {
   private readonly resetColor = '\x1b[0m';

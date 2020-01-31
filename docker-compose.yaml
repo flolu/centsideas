@@ -81,4 +81,3 @@ services:
     image: mongo:4.2
     logging:
       driver: none
-# // TODO angular app into docker-compose

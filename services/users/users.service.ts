@@ -28,7 +28,6 @@ export class UsersService {
       try {
         this.logger.debug(_loggerName);
         const result = await this.commandHandler.login(req.body.email);
-        // FIXME don't send token back!... instead send email to user
         resolve({
           status: HttpStatusCodes.Accepted,
           body: result,
@@ -83,7 +82,6 @@ export class UsersService {
         this.logger.debug(_loggerName, req.body, req.params);
         NotAuthenticatedError.validate(req.locals.userId);
         NoPermissionError.validate(req.locals.userId, req.params.id);
-        // TODO email field disappears when changing it
         const updatedUser = await this.commandHandler.updateUser(req.params.id, req.body.username, req.body.email);
         resolve({
           status: HttpStatusCodes.Accepted,
@@ -97,7 +95,5 @@ export class UsersService {
     });
 
   confirmEmailChange = (req: HttpRequest<IConfirmEmailChangeDto>): Promise<HttpResponse<any>> =>
-    new Promise(async resolve => {
-      // FIXME email change
-    });
+    new Promise(async resolve => {});
 }
