@@ -7,4 +7,5 @@ export interface IUsersState {
   user: IUserState | null;
   activationUrl: string | null;
   token: string | null;
+  initialized: boolean;
 }

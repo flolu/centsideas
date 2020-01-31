@@ -13,8 +13,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
     return this.store.select(AppSelectors.selectUsersState).pipe(
-      // FIXME skip while not initialized
-      skipWhile(state => state.loading),
+      skipWhile(state => !state.initialized),
       map(state => {
         if (!state.user) {
           console.log('[AuthGuard] not authenticated', state);

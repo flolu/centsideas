@@ -10,6 +10,7 @@ const initialState: IUsersState = {
   user: null,
   activationUrl: null,
   token: null,
+  initialized: false,
 };
 
 const usersReducer = createReducer(
@@ -40,6 +41,8 @@ const usersReducer = createReducer(
     user: action.user,
     token: action.token,
   })),
+  on(UsersActions.authenticate, state => ({ ...state, initialized: false })),
+  on(UsersActions.authenticateFail, state => ({ ...state, initialized: true })),
   on(UsersActions.authenticateDone, (state, action) => ({
     ...state,
     loading: false,
@@ -47,6 +50,7 @@ const usersReducer = createReducer(
     error: null,
     user: action.user,
     token: action.token,
+    initialized: true,
   })),
 );
 

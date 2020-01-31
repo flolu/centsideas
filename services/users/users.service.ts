@@ -45,7 +45,7 @@ export class UsersService {
     new Promise(async resolve => {
       const _loggerName = 'confirm sign up';
       try {
-        this.logger.debug(_loggerName);
+        this.logger.debug(_loggerName, req);
         const { user, token } = await this.commandHandler.confirmSignUp(req.headers[HeaderKeys.Auth]);
         resolve({
           status: HttpStatusCodes.Created,
@@ -79,7 +79,7 @@ export class UsersService {
     new Promise(async resolve => {
       const _loggerName = 'update user';
       try {
-        this.logger.debug(_loggerName, req.body, req.params);
+        this.logger.debug(_loggerName, req);
         NotAuthenticatedError.validate(req.locals.userId);
         NoPermissionError.validate(req.locals.userId, req.params.id);
         const updatedUser = await this.commandHandler.updateUser(req.params.id, req.body.username, req.body.email);
