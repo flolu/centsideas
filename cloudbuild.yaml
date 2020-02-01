@@ -3,3 +3,11 @@ steps:
     args: ['test', '//...']
   - name: gcr.io/cloud-builders/bazel
     args: ['run', '//services/ideas:push']
+  - name: gcr.io/cloud-builders/bazel
+    args: ['run', '//services/reviews:push']
+  - name: gcr.io/cloud-builders/bazel
+    args: ['run', '//services/gateway:push']
+  - name: gcr.io/cloud-builders/bazel
+    args: ['run', '//services/users:push']
+  - name: gcr.io/cloud-builders/bazel
+    args: ['run', '//services/consumer:push']

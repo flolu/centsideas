@@ -52,5 +52,5 @@ container_push(
    format = "Docker",
    registry = "gcr.io",
    repository = "cents-ideas/users",
-   tag = "experimenting",
+   tag = "develop",
 )
