@@ -63,6 +63,41 @@ yarn start
 yarn test
 ```
 
+# Services
+
+List of all microservices inside this monorepo (services depend on packages)
+
+- ⛩️ [gateway](https://github.com/flolude/cents-ideas/tree/develop/services/gateway)
+- 💡 [ideas](https://github.com/flolude/cents-ideas/tree/develop/services/ideas)
+- 📱 [frontend](https://github.com/flolude/cents-ideas/blob/develop/services/frontend)
+- ⭐ [reviews](https://github.com/flolude/cents-ideas/tree/develop/services/reviews)
+- 🍝 [consumer](https://github.com/flolude/cents-ideas/tree/develop/services/consumer)
+
+# Packages
+
+List of all packages inside this monorepo (packages are dependencies of services)
+
+- [enums](https://github.com/flolude/cents-ideas/tree/master/packages/enums)
+- [event-sourcing](https://github.com/flolude/cents-ideas/tree/master/packages/event-sourcing)
+- [models](https://github.com/flolude/cents-ideas/tree/master/packages/models)
+- [utils](https://github.com/flolude/cents-ideas/tree/master/packages/utils)
+
+# Requirements
+
+### Required
+
+- git
+- docker
+- docker-compose
+- node.js
+- yarn
+- bazel
+
+### Optional
+
+- microk8s or minikube
+- kubectl
+
 # Git Flow
 
 **Read [this](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) for more detail**
@@ -95,46 +130,15 @@ git flow hotfix start <name-of-hotfix-branch>
 git flow hotfix finish <name-of-hotfix-branch>
 ```
 
-# Services
-
-List of all microservices inside this monorepo (services depend on packages)
-
-- ⛩️ [gateway](https://github.com/flolude/cents-ideas/tree/develop/services/gateway)
-- 💡 [ideas](https://github.com/flolude/cents-ideas/tree/develop/services/ideas)
-- 📱 [frontend](https://github.com/flolude/cents-ideas/blob/develop/services/frontend)
-- ⭐ [reviews](https://github.com/flolude/cents-ideas/tree/develop/services/reviews)
-- 🍝 [consumer](https://github.com/flolude/cents-ideas/tree/develop/services/consumer)
-
-# Packages
-
-List of all packages inside this monorepo (packages are dependencies of services)
-
-- [enums](https://github.com/flolude/cents-ideas/tree/master/packages/enums)
-- [event-sourcing](https://github.com/flolude/cents-ideas/tree/master/packages/event-sourcing)
-- [models](https://github.com/flolude/cents-ideas/tree/master/packages/models)
-- [utils](https://github.com/flolude/cents-ideas/tree/master/packages/utils)
-
-# Requirements
-
-### Required
-
-- node.js
-- docker
-- docker-compose
-- yarn
-- bazel
-
-### Optional
-
-- microk8s or minikube
-- kubectl
-
 ### Recommended VSCode Plugins
 
+- [TSLint](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-tslint-plugin)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter)
 - [Todo Tree](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree)
 - [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
 - [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools)
-- [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter)
+- [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
 
 # Some Useful Commands for Development
 
