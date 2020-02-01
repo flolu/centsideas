@@ -56,72 +56,43 @@
 
 ```
 yarn dev
-```
 
-**Starting Frontend**
-
-```
 cd services/frontend
 yarn start
-```
 
-## Testing
-
-```
 yarn test
 ```
 
-## Git Flow
+# Git Flow
 
-1. Checkout develop branch
+**Read [this](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) for more detail**
 
-```
-git checkout develop
-```
+![](<https://wac-cdn.atlassian.com/dam/jcr:61ccc620-5249-4338-be66-94d563f2843c/05%20(2).svg?cdnVersion=788>)
 
-2. Create your feature branch
+## Creating a feature branch
 
 ```
-git checkout -b my-feature
+git flow feature start <name-of-feature-branch>
 ```
 
-3. Commit changes to my-feature
-4. Pull changes from develop
+## Finishing a feature branch
 
 ```
-git checkout develop
-git pull
+git flow feature finish <name-of-feature-branch>
 ```
 
-5. Fix potential merge conflicts
-6. Checkout features
+## Release branches
 
 ```
-git checkout my-feature
+git flow release start 0.1.0
+git flow release finish '0.1.0'
 ```
 
-7. Rebase against develop branch
+## Hotfix branches
 
 ```
-git rebase develop
-```
-
-8. Checkout develop branch
-
-```
-git checkout develop
-```
-
-9. Rebase against feature
-
-```
-git rebase feature
-```
-
-10. Push changes
-
-```
-git push origin develop
+git flow hotfix start <name-of-hotfix-branch>
+git flow hotfix finish <name-of-hotfix-branch>
 ```
 
 # Services
