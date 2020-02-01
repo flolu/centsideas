@@ -77,12 +77,21 @@ jest_test(
 
 load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
 k8s_object(
-  name = "k8s",
+  name = "k8s_old",
+  kind = "",
   cluster = 'cents-ideas',
-  context = '',
   image_chroot = 'gcr.io/cents-ideas',
   images = {
     "ideas:do_not_delete": "//services/ideas:image"
   },
   template = ":ideas.yaml",
+)
+
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+k8s_deploy(
+  name = "k8s",
+  template = ":ideas.yaml",
+  images = {
+    "gcr.io/cents-ideas/ideas:dev": ":image"
+  },
 )

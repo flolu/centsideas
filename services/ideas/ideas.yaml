@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: ideas
-          image: ideas:do_not_delete
+          image: gcr.io/cents-ideas/ideas:dev
           imagePullPolicy: Always
           #envFrom:
           #  - configMapRef:

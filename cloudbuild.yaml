@@ -1,13 +1,23 @@
 steps:
-  - name: gcr.io/cloud-builders/bazel
+  - id: 'run unit tests'
+    name: gcr.io/cloud-builders/bazel
     args: ['test', '//...']
-  - name: gcr.io/cloud-builders/bazel
-    args: ['run', '//services/ideas:push']
-  - name: gcr.io/cloud-builders/bazel
-    args: ['run', '//services/reviews:push']
-  - name: gcr.io/cloud-builders/bazel
-    args: ['run', '//services/gateway:push']
-  - name: gcr.io/cloud-builders/bazel
-    args: ['run', '//services/users:push']
-  - name: gcr.io/cloud-builders/bazel
-    args: ['run', '//services/consumer:push']
+
+  - id: 'push ideas image and deploy to kubernetes'
+    name: gcr.io/cloud-builders/bazel
+    args: ['run', '//services/ideas:k8s']
+#   - id: 'push ideas service docker image'
+#     name: gcr.io/cloud-builders/bazel
+#     args: ['run', '//services/ideas:push']
+#   - id: 'push reviews service docker image'
+#     name: gcr.io/cloud-builders/bazel
+#     args: ['run', '//services/reviews:push']
+#   - id: 'push gateway service docker image'
+#     name: gcr.io/cloud-builders/bazel
+#     args: ['run', '//services/gateway:push']
+#   - id: 'push users service docker image'
+#     name: gcr.io/cloud-builders/bazel
+#     args: ['run', '//services/users:push']
+#   - id: 'push consumer service docker image'
+#     name: gcr.io/cloud-builders/bazel
+#     args: ['run', '//services/consumer:push']
