@@ -56,72 +56,11 @@
 
 ```
 yarn dev
-```
 
-**Starting Frontend**
-
-```
 cd services/frontend
 yarn start
-```
 
-## Testing
-
-```
 yarn test
-```
-
-## Git Flow
-
-1. Checkout develop branch
-
-```
-git checkout develop
-```
-
-2. Create your feature branch
-
-```
-git checkout -b my-feature
-```
-
-3. Commit changes to my-feature
-4. Pull changes from develop
-
-```
-git checkout develop
-git pull
-```
-
-5. Fix potential merge conflicts
-6. Checkout features
-
-```
-git checkout my-feature
-```
-
-7. Rebase against develop branch
-
-```
-git rebase develop
-```
-
-8. Checkout develop branch
-
-```
-git checkout develop
-```
-
-9. Rebase against feature
-
-```
-git rebase feature
-```
-
-10. Push changes
-
-```
-git push origin develop
 ```
 
 # Services
@@ -147,9 +86,10 @@ List of all packages inside this monorepo (packages are dependencies of services
 
 ### Required
 
-- node.js
+- git
 - docker
 - docker-compose
+- node.js
 - yarn
 - bazel
 
@@ -158,12 +98,47 @@ List of all packages inside this monorepo (packages are dependencies of services
 - microk8s or minikube
 - kubectl
 
+# Git Flow
+
+**Read [this](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) for more detail**
+
+![](<https://wac-cdn.atlassian.com/dam/jcr:61ccc620-5249-4338-be66-94d563f2843c/05%20(2).svg?cdnVersion=788>)
+
+## Creating a feature branch
+
+```
+git flow feature start <name-of-feature-branch>
+```
+
+## Finishing a feature branch
+
+```
+git flow feature finish <name-of-feature-branch>
+```
+
+## Release branches
+
+```
+git flow release start 0.1.0
+git flow release finish '0.1.0'
+```
+
+## Hotfix branches
+
+```
+git flow hotfix start <name-of-hotfix-branch>
+git flow hotfix finish <name-of-hotfix-branch>
+```
+
 ### Recommended VSCode Plugins
 
+- [TSLint](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-tslint-plugin)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter)
 - [Todo Tree](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree)
 - [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
 - [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools)
-- [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter)
+- [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
 
 # Some Useful Commands for Development
 
