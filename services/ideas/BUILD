@@ -49,7 +49,7 @@ container_push(
    format = "Docker",
    registry = "gcr.io",
    repository = "cents-ideas/ideas",
-   tag = "experimenting",
+   tag = "develop",
 )
 
 load("@npm_bazel_typescript//:index.bzl", "ts_library")

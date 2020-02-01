@@ -1,3 +1,5 @@
 steps:
   - name: gcr.io/cloud-builders/bazel
     args: ['test', '//...']
+  - name: gcr.io/cloud-builders/bazel
+    args: ['build', '//services/ideas:push']
