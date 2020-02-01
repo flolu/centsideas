@@ -74,3 +74,15 @@ jest_test(
     jest_config = "//:jest.config.js",
     deps = [":lib"],
 )
+
+load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
+k8s_object(
+  name = "k8s",
+  kind = "deployment",
+  namespace = "default",
+  template = ":ideas.yaml",
+  cluster = "cents-ideas"
+  images = {
+    "gcr.io/cents-ideas/ideas:dev": "//services/ideas:image"
+  },
+)
