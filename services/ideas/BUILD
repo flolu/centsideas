@@ -81,7 +81,7 @@ k8s_object(
   kind = "deployment",
   namespace = "default",
   template = ":ideas.yaml",
-  cluster = "cents-ideas"
+  cluster = "cents-ideas",
   images = {
     "gcr.io/cents-ideas/ideas:dev": "//services/ideas:image"
   },
