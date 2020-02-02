@@ -1,4 +1,8 @@
 steps:
+  # - id: 'fetch bazel-bin cache from last build'
+  #   name: gcr.io/cloud-builders/gsutil
+  #   args: ['cp', 'gs://cents-ideas-build-cache/bazel-bin', 'previous-bazel-bin']
+
   - id: 'run unit tests'
     name: gcr.io/cloud-builders/bazel
     args: ['test', '//...']
@@ -6,3 +10,14 @@ steps:
   - id: 'push docker images and deploy changes to kubernetes'
     name: gcr.io/cloud-builders/bazel
     args: ['run', '//:kubernetes']
+
+  # - id: 'caching bazel-bin folder for next build'
+  #   name: gcr.io/cloud-builders/gsutil
+  #   args: ['cp', 'bazel-bin', 'gs://cents-ideas-build-cache/bazel-bin']
+
+  - id: 'apply kubernetes resources to cluster'
+    name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', '-']
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a	'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cents-ideas'
