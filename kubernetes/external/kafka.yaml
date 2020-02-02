@@ -27,6 +27,13 @@ spec:
                   fieldPath: status.podIP
             - name: KAFKA_ADVERTISED_HOST_NAME
               value: $(MY_POD_IP)
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 200m
+            limits:
+              memory: 500Mi
+              cpu: 500m
 
 ---
 apiVersion: v1

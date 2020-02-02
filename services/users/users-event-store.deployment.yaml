@@ -18,6 +18,13 @@ spec:
           volumeMounts:
             - name: persistent-db-storage
               mountPath: /data/db
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 200m
+            limits:
+              memory: 500Mi
+              cpu: 500m
       volumes:
         - name: persistent-db-storage
           persistentVolumeClaim:
