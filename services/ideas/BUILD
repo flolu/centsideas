@@ -89,9 +89,9 @@ k8s_object(
 
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 k8s_deploy(
-  name = "k8s",
+  name = "deployment",
   template = ":ideas.yaml",
   images = {
-    "gcr.io/cents-ideas/ideas:dev": ":image"
+    "gcr.io/cents-ideas/ideas:from_k8s": ":image"
   },
 )
