@@ -3,9 +3,18 @@ steps:
   #   name: gcr.io/cloud-builders/gsutil
   #   args: ['cp', 'gs://cents-ideas-build-cache/bazel-bin', 'previous-bazel-bin']
 
-  - id: 'run unit tests'
-    name: gcr.io/cloud-builders/bazel
-    args: ['test', '//...']
+  # - id: 'run unit tests'
+  #   name: gcr.io/cloud-builders/bazel
+  #   args: ['test', '//...']
+  - name: gcr.io/cloud-builders/bazel
+    args:
+      [
+        'test',
+        '--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache',
+        '--google_default_credentials=/secrets/cents-ideas-9b2e2bd6cca4.json',
+        '--test_output=errors',
+        '//...',
+      ]
 
   - id: 'push docker images and deploy changes to kubernetes'
     name: gcr.io/cloud-builders/bazel
