@@ -6,19 +6,27 @@ steps:
   # - id: 'run unit tests'
   #   name: gcr.io/cloud-builders/bazel
   #   args: ['test', '//...']
+
   - name: gcr.io/cloud-builders/bazel
-    args:
-      [
+    args: [
         'test',
+        # https://github.com/bazelbuild/bazel/blob/master/site/docs/remote-caching.md#google-cloud-storage
         '--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache',
-        '--google_default_credentials=/secrets/cents-ideas-9b2e2bd6cca4.json',
+        '--google_default_credentials',
         '--test_output=errors',
         '//...',
       ]
 
   - id: 'push docker images and deploy changes to kubernetes'
     name: gcr.io/cloud-builders/bazel
-    args: ['run', '//:kubernetes.apply']
+    args:
+      [
+        'run',
+        '--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache',
+        '--google_default_credentials',
+        '--test_output=errors',
+        '//:kubernetes.apply',
+      ]
   # - id: 'caching bazel-bin folder for next build'
   #   name: gcr.io/cloud-builders/gsutil
   #   args: ['cp', 'bazel-bin', 'gs://cents-ideas-build-cache/bazel-bin']
