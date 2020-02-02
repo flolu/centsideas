@@ -1,6 +1,6 @@
 steps:
   - name: gcr.io/cloud-builders/gsutil
-    args: ['cp', 'gs://cents-ideas-build-cache/results.zip', 'previous_results.zip']
+    args: ['cp', 'gs://cents-ideas-build-cache/bazel-bin', 'bazel-bin']
 
   - id: 'run unit tests'
     name: gcr.io/cloud-builders/bazel
@@ -11,4 +11,4 @@ steps:
     args: ['run', '//:deployments']
 
   - name: gcr.io/cloud-builders/gsutil
-    args: ['cp', 'new_results.zip', 'gs://cents-ideas-build-cache/results.zip']
+    args: ['cp', 'bazel-bin', 'gs://cents-ideas-build-cache/bazel-bin']

@@ -55,20 +55,15 @@ yarn start
 yarn test
 ```
 
-# Services
+# Structure
 
-- ⛩️ [gateway](https://github.com/flolude/cents-ideas/tree/develop/services/gateway)
-- 💡 [ideas](https://github.com/flolude/cents-ideas/tree/develop/services/ideas)
-- 📱 [frontend](https://github.com/flolude/cents-ideas/blob/develop/services/frontend)
-- ⭐ [reviews](https://github.com/flolude/cents-ideas/tree/develop/services/reviews)
-- 🍝 [consumer](https://github.com/flolude/cents-ideas/tree/develop/services/consumer)
+**Services**
 
-# Packages
+[gateway](https://github.com/flolude/cents-ideas/tree/develop/services/gateway), [ideas](https://github.com/flolude/cents-ideas/tree/develop/services/ideas), [frontend](https://github.com/flolude/cents-ideas/blob/develop/services/frontend), [reviews](https://github.com/flolude/cents-ideas/tree/develop/services/reviews), [consumer](https://github.com/flolude/cents-ideas/tree/develop/services/consumer)
 
-- [enums](https://github.com/flolude/cents-ideas/tree/master/packages/enums)
-- [event-sourcing](https://github.com/flolude/cents-ideas/tree/master/packages/event-sourcing)
-- [models](https://github.com/flolude/cents-ideas/tree/master/packages/models)
-- [utils](https://github.com/flolude/cents-ideas/tree/master/packages/utils)
+**Packages**
+
+[enums](https://github.com/flolude/cents-ideas/tree/master/packages/enums), [event-sourcing](https://github.com/flolude/cents-ideas/tree/master/packages/event-sourcing), [models](https://github.com/flolude/cents-ideas/tree/master/packages/models), [utils](https://github.com/flolude/cents-ideas/tree/master/packages/utils)
 
 # Requirements
 
