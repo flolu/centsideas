@@ -9,13 +9,22 @@ steps:
         '//...',
       ]
 
-  - id: 'push docker images and deploy changes to kubernetes'
-    name: gcr.io/cloud-builders/bazel
+  # - id: 'push docker images and deploy changes to kubernetes'
+  #   name: gcr.io/cloud-builders/bazel
+  #   args:
+  #     [
+  #       'run',
+  #       '--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache',
+  #       '--google_default_credentials',
+  #       '--test_output=errors',
+  #       '//:kubernetes.apply',
+  #     ]
+
+  - name: ubuntu
+    entrypoint: 'bash'
     args:
-      [
-        'run',
-        '--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache',
-        '--google_default_credentials',
-        '--test_output=errors',
-        '//:kubernetes.create',
-      ]
+      - '-c'
+      - |
+        gcloud container clusters get-credentials dev-k8-cluster --zone europe-west3-a
+        bazel run :kubernetes.delete
+        bazel run :kubernetes.create
