@@ -22,16 +22,3 @@ spec:
         - name: persistent-db-storage
           persistentVolumeClaim:
             claimName: reviews-event-store-pvc
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cents-reviews-reviews-event-store
-spec:
-  selector:
-    app: reviews-event-store
-  ports:
-    - name: mongo
-      port: 27017
-  type: ClusterIP

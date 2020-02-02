@@ -52,3 +52,26 @@ container_push(
    repository = "cents-ideas/gateway",
    tag = "develop",
 )
+
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+k8s_deploy(
+  name = "k8s_deployment",
+  template = ":gateway.deployment.yaml",
+  images = {
+    "gcr.io/cents-ideas/gateway:latest": ":image"
+  },
+)
+
+k8s_deploy(
+  name = "k8s_service",
+  kind = "service",
+  template = ":gateway.service.yaml",
+)
+
+k8s_objects(
+  name = "k8s",
+  objects = [
+    ":k8s_deployment",
+    ":k8s_service",
+  ]
+)

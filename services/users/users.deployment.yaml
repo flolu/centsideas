@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ideas-deployment
+  name: users-deployment
 spec:
   selector:
     matchLabels:
-      app: ideas
+      app: users
   replicas: 1
   template:
     metadata:
       labels:
-        app: ideas
+        app: users
     spec:
       containers:
-        - name: ideas
-          image: registry.hub.docker.com/flolu/cents-ideas_ideas:0.3.3
+        - name: users
+          image: gcr.io/cents-ideas/users:latest
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
@@ -31,16 +31,3 @@ spec:
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cents-ideas-ideas
-spec:
-  selector:
-    app: ideas
-  ports:
-    - name: http
-      port: 3000
-  type: ClusterIP

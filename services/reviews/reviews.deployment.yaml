@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ideas-deployment
+  name: reviews-deployment
 spec:
   selector:
     matchLabels:
-      app: ideas
+      app: reviews
   replicas: 1
   template:
     metadata:
       labels:
-        app: ideas
+        app: reviews
     spec:
       containers:
-        - name: ideas
-          image: gcr.io/cents-ideas/ideas:from_k8s
+        - name: reviews
+          image: gcr.io/cents-ideas/reviews:latest
           imagePullPolicy: Always
-          #envFrom:
-          #  - configMapRef:
-          #      name: global-config
+          envFrom:
+            - configMapRef:
+                name: global-config
           readinessProbe:
             httpGet:
               path: /alive
@@ -31,16 +31,3 @@ spec:
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cents-ideas-ideas
-spec:
-  selector:
-    app: ideas
-  ports:
-    - name: http
-      port: 3000
-  type: ClusterIP

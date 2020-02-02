@@ -1,14 +1,8 @@
 steps:
-  - name: gcr.io/cloud-builders/gsutil
-    args: ['cp', 'gs://cents-ideas-build-cache/bazel-bin', 'bazel-bin']
-
   - id: 'run unit tests'
     name: gcr.io/cloud-builders/bazel
     args: ['test', '//...']
 
   - id: 'push docker images and deploy changes to kubernetes'
     name: gcr.io/cloud-builders/bazel
-    args: ['run', '//:deployments']
-
-  - name: gcr.io/cloud-builders/gsutil
-    args: ['cp', 'bazel-bin', 'gs://cents-ideas-build-cache/bazel-bin']
+    args: ['run', '//:kubernetes']

@@ -16,9 +16,15 @@ ts_config(
 )
 
 load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
+# TODO config, kafka, zookeeper, database-storage, ingress, tsl-secret
+
 k8s_objects(
-   name = "deployments",
-   objects = [
-      "//services/ideas:deployment",
-   ]
+    name = "kubernetes",
+    objects = [
+        "//services/consumer:k8s",
+        "//services/gateway:k8s",
+        "//services/ideas:k8s",
+        "//services/reviews:k8s",
+        "//services/users:k8s",
+    ]
 )

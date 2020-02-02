@@ -75,23 +75,38 @@ jest_test(
     deps = [":lib"],
 )
 
-load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
-k8s_object(
-  name = "k8s_old",
-  kind = "",
-  cluster = 'cents-ideas',
-  image_chroot = 'gcr.io/cents-ideas',
-  images = {
-    "ideas:do_not_delete": "//services/ideas:image"
-  },
-  template = ":ideas.yaml",
-)
-
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 k8s_deploy(
-  name = "deployment",
-  template = ":ideas.yaml",
+  name = "k8s_deployment",
+  template = ":ideas.deployment.yaml",
   images = {
-    "gcr.io/cents-ideas/ideas:from_k8s": ":image"
+    "gcr.io/cents-ideas/ideas:latest": ":image"
   },
+)
+
+k8s_deploy(
+  name = "k8s_service",
+  kind = "service",
+  template = ":ideas.service.yaml",
+)
+
+k8s_deploy(
+  name = "event_store_k8s_service",
+  kind = "service",
+  template = ":ideas-event-store.service.yaml",
+)
+
+k8s_deploy(
+  name = "event_store_k8s_deployment",
+  template = ":ideas-event-store.deployment.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+      ":k8s_deployment",
+      ":k8s_service",
+      ":event_store_k8s_deployment",
+      ":event_store_k8s_service",
+    ]
 )

@@ -51,3 +51,39 @@ container_push(
    repository = "cents-ideas/consumer",
    tag = "develop",
 )
+
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+k8s_deploy(
+  name = "k8s_deployment",
+  template = ":consumer.deployment.yaml",
+  images = {
+    "gcr.io/cents-ideas/consumer:latest": ":image"
+  },
+)
+
+k8s_deploy(
+  name = "k8s_service",
+  kind = "service",
+  template = ":consumer.service.yaml",
+)
+
+k8s_deploy(
+  name = "projection_database_k8s_service",
+  kind = "service",
+  template = ":projection-database.service.yaml",
+)
+
+k8s_deploy(
+  name = "projection_database_k8s_deployment",
+  template = ":projection-database.deployment.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+      ":k8s_deployment",
+      ":k8s_service",
+      ":projection_database_k8s_deployment",
+      ":projection_database_k8s_service",
+    ]
+)

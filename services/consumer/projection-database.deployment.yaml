@@ -22,16 +22,3 @@ spec:
         - name: persistent-db-storage
           persistentVolumeClaim:
             claimName: projection-database-pvc
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cents-ideas-projection-database
-spec:
-  selector:
-    app: projection-database
-  ports:
-    - name: mongo
-      port: 27017
-  type: ClusterIP

@@ -54,3 +54,39 @@ container_push(
    repository = "cents-ideas/users",
    tag = "develop",
 )
+
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+k8s_deploy(
+  name = "k8s_deployment",
+  template = ":users.deployment.yaml",
+  images = {
+    "gcr.io/cents-ideas/users:latest": ":image"
+  },
+)
+
+k8s_deploy(
+  name = "k8s_service",
+  kind = "service",
+  template = ":users.service.yaml",
+)
+
+k8s_deploy(
+  name = "event_store_k8s_service",
+  kind = "service",
+  template = ":users-event-store.service.yaml",
+)
+
+k8s_deploy(
+  name = "event_store_k8s_deployment",
+  template = ":users-event-store.deployment.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+      ":k8s_deployment",
+      ":k8s_service",
+      ":event_store_k8s_deployment",
+      ":event_store_k8s_service",
+    ]
+)
