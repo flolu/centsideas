@@ -19,5 +19,5 @@ steps:
     name: 'gcr.io/cloud-builders/kubectl'
     args: ['apply', '-f', '-']
     env:
-      - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a	'
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=cents-ideas'
