@@ -17,7 +17,13 @@ steps:
 
   - id: 'apply kubernetes resources to cluster'
     name: 'gcr.io/cloud-builders/kubectl'
-    args: ['apply', '-f', '-']
+    args:
+      [
+        'apply',
+        '-f',
+        '/bazel-bin/services/ideas/k8s_deployment.substituted.yaml',
+        '/bazel-bin/services/ideas/k8s_service.substituted.yaml',
+      ]
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=cents-ideas'
