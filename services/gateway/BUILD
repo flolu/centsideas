@@ -57,6 +57,7 @@ load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 k8s_deploy(
   name = "k8s_deployment",
   template = ":gateway.deployment.yaml",
+  kind = "deployment",
   images = {
     "gcr.io/cents-ideas/gateway:latest": ":image"
   },
@@ -68,6 +69,7 @@ k8s_deploy(
   template = ":gateway.service.yaml",
 )
 
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 k8s_objects(
   name = "k8s",
   objects = [

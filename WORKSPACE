@@ -52,6 +52,6 @@ k8s_go_deps()
 load("@io_bazel_rules_k8s//k8s:k8s.bzl", "k8s_defaults")
 k8s_defaults(
   name = "k8s_deploy",
-  kind = "deployment",
+  # kind = "deployment",
   cluster = "cents-ideas",
 )

@@ -53,6 +53,7 @@ load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 k8s_deploy(
   name = "k8s_deployment",
   template = ":reviews.deployment.yaml",
+  kind = "deployment",
   images = {
     "gcr.io/cents-ideas/reviews:latest": ":image"
   },
@@ -72,9 +73,11 @@ k8s_deploy(
 
 k8s_deploy(
   name = "event_store_k8s_deployment",
+  kind = "deployment",
   template = ":reviews-event-store.deployment.yaml",
 )
 
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 k8s_objects(
     name = "k8s",
     objects = [

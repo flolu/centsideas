@@ -78,6 +78,7 @@ jest_test(
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 k8s_deploy(
   name = "k8s_deployment",
+  kind = "deployment",
   template = ":ideas.deployment.yaml",
   images = {
     "gcr.io/cents-ideas/ideas:latest": ":image"
@@ -98,9 +99,11 @@ k8s_deploy(
 
 k8s_deploy(
   name = "event_store_k8s_deployment",
+  kind = "deployment",
   template = ":ideas-event-store.deployment.yaml",
 )
 
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 k8s_objects(
     name = "k8s",
     objects = [

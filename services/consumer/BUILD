@@ -56,6 +56,7 @@ load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 k8s_deploy(
   name = "k8s_deployment",
   template = ":consumer.deployment.yaml",
+  kind = "deployment",
   images = {
     "gcr.io/cents-ideas/consumer:latest": ":image"
   },
@@ -75,9 +76,11 @@ k8s_deploy(
 
 k8s_deploy(
   name = "projection_database_k8s_deployment",
+  kind = "deployment",
   template = ":projection-database.deployment.yaml",
 )
 
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 k8s_objects(
     name = "k8s",
     objects = [
