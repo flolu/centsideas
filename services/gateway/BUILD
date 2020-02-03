@@ -53,19 +53,21 @@ container_push(
    tag = "develop",
 )
 
-load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
-k8s_deploy(
+load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
+k8s_object(
   name = "k8s_deployment",
   template = ":gateway.deployment.yaml",
   kind = "deployment",
+  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
   images = {
     "gcr.io/cents-ideas/gateway:latest": ":image"
   },
 )
 
-k8s_deploy(
+k8s_object(
   name = "k8s_service",
   kind = "service",
+  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
   template = ":gateway.service.yaml",
 )
 
