@@ -11,6 +11,30 @@ spec:
       storage: 2Gi
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: reviews-event-store-pvc
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: users-event-store-pvc
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: local-storage

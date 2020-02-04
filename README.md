@@ -120,7 +120,7 @@ microk8s.kubectl cluster-info
 **Issue a ssl certificate**
 
 ```
-sudo apt-get install letsencrypt
+sudo apt install certbot
 sudo certbot certonly --manual -d *.domain.com
 ```
 
