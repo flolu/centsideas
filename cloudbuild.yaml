@@ -1,28 +1,11 @@
 steps:
-  - name: gcr.io/cloud-builders/bazel
-    entrypoint: /bin/bash
-    args: ['bazel', 'run', '//:kubernetes', ' > /workspace/kubernetes.yaml']
-
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['apply', '-f', '/workspace/kubernetes.yaml']
-    env:
-      - 'CLOUDSDK_COMPUTE_ZONE=europe-west3-a'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=cents-ideas'
-    #- id: 'unit tests'
-    #  name: gcr.io/cloud-builders/bazel
-    #  args:
-    #    [
-    #      'test',
-    #      '--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache',
-    #      '--google_default_credentials',
-    #      '--test_output=errors',
-    #      '//...',
-    #    ]
-    #- id: 'apply to kubernetes'
-    #  name: eu.gcr.io/cents-ideas/slim-bazel-kubectl
-    #  entrypoint: /bin/sh
-    #  args:
-    #    - -c
-    #    - |
-    #      gcloud container clusters get-credentials cents-ideas --zone europe-west3-a --project cents-ideas
-    #      bazel run --remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache --google_default_credentials //:kubernetes.apply
+  - id: 'unit tests'
+    name: gcr.io/cloud-builders/bazel
+    args:
+      [
+        'test',
+        '--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache',
+        '--google_default_credentials',
+        '--test_output=errors',
+        '//...',
+      ]

@@ -53,6 +53,8 @@ cd services/frontend
 yarn start
 
 yarn test
+
+yarn deploy
 ```
 
 # Structure
@@ -69,7 +71,7 @@ yarn test
 
 **Required**: git, docker, docker-compose, node, yarn, bazel
 
-**Optional**: microk8s or minikube, kubectl
+**Optional**: microk8s or minikube, kubectl, gcloud
 
 **Recommended VSCode Plugins**: [TSLint](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-tslint-plugin), [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode), [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter), [Todo Tree](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree), [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker), [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools), [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
 
