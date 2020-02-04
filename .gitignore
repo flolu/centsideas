@@ -17,3 +17,4 @@ bazel-bin
 bazel-cents-ideas
 bazel-out
 bazel-testlogs
+secrets/*

@@ -6,23 +6,27 @@ data:
   # general
   NODE_ENV: prod
   LEVEL: debug
-  API_URL: https://cents-ideas-api.drakery.com
+  API_URL: https://cents-ideas-api.flolu.com
+
+  # gateway
+  IDEAS_SERVICE_HOST: ideas:3000
+  CONSUMER_SERVICE_HOST: consumer:3000
+  USERS_SERVICE_HOST: users:3000
+  JWT_SECRET: 2:Q6Y:2YL?`A<ZebSs~O"ybs?n<J}CQYg<SkUIcJ]jsZJs|=jmbb?QX/BKW1MB]Hr`b8j#7T/?D76`*6~&Ii
 
   # kafka
-  KAFKA_ADVERTISED_PORT: "9092"
-  KAFKA_ADVERTISED_HOST_NAME: 172.31.25.198
   KAFKA_BROKER_HOST: kafka-service:9092
+  KAFKA_ADVERTISED_HOST_NAME: 172.31.25.198
   KAFKA_ZOOKEEPER_CONNECT: zookeeper-service:2181
-  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
 
   # ideas service
   IDEAS_DATABASE_URL: mongodb://cents-ideas-ideas-event-store:27017
-  IDEAS_SERVICE_HOST: cents-ideas-ideas:3000
 
   # reviews service
   REVIEWS_DATABASE_URL: mongodb://cents-ideas-reviews-event-store:27017
-  REVIEWS_SERVICE_HOST: cents-ideas-reviews:3000
 
   # consumer service
   PROJECTION_DATABASE_URL: mongodb://cents-ideas-projection-database:27017
-  CONSUMER_SERVICE_HOST: cents-ideas-consumer:3000
+
+  # users
+  USERS_DATABASE_URL: mongodb://users-event-store:27017

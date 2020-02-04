@@ -50,5 +50,32 @@ container_push(
    format = "Docker",
    registry = "gcr.io",
    repository = "cents-ideas/gateway",
-   tag = "experimenting",
+   tag = "develop",
+)
+
+load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
+k8s_object(
+  name = "k8s_deployment",
+  template = ":gateway.deployment.yaml",
+  kind = "deployment",
+  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  images = {
+    "gcr.io/cents-ideas/gateway:latest": ":image"
+  },
+)
+
+k8s_object(
+  name = "k8s_service",
+  kind = "service",
+  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  template = ":gateway.service.yaml",
+)
+
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
+k8s_objects(
+  name = "k8s",
+  objects = [
+    ":k8s_deployment",
+    ":k8s_service",
+  ]
 )

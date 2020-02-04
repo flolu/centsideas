@@ -1,5 +1,11 @@
 steps:
-  - name: gcr.io/cloud-builders/bazel
-    args: ['test', '//...']
-  - name: gcr.io/cloud-builders/bazel
-    args: ['run', '//services/ideas:push']
+  - id: 'unit tests'
+    name: gcr.io/cloud-builders/bazel
+    args:
+      [
+        'test',
+        '--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache',
+        '--google_default_credentials',
+        '--test_output=errors',
+        '//...',
+      ]
