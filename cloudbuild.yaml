@@ -16,5 +16,5 @@ steps:
     entrypoint: /bin/sh
     args:
       - |
-        gcloud container clusters get-credentials cents-ideas --zone europe-west3-a --project cents-ideas
+        gcloud container clusters get-credentials cents-ideas --zone=europe-west3-a --project=cents-ideas
         bazel run //:kubernetes.apply
