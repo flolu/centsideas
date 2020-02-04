@@ -9,12 +9,29 @@ steps:
   #      "//...",
   #    ]
 
+  #- id: "push docker images and deploy changes to kubernetes"
+  #  name: gcr.io/cloud-builders/bazel
+  #  args:
+  #    [
+  #      "run",
+  #      "--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache",
+  #      "--google_default_credentials",
+  #      "//:kubernetes.apply",
+  #    ]
   - id: "push docker images and deploy changes to kubernetes"
     name: gcr.io/cloud-builders/bazel
+    args: ["build", "//:kubernetes"]
+    volumes:
+      - name: "vol1"
+        path: "/bazel-bin"
+
+  - name: "gcr.io/cloud-builders/kubectl"
     args:
       [
-        "run",
-        "--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache",
-        "--google_default_credentials",
-        "//:kubernetes.apply",
+        "apply",
+        "-f",
+        "/bazel-bin/services/consumer/k8s_deployment.substituted.yaml",
       ]
+    env:
+      - "CLOUDSDK_COMPUTE_ZONE=europe-west3-a"
+      - "CLOUDSDK_CONTAINER_CLUSTER=cents-ideas"
