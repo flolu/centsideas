@@ -22,18 +22,18 @@ steps:
     name: gcr.io/cloud-builders/bazel
     volumes:
       - name: "vol1"
-        path: "/bazel-bin"
+        path: "/persistent_volume"
     args: ["build", "//:kubernetes"]
 
   - name: "gcr.io/cloud-builders/kubectl"
     volumes:
       - name: "vol1"
-        path: "/bazel-bin"
+        path: "/persistent_volume"
     args:
       [
         "apply",
         "-f",
-        "/bazel-bin/services/consumer/k8s_deployment.substituted.yaml",
+        "/persistent_volume/bazel-bin/services/consumer/k8s_deployment.substituted.yaml",
       ]
     env:
       - "CLOUDSDK_COMPUTE_ZONE=europe-west3-a"
