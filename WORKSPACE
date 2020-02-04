@@ -45,7 +45,7 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_k8s/releases/download/v0.3.1/rules_k8s-v0.3.1.tar.gz"],
 )
 load("@io_bazel_rules_k8s//k8s:k8s.bzl", "k8s_repositories")
-# k8s_repositories()
+k8s_repositories()
 load("@io_bazel_rules_k8s//k8s:k8s_go_deps.bzl", k8s_go_deps = "deps")
 k8s_go_deps()
 
