@@ -20,12 +20,15 @@ steps:
   #    ]
   - id: "push docker images and deploy changes to kubernetes"
     name: gcr.io/cloud-builders/bazel
-    args: ["build", "//:kubernetes"]
     volumes:
       - name: "vol1"
         path: "/bazel-bin"
+    args: ["build", "//:kubernetes"]
 
   - name: "gcr.io/cloud-builders/kubectl"
+    volumes:
+      - name: "vol1"
+        path: "/bazel-bin"
     args:
       [
         "apply",
