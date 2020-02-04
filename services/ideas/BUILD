@@ -49,7 +49,7 @@ container_push(
    format = "Docker",
    registry = "gcr.io",
    repository = "cents-ideas/ideas",
-   tag = "experimenting",
+   tag = "develop",
 )
 
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
@@ -73,4 +73,47 @@ jest_test(
     srcs = [":test_lib.js"],
     jest_config = "//:jest.config.js",
     deps = [":lib"],
+)
+
+load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
+k8s_object(
+  name = "k8s_deployment",
+  kind = "deployment",
+  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  template = ":ideas.deployment.yaml",
+  images = {
+    "gcr.io/cents-ideas/ideas:latest": ":image"
+  },
+)
+
+k8s_object(
+  name = "k8s_service",
+  kind = "service",
+  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  template = ":ideas.service.yaml",
+)
+
+k8s_object(
+  name = "event_store_k8s_service",
+  kind = "service",
+  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  template = ":ideas-event-store.service.yaml",
+)
+
+k8s_object(
+  name = "event_store_k8s_deployment",
+  kind = "deployment",
+  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  template = ":ideas-event-store.deployment.yaml",
+)
+
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
+k8s_objects(
+    name = "k8s",
+    objects = [
+      ":k8s_deployment",
+      ":k8s_service",
+      ":event_store_k8s_deployment",
+      ":event_store_k8s_service",
+    ]
 )

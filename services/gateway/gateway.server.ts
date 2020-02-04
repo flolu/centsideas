@@ -40,7 +40,7 @@ export class GatewayServer {
         this.logger.debug(`found valid auth token (${payload.userId} is authenticated)`);
       } catch (err) {
         res.locals.userId = null;
-        this.logger.debug(`found no valid auth token (user is not authenticated)`);
+        // this.logger.debug(`found no valid auth token (user is not authenticated)`);
       }
       next();
     });
@@ -50,6 +50,7 @@ export class GatewayServer {
     this.app.use(`/${ApiEndpoints.Users}`, this.usersRoutes.setup(env.hosts.users, env.hosts.consumer));
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
+      this.logger.debug('sent alive');
       return res.status(200).send('gateway alive');
     });
 

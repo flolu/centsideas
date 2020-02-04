@@ -3,24 +3,24 @@ kind: Ingress
 metadata:
   name: cents-ideas-ingress
   annotations:
-    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.allow-http: 'false'
 spec:
   tls:
     - secretName: tls-secret
       hosts:
-        - drakery.com
-        - cents-ideas.drakery.com
-        - cents-ideas-api.drakery.com
+        - flolu.com
+        - cents-ideas.flolu.com
+        - cents-ideas-api.flolu.com
   rules:
-    - host: cents-ideas-api.drakery.com
+    - host: cents-ideas-api.flolu.com
       http:
         paths:
           - backend:
               serviceName: cents-ideas-gateway
               servicePort: 3000
-    - host: cents-ideas.drakery.com
-      http:
-        paths:
-          - backend:
-              serviceName: cents-ideas-frontend
-              servicePort: 80
+    # - host: cents-ideas.flolu.com
+    #   http:
+    #     paths:
+    #       - backend:
+    #           serviceName: cents-ideas-frontend
+    #           servicePort: 80

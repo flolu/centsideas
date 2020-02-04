@@ -1,33 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-deployment
+  name: users-deployment
 spec:
   selector:
     matchLabels:
-      app: frontend
+      app: users
   replicas: 1
   template:
     metadata:
       labels:
-        app: frontend
+        app: users
     spec:
       containers:
-        - name: frontend
-          image: registry.hub.docker.com/flolu/cents-ideas_frontend:0.3.2
+        - name: users
+          image: gcr.io/cents-ideas/users:latest
+          imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: global-config
           readinessProbe:
             httpGet:
-              path: /
-              port: 4000
+              path: /alive
+              port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /
-              port: 4000
+              path: /alive
+              port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
           resources:
@@ -37,18 +38,3 @@ spec:
             limits:
               memory: 500Mi
               cpu: 500m
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cents-ideas-frontend
-spec:
-  type: NodePort
-  selector:
-    app: frontend
-  ports:
-    - name: http
-      port: 80
-      targetPort: 4000
-      nodePort: 30001
