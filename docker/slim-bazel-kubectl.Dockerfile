@@ -1,4 +1,4 @@
-FROM eu.gcr.io/cents-ideas/gcloud-slim
+FROM google/cloud-sdk
 
 # install gcloud components and kubectl
 RUN apt-get -y update && \
