@@ -12,15 +12,15 @@ This is a project with the purpose of learning the architecture of complex web a
 | -------------- | -------------------------------------- | ------ |
 | Event sourcing | event-driven, commands, message broker | ✅     |
 | Deployment     | ci, cd, build automation, bazel        | ✅     |
-| Testing        | unit Tests, integration Tests          | ✅     |
+| Testing        | unit Tests, integration Tests          | ✔️     |
 | Microservices  | small services, docker                 | ✔️     |
-| Kubernetes     | container orchestration                | ⏳     |
-| Database(s)    | data storage, event store              | ⏳     |
+| Kubernetes     | container orchestration                | ✅     |
+| Database(s)    | data storage, event store              | ✅     |
 | File storage   | blob storage                           | ❌     |
 | Redux frontend | reactive, actions, effects             | ✅     |
 | GDPR           | legal, privacy                         | ❌     |
 | SEO            | server side rendering, marketing       | ❌     |
-| Monorepo       | all packages and services in one repo  | ✅     |
+| Monorepo       | all packages and services in one repo  | ✔️     |
 
 ## Secondary
 
@@ -29,8 +29,8 @@ This is a project with the purpose of learning the architecture of complex web a
 | Typescript        | types everywhere!                  | ✔️     |
 | Local development | hot reload, docker-compose, vscode | ✔️     |
 | Monitoring        | logs, alarms, dashboard            | ❌     |
-| Git flow          | branching, releases, rebasing      | ✅     |
-| Gateway           | discovery, entry point, auth       | ✅     |
+| Git flow          | branching, releases, rebasing      | ✔️     |
+| Gateway           | discovery, entry point, auth       | ✔️     |
 | Static pages      | homepage, static content           | ❌     |
 | Cross platform    | electron, nativescript             | ❌     |
 
@@ -46,16 +46,37 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Development
 
+To start all backend services with the help of `docker-compose` simply run
+
 ```
 yarn dev
+```
 
-cd services/frontend
+If you wish to also run the frontend application you have to `cd` into `/services/frontend` and run
+
+```
 yarn start
+```
 
+# Testing
+
+By running
+
+```
 yarn test
+```
 
+Bazel will execute all unit tests.
+
+# Deployment
+
+To deploy all services to Kubernetes run
+
+```
 yarn deploy
 ```
+
+It only works if you have Bazel, kubectl and Google Cloud SDK installed. (you also need to be authenticated to push containers to Google Container Registry and deploy configurations to your Kubernetes cluster)
 
 # Structure
 
