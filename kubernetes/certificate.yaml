@@ -1,0 +1,19 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: cents-ideas
+  namespace: default
+spec:
+  secretName: cents-ideas-crt
+  commonName: cents-ideas.flolu.com
+  dnsNames:
+    - cents-ideas.flolu.com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: Issuer
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx
+        domains:
+          - cents-ideas.flolu.com

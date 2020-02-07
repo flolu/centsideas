@@ -9,9 +9,10 @@ data:
   API_URL: https://cents-ideas-api.flolu.com
 
   # gateway
-  IDEAS_SERVICE_HOST: ideas:3000
-  CONSUMER_SERVICE_HOST: consumer:3000
-  USERS_SERVICE_HOST: users:3000
+  IDEAS_SERVICE_HOST: cents-ideas-ideas:3000
+  CONSUMER_SERVICE_HOST: cents-ideas-consumer:3000
+  USERS_SERVICE_HOST: cents-ideas-users:3000
+  REVIEWS_SERVICE_HOST: cents-ideas-reviews:3000
   JWT_SECRET: 2:Q6Y:2YL?`A<ZebSs~O"ybs?n<J}CQYg<SkUIcJ]jsZJs|=jmbb?QX/BKW1MB]Hr`b8j#7T/?D76`*6~&Ii
 
   # kafka

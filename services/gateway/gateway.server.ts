@@ -50,8 +50,11 @@ export class GatewayServer {
     this.app.use(`/${ApiEndpoints.Users}`, this.usersRoutes.setup(env.hosts.users, env.hosts.consumer));
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
-      this.logger.debug('sent alive');
       return res.status(200).send('gateway alive');
+    });
+
+    this.app.get(`**`, (req, res) => {
+      return res.status(200).send(`greetings from cents-ideas gateway: ${JSON.stringify(req)}`);
     });
 
     this.app.listen(env.port, () => this.logger.debug('gateway listening on internal port', env.port));

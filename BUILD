@@ -35,17 +35,17 @@ k8s_object(
 k8s_object(
   name = "k8s_database_storage",
   cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
-  template = "//kubernetes:gcp/database-storage.yaml",
+  template = "//kubernetes:database-storage.yaml",
 )
 k8s_object(
   name = "k8s_config",
   cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
-  template = "//kubernetes:gcp/config.yaml",
+  template = "//kubernetes:config.yaml",
 )
 k8s_object(
   name = "k8s_ingress",
   cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
-  template = "//kubernetes:gcp/ingress.yaml",
+  template = "//kubernetes:ingress.yaml",
 )
 
 k8s_objects(
