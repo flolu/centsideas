@@ -3,24 +3,13 @@ kind: Ingress
 metadata:
   name: cents-ideas-ingress
   annotations:
-    kubernetes.io/ingress.allow-http: 'false'
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"
 spec:
-  tls:
-    - secretName: tls-secret
-      hosts:
-        - flolu.com
-        - cents-ideas.flolu.com
-        - cents-ideas-api.flolu.com
   rules:
-    - host: cents-ideas-api.flolu.com
+    - host: api.cents-ideas.flolu.com
       http:
         paths:
           - backend:
               serviceName: cents-ideas-gateway
               servicePort: 3000
-    # - host: cents-ideas.flolu.com
-    #   http:
-    #     paths:
-    #       - backend:
-    #           serviceName: cents-ideas-frontend
-    #           servicePort: 80
