@@ -43,10 +43,11 @@ k8s_object(
 )
 k8s_objects(
     name = "nginx",
+    # order is important
     objects = [
         ":nginx_admin_binding",
+        ":nginx_mandatory",
         ":nginx_cloud_generic",
-        ":nginx_mandatory"
     ]
 )
 
