@@ -43,6 +43,7 @@ nodejs_image(
     entry_point = ":index.ts",
 )
 
+# TODO remove those
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 container_push(
    name = "push",
