@@ -8,7 +8,14 @@ spec:
     # The ACME server URL
     server: https://acme-v02.api.letsencrypt.org/directory
     # Email address used for ACME registration
-    email: fllu@pm.me
+    # email: fllu@pm.me
+    email:
+      valueFrom:
+        configMapKeyRef:
+          # The ConfigMap containing the value you want to assign to SPECIAL_LEVEL_KEY
+          name: global-config
+          # Specify the key associated with the value
+          key: ISSUER_EMAIL
     # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
       name: letsencrypt-prod

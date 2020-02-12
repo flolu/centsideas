@@ -20,14 +20,11 @@ data:
   KAFKA_ADVERTISED_HOST_NAME: 172.31.25.198
   KAFKA_ZOOKEEPER_CONNECT: zookeeper-service:2181
 
-  # ideas service
+  # services
   IDEAS_DATABASE_URL: mongodb://cents-ideas-ideas-event-store:27017
-
-  # reviews service
   REVIEWS_DATABASE_URL: mongodb://cents-ideas-reviews-event-store:27017
-
-  # consumer service
   PROJECTION_DATABASE_URL: mongodb://cents-ideas-projection-database:27017
-
-  # users
   USERS_DATABASE_URL: mongodb://users-event-store:27017
+
+  ISSUER_EMAIL: fllu@pm.me
+  CLUSTER_ADMIN_USER: fllu@pm.me

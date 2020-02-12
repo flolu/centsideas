@@ -103,30 +103,46 @@ It only works if you have Bazel, kubectl and Google Cloud SDK installed. (you al
 **Creating a feature branch**
 
 ```
-git flow feature start <name-of-feature-branch>
+git checkout develop
+git checkout -b <name-of-feature-branch>
 ```
 
 **Finishing a feature branch**
 
 ```
-git flow feature finish <name-of-feature-branch>
+git checkout develop
+git merge <name-of-feature-branch>
 ```
 
 **Release branches**
 
 ```
-git flow release start 0.1.0
-git flow release finish '0.1.0'
+git checkout develop
+git checkout -b release/0.1.0
+# release work
+git checkout master
+git merge release/0.1.0
 ```
 
 **Hotfix branches**
 
 ```
-git flow hotfix start <name-of-hotfix-branch>
-git flow hotfix finish <name-of-hotfix-branch>
+git checkout master
+git checkout -b <name-of-hotfix-branch>
+git checkout master
+git merge <name-of-hotfix-branch>
+git checkout develop
+git merge <name-of-hotfix-branch>
+git branch -D <name-of-hotfix-branch>
 ```
 
 # Useful Commands
+
+**Connect to GKE Cluster**
+
+```
+gcloud container clusters get-credentials cents-ideas --zone europe-west3-b --project cents-ideas
+```
 
 **Update all your @bazel-scoped npm packages to the latest versions**
 

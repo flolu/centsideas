@@ -54,7 +54,7 @@ k8s_object(
   name = "k8s_deployment",
   template = ":reviews.deployment.yaml",
   kind = "deployment",
-  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
   images = {
     "gcr.io/cents-ideas/reviews:latest": ":image"
   },
@@ -63,21 +63,21 @@ k8s_object(
 k8s_object(
   name = "k8s_service",
   kind = "service",
-  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
   template = ":reviews.service.yaml",
 )
 
 k8s_object(
   name = "event_store_k8s_service",
   kind = "service",
-  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
   template = ":reviews-event-store.service.yaml",
 )
 
 k8s_object(
   name = "event_store_k8s_deployment",
   kind = "deployment",
-  cluster = "gke_cents-ideas_europe-west3-a_cents-ideas",
+  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
   template = ":reviews-event-store.deployment.yaml",
 )
 
