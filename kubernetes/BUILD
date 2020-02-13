@@ -27,19 +27,19 @@ k8s_object(
   name = "nginx_admin_binding",
   kind = "deployment",
   cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
-  template = ":nginx/admin-binding.yaml",
+  template = ":nginx-ingress/admin-binding.yaml",
 )
 k8s_object(
   name = "nginx_cloud_generic",
   kind = "deployment",
   cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
-  template = ":nginx/cloud-generic.yaml",
+  template = ":nginx-ingress/cloud-generic.yaml",
 )
 k8s_object(
   name = "nginx_mandatory",
   kind = "deployment",
   cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
-  template = ":nginx/mandatory.yaml",
+  template = ":nginx-ingress/mandatory.yaml",
 )
 k8s_objects(
     name = "nginx",
@@ -67,4 +67,10 @@ k8s_object(
   name = "k8s_ingress",
   cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
   template = ":ingress.yaml",
+)
+
+k8s_object(
+  name = "issuer",
+  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
+  template = ":https/issuer.yaml",
 )

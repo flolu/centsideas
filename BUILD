@@ -25,6 +25,8 @@ k8s_objects(
         "//kubernetes:nginx",
         "//kubernetes:k8s_ingress",
         "//kubernetes:kafka",
+        "//kubernetes:issuer",
+
         "//services/consumer:k8s",
         "//services/gateway:k8s",
         "//services/ideas:k8s",

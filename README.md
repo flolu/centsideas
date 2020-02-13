@@ -203,3 +203,11 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ngin
 ## HTTPs
 
 https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes
+
+Install `cert-manager` via:
+
+```
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.12.0/cert-manager.yaml
+```
+
+then just deploy kubernetes resources and wait until the certificate is issued (check by running: `kubectl describe certificate cents-ideas-tls`)
