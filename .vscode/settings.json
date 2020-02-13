@@ -29,6 +29,7 @@
     "filegroup",
     "flolu",
     "gcloud",
+    "healthcheck",
     "hotfix",
     "ifconfig",
     "inversify",

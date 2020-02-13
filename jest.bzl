@@ -1,5 +1,3 @@
-"Shows how you might create a macro for the autogeneratd Jest rule"
-
 load("@npm//jest-cli:index.bzl", _jest_test = "jest_test")
 
 def jest_test(name, srcs, deps, jest_config, **kwargs):

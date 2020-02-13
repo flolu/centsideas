@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
-const EXAMPLE_ENV_FILE_PATH: string = 'env/.env.example';
-const DEVELOPMENT_ENV_FILE_PATH: string = 'env/.env.dev';
+const EXAMPLE_ENV_FILE_PATH: string = '.env.example';
+const DEVELOPMENT_ENV_FILE_PATH: string = '.env';
 
 const setupEnvFile = async () => {
   try {

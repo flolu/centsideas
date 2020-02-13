@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper:latest
@@ -8,7 +8,7 @@ services:
     image: wurstmeister/kafka:2.11-1.1.0
     ports:
       - 9092:9092
-    env_file: ./env/.env.dev
+    env_file: .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     logging:
@@ -24,7 +24,12 @@ services:
       - ./services/gateway:/usr/app/src/services/gateway
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
-    env_file: ./env/.env.dev
+    env_file: .env
+    healthcheck:
+      test: curl -sS http://127.0.0.1:3000/alive || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   ideas:
     build:
@@ -34,7 +39,7 @@ services:
       - ./services/ideas:/usr/app/src/services/ideas
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
-    env_file: ./env/.env.dev
+    env_file: .env
   ideas-event-store:
     image: mongo:4.2
     logging:
@@ -48,7 +53,7 @@ services:
       - ./services/reviews:/usr/app/src/services/reviews
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
-    env_file: ./env/.env.dev
+    env_file: .env
   reviews-event-store:
     image: mongo:4.2
     logging:
@@ -62,7 +67,7 @@ services:
       - ./services/users:/usr/app/src/services/users
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
-    env_file: ./env/.env.dev
+    env_file: .env
   users-event-store:
     image: mongo:4.2
     logging:
@@ -76,7 +81,7 @@ services:
       - ./services/consumer:/usr/app/src/services/consumer
       - ./packages:/usr/app/src/packages
       - ./node_modules:/usr/app/src/node_modules
-    env_file: ./env/.env.dev
+    env_file: .env
   projection-database:
     image: mongo:4.2
     logging:
