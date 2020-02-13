@@ -1,44 +1,28 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
-load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 
-k8s_object(
-  name = "kafka_deployment",
-  kind = "deployment",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
-  template = ":kafka/kafka.yaml",
-)
-k8s_object(
-  name = "zookeeper_deployment",
-  kind = "deployment",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
-  template = ":kafka/zookeeper.yaml",
-)
-k8s_objects(
-    name = "kafka",
-    objects = [
-        ":kafka_deployment",
-        ":zookeeper_deployment",
-    ]
+k8s_deploy(
+  name = "kafka",
+  template = ":kafka.yaml",
 )
 
-k8s_object(
+k8s_deploy(
+  name = "certificate_issuer",
+  template = ":certificate-issuer.yaml",
+)
+
+k8s_deploy(
   name = "nginx_admin_binding",
-  kind = "deployment",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
   template = ":nginx-ingress/admin-binding.yaml",
 )
-k8s_object(
+k8s_deploy(
   name = "nginx_cloud_generic",
-  kind = "deployment",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
   template = ":nginx-ingress/cloud-generic.yaml",
 )
-k8s_object(
+k8s_deploy(
   name = "nginx_mandatory",
-  kind = "deployment",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
   template = ":nginx-ingress/mandatory.yaml",
 )
 k8s_objects(
@@ -51,26 +35,17 @@ k8s_objects(
     ]
 )
 
-k8s_object(
-  name = "k8s_database_storage",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
+k8s_deploy(
+  name = "database_storage",
   template = ":database-storage.yaml",
 )
 
-k8s_object(
-  name = "k8s_config",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
+k8s_deploy(
+  name = "config",
   template = ":config.yaml",
 )
 
-k8s_object(
-  name = "k8s_ingress",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
+k8s_deploy(
+  name = "ingress",
   template = ":ingress.yaml",
-)
-
-k8s_object(
-  name = "issuer",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
-  template = ":https/issuer.yaml",
 )

@@ -20,12 +20,12 @@ load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
 k8s_objects(
     name = "kubernetes_deployment",
     objects = [
-        "//kubernetes:k8s_database_storage",
-        "//kubernetes:k8s_config",
+        "//kubernetes:config",
+        "//kubernetes:database_storage",
         "//kubernetes:nginx",
-        "//kubernetes:k8s_ingress",
+        "//kubernetes:ingress",
+        "//kubernetes:certificate_issuer",
         "//kubernetes:kafka",
-        "//kubernetes:issuer",
 
         "//services/consumer:k8s",
         "//services/gateway:k8s",

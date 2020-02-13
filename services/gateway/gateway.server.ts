@@ -54,7 +54,7 @@ export class GatewayServer {
     });
 
     this.app.get(`**`, (req, res) => {
-      return res.status(200).send(`greetings from cents-ideas gateway: ${JSON.stringify(req)}`);
+      return res.status(200).send(`hello ${req.ip}, greetings from cents-ideas gateway`);
     });
 
     this.app.listen(env.port, () => this.logger.debug('gateway listening on internal port', env.port));
