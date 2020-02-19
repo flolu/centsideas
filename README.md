@@ -8,31 +8,27 @@ This is a project with the purpose of learning the architecture of complex web a
 
 ## Essential
 
-| Requirement    | Keywords                               | Status |
-| -------------- | -------------------------------------- | ------ |
-| Event sourcing | event-driven, commands, message broker | ✅     |
-| Deployment     | ci, cd, build automation, bazel        | ✅     |
-| Testing        | unit Tests, integration Tests          | ✔️     |
-| Microservices  | small services, docker                 | ✔️     |
-| Kubernetes     | container orchestration                | ✅     |
-| Database(s)    | data storage, event store              | ✅     |
-| File storage   | blob storage                           | ❌     |
-| Redux frontend | reactive, actions, effects             | ✅     |
-| GDPR           | legal, privacy                         | ❌     |
-| SEO            | server side rendering, marketing       | ❌     |
-| Monorepo       | all packages and services in one repo  | ✔️     |
-
-## Secondary
-
-| Requirement       | Keywords                           | Status |
-| ----------------- | ---------------------------------- | ------ |
-| Typescript        | types everywhere!                  | ✔️     |
-| Local development | hot reload, docker-compose, vscode | ✔️     |
-| Monitoring        | logs, alarms, dashboard            | ❌     |
-| Git flow          | branching, releases, rebasing      | ✔️     |
-| Gateway           | discovery, entry point, auth       | ✔️     |
-| Static pages      | homepage, static content           | ❌     |
-| Cross platform    | electron, nativescript             | ❌     |
+| Requirement       | Keywords                               | Status |
+| ----------------- | -------------------------------------- | ------ |
+| Event sourcing    | event-driven, commands, message broker | ✅     |
+| Deployment        | ci, cd, build automation, bazel        | ✅     |
+| Testing           | unit Tests, integration Tests          | ✔️     |
+| Microservices     | small services, docker                 | ✔️     |
+| Kubernetes        | container orchestration                | ✅     |
+| Database(s)       | data storage, event store              | ✅     |
+| File storage      | blob storage                           | ❌     |
+| Redux frontend    | reactive, actions, effects             | ✅     |
+| GDPR              | legal, privacy                         | ❌     |
+| SEO               | server side rendering, marketing       | ❌     |
+| Monorepo          | all packages and services in one repo  | ✔️     |
+| Typescript        | types everywhere!                      | ✔️     |
+| Local development | hot reload, docker-compose, vscode     | ✔️     |
+| Monitoring        | logs, alarms, dashboard                | ❌     |
+| Git flow          | branching, releases, rebasing          | ✔️     |
+| Gateway           | discovery, entry point, auth           | ✔️     |
+| Static pages      | homepage, static content               | ❌     |
+| Search            | indexing, realtime search              | ❌     |
+| Cross platform    | electron, nativescript?                | ❌     |
 
 ### Status
 
