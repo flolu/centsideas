@@ -43,7 +43,7 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
   private hasInitialized: boolean = false;
 
   constructor(private messageBroker: MessageBroker, private logger: Logger) {
-    this.messageBroker.initialize({ brokers: [process.env.KAFKA_BROKER_HOST || '172.18.0.1:9092'] });
+    this.messageBroker.initialize({ brokers: [process.env.KAFKA_BROKER_HOST || 'localhost:9092'] });
   }
 
   initialize = (

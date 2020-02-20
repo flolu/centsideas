@@ -1,30 +1,18 @@
 import { injectable } from 'inversify';
-import { logLevel, Kafka, Producer, Consumer, KafkaConfig, Message, RecordMetadata } from 'kafkajs';
+import { Kafka, Producer, Consumer, KafkaConfig, Message, RecordMetadata } from 'kafkajs';
 
 import { Logger } from '@cents-ideas/utils';
 import { IEvent } from '.';
 
 @injectable()
 export class MessageBroker {
-  private readonly defaultConfig = {
-    clientId: 'cents-ideas',
-    brokers: ['172.18.0.1:9092'],
-    logLevel: logLevel.WARN,
-    retry: {
-      initialRetryTime: 300,
-      retries: 10,
-    },
-  };
   private kafka: Kafka | undefined;
   private producer: Producer | undefined;
 
-  constructor(private logger: Logger) {
-    this.initialize();
-  }
+  constructor(private logger: Logger) {}
 
-  initialize = (overrides: Partial<KafkaConfig> = {}) => {
-    const config = { ...this.defaultConfig, ...overrides };
-    this.logger.debug(`initialize message broker with config: `, config, `(overrides: `, overrides, ')');
+  initialize = (config: KafkaConfig) => {
+    this.logger.debug(`initialize message broker with config: `, config);
     this.kafka = new Kafka(config);
   };
 
