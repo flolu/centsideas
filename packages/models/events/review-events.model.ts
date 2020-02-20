@@ -3,6 +3,7 @@ import { IReviewScores } from '../entities';
 export interface IReviewCreatedEvent {
   reviewId: string;
   ideaId: string;
+  userId: string;
 }
 
 export interface IReviewDraftSavedEvent {

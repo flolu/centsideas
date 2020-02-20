@@ -23,7 +23,8 @@ export class ReviewsService {
       const _loggerName = 'create';
       try {
         this.logger.debug(_loggerName, req.body);
-        const review = await this.commandHandler.create(req.body.ideaId);
+        const userId: string = req.locals.userId || '';
+        const review = await this.commandHandler.create(req.body.ideaId, userId);
         resolve({
           status: HttpStatusCodes.Accepted,
           body: review.persistedState,

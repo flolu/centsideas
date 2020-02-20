@@ -43,6 +43,7 @@ export class ReviewsProjection {
     const review: IReviewViewModel = {
       id: event.aggregateId,
       ideaId: event.data.ideaId,
+      userId: event.data.userId,
       content: '',
       scores: { control: 0, entry: 0, need: 0, time: 0, scale: 0 },
       createdAt: event.timestamp,

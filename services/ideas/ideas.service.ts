@@ -23,7 +23,6 @@ export class IdeasService {
       try {
         this.logger.debug(_loggerName);
         const userId: string = req.locals.userId || '';
-        NotAuthenticatedError.validate(userId);
         const idea = await this.commandHandler.create(userId);
         resolve({
           status: HttpStatusCodes.Accepted,

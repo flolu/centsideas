@@ -1,6 +1,7 @@
 export interface IReviewState {
   id: string;
   ideaId: string;
+  userId: string;
   content: string;
   scores: IReviewScores;
   createdAt: string | null;

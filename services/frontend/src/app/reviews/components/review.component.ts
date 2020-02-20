@@ -9,6 +9,8 @@ import { IReviewViewModel } from '@cents-ideas/models';
         ><strong>{{ review.content }}</strong></span
       >
       <br />
+      <span>by {{ review.userId }}</span>
+      <br />
       <div class="scores">
         <span class="score"
           >🎚 Control: <span class="number">{{ review.scores?.control }}</span></span

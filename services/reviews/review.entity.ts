@@ -8,6 +8,7 @@ export class Review extends EventEntity<IReviewState> {
   static initialState: IReviewState = {
     id: '',
     ideaId: '',
+    userId: '',
     content: '',
     scores: {
       control: 0,
@@ -32,9 +33,9 @@ export class Review extends EventEntity<IReviewState> {
     }
   }
 
-  static create(reviewId: string, ideaId: string): Review {
+  static create(reviewId: string, ideaId: string, userId: string): Review {
     const review = new Review();
-    review.pushEvents(new ReviewCreatedEvent(reviewId, ideaId));
+    review.pushEvents(new ReviewCreatedEvent(reviewId, ideaId, userId));
     return review;
   }
 

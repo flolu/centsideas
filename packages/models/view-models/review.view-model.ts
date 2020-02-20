@@ -3,6 +3,7 @@ import { IReviewScores } from '../entities';
 export interface IReviewViewModel {
   id: string;
   ideaId: string;
+  userId: string;
   content: string;
   scores: IReviewScores;
   createdAt: string;

@@ -5,3 +5,4 @@ export { ReviewScoresRangeError } from './review-scores-range.error';
 export { ReviewAlreadyPublishedError } from './review-already-published.error';
 export { SaveReviewPayloadRequiredError } from './save-review-payload-required.error';
 export { ReviewAlreadyUnpublishedError } from './review-already-unpublished.error';
+export { AlreadyCreatedReviewError } from './already-created-review.error';

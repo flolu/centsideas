@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { sanitizeHtml } from '@cents-ideas/utils';
+import { sanitizeHtml, NotAuthenticatedError } from '@cents-ideas/utils';
 
 import {
   IdeaAlreadyDeletedError,
@@ -20,6 +20,7 @@ export class IdeaCommandHandler {
   constructor(private repository: IdeaRepository) {}
 
   create = async (userId: string): Promise<Idea> => {
+    NotAuthenticatedError.validate(userId);
     const ideaId = await this.repository.generateUniqueId();
     const idea = Idea.create(ideaId, userId);
     return this.repository.save(idea);

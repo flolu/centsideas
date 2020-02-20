@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { sanitizeHtml } from '@cents-ideas/utils';
+import { sanitizeHtml, NotAuthenticatedError } from '@cents-ideas/utils';
 
 import {
   ReviewIdeaIdRequiredError,
@@ -8,6 +8,7 @@ import {
   ReviewScoresRangeError,
   ReviewAlreadyPublishedError,
   SaveReviewPayloadRequiredError,
+  AlreadyCreatedReviewError,
 } from './errors';
 import { Review } from './review.entity';
 import { ReviewRepository } from './review.repository';
@@ -18,10 +19,11 @@ import { ReviewAlreadyUnpublishedError } from './errors/review-already-unpublish
 export class ReviewCommandHandler {
   constructor(private repository: ReviewRepository) {}
 
-  create = async (ideaId: string): Promise<Review> => {
+  create = async (ideaId: string, userId: string): Promise<Review> => {
+    NotAuthenticatedError.validate(userId);
     ReviewIdeaIdRequiredError.validate(ideaId);
     const reviewId = await this.repository.generateUniqueId();
-    const review = Review.create(reviewId, ideaId);
+    const review = Review.create(reviewId, ideaId, userId);
     return this.repository.save(review);
   };
 
