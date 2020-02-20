@@ -20,12 +20,8 @@ export class IdeasServer {
 
     this.app.use(bodyParser.json());
 
-    this.app.post(`/${IdeasApiRoutes.Create}`, this.expressAdapter.json(this.ideasService.createEmptyIdea));
-    this.app.post(`/${IdeasApiRoutes.SaveDraft}`, this.expressAdapter.json(this.ideasService.saveDraft));
-    this.app.post(`/${IdeasApiRoutes.CommitDraft}`, this.expressAdapter.json(this.ideasService.commitDraft));
-    this.app.post(`/${IdeasApiRoutes.Publish}`, this.expressAdapter.json(this.ideasService.publish));
+    this.app.post(`/${IdeasApiRoutes.Create}`, this.expressAdapter.json(this.ideasService.create));
     this.app.post(`/${IdeasApiRoutes.Update}`, this.expressAdapter.json(this.ideasService.update));
-    this.app.post(`/${IdeasApiRoutes.Unpublish}`, this.expressAdapter.json(this.ideasService.unpublish));
     this.app.post(`/${IdeasApiRoutes.Delete}`, this.expressAdapter.json(this.ideasService.delete));
 
     this.app.get(`/${IdeasApiRoutes.Alive}`, (_req, res) => {

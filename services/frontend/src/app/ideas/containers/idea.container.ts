@@ -14,7 +14,7 @@ import { IdeasSelectors, IdeasActions } from '..';
       <ci-ideas-card *ngIf="idea$ | async" [idea]="idea$ | async"></ci-ideas-card>
       <p>{{ (idea$ | async)?.description }}</p>
       <p>Posted by: {{ (idea$ | async)?.userId }}</p>
-      <p>Published at: {{ (idea$ | async)?.publishedAt | date }}</p>
+      <p>Published at: {{ (idea$ | async)?.createdAt | date }}</p>
       <ci-reviews [reviews]="(idea$ | async)?.reviews"></ci-reviews>
     </div>
   `,

@@ -16,12 +16,8 @@ export const fakeIdeaState: IIdeaState = {
   title: fakeIdeaTitle,
   description: fakeIdeaDescription,
   createdAt: new Date().toISOString(),
-  published: false,
-  publishedAt: new Date().toISOString(),
-  unpublishedAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   deleted: false,
   deletedAt: new Date().toISOString(),
-  draft: null,
   lastEventId: '',
 };

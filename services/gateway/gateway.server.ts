@@ -40,7 +40,6 @@ export class GatewayServer {
         this.logger.debug(`found valid auth token (${payload.userId} is authenticated)`);
       } catch (err) {
         res.locals.userId = null;
-        // this.logger.debug(`found no valid auth token (user is not authenticated)`);
       }
       next();
     });

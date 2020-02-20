@@ -1,11 +1,8 @@
 export interface IIdeaCreatedEvent {
   ideaId: string;
   userId: string;
-}
-
-export interface IIdeaDraftSavedEvent {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
 }
 
 export interface IIdeaUpdatedEvent {
@@ -14,7 +11,3 @@ export interface IIdeaUpdatedEvent {
 }
 
 export interface IIdeaDeletedEvent {}
-export interface IIdeaDraftCommittedEvent {}
-export interface IIdeaDraftDiscardedEvent {}
-export interface IIdeaPublishedEvent {}
-export interface IIdeaUnpublishedEvent {}

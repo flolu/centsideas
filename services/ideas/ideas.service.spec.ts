@@ -5,7 +5,7 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 import { makeFakeHttpRequest } from '@cents-ideas/models';
 
 import { IdeasService } from './ideas.service';
-import { IdeaCommandHandlerMock, fakeIdeaId, fakeUserId } from './test';
+import { IdeaCommandHandlerMock, fakeIdeaId, fakeUserId, fakeIdeaTitle, fakeIdeaDescription } from './test';
 import { Idea } from './idea.entity';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
@@ -20,7 +20,7 @@ describe('Ideas Service', () => {
 
   it('should create an idea', async () => {
     const request = makeFakeHttpRequest({ locals: { userId: fakeUserId } });
-    const response = await service.createEmptyIdea(request);
+    const response = await service.create(request);
 
     // FIXME find a better way! (maybe I need to mock whole idea entity with all events?!)
     const createdAt = new Date().toISOString();
@@ -29,7 +29,14 @@ describe('Ideas Service', () => {
 
     expect(response).toEqual({
       status: HttpStatusCodes.Accepted,
-      body: { ...Idea.initialState, id: fakeIdeaId, userId: fakeUserId, createdAt },
+      body: {
+        ...Idea.initialState,
+        id: fakeIdeaId,
+        userId: fakeUserId,
+        createdAt,
+        title: fakeIdeaTitle,
+        description: fakeIdeaDescription,
+      },
       headers: {},
     });
   });

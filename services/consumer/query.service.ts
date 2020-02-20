@@ -16,7 +16,7 @@ export class QueryService {
       try {
         const ideasCollection = await this.projectionDatabase.ideas();
         const reviewsCollection = await this.projectionDatabase.reviews();
-        const ideas = await ideasCollection.find({ published: true, deleted: false }).toArray();
+        const ideas = await ideasCollection.find({ deleted: false }).toArray();
         res({
           status: HttpStatusCodes.Ok,
           body: ideas.map(i => renameObjectProperty(i, '_id', 'id')),
