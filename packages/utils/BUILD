@@ -17,6 +17,7 @@ ts_library(
       "@npm//shortid",
       "@npm//uuid",
       "@npm//module-alias",
+      "@npm//nodemailer",
 
       "@npm//@types/uuid",
       "@npm//@types/express",
@@ -24,6 +25,7 @@ ts_library(
       "@npm//@types/shortid",
       "@npm//@types/jest",
       "@npm//@types/module-alias",
+      "@npm//@types/nodemailer",
     ],
     module_name = "@cents-ideas/utils",
 )

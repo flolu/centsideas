@@ -4,7 +4,6 @@ import { HttpStatusCodes, HeaderKeys } from '@cents-ideas/enums';
 import {
   HttpRequest,
   HttpResponse,
-  ILoginResponseDto,
   ILoginDto,
   IAuthenticateDto,
   IAuthenticatedDto,
@@ -22,15 +21,15 @@ import { UserCommandHandler } from './user.command-handler';
 export class UsersService {
   constructor(private commandHandler: UserCommandHandler, private logger: Logger) {}
 
-  login = (req: HttpRequest<ILoginDto>): Promise<HttpResponse<ILoginResponseDto>> =>
+  login = (req: HttpRequest<ILoginDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
       const _loggerName = 'login';
       try {
         this.logger.debug(_loggerName);
-        const result = await this.commandHandler.login(req.body.email);
+        await this.commandHandler.login(req.body.email);
         resolve({
           status: HttpStatusCodes.Accepted,
-          body: result,
+          body: {},
           headers: {},
         });
       } catch (error) {

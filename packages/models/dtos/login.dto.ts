@@ -1,11 +1,5 @@
 import { IUserState } from '../entities';
 
-export interface ILoginResponseDto {
-  existingAccount: boolean;
-  activationRoute: string;
-  token: string;
-}
-
 export interface ILoginDto {
   email: string;
 }

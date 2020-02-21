@@ -2,9 +2,9 @@ import { injectable } from 'inversify';
 import * as faker from 'faker';
 import * as jwt from 'jsonwebtoken';
 
-import { sanitizeHtml } from '@cents-ideas/utils';
+import { sanitizeHtml, sendMail } from '@cents-ideas/utils';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
-import { ILoginResponseDto, IConfirmSignUpResponseDto, IAuthenticatedDto, IAuthTokenData } from '@cents-ideas/models';
+import { IConfirmSignUpResponseDto, IAuthenticatedDto, IAuthTokenData } from '@cents-ideas/models';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -24,25 +24,38 @@ import { TokenInvalidError } from './errors/token-invalid.error';
 export class UserCommandHandler {
   constructor(private repository: UserRepository) {}
 
-  login = async (email: string): Promise<ILoginResponseDto> => {
+  login = async (email: string): Promise<boolean> => {
     EmailRequiredError.validate(email);
     EmailInvalidError.validate(email);
     const existing = await this.repository.getUserIdEmailMapping(email);
+
     if (existing && existing.userId) {
       const token = this.createAuthToken(existing.userId);
-      return {
-        existingAccount: true,
-        activationRoute: `/${ApiEndpoints.Users}/${UsersApiRoutes.Authenticate}`,
-        token,
-      };
+      // TODO don't hard-code those strings
+      const activationRoute: string = `${env.frontendUrl}/login?token=${token}`;
+      await sendMail(
+        env.mailing.fromAddress,
+        email,
+        'CENTS Ideas Login',
+        `URL to login into your account: ${activationRoute}`,
+        `URL to login into your account: ${activationRoute}`,
+        env.mailing,
+      );
+      return true;
     } else {
       const data: ISignUpTokenData = { email };
       const token = jwt.sign(data, env.jwtSecret, { expiresIn: '1h' });
-      return {
-        existingAccount: false,
-        activationRoute: `/${ApiEndpoints.Users}/${UsersApiRoutes.ConfirmSignUp}`,
-        token,
-      };
+      // TODO don't hard-code those strings
+      const activationRoute: string = `${env.frontendUrl}/confirm-sign-up?token=${token}`;
+      await sendMail(
+        env.mailing.fromAddress,
+        email,
+        'CENTS Ideas Login',
+        `URL to sign up your account: ${activationRoute}`,
+        `URL to sign up your account: ${activationRoute}`,
+        env.mailing,
+      );
+      return true;
     }
   };
 

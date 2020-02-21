@@ -5,7 +5,5 @@ export interface IUsersState {
   loaded: boolean;
   error: string | null;
   user: IUserState | null;
-  activationUrl: string | null;
-  token: string | null;
   initialized: boolean;
 }

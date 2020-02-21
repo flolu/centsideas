@@ -8,8 +8,6 @@ const initialState: IUsersState = {
   loading: false,
   error: null,
   user: null,
-  activationUrl: null,
-  token: null,
   initialized: false,
 };
 
@@ -17,22 +15,7 @@ const usersReducer = createReducer(
   initialState,
   on(UsersActions.login, state => ({ ...state, loading: true, loaded: false, error: null })),
   on(UsersActions.loginFail, (state, { error }) => ({ ...state, loading: false, loaded: false, error })),
-  on(UsersActions.loginRequested, (state, action) => ({
-    ...state,
-    activationUrl: action.activationRoute,
-    token: action.token,
-    loading: false,
-    loaded: true,
-    error: null,
-  })),
-  on(UsersActions.signUpRequested, (state, action) => ({
-    ...state,
-    activationUrl: action.activationRoute,
-    token: action.token,
-    loading: false,
-    loaded: true,
-    error: null,
-  })),
+  on(UsersActions.loginDone, state => ({ loading: false, loaded: true, error: null })),
   on(UsersActions.confirmSignUpDone, (state, action) => ({
     ...state,
     loading: false,

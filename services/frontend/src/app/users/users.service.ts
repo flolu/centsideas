@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 
 import { ApiEndpoints, UsersApiRoutes, HeaderKeys } from '@cents-ideas/enums';
 import {
-  ILoginResponseDto,
   ILoginDto,
   IAuthenticatedDto,
   IAuthenticateDto,
@@ -22,10 +21,10 @@ export class UsersService {
 
   constructor(private http: HttpClient, private settingsService: SettingsService) {}
 
-  login = (email: string): Observable<ILoginResponseDto> => {
+  login = (email: string): Observable<{}> => {
     const payload: ILoginDto = { email };
     const url = `${this.baseUrl}/${UsersApiRoutes.Login}`;
-    return this.http.post<ILoginResponseDto>(url, payload);
+    return this.http.post<{}>(url, payload);
   };
 
   authenticate = (): Observable<IAuthenticatedDto> => {

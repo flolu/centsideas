@@ -24,11 +24,7 @@ export class UsersEffects {
       ofType(UsersActions.login),
       switchMap(({ email }) =>
         this.usersService.login(email).pipe(
-          map(loginResponse =>
-            loginResponse.existingAccount
-              ? UsersActions.loginRequested(loginResponse)
-              : UsersActions.signUpRequested(loginResponse),
-          ),
+          map(() => UsersActions.loginDone()),
           catchError(error => of(UsersActions.loginFail({ error }))),
         ),
       ),

@@ -5,6 +5,7 @@ export const environment = {
       name: 'ideas',
     },
     auth: {
+      // TODO don't hard-code those strings
       login: {
         name: 'login',
       },

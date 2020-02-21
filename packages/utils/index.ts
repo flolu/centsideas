@@ -8,3 +8,4 @@ export * from './test';
 export { handleHttpResponseError } from './http-error-response-handler';
 export { EntityError } from './errors/entity.error';
 export * from './errors';
+export { sendMail } from './mailing';

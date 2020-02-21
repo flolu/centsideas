@@ -22,9 +22,7 @@ import { UsersActions, UsersSelectors } from '..';
       </form>
       <div *ngIf="loading$ | async">Loading</div>
       <ng-container *ngIf="loaded$ | async">
-        <h3>We've sent you an email to confirm your login/sign up</h3>
-        <!-- // FIXME remove this url and instead send email to user -->
-        <a href="{{ activationRoute$ | async }}">Confirm</a>
+        <h3>We've sent you an email to confirm your login</h3>
       </ng-container>
     </div>
   `,
@@ -42,8 +40,6 @@ import { UsersActions, UsersSelectors } from '..';
 export class LoginContainer {
   loading$ = this.store.select(UsersSelectors.selectLoading);
   loaded$ = this.store.select(UsersSelectors.selectLoaded);
-  token$ = this.store.select(UsersSelectors.selectToken);
-  activationRoute$ = this.store.select(UsersSelectors.selectFullActivationRoute);
 
   form = new FormGroup({
     email: new FormControl(''),
