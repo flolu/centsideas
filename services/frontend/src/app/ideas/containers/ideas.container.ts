@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { IIdeaViewModel } from '@cents-ideas/models';
+import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
+
 import { AppState } from '@ci-frontend/app';
 import { IdeasSelectors, IdeasActions } from '@ci-frontend/ideas';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'ci-ideas',
@@ -60,7 +61,7 @@ export class IdeasContainer {
   }
 
   onIdeaTitleClicked = (idea: IIdeaViewModel): void => {
-    this.router.navigate([environment.routing.ideas.name, idea.id]);
+    this.router.navigate([TopLevelFrontendRoutes.Ideas, idea.id]);
   };
 
   onCreate = (): void => {

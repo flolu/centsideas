@@ -2,9 +2,9 @@ import { injectable } from 'inversify';
 import * as faker from 'faker';
 import * as jwt from 'jsonwebtoken';
 
-import { sanitizeHtml, sendMail } from '@cents-ideas/utils';
-import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
+import { sanitizeHtml, sendMail, Logger } from '@cents-ideas/utils';
 import { IConfirmSignUpResponseDto, IAuthenticatedDto, IAuthTokenData } from '@cents-ideas/models';
+import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -22,7 +22,7 @@ import { TokenInvalidError } from './errors/token-invalid.error';
 
 @injectable()
 export class UserCommandHandler {
-  constructor(private repository: UserRepository) {}
+  constructor(private repository: UserRepository, private logger: Logger) {}
 
   login = async (email: string): Promise<boolean> => {
     EmailRequiredError.validate(email);
@@ -30,23 +30,23 @@ export class UserCommandHandler {
     const existing = await this.repository.getUserIdEmailMapping(email);
 
     if (existing && existing.userId) {
-      const token = this.createAuthToken(existing.userId);
-      // TODO don't hard-code those strings
-      const activationRoute: string = `${env.frontendUrl}/login?token=${token}`;
+      const token = this.createAuthToken(existing.userId, '2h');
+      this.logger.debug(`Found existing user with email: ${email}. Send an email with the login URL`);
+      const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Login}?token=${token}`;
       await sendMail(
         env.mailing.fromAddress,
         email,
         'CENTS Ideas Login',
-        `URL to login into your account: ${activationRoute}`,
-        `URL to login into your account: ${activationRoute}`,
+        `URL to login into your account: ${activationRoute} (URL will expire after 2 hours)`,
+        `URL to login into your account: ${activationRoute} (URL will expire after 2 hours)`,
         env.mailing,
       );
       return true;
     } else {
+      this.logger.debug(`No existing user with email: ${email}. Send email with registration URL`);
       const data: ISignUpTokenData = { email };
       const token = jwt.sign(data, env.jwtSecret, { expiresIn: '1h' });
-      // TODO don't hard-code those strings
-      const activationRoute: string = `${env.frontendUrl}/confirm-sign-up?token=${token}`;
+      const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.ConfirmSignUp}?token=${token}`;
       await sendMail(
         env.mailing.fromAddress,
         email,
@@ -120,8 +120,8 @@ export class UserCommandHandler {
 
   confirmEmailChange = () => {};
 
-  private createAuthToken = (userId: string): string => {
+  private createAuthToken = (userId: string, expiresIn: string = '7d'): string => {
     const data: IAuthTokenData = { userId };
-    return jwt.sign(data, env.jwtSecret, { expiresIn: '7d' });
+    return jwt.sign(data, env.jwtSecret, { expiresIn });
   };
 }

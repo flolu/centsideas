@@ -21,6 +21,7 @@
       "@ci-frontend/reviews/*": ["./src/app/reviews/*"],
       "@ci-frontend/users": ["./src/app/users"],
       "@ci-frontend/users/*": ["./src/app/users/*"],
+
       "@cents-ideas/enums": ["../../packages/enums"],
       "@cents-ideas/utils": ["../../packages/utils"],
       "@cents-ideas/event-sourcing": ["../../packages/event-sourcing"],

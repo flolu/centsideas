@@ -1,10 +1,12 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { AppState } from '@ci-frontend/app';
 
 import { UsersActions, UsersSelectors } from '..';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'ci-login',
@@ -37,7 +39,7 @@ import { UsersActions, UsersSelectors } from '..';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginContainer {
+export class LoginContainer implements OnInit {
   loading$ = this.store.select(UsersSelectors.selectLoading);
   loaded$ = this.store.select(UsersSelectors.selectLoaded);
 
@@ -45,7 +47,15 @@ export class LoginContainer {
     email: new FormControl(''),
   });
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private route: ActivatedRoute, private store: Store<AppState>, private usersService: UsersService) {}
+
+  ngOnInit() {
+    const token = this.route.snapshot.queryParams['token'];
+    if (token) {
+      this.usersService.saveToken(token);
+      this.store.dispatch(UsersActions.authenticate());
+    }
+  }
 
   onLogin = () => {
     this.store.dispatch(UsersActions.login({ email: this.form.value.email }));

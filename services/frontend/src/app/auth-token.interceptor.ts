@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 
 import { HeaderKeys } from '@cents-ideas/enums';
 
-import { environment } from 'src/environments/environment';
+import { TOKEN_KEY } from './users/users.service';
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem(environment.tokenKey);
+    const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
       req = req.clone({ setHeaders: { [HeaderKeys.Auth]: token } });
     }

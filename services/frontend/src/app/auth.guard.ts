@@ -4,8 +4,9 @@ import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { map, skipWhile } from 'rxjs/operators';
 
+import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
+
 import { AppState, AppSelectors } from '.';
-import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -17,7 +18,7 @@ export class AuthGuard implements CanActivate {
       map(state => {
         if (!state.user) {
           console.log('[AuthGuard] not authenticated', state);
-          this.router.navigate([environment.routing.auth.login.name]);
+          this.router.navigate([TopLevelFrontendRoutes.Login]);
         }
         return !!(state.user && state.user.id);
       }),

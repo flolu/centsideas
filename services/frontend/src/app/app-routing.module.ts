@@ -1,22 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { environment } from 'src/environments/environment';
-import { IdeasContainer, IdeaContainer } from '@ci-frontend/ideas/containers';
+import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
 
-import { LoginContainer, ConfirmSignUpContainer, UserContainer } from './users/containers';
+import { IdeasContainer, IdeaContainer } from '@ci-frontend/ideas/containers';
+import { UserContainer, LoginContainer, ConfirmSignUpContainer } from '@ci-frontend/users/containers';
 import { AuthGuard } from './auth.guard';
 
-const IDEAS = environment.routing.ideas.name;
-
 const routes: Routes = [
-  { path: '', redirectTo: IDEAS, pathMatch: 'full' },
-  { path: IDEAS, component: IdeasContainer },
-  { path: `${IDEAS}/:id`, component: IdeaContainer },
-  { path: `${environment.routing.user.name}`, component: UserContainer, canActivate: [AuthGuard] },
-  { path: `${environment.routing.auth.login.name}`, component: LoginContainer },
-  { path: `${environment.routing.auth.confirmSignUp.name}`, component: ConfirmSignUpContainer },
-  { path: '**', redirectTo: IDEAS, pathMatch: 'full' },
+  { path: '', redirectTo: TopLevelFrontendRoutes.Ideas, pathMatch: 'full' },
+  { path: TopLevelFrontendRoutes.Ideas, component: IdeasContainer },
+  { path: `${TopLevelFrontendRoutes.Ideas}/:id`, component: IdeaContainer },
+  { path: `${TopLevelFrontendRoutes.User}`, component: UserContainer, canActivate: [AuthGuard] },
+  { path: `${TopLevelFrontendRoutes.Login}`, component: LoginContainer },
+  { path: `${TopLevelFrontendRoutes.ConfirmSignUp}`, component: ConfirmSignUpContainer },
+  { path: '**', redirectTo: TopLevelFrontendRoutes.Ideas, pathMatch: 'full' },
 ];
 
 @NgModule({

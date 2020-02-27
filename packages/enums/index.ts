@@ -5,3 +5,4 @@ export * from './events';
 export { EventTopics } from './event-topics.enum';
 export { HeaderKeys } from './headers.enum';
 export { LoggerPrefixes } from './logger-prefixes.enum';
+export { TopLevelFrontendRoutes } from './frontend-routing';

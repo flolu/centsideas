@@ -3,11 +3,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { switchMap, catchError, map, tap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+
+import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
 
 import { UsersService } from './users.service';
 import { UsersActions, UsersSelectors } from '.';
-import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { AppState } from '..';
 
 @Injectable()
@@ -48,7 +49,7 @@ export class UsersEffects {
       this.actions$.pipe(
         ofType(UsersActions.confirmSignUpDone),
         tap(action => this.usersService.saveToken(action.token)),
-        tap(() => this.router.navigate([environment.routing.user.name])),
+        tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
       ),
     { dispatch: false },
   );
@@ -70,6 +71,7 @@ export class UsersEffects {
       this.actions$.pipe(
         ofType(UsersActions.authenticateDone),
         tap(action => this.usersService.saveToken(action.token)),
+        tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
       ),
     { dispatch: false },
   );

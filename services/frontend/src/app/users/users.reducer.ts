@@ -35,6 +35,15 @@ const usersReducer = createReducer(
     token: action.token,
     initialized: true,
   })),
+  on(UsersActions.updateUser, state => ({ ...state, loading: true, loaded: false, error: null })),
+  on(UsersActions.updateUserFail, (state, { error }) => ({ ...state, loading: false, loaded: false, error })),
+  on(UsersActions.updateUserDone, (state, { updated }) => ({
+    ...state,
+    loading: false,
+    loaded: true,
+    error: null,
+    user: updated,
+  })),
 );
 
 export function reducer(state: IUsersState | undefined, action: Action) {

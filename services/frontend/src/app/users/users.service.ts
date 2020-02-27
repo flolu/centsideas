@@ -13,7 +13,8 @@ import {
 } from '@cents-ideas/models';
 
 import { SettingsService } from '../settings.service';
-import { environment } from 'src/environments/environment';
+
+export const TOKEN_KEY = 'token';
 
 @Injectable()
 export class UsersService {
@@ -49,11 +50,11 @@ export class UsersService {
   };
 
   saveToken = (token: string) => {
-    localStorage.setItem(environment.tokenKey, token);
+    localStorage.setItem(TOKEN_KEY, token);
   };
 
   removeToken = () => {
-    localStorage.removeItem(environment.tokenKey);
+    localStorage.removeItem(TOKEN_KEY);
   };
 
   get baseUrl() {
@@ -61,6 +62,6 @@ export class UsersService {
   }
 
   get token() {
-    return localStorage.getItem(environment.tokenKey);
+    return localStorage.getItem(TOKEN_KEY);
   }
 }
