@@ -1,0 +1,11 @@
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+
+package(default_visibility = ["//:__subpackages__"])
+
+# k8s_deploy(
+#     name = "deploy",
+#     images = {
+#         "gcr.io/cents-ideas/src:nodejs_image": "//src:image",
+#     },
+#     template = ":deployment.yaml",
+# )
