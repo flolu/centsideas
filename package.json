@@ -73,5 +73,6 @@
     "@cents-ideas/utils": "./packages/utils",
     "@cents-ideas/event-sourcing": "./packages/event-sourcing",
     "@cents-ideas/models": "./packages/models"
-  }
+  },
+  "version": "0.0.0"
 }
