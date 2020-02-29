@@ -2,6 +2,11 @@ load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 
 package(default_visibility = ["//:__subpackages__"])
 
+exports_files([
+    "tsconfig.json",
+    "tsconfig.spec.json",
+])
+
 # k8s_deploy(
 #     name = "deploy",
 #     images = {
