@@ -1,4 +1,4 @@
-import {Action} from '@ngrx/store';
+import { Action } from '@ngrx/store';
 
 export const ADD_TODO = 'ADD_TODO';
 export const DELETE_TODO = 'DELETE_TODO';
@@ -24,11 +24,11 @@ export function todoReducer(state = [], action: ActionWithPayload<TodoPayload>) 
       return state.filter((item, index) => index !== action.payload.index);
     case UPDATE_TODO:
       return state.map((item, index) => {
-        return index === action.payload.index ? {...item, value: action.payload.newValue} : item;
+        return index === action.payload.index ? { ...item, value: action.payload.newValue } : item;
       });
     case TOGGLE_DONE:
       return state.map((item, index) => {
-        return index === action.payload.index ? {...item, done: !action.payload.done} : item;
+        return index === action.payload.index ? { ...item, done: !action.payload.done } : item;
       });
     default:
       return state;

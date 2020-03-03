@@ -3,20 +3,11 @@ load("@npm_angular_bazel//:index.bzl", "ng_module")
 
 package(default_visibility = ["//:__subpackages__"])
 
-sass_binary(
-    name = "todos-styles",
-    src = "todos.component.scss",
-)
-
 ng_module(
     name = "todos",
     srcs = [
         "todos.component.ts",
         "todos.module.ts",
-    ],
-    assets = [
-        "todos.component.html",
-        ":todos-styles",
     ],
     tsconfig = "//src:tsconfig.json",
     deps = [

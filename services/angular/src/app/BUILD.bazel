@@ -5,7 +5,6 @@ package(default_visibility = ["//:__subpackages__"])
 ng_module(
     name = "app",
     srcs = glob(["*.ts"]),
-    assets = ["app.component.html"],
     tsconfig = "//src:tsconfig.json",
     deps = [
         "//src/app/hello-world",

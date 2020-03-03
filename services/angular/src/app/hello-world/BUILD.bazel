@@ -5,20 +5,11 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
 
-sass_binary(
-    name = "hello-world-styles",
-    src = "hello-world.component.scss",
-)
-
 ng_module(
     name = "hello-world",
     srcs = [
         "hello-world.component.ts",
         "hello-world.module.ts",
-    ],
-    assets = [
-        ":hello-world.component.html",
-        ":hello-world-styles",
     ],
     tsconfig = "//src:tsconfig.json",
     deps = [
