@@ -5,7 +5,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-bazel-bin
-bazel-cents-ideas
-bazel-out
-bazel-testlogs
+bazel-*
+dist
