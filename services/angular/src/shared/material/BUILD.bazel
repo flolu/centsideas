@@ -1,0 +1,13 @@
+load("@npm_angular_bazel//:index.bzl", "ng_module")
+
+package(default_visibility = ["//:__subpackages__"])
+
+ng_module(
+    name = "material",
+    srcs = glob(["*.ts"]),
+    tsconfig = "//src:tsconfig.json",
+    deps = [
+        "@npm//@angular/core",
+        "@npm//@angular/material",
+    ],
+)
