@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,7 +9,7 @@ import { todoReducer } from './todos/reducers/reducers';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [AppRoutingModule, BrowserModule, BrowserAnimationsModule, HomeModule, StoreModule.forRoot({ todoReducer })],
+  imports: [AppRoutingModule, BrowserModule, HomeModule, StoreModule.forRoot({ todoReducer })],
   exports: [AppComponent],
   bootstrap: [AppComponent],
 })

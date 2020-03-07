@@ -58,7 +58,5 @@ karma_web_test_suite(
     deps = [
         ":test_lib",
         "//src:rxjs_umd_modules",
-        # explicit tslib dependency comes from @angular/material
-        #"@npm//:node_modules/tslib/tslib.js",
     ],
 )
