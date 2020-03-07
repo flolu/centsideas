@@ -12,7 +12,6 @@ ng_module(
     tsconfig = "//src:tsconfig.json",
     deps = [
         "//src/app/todos/reducers",
-        "//src/shared/material",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",

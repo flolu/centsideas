@@ -5,15 +5,7 @@ import { format } from 'date-fns';
   selector: 'hello-world',
   template: `
     <h1>Home</h1>
-    <mat-card>
-      <mat-card-content>
-        <p>Today is {{ date }}</p>
-      </mat-card-content>
-
-      <mat-card-footer>
-        <div class="mood-icon"><mat-icon>mood</mat-icon></div>
-      </mat-card-footer>
-    </mat-card>
+    <p>Today is {{ date }}</p>
   `,
 })
 export class HelloWorldComponent {
