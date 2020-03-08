@@ -21,17 +21,6 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/1.4.1/rules_nodejs-1.4.1.tar.gz"],
 )
 
-# Fetch sass rules for compiling sass files
-http_archive(
-    name = "io_bazel_rules_sass",
-    sha256 = "c78be58f5e0a29a04686b628cf54faaee0094322ae0ac99da5a8a8afca59a647",
-    strip_prefix = "rules_sass-1.25.0",
-    urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/1.25.0.zip",
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_sass/archive/1.25.0.zip",
-    ],
-)
-
 # Check the bazel version and download npm dependencies
 load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 
@@ -73,11 +62,6 @@ browser_repositories(
 load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
 
 ts_setup_workspace()
-
-# Setup the rules_sass toolchain
-load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
-
-sass_repositories()
 
 ################################
 # Support for Remote Execution #

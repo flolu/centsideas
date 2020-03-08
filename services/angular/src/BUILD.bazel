@@ -1,7 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 load("@npm//@babel/cli:index.bzl", "babel")
 load("@npm//history-server:index.bzl", "history_server")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
@@ -16,13 +15,6 @@ ts_config(
     name = "tsconfig-test",
     src = "tsconfig-test.json",
     deps = [":tsconfig.json"],
-)
-
-# Run the sass compiler to output "styles.css"
-# TODO(alexeagle): demonstrate the sass_library rule too
-sass_binary(
-    name = "styles",
-    src = "styles.scss",
 )
 
 ts_library(
@@ -64,7 +56,6 @@ filegroup(
 
 # Files that we serve in both development and production
 _ASSETS = [
-    # This label references an output of the "styles" sass_binary above.
     ":styles.css",
     # We load zone.js outside the bundle. That's because it's a "pollyfill"
     # which speculates that such features might be available in a browser.

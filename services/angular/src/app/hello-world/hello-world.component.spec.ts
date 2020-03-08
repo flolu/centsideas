@@ -21,15 +21,4 @@ describe('BannerComponent (inline template)', () => {
     comp = fixture.componentInstance;
     el = fixture.debugElement.query(By.css('div')).nativeElement;
   });
-
-  it('should display original title', () => {
-    fixture.detectChanges();
-    expect(el.textContent).toContain(comp.name);
-  });
-
-  it('should display a different test title', () => {
-    comp.name = 'Test';
-    fixture.detectChanges();
-    expect(el.textContent).toContain('Test');
-  });
 });
