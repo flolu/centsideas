@@ -63,6 +63,7 @@
   "scripts": {
     "build": "bazelisk build //src:prodapp",
     "serve": "ibazel run //src:devserver",
+    "serve2": "bazelisk run //src:devserver",
     "deploy": "ng build && firebase deploy",
     "serve-prod": "bazelisk run //src:prodserver",
     "e2e": "bazelisk test //e2e:all",
