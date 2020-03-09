@@ -6,8 +6,10 @@
  * platform-browser.
  * This file is completely unused in the Bazel build.
  */
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import {AppModule} from './app.module';
+import { AppModule } from './app/app.module';
 
-platformBrowserDynamic().bootstrapModule(AppModule).catch(err => console.log(err));
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  .catch(err => console.log(err));
