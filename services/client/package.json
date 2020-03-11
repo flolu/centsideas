@@ -1,15 +1,15 @@
 {
   "name": "client",
-  "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "serve": "ibazel run //src:devserver",
-    "build": "ng build",
-    "test": "ng test",
+    "start": "ibazel run //src:devserver",
+    "build": "bazelisk build //src:prodapp",
+    "serve-prod": "bazelisk run //src:prodserver",
+    "e2e": "bazelisk test //e2e:all",
+    "test": "bazelisk test //src/...",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "postinstall": "ngcc"
+    "postinstall": "ngcc",
+    "bazel:clean": "bazel clean"
   },
   "private": true,
   "dependencies": {

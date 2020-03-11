@@ -14,7 +14,8 @@
     "start:reviews": "ts-node-dev services/reviews/index.ts",
     "docker:stop": "docker container stop $(docker container ls -aq)",
     "docker:prune": "docker system prune --volumes",
-    "docker:clean": "yarn docker:stop && yarn docker:prune"
+    "docker:clean": "yarn docker:stop && yarn docker:prune",
+    "bazel:clean": "bazel clean"
   },
   "dependencies": {
     "@types/uuid": "^3.4.6",

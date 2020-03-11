@@ -2,15 +2,15 @@ load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 
 package(default_visibility = ["//:__subpackages__"])
 
-exports_files([
-    "tsconfig.json",
-    "tsconfig.spec.json",
-])
+alias(
+    name = "tsconfig.json",
+    actual = "//src:tsconfig.json",
+)
 
-# k8s_deploy(
-#     name = "deploy",
-#     images = {
-#         "gcr.io/cents-ideas/src:nodejs_image": "//src:image",
-#     },
-#     template = ":deployment.yaml",
-# )
+k8s_deploy(
+    name = "deploy",
+    images = {
+        "gcr.io/cents-ideas/src:nodejs_image": "//src:image",
+    },
+    template = ":deployment.yaml",
+)
