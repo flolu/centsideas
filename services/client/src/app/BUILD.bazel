@@ -9,7 +9,7 @@ ng_module(
         exclude = ["**/*.spec.ts"]
     ),
     # assets = ["app.component.html"],
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//services/client:tsconfig.json",
     deps = [
         #"//src/app/hello-world",
         #"//src/app/home",

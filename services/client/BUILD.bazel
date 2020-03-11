@@ -4,13 +4,13 @@ package(default_visibility = ["//:__subpackages__"])
 
 alias(
     name = "tsconfig.json",
-    actual = "//src:tsconfig.json",
+    actual = "//services/client/src:tsconfig.json",
 )
 
-k8s_deploy(
-    name = "deploy",
-    images = {
-        "gcr.io/cents-ideas/src:nodejs_image": "//src:image",
-    },
-    template = ":deployment.yaml",
-)
+# k8s_deploy(
+#     name = "deploy",
+#     images = {
+#         "gcr.io/cents-ideas/src:nodejs_image": "//services/client/src:image",
+#     },
+#     template = ":deployment.yaml",
+# )

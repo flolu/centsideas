@@ -1,4 +1,7 @@
-workspace(name = 'cents_ideas')
+workspace(
+    name = 'cents_ideas',
+    managed_directories = {"@npm": ["node_modules"]},
+)
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
@@ -9,21 +12,36 @@ http_archive(
     sha256 = "2eca5b934dee47b5ff304f502ae187c40ec4e33e12bcbce872a2eeb786e23269",
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/1.4.1/rules_nodejs-1.4.1.tar.gz"],
 )
-
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories","yarn_install")
 node_repositories(package_json = ["//:package.json"])
 yarn_install(
     name = "npm",
     package_json = "//:package.json",
     yarn_lock = "//:yarn.lock",
-    symlink_node_modules = False
+   # symlink_node_modules = False
 )
 
 load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
 install_bazel_dependencies()
 
+load("@npm_bazel_protractor//:package.bzl", "npm_bazel_protractor_dependencies")
+npm_bazel_protractor_dependencies()
+
+load("@npm_bazel_karma//:package.bzl", "npm_bazel_karma_dependencies")
+npm_bazel_karma_dependencies()
+
+load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
+web_test_repositories()
+
+load("@io_bazel_rules_webtesting//web/versioned:browsers-0.3.2.bzl", "browser_repositories")
+browser_repositories(
+    chromium = True,
+    firefox = True,
+)
+
 load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
 ts_setup_workspace()
+
 
 # https://github.com/bazelbuild/rules_docker#setup
 http_archive(
@@ -32,10 +50,13 @@ http_archive(
     strip_prefix = "rules_docker-0.14.1",
     urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.14.1/rules_docker-v0.14.1.tar.gz"],
 )
+
 load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
 container_repositories()
-load("@io_bazel_rules_docker//nodejs:image.bzl", _nodejs_image_repos = "repositories")
-_nodejs_image_repos()
+
+load("@io_bazel_rules_docker//nodejs:image.bzl", nodejs_image_repos = "repositories")
+nodejs_image_repos()
+
 
 # https://github.com/bazelbuild/rules_k8s#setup
 http_archive(
@@ -51,7 +72,12 @@ k8s_go_deps()
 
 load("@io_bazel_rules_k8s//k8s:k8s.bzl", "k8s_defaults")
 k8s_defaults(
-  name = "k8s_deploy",
-  kind = "deployment",
-  cluster = "gke_cents-ideas_europe-west3-b_cents-ideas",
+    name = "k8s_deploy",
+    kind = "deployment",
+    cluster = "_".join([
+        "gke",
+        "cents-ideas",
+        "europe-west3-b",
+        "cents-ideas",
+    ]),
 )
