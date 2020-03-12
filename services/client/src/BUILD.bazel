@@ -37,7 +37,6 @@ ng_module(
     ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
-        "//packages/enums:lib",
         "//services/client/src/app",
 
         "@npm//@angular/core",
