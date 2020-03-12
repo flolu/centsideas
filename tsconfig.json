@@ -5,10 +5,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "paths": {
-      "@cents-ideas/enums": ["./packages/enums"],
-      "@cents-ideas/utils": ["./packages/utils"],
-      "@cents-ideas/event-sourcing": ["./packages/event-sourcing"],
-      "@cents-ideas/models": ["./packages/models"]
+      "@cents-ideas/*": ["./packages/*"]
     },
     "types": ["reflect-metadata", "node", "jest"]
   },

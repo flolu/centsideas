@@ -37,7 +37,9 @@ ng_module(
     ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
+        "//packages/enums:lib",
         "//services/client/src/app",
+
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
@@ -180,5 +182,5 @@ container_image(
     name = "image",
     base = ":nodejs_image",
     tags = ["local"],
-    workdir = "/app/src/nodejs_image.binary.runfiles/cents_ideas/services/client/",
+    workdir = "/app/src/nodejs_image.binary.runfiles/cents_ideas/services/client",
 )

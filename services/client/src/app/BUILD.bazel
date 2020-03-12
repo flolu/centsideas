@@ -11,6 +11,7 @@ ng_module(
     # assets = ["app.component.html"],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
+        "//packages/enums:lib",
         #"//src/app/hello-world",
         #"//src/app/home",
         #"//src/app/todos",
