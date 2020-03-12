@@ -163,7 +163,7 @@ history_server(
     data = [":prodapp"],
     templated_args = [
         "-a",
-        "src/prodapp",
+        "$(rlocation cents_ideas/services/client/src/prodapp)",
     ],
 )
 
@@ -173,12 +173,12 @@ nodejs_image(
     entry_point = "@npm//:node_modules/history-server/modules/cli.js",
     node_modules = "@npm//:node_modules",
     tags = ["local"],
-    templated_args = ["src/prodapp"],
+    templated_args = ["services/client/src/prodapp"],
 )
 
 container_image(
     name = "image",
     base = ":nodejs_image",
     tags = ["local"],
-    workdir = "/app/src/nodejs_image.binary.runfiles/client",
+    workdir = "/app/src/nodejs_image.binary.runfiles/cents_ideas/services/client/",
 )

@@ -20,6 +20,7 @@ ts_library(
       "@npm//nodemailer",
 
       "@npm//@types/uuid",
+      "@npm//@types/node",
       "@npm//@types/express",
       "@npm//@types/sanitize-html",
       "@npm//@types/shortid",
