@@ -5,8 +5,8 @@ steps:
         'test',
         #"--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache",
         #'--test_output=errors',
-        '--',
-        '//...',
-        '-services/client/...',
         '--google_default_credentials',
+        '//...',
+        '--',
+        '-services/client/...',
       ]
