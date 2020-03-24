@@ -1,12 +1,13 @@
 steps:
-  - id: 'unit tests'
+  - id: "unit tests"
     name: gcr.io/cloud-builders/bazel
     args: [
-        'test',
+        "test",
         #"--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache",
         #'--test_output=errors',
-        '--google_default_credentials',
-        '//...',
-        '--',
-        '-services/client/...',
+        "--google_default_credentials",
+        "//...",
+        "--",
+        "-services/client/...",
       ]
+timeout: 900s
