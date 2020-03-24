@@ -12,9 +12,7 @@ ng_module(
     tsconfig = "//services/client:tsconfig.json",
     deps = [
         "//packages/enums:lib",
-        #"//src/app/hello-world",
-        #"//src/app/home",
-        #"//src/app/todos",
+        "//services/client/src/app/hello-world",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
