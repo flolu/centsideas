@@ -18,10 +18,10 @@ ts_config(
     deps = [":tsconfig.json"],
 )
 
-k8s_deploy(
-    name = "deploy",
-    images = {
-        "gcr.io/cents-ideas/src:nodejs_image": "//services/client/src:image",
-    },
-    template = ":deployment.yaml",
-)
+#k8s_deploy(
+#    name = "deploy",
+#    images = {
+#        "gcr.io/cents-ideas/src:nodejs_image": "//services/client/src:image",
+#    },
+#    template = ":deployment.yaml",
+#)

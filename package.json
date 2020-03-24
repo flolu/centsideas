@@ -3,7 +3,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "yarn setup && yarn docker:dev",
-    "test": "bazel test -- //... -services/client/...",
+    "test": "bazel test //...",
     "deploy": "bazel run :kubernetes_deployment.apply",
     "setup": "ts-node setup",
     "docker:dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
@@ -21,8 +21,7 @@
     "client:start": "ibazel run //services/client/src:devserver",
     "client:build": "bazelisk build //services/client/src:prodapp",
     "client:serve-prod": "bazelisk run //services/client/src:prodserver",
-    "client:e2e": "bazelisk test //services/client/e2e:all",
-    "client:test": "bazelisk test //services/client/src/..."
+    "client:e2e": "bazelisk test //services/client/e2e:all"
   },
   "dependencies": {
     "@types/uuid": "^3.4.6",
