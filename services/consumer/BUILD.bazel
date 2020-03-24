@@ -1,44 +1,46 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+
 package(default_visibility = ["//visibility:public"])
 
-load("@npm_bazel_typescript//:index.bzl", "ts_library")
 ts_library(
     name = "lib",
     srcs = glob(
         include = ["**/*.ts"],
-        exclude = ["**/*.spec.ts"]
+        exclude = ["**/*.spec.ts"],
     ),
     deps = [
-      "//packages/enums:lib",
-      "//packages/event-sourcing:lib",
-      "//packages/utils:lib",
-      "//packages/models:lib",
-
-      "@npm//async-retry",
-      "@npm//body-parser",
-      "@npm//express",
-      "@npm//inversify",
-      "@npm//mongodb",
-      "@npm//reflect-metadata",
-
-      "@npm//@types/body-parser",
-      "@npm//@types/express",
-      "@npm//@types/mongodb",
-      "@npm//@types/async-retry",
+        "//packages/enums:lib",
+        "//packages/event-sourcing:lib",
+        "//packages/models:lib",
+        "//packages/utils:lib",
+        "@npm//@types/async-retry",
+        "@npm//@types/body-parser",
+        "@npm//@types/express",
+        "@npm//@types/mongodb",
+        "@npm//async-retry",
+        "@npm//body-parser",
+        "@npm//express",
+        "@npm//inversify",
+        "@npm//mongodb",
+        "@npm//reflect-metadata",
     ],
 )
 
-load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 nodejs_image(
     name = "image",
-    data = [":lib", "//:package.json"],
+    data = [
+        ":lib",
+        "//:package.json",
+    ],
     entry_point = ":index.ts",
 )
 
-load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 k8s_deploy(
-  name = "k8s",
-  template = ":consumer.yaml",
-  images = {
-    "gcr.io/cents-ideas/consumer:latest": ":image"
-  },
+    name = "k8s",
+    images = {
+        "gcr.io/cents-ideas/consumer:latest": ":image",
+    },
+    template = ":consumer.yaml",
 )

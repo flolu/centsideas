@@ -6,7 +6,7 @@ ng_module(
     name = "app",
     srcs = glob(
         include = ["**/*.ts"],
-        exclude = ["**/*.spec.ts"]
+        exclude = ["**/*.spec.ts"],
     ),
     # assets = ["app.component.html"],
     tsconfig = "//services/client:tsconfig.json",

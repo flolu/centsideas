@@ -7,7 +7,7 @@ load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
-load("@npm_bazel_typescript//:index.bzl", "ts_config", "ts_devserver", "ts_library")
+load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -38,7 +38,6 @@ ng_module(
     tsconfig = "//services/client:tsconfig.json",
     deps = [
         "//services/client/src/app",
-
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
@@ -144,12 +143,12 @@ html_insert_assets(
     name = "inject_scripts_for_prod",
     outs = ["_prodapp/services/client/src/index.html"],
     args = [
-        "--html=$(execpath //services/client/src:_index.html)",
-        "--out=$@",
-        "--roots=. $(RULEDIR) npm/node_modules/core-js/client npm/node_modules/systemjs/dist",
-        "--assets",
-    ] + ["$(execpath %s)" % s for s in _ASSETS + _PROD_ASSETS]
-      + ["$(execpath %s)/index.js" % s for s in _BUNDLE_ASSETS],
+               "--html=$(execpath //services/client/src:_index.html)",
+               "--out=$@",
+               "--roots=. $(RULEDIR) npm/node_modules/core-js/client npm/node_modules/systemjs/dist",
+               "--assets",
+           ] + ["$(execpath %s)" % s for s in _ASSETS + _PROD_ASSETS] +
+           ["$(execpath %s)/index.js" % s for s in _BUNDLE_ASSETS],
     data = [":_index.html"] + _ASSETS + _PROD_ASSETS + _BUNDLE_ASSETS,
 )
 
