@@ -11,11 +11,6 @@ load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
 
-exports_files([
-    "tsconfig.json",
-    "tsconfig.spec.json",
-])
-
 ts_library(
     name = "initialize_testbed",
     testonly = 1,
