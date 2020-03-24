@@ -1,10 +1,8 @@
 {
   "scripts": {
-    "ng": "ng",
-    "build": "ng build",
-    "dev:ssr": "ng run server-side-rendering:serve-ssr",
-    "serve:ssr": "node dist/server-side-rendering/server/main.js",
-    "build:ssr": "ng build --prod && ng run server-side-rendering:server:production",
-    "prerender": "ng run server-side-rendering:prerender"
+    "dev:ssr": "ng run client:serve-ssr",
+    "serve:ssr": "node dist/client/server/main.js",
+    "build:ssr": "ng build --prod && ng run client:server:production",
+    "prerender": "ng run client:prerender"
   }
 }
