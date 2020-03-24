@@ -1,11 +1,18 @@
 import { browser, by, element } from 'protractor';
 
 export class AppPage {
-  navigateTo(): Promise<unknown> {
-    return browser.get(browser.baseUrl) as Promise<unknown>;
+  async navigateTo() {
+    await browser.get(browser.baseUrl);
+    return browser.waitForAngular();
   }
 
-  getTitleText(): Promise<string> {
-    return element(by.css('app-root .content span')).getText() as Promise<string>;
+  async waitForElement(el, timeout = 10000) {
+    await browser.wait(() => el.isPresent(), timeout);
+    await browser.wait(() => el.isDisplayed(), timeout);
+    return el;
+  }
+
+  async getTitleText() {
+    return (await this.waitForElement(element(by.css('app-component h1')))).getText();
   }
 }
