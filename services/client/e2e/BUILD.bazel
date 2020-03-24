@@ -17,7 +17,10 @@ protractor_web_test_suite(
     name = "prodserver_test",
     on_prepare = ":protractor.on-prepare.js",
     server = "//services/client/src:prodserver",
-    deps = [":e2e"],
+    deps = [
+        ":e2e",
+        "@npm//tslib"
+    ],
 )
 
 protractor_web_test_suite(
