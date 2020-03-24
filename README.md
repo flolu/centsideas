@@ -23,12 +23,16 @@ This is a project with the purpose of learning the architecture of complex web a
 | Monorepo          | all packages and services in one repo  | ✔️     |
 | Typescript        | types everywhere!                      | ✔️     |
 | Local development | hot reload, docker-compose, vscode     | ✔️     |
-| Monitoring        | logs, alarms, dashboard                | ❌     |
 | Git flow          | branching, releases, rebasing          | ✔️     |
 | Gateway           | discovery, entry point, auth           | ✔️     |
 | Static pages      | homepage, static content               | ❌     |
 | Search            | indexing, realtime search              | ❌     |
 | Cross platform    | electron, nativescript?                | ❌     |
+| Authentication    | passwordless, 2f auth, google login    | ❌     |
+| Admin panel       | monitoring, event handling, logs       | ❌     |
+| Backups           | automatic, manual, restore             | ❌     |
+| Realtime          | some kind of realtime integration      | ❌     |
+| User Interface    | modern, unique, reusable               | ❌     |
 
 ### Status
 
@@ -42,57 +46,22 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Development
 
-To start all backend services with the help of `docker-compose` simply run
+- `yarn` to install all necessary dependencies for local development
+- `yarn dev` to start all backend services locally (gateway is available under http://localhost:3000)
+- `yarn client:start` to start the frontend application (live url is printed in logs)
+- `yarn test` to run all unit tests
+- `yarn deploy` to deploy all services to your Kubernetes cluster (works only if kubectl and google-cloud-sdk are installed, and your need to authenticated to push containers to google container registry and deploy configurations to your kubernetes cluster)
 
-```
-yarn dev
-```
+## Requirements
 
-If you wish to also run the frontend application you have to `cd` into `/services/frontend` and run
+- Yarn
+- Docker-Compose
+- NodeJs
+- _kubectl_
+- _google-cloud-sdk_
+- _Bazel_
 
-```
-yarn start
-```
-
-# Testing
-
-By running
-
-```
-yarn test
-```
-
-Bazel will execute all unit tests.
-
-# Deployment
-
-To deploy all services to Kubernetes run
-
-```
-yarn deploy
-```
-
-It only works if you have Bazel, kubectl and Google Cloud SDK installed. (you also need to be authenticated to push containers to Google Container Registry and deploy configurations to your Kubernetes cluster)
-
-# Structure
-
-**Services**
-
-[gateway](https://github.com/flolude/cents-ideas/tree/develop/services/gateway), [ideas](https://github.com/flolude/cents-ideas/tree/develop/services/ideas), [frontend](https://github.com/flolude/cents-ideas/blob/develop/services/frontend), [reviews](https://github.com/flolude/cents-ideas/tree/develop/services/reviews), [consumer](https://github.com/flolude/cents-ideas/tree/develop/services/consumer)
-
-**Packages**
-
-[enums](https://github.com/flolude/cents-ideas/tree/master/packages/enums), [event-sourcing](https://github.com/flolude/cents-ideas/tree/master/packages/event-sourcing), [models](https://github.com/flolude/cents-ideas/tree/master/packages/models), [utils](https://github.com/flolude/cents-ideas/tree/master/packages/utils)
-
-# Requirements
-
-**Required**: git, docker, docker-compose, node, yarn, bazel
-
-**Optional**: microk8s or minikube, kubectl, google-cloud-sdk
-
-**Recommended VSCode Plugins**: [TSLint](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-tslint-plugin), [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode), [Angular template formatter](https://marketplace.visualstudio.com/items?itemName=stringham.angular-template-formatter), [Todo Tree](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree), [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker), [Kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools), [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
-
-# Git Flow
+## Git Flow
 
 **Read [this](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) for more detail**
 
@@ -131,79 +100,3 @@ git checkout develop
 git merge <name-of-hotfix-branch>
 git branch -D <name-of-hotfix-branch>
 ```
-
-# Useful Commands
-
-**Connect to GKE Cluster**
-
-```
-gcloud container clusters get-credentials cents-ideas --zone europe-west3-b --project cents-ideas
-```
-
-**Update all your @bazel-scoped npm packages to the latest versions**
-
-```
-yarn upgrade --scope @bazel
-```
-
-**Get microk8s cluster info**
-
-```
-microk8s.kubectl cluster-info
-```
-
-**Issue a ssl certificate**
-
-```
-sudo apt install certbot
-sudo certbot certonly --manual -d *.domain.com
-```
-
-**Create k8s secret containing ssl certificate and key**
-
-```
-kubectl create secret tls tls-secret --key privateKey.pem --cert certificate.pem
-```
-
-## Setting up NGINX Ingress on GKE
-
-https://kubernetes.github.io/ingress-nginx/deploy/
-
-> If you're using GKE you need to initialize your user as a cluster-admin with the following command:
-
-```
-kubectl create clusterrolebinding cluster-admin-binding \
-  --clusterrole cluster-admin \
-  --user $(gcloud config get-value account)
-```
-
-> The following Mandatory Command is required for all deployments.
-
-```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.28.0/deploy/static/mandatory.yaml
-```
-
-**You may have to remove those two lines if you're getting an error**
-
-```
-      nodeSelector:
-        kubernetes.io/os: linux
-```
-
-> GCE-GKE
-
-```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.28.0/deploy/static/provider/cloud-generic.yaml
-```
-
-## HTTPs
-
-https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes
-
-Install `cert-manager` via:
-
-```
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.12.0/cert-manager.yaml
-```
-
-then just deploy kubernetes resources and wait until the certificate is issued (check by running: `kubectl describe certificate cents-ideas-tls`)
