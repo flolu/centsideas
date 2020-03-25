@@ -184,3 +184,26 @@ container_image(
     tags = ["local"],
     workdir = "/app/src/nodejs_image.binary.runfiles/cents_ideas/services/client",
 )
+
+ts_library(
+    name = "universal_server_lib",
+    srcs = [
+        "server.ts",
+    ],
+    deps = [
+        "//services/client/src/app:app_server",
+        "@npm//@nguniversal/express-engine",
+        "@npm//@types/express",
+        "@npm//@types/node",
+        "@npm//express",
+    ],
+)
+
+nodejs_image(
+    name = "universal_server",
+    data = [
+        ":prodapp",
+        ":universal_server_lib",
+    ],
+    entry_point = ":server.ts",
+)
