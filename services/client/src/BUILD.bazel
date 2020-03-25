@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_web")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@npm//@babel/cli:index.bzl", "babel")
@@ -152,6 +152,7 @@ pkg_web(
     srcs = _ASSETS + _PROD_ASSETS + _BUNDLE_ASSETS + [
         ":inject_scripts_for_prod",
         "styles.css",
+        "favicon.ico",
         "//services/client/src/assets",
     ],
     additional_root_paths = [
@@ -192,6 +193,7 @@ ts_library(
     ],
     deps = [
         "//services/client/src/app:app_server",
+        "@npm//@angular/core",
         "@npm//@nguniversal/express-engine",
         "@npm//@types/express",
         "@npm//@types/node",
@@ -199,7 +201,7 @@ ts_library(
     ],
 )
 
-nodejs_image(
+nodejs_binary(
     name = "universal_server",
     data = [
         ":prodapp",

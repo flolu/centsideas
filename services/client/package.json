@@ -1,8 +1,0 @@
-{
-  "scripts": {
-    "dev:ssr": "ng run client:serve-ssr",
-    "serve:ssr": "node dist/client/server/main.js",
-    "build:ssr": "ng build --prod && ng run client:server:production",
-    "prerender": "ng run client:prerender"
-  }
-}
