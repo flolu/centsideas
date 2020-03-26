@@ -5,22 +5,17 @@
     "dev": "yarn setup && yarn docker:dev",
     "test": "bazelisk test //...",
     "deploy": "bazelisk run :kubernetes_deployment.apply",
+    "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
     "setup": "ts-node setup",
     "docker:dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
-    "start:gateway": "ts-node-dev services/gateway/index.ts",
-    "start:ideas": "ts-node-dev services/ideas/index.ts",
-    "start:users": "ts-node-dev services/users/index.ts",
-    "start:consumer": "ts-node-dev services/consumer/index.ts",
-    "start:reviews": "ts-node-dev services/reviews/index.ts",
     "docker:stop": "docker container stop $(docker container ls -aq)",
     "docker:prune": "docker system prune --volumes",
     "docker:clean": "yarn docker:stop && yarn docker:prune",
     "bazel:clean": "bazelisk clean",
-    "postinstall": "ngcc",
     "client:start": "ibazel run //services/client/src:devserver",
-    "client:build": "bazelisk build //services/client/src:prodapp",
     "client:serve-prod": "bazelisk run //services/client/src:prodserver",
-    "client:serve-ssr": "bazelisk run //services/client/src:universal_server"
+    "client:serve-ssr": "bazelisk run //services/client/src:universal_server",
+    "postinstall": "ngcc"
   },
   "dependencies": {
     "@angular/animations": "9.0.7",
@@ -112,7 +107,6 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "terser": "4.6.7",
     "ts-jest": "24.3.0",
-    "ts-node": "8.3.0",
     "ts-node-dev": "1.0.0-pre.44",
     "tslint": "5.18.0",
     "typescript": "3.7.5"
