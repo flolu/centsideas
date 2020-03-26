@@ -127,6 +127,7 @@ terser_minified(
 _PROD_ASSETS = [
     "@npm//:node_modules/systemjs/dist/system.js",
     "@npm//:node_modules/core-js/client/core.min.js",
+    "@npm//:node_modules/core-js/client/core.min.js.map",
 ]
 
 _BUNDLE_ASSETS = [
