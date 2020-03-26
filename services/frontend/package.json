@@ -46,7 +46,7 @@
     "@ngrx/store": "8.6.0",
     "@ngrx/store-devtools": "8.6.0",
     "@types/jest": "24.9.1",
-    "@types/node": "12.12.27",
+    "@types/node": "12.12.31",
     "codelyzer": "5.2.1",
     "envsub": "3.1.0",
     "jest": "24.9.0",
