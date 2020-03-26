@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_web")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@npm//@babel/cli:index.bzl", "babel")
@@ -10,11 +10,6 @@ load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
-
-exports_files([
-    "tsconfig.json",
-    "tsconfig.spec.json",
-])
 
 ts_library(
     name = "initialize_testbed",
@@ -132,6 +127,7 @@ terser_minified(
 _PROD_ASSETS = [
     "@npm//:node_modules/systemjs/dist/system.js",
     "@npm//:node_modules/core-js/client/core.min.js",
+    "@npm//:node_modules/core-js/client/core.min.js.map",
 ]
 
 _BUNDLE_ASSETS = [
@@ -157,6 +153,7 @@ pkg_web(
     srcs = _ASSETS + _PROD_ASSETS + _BUNDLE_ASSETS + [
         ":inject_scripts_for_prod",
         "styles.css",
+        "favicon.ico",
         "//services/client/src/assets",
     ],
     additional_root_paths = [
@@ -188,4 +185,28 @@ container_image(
     base = ":nodejs_image",
     tags = ["local"],
     workdir = "/app/src/nodejs_image.binary.runfiles/cents_ideas/services/client",
+)
+
+ts_library(
+    name = "universal_server_lib",
+    srcs = [
+        "server.ts",
+    ],
+    deps = [
+        "//services/client/src/app:app_server",
+        "@npm//@angular/core",
+        "@npm//@nguniversal/express-engine",
+        "@npm//@types/express",
+        "@npm//@types/node",
+        "@npm//express",
+    ],
+)
+
+nodejs_binary(
+    name = "universal_server",
+    data = [
+        ":prodapp",
+        ":universal_server_lib",
+    ],
+    entry_point = ":server.ts",
 )

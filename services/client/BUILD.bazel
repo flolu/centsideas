@@ -2,26 +2,14 @@ load("@npm_bazel_typescript//:index.bzl", "ts_config")
 
 package(default_visibility = ["//:__subpackages__"])
 
-alias(
-    name = "tsconfig.json",
-    actual = "//services/client/src:tsconfig.json",
-)
-
-alias(
-    name = "tsconfig.spec.json",
-    actual = "//services/client/src:tsconfig.spec.json",
-)
-
 ts_config(
     name = "tsconfig-test",
     src = ":tsconfig.spec.json",
     deps = [":tsconfig.json"],
 )
 
-#k8s_deploy(
-#    name = "deploy",
-#    images = {
-#        "gcr.io/cents-ideas/src:nodejs_image": "//services/client/src:image",
-#    },
-#    template = ":deployment.yaml",
-#)
+ts_config(
+    name = "tsconfig-server",
+    src = ":tsconfig.server.json",
+    deps = [":tsconfig.json"],
+)

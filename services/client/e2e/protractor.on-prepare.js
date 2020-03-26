@@ -20,7 +20,7 @@ module.exports = function(config) {
     .runServer(config.workspace, config.server, isProdserver ? '-p' : '-port', [])
     .then(serverSpec => {
       // Example app is hosted under `/example` in the prodserver and under `/` in devserver
-      const serverUrl = `http://localhost:${serverSpec.port}` + (isProdserver ? '/example' : '');
+      const serverUrl = `http://localhost:${serverSpec.port}`;
       protractor.browser.baseUrl = serverUrl;
     });
 };

@@ -6,7 +6,10 @@ ng_module(
     name = "app",
     srcs = glob(
         include = ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = [
+            "**/*.spec.ts",
+            "app.server.module.ts",
+        ],
     ),
     # assets = ["app.component.html"],
     tsconfig = "//services/client:tsconfig.json",
@@ -16,6 +19,17 @@ ng_module(
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
+        #"@npm//@angular/platform-server",
         #"@npm//@ngrx/store",
+    ],
+)
+
+ng_module(
+    name = "app_server",
+    srcs = ["app.server.module.ts"],
+    tsconfig = "//services/client:tsconfig-server",
+    deps = [
+        ":app",
+        "@npm//@angular/platform-server",
     ],
 )
