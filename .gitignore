@@ -9,3 +9,5 @@ yarn-error.log*
 
 bazel-*
 dist
+
+__ngcc_entry_points__.json
