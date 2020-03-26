@@ -5,7 +5,7 @@
     "dev": "yarn setup && yarn docker:dev",
     "test": "bazelisk test //...",
     "deploy": "bazelisk run :kubernetes_deployment.apply",
-    "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
+    "clean": "rm -rf node_modules && yarn bazel:clean",
     "setup": "ts-node setup",
     "docker:dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "docker:stop": "docker container stop $(docker container ls -aq)",
@@ -109,7 +109,7 @@
     "ts-jest": "25.2.1",
     "ts-node-dev": "1.0.0-pre.44",
     "tslint": "6.1.0",
-    "typescript": "3.7.5"
+    "typescript": "3.8.3"
   },
   "prettier": {
     "trailingComma": "all",
