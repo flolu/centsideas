@@ -8,6 +8,7 @@ load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -203,10 +204,27 @@ ts_library(
 )
 
 nodejs_binary(
+    name = "universal_server_dev_server",
+    data = [
+        ":prodapp",
+        ":universal_server_lib",
+    ],
+    entry_point = ":server.ts",
+)
+
+nodejs_image(
     name = "universal_server",
     data = [
         ":prodapp",
         ":universal_server_lib",
     ],
     entry_point = ":server.ts",
+)
+
+k8s_deploy(
+    name = "k8s",
+    images = {
+        "gcr.io/centsideas/client:latest": ":universal_server",
+    },
+    template = ":client.yaml",
 )

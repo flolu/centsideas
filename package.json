@@ -14,7 +14,7 @@
     "bazel:clean": "bazelisk clean",
     "client:start": "ibazel run //services/client/src:devserver",
     "client:serve-prod": "bazelisk run //services/client/src:prodserver",
-    "client:serve-ssr": "bazelisk run //services/client/src:universal_server",
+    "client:serve-ssr": "bazelisk run //services/client/src:universal_server_dev_server",
     "postinstall": "ngcc"
   },
   "dependencies": {

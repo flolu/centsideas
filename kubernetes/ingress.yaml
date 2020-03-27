@@ -21,3 +21,9 @@ spec:
           - backend:
               serviceName: cents-ideas-gateway
               servicePort: 3000
+    - host: cents-ideas.flolu.com
+      http:
+        paths:
+          - backend:
+              serviceName: cents-ideas-client
+              servicePort: 8080
