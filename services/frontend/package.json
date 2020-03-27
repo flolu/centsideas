@@ -49,7 +49,7 @@
     "@types/node": "12.12.31",
     "codelyzer": "5.2.1",
     "envsub": "3.1.0",
-    "jest": "24.9.0",
+    "jest": "25.2.3",
     "jest-preset-angular": "7.1.1",
     "protractor": "5.4.2",
     "ts-loader": "5.4.5",
