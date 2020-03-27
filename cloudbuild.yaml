@@ -4,7 +4,7 @@ steps:
     args: [
         'test',
         #"--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache",
-        '--test_output=errors',
+        '--test_output=all',
         '--google_default_credentials',
         '//...',
       ]
