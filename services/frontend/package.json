@@ -50,7 +50,7 @@
     "codelyzer": "5.2.1",
     "envsub": "3.1.0",
     "jest": "24.9.0",
-    "jest-preset-angular": "7.1.1",
+    "jest-preset-angular": "8.1.2",
     "protractor": "5.4.2",
     "ts-loader": "5.4.5",
     "ts-node": "7.0.1",
