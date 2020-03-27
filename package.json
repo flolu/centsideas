@@ -124,5 +124,19 @@
     "@cents-ideas/event-sourcing": "./packages/event-sourcing",
     "@cents-ideas/models": "./packages/models"
   },
-  "version": "0.0.0"
+  "renovate": {
+    "extends": [
+      "config:base"
+    ],
+    "baseBranches": [
+      "dev"
+    ],
+    "ignorePaths": [
+      "services/frontend"
+    ],
+    "groupName": "all",
+    "assignees": [
+      "flolu"
+    ]
+  }
 }
