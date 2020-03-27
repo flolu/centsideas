@@ -48,7 +48,7 @@
     "@types/jest": "24.9.1",
     "@types/node": "12.12.31",
     "codelyzer": "5.2.1",
-    "envsub": "3.1.0",
+    "envsub": "4.0.7",
     "jest": "24.9.0",
     "jest-preset-angular": "7.1.1",
     "protractor": "5.4.2",
