@@ -1704,10 +1704,10 @@
   resolved "https://registry.yarnpkg.com/@types/module-alias/-/module-alias-2.0.0.tgz#882668f8b8cdbda44812c3b592c590909e18849e"
   integrity sha512-e3sW4oEH0qS1QxSfX7PT6xIi5qk/YSMsrB9Lq8EtkhQBZB+bKyfkP+jpLJRySanvBhAQPSv2PEBe81M8Iy/7yg==
 
-"@types/mongodb@3.5.3":
-  version "3.5.3"
-  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.5.3.tgz#30187822af029b21c419a1e0415a7dcf48c2668a"
-  integrity sha512-89Ftby4+/qliA+Yb8FYMPYBryKdqnJ63FmZwZ0EFNI8HZ7adT9r2XxdMkqC9SdIOMfk39km9iFXr+obBm1dFGQ==
+"@types/mongodb@3.5.4":
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.5.4.tgz#3c54abf6340fd2fe7c83fb8c3f1848497db8e55d"
+  integrity sha512-1Q781+rC+hYB34Ped9dRLOWsw1yTNwqphqkRyJR/yFuoWoZ3664s6RxilVSkqEm3lwFmpTYCXtGudxSpHHGDIQ==
   dependencies:
     "@types/bson" "*"
     "@types/node" "*"
