@@ -1,4 +1,5 @@
 {
   "extends": ["config:base"],
-  "baseBranches": ["dev"]
+  "baseBranches": ["dev"],
+  "ignorePaths": ["services/frontend"]
 }
