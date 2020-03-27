@@ -40,7 +40,7 @@ nodejs_image(
 k8s_deploy(
     name = "k8s",
     images = {
-        "gcr.io/cents-ideas/consumer:latest": ":image",
+        "gcr.io/centsideas/consumer:latest": ":image",
     },
     template = ":consumer.yaml",
 )

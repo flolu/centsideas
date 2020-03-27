@@ -64,7 +64,7 @@ jest_test(
 k8s_deploy(
     name = "k8s",
     images = {
-        "gcr.io/cents-ideas/ideas:latest": ":image",
+        "gcr.io/centsideas/ideas:latest": ":image",
     },
     template = ":ideas.yaml",
 )

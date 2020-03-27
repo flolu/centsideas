@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: gcr.io/cents-ideas/gateway:latest
+          image: gcr.io/centsideas/gateway:latest
           envFrom:
             - configMapRef:
                 name: global-config

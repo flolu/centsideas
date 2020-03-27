@@ -24,7 +24,7 @@ k8s_objects(
         "//kubernetes:database_storage",
         "//kubernetes:nginx",
         "//kubernetes:ingress",
-        "//kubernetes:certificate_issuer",
+        #"//kubernetes:certificate_issuer",
         "//kubernetes:kafka",
         "//services/consumer:k8s",
         "//services/gateway:k8s",

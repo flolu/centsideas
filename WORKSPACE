@@ -85,7 +85,7 @@ k8s_defaults(
     name = "k8s_deploy",
     cluster = "_".join([
         "gke",
-        "cents-ideas",
+        "centsideas",
         "europe-west3-b",
         "cents-ideas",
     ]),

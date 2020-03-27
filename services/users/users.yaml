@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: users
-          image: gcr.io/cents-ideas/users:latest
+          image: gcr.io/centsideas/users:latest
           imagePullPolicy: Always
           envFrom:
             - configMapRef:

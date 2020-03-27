@@ -50,7 +50,14 @@ This is a project with the purpose of learning the architecture of complex web a
 - `yarn dev` to start all backend services locally (gateway is available under http://localhost:3000)
 - `yarn client:start` to start the frontend application (live url is printed in logs)
 - `yarn test` to run all unit tests
-- `yarn deploy` to deploy all services to your Kubernetes cluster (works only if kubectl and google-cloud-sdk are installed, and your need to authenticated to push containers to google container registry and deploy configurations to your kubernetes cluster)
+
+## Deployment
+
+`yarn deploy` to deploy all services to your Kubernetes cluster (works only if kubectl and google-cloud-sdk are installed, and your need to authenticated to push containers to google container registry and deploy configurations to your kubernetes cluster)
+
+1. `gcloud init`
+2. `gcloud auth configure-docker`
+3. `yarn deploy`
 
 ## Requirements
 
