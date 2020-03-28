@@ -65,7 +65,7 @@
     "@bazel/protractor": "1.4.1",
     "@bazel/rollup": "1.4.1",
     "@bazel/terser": "1.4.1",
-    "@bazel/typescript": "1.4.1",
+    "@bazel/typescript": "1.5.0",
     "@nguniversal/builders": "9.0.2",
     "@types/async-retry": "1.4.1",
     "@types/body-parser": "1.19.0",
