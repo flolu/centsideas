@@ -1296,10 +1296,17 @@
     rxjs "6.5.4"
     webpack-sources "1.4.3"
 
-"@nguniversal/express-engine@8.2.6":
-  version "8.2.6"
-  resolved "https://registry.yarnpkg.com/@nguniversal/express-engine/-/express-engine-8.2.6.tgz#3930551727b5be1256f0aefa1ffd3c37cb420f9f"
-  integrity sha512-IKUKTpesgjYyB0Xg+fFhSbwbGBJhG0Wfn8MkQAi9RgSi8QsrSMkI3oUXc86Z7fpQL55D/ZIH7PekoC0Fmh/kxA==
+"@nguniversal/common@9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@nguniversal/common/-/common-9.1.0.tgz#01ac2d2c47c6d04f955f1713697377afcaa1ad91"
+  integrity sha512-Pvb3KhuV44PxLmVOf1dqnuckdaNdfT5tbiUu2/vVbdtyFdQpF40D1Zx4RumRymK0ZzTJGQsJtJSi2DJvvGgwMg==
+
+"@nguniversal/express-engine@9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@nguniversal/express-engine/-/express-engine-9.1.0.tgz#ddc1cecb4134a365142a9ba6ebb6ae8f99cb2ad1"
+  integrity sha512-uRb8dJD3huk42eY1iOpmr8yfq/LTSOoUfKY4eVREE7nMePyZNSRQHNCEybHDTNh43FvTN38u+cA4dTlmMFD5GQ==
+  dependencies:
+    "@nguniversal/common" "9.1.0"
 
 "@nguniversal/module-map-ngfactory-loader@8.2.6":
   version "8.2.6"
