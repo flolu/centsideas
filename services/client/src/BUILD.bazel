@@ -225,7 +225,7 @@ nodejs_image(
 k8s_deploy(
     name = "k8s",
     images = {
-        CONTAINER_REGISTRY + "/client:latest": ":universal_server",
+        "client:placeholder_name": ":universal_server",
     },
     template = ":client.yaml",
 )

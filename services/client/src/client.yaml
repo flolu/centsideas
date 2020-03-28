@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: gcr.io/centsideas/client:latest
+          image: client:placeholder_name
           envFrom:
             - configMapRef:
                 name: global-config

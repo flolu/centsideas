@@ -65,7 +65,7 @@ jest_test(
 k8s_deploy(
     name = "k8s",
     images = {
-        CONTAINER_REGISTRY + "/ideas:latest": ":image",
+        "ideas:placeholder_name": ":image",
     },
     template = ":ideas.yaml",
 )

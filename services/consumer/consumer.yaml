@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: consumer
-          image: gcr.io/centsideas/consumer:latest
+          image: consumer:placeholder_name
           envFrom:
             - configMapRef:
                 name: global-config

@@ -38,7 +38,7 @@ nodejs_image(
 k8s_deploy(
     name = "k8s",
     images = {
-        CONTAINER_REGISTRY + "/reviews:latest": ":image",
+        "reviews:placeholder_name": ":image",
     },
     template = ":reviews.yaml",
 )

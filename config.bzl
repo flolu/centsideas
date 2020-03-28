@@ -12,6 +12,5 @@ KUBERNETES_CLUSTER = "_".join([
     CLUSTER_NAME,
 ])
 
-# TODO also make configurable for deployment yaml's
 CONTAINER_REGISTRY_HOST = "gcr.io"
 CONTAINER_REGISTRY = CONTAINER_REGISTRY_HOST + "/" + GOOGLE_CLOUD_PROJECT_ID
