@@ -1037,10 +1037,10 @@
   dependencies:
     tmp "0.1.0"
 
-"@bazel/protractor@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-1.4.1.tgz#fb668429ddc7d1d725d9ce9cf16a29e0e39ab2e0"
-  integrity sha512-AkgKdd+6cv6tSmCyop11jgfkpCGWsmykgBOAUftBPK2qtn5iHDSpI2xrZUQQv1/F9vhFFvy+09sIslGWP/TyEA==
+"@bazel/protractor@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-1.5.0.tgz#ac92442bf38f5cd718812e4cca41ba2e5ebf1fa5"
+  integrity sha512-nUwOOUjNGJUU18JiE3sPOBzIul0jvGApEEikntKTLLwQ7w7/1TnOdXDWvHXrXRW3nwit6flWIzEUoFtWgwtCeg==
 
 "@bazel/rollup@1.4.1":
   version "1.4.1"
