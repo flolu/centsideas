@@ -1042,10 +1042,10 @@
   resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-1.4.1.tgz#fb668429ddc7d1d725d9ce9cf16a29e0e39ab2e0"
   integrity sha512-AkgKdd+6cv6tSmCyop11jgfkpCGWsmykgBOAUftBPK2qtn5iHDSpI2xrZUQQv1/F9vhFFvy+09sIslGWP/TyEA==
 
-"@bazel/rollup@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@bazel/rollup/-/rollup-1.4.1.tgz#395fbd2611867a54be154ecff1239fcde261371b"
-  integrity sha512-CU0D+xPQbspuVsKhv2sP0kWhIuEQo8eYjhQXP9BXVZ02uc+YCOkW/5JHIhF946QYljp++W6mcVUGFdBYcrVZow==
+"@bazel/rollup@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@bazel/rollup/-/rollup-1.5.0.tgz#d0933d167e682470b90f8149eecf4c5bd7511369"
+  integrity sha512-/FEJfNi9dbbH8oQbf7LHyd0uhGSB0CQQhOpz8d4b2WLnYLhK0NZhoNF4afFjju5kQkrbrOfKaho64BfVxvNppA==
 
 "@bazel/terser@1.4.1":
   version "1.4.1"
