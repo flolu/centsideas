@@ -14,31 +14,6 @@ k8s_deploy(
 )
 
 k8s_deploy(
-    name = "nginx_admin_binding",
-    template = ":nginx-ingress/admin-binding.yaml",
-)
-
-k8s_deploy(
-    name = "nginx_cloud_generic",
-    template = ":nginx-ingress/cloud-generic.yaml",
-)
-
-k8s_deploy(
-    name = "nginx_mandatory",
-    template = ":nginx-ingress/mandatory.yaml",
-)
-
-k8s_objects(
-    name = "nginx",
-    # order is important
-    objects = [
-        ":nginx_admin_binding",
-        ":nginx_mandatory",
-        ":nginx_cloud_generic",
-    ],
-)
-
-k8s_deploy(
     name = "database_storage",
     template = ":database-storage.yaml",
 )

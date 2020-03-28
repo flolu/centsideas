@@ -50,3 +50,4 @@ spec:
     - name: http
       port: 8080
       targetPort: 8080
+  type: NodePort
