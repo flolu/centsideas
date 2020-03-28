@@ -80,7 +80,7 @@
     "@types/kafkajs": "1.9.0",
     "@types/module-alias": "2.0.0",
     "@types/mongodb": "3.5.4",
-    "@types/node": "13.9.4",
+    "@types/node": "13.9.5",
     "@types/nodemailer": "6.4.0",
     "@types/sanitize-html": "1.22.0",
     "@types/shortid": "0.0.29",
