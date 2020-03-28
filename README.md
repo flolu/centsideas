@@ -58,138 +58,56 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Deployment
 
-## 1. Setup your Kubernetes Cluster
+### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster
 
-- Head to [Google Kubernetes Engine](https://console.cloud.google.com/kubernetes) create a cluster
-  ![](assets/deployment_create-gke-cluster.jpg)
-- Give your cluster a name and configure a zone or region. All other settings can be left untouched. Then hit "Create"
-  ![](assets/deployment_cluster-settings.jpg)
-- While the cluster is creating you can install [Google Cloud SDK](https://cloud.google.com/sdk/install) and [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- Select your created cluster and choose "Connect". You can just copy the command and paste it into your terminal.
-  ![](assets/deployment_connect-cluster.jpg)
-- This command should be successful if you have `kubectl` installed
-  ![](assets/deployment_connected-to-cluster.jpg)
+```
+gcloud beta container --project "centsideas" clusters create "cents-ideas" --zone "europe-west3-b"
+```
 
-## 2. Setup [Helm](https://helm.sh/)
+### 2. Connect to cluster
 
-> To simplify the next step we will use Helm, a package manager for Kubernetes
+```
+gcloud container clusters get-credentials cents-ideas --zone europe-west3-b --project centsideas
+```
 
-- Install [Helm](https://helm.sh/docs/intro/install/)
-- Add chart repositories
-  ```
-  helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-  helm repo add jetstack https://charts.jetstack.io/
-  helm repo update
-  ```
+### 3. Setup [Helm](https://helm.sh/)
 
-## 3. Create an [NGINX Ingress](https://github.com/kubernetes/ingress-nginx)
+```
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo add jetstack https://charts.jetstack.io/
+helm repo update
+```
 
-> ingress-nginx is an Ingress controller for Kubernetes using NGINX as a reverse proxy and load balancer
+### 3. Create an [NGINX Ingress](https://github.com/kubernetes/ingress-nginx)
 
-- Configure permissions
-  ```
-  kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $(gcloud config get-value account)
-  ```
-- Install nginx-ingress
-  ```
-  helm install nginx-ingress stable/nginx-ingress
-  ```
-  > It may take a few minutes for the LoadBalancer IP to be available
-- Head to your [Load Balancers](https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list) and select the newly created Load Balancer. There you will find the IP address. (In my case it's: `35.242.213.153`)
-  ![](assets/deployment_load-balancer-ip.jpg)
-- In the settings of your domain name provider add two "A" records, that point to the Load Balancer's IP address. One for the backend API and one for the web application:
-  ![](assets/deployment_domain-a-record.jpg)
+```
+kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $(gcloud config get-value account)
 
-## 4. Setup [Cert Manager](https://github.com/helm/charts/tree/master/stable/cert-manager)
+helm install nginx-ingress stable/nginx-ingress
+```
 
-> cert-manager is a Kubernetes addon to automate the management and issuance of TLS certificates from various issuing sources.
+### 4. Point Domain to IP
 
-- Install mandatory configuration for cert-manager
-  ```
-  kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.0/deploy/manifests/00-crds.yaml
-  ```
-  ![](assets/deployment_apply-prerequisites.jpg)
-- It's recommended to create a namespace for cert-manager
-  ```
-  kubectl create namespace cert-manager
-  ```
-- Install cert-manager via helm
-  ```
-  helm install cert-manager jetstack/cert-manager --namespace cert-manager
-  ```
-  ![](assets/deployment_cert-manager-installed.jpg)
-- By now you should already have a few workloads and services in your cluster
-- Enter your email address for the issuing the ssl certificates in `kubernetes/certificate-issuer.yaml`
-  ```
-  apiVersion: cert-manager.io/v1alpha2
-  kind: ClusterIssuer
-  metadata:
-    name: letsencrypt
-  spec:
-    acme:
-      server: https://acme-v02.api.letsencrypt.org/directory
-  ⮕   email: YOUR@EMAIL.HERE
-      privateKeySecretRef:
-        name: letsencrypt-private-key
-      solvers:
-        - http01:
-            ingress:
-              class: nginx
-  ```
-- Configure the Ingress to use your domains in `kubernetes/ingress.yaml`
-  ```
-  apiVersion: extensions/v1beta1
-  kind: Ingress
-  metadata:
-    name: cents-ideas-ingress
-    annotations:
-      kubernetes.io/tls-acme: 'true'
-      kubernetes.io/ingress.class: 'nginx'
-      cert-manager.io/cluster-issuer: letsencrypt
-  spec:
-    tls:
-      - hosts:
-  ⮕       - cents-ideas.flolu.com
-  ⮕       - api.cents-ideas.flolu.com
-        secretName: cents-ideas-tls
-    rules:
-  ⮕   - host: api.cents-ideas.flolu.com
-        http:
-          paths:
-            - backend:
-                serviceName: cents-ideas-gateway
-                servicePort: 3000
-   ⮕  - host: cents-ideas.flolu.com
-        http:
-          paths:
-            - backend:
-                serviceName: cents-ideas-client
-                servicePort: 8080
-  ```
-  - In `kubernetes/config.yaml`, you'll also need to change the `API_URL` to your domain
-  ```
-  data:
-  ⮕  API_URL: https://cents-ideas-api.flolu.com
-  ```
+Go to the created [Load Balancer](https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list) and point your domain to this IP address via an "A" record.
 
-## 5. Deploy services
+| Record Type | Domain                    | Value      |
+| ----------- | ------------------------- | ---------- |
+| A           | cents-ideas.flolu.com     | IP address |
+| A           | api.cents-ideas.flolu.com | IP address |
 
-- In `config.bzl` enter your Google project name, the zone or region of the cluster and your cluster name
+### 5. Setup [Cert Manager](https://github.com/helm/charts/tree/master/stable/cert-manager)
 
-  ```
-  ⮕ GOOGLE_CLOUD_PROJECT_ID = "centsideas"
+```
+kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.0/deploy/manifests/00-crds.yaml
+kubectl create namespace cert-manager
+helm install cert-manager jetstack/cert-manager --namespace cert-manager
+```
 
-  ⮕ CLUSTER_ZONE = "europe-west3-b"
+### 6. Deploy services
 
-  ⮕ CLUSTER_NAME = "cents-ideas"
-  ```
-
-- Now it's finally time to deploy the configurations and all `./services`.
-  ```
-  yarn deploy
-  ```
-- Depending on your workstation and your internet speed, this step may take a few minutes. Bazel will take the source code and create Docker images from it. Those docker images will then be uploaded the Google Container Registry. Afterwards all deployments will be applied to the Kubernetes cluster, which then runs the Docker images.
-- That's it. You should now be able to visit your domains. In my case https://cents-ideas.flolu.com for the web application and https://api.cents-ideas.flolu.com for the backend API
+```
+yarn deploy
+```
 
 ## Git Flow
 
