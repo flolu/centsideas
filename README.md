@@ -174,20 +174,16 @@ This is a project with the purpose of learning the architecture of complex web a
 
 ## 5. Deploy services
 
-- In `WORKSPACE` enter your Google project name, the zone or region of the cluster and your cluster name
+- In `config.bzl` enter your Google project name, the zone or region of the cluster and your cluster name
+
   ```
-  k8s_defaults(
-      name = "k8s_deploy",
-      cluster = "_".join([
-          "gke",
-  ⮕       "centsideas",
-  ⮕       "europe-west3-b",
-  ⮕       "cents-ideas",
-      ]),
-      kind = "deployment",
-  )
+  ⮕ GOOGLE_CLOUD_PROJECT_ID = "centsideas"
+
+  ⮕ CLUSTER_ZONE = "europe-west3-b"
+
+  ⮕ CLUSTER_NAME = "cents-ideas"
   ```
-- **TODO:** Add variable for docker image urls!
+
 - Now it's finally time to deploy the configurations and all `./services`.
   ```
   yarn deploy

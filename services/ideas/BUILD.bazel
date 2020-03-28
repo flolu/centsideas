@@ -2,6 +2,7 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@cents_ideas//:jest.bzl", "jest_test")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("//:config.bzl", "CONTAINER_REGISTRY")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -64,7 +65,7 @@ jest_test(
 k8s_deploy(
     name = "k8s",
     images = {
-        "gcr.io/centsideas/ideas:latest": ":image",
+        CONTAINER_REGISTRY + "/ideas:latest": ":image",
     },
     template = ":ideas.yaml",
 )

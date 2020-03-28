@@ -9,6 +9,7 @@ load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("//:config.bzl", "CONTAINER_REGISTRY")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -224,7 +225,7 @@ nodejs_image(
 k8s_deploy(
     name = "k8s",
     images = {
-        "gcr.io/centsideas/client:latest": ":universal_server",
+        CONTAINER_REGISTRY + "/client:latest": ":universal_server",
     },
     template = ":client.yaml",
 )

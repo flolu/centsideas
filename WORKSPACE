@@ -81,13 +81,10 @@ load("@io_bazel_rules_k8s//k8s:k8s_go_deps.bzl", k8s_go_deps = "deps")
 
 k8s_go_deps()
 
+load("//:config.bzl", "KUBERNETES_CLUSTER")
+
 k8s_defaults(
     name = "k8s_deploy",
-    cluster = "_".join([
-        "gke",
-        "centsideas",
-        "europe-west3-b",
-        "cents-ideas",
-    ]),
+    cluster = KUBERNETES_CLUSTER,
     kind = "deployment",
 )

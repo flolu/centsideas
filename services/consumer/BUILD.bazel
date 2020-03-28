@@ -1,6 +1,7 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("//:config.bzl", "CONTAINER_REGISTRY")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -40,7 +41,7 @@ nodejs_image(
 k8s_deploy(
     name = "k8s",
     images = {
-        "gcr.io/centsideas/consumer:latest": ":image",
+        CONTAINER_REGISTRY + "/consumer:latest": ":image",
     },
     template = ":consumer.yaml",
 )
