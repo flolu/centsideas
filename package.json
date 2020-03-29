@@ -15,7 +15,8 @@
     "client:start": "ibazel run //services/client/src:devserver",
     "client:serve-prod": "bazelisk run //services/client/src:prodserver",
     "client:serve-ssr": "bazelisk run //services/client/src:universal_server_dev_server",
-    "postinstall": "ngcc"
+    "postinstall": "ngcc",
+    "prettier": "prettier --check \"**\""
   },
   "dependencies": {
     "@angular/animations": "9.1.0",
@@ -99,6 +100,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "module-alias": "2.2.2",
     "npm-run-all": "4.1.5",
+    "prettier": "^2.0.2",
     "protractor": "5.4.3",
     "requirejs": "2.3.6",
     "rimraf": "3.0.2",
@@ -111,29 +113,10 @@
     "tslint": "6.1.0",
     "typescript": "3.8.3"
   },
-  "prettier": {
-    "trailingComma": "all",
-    "tabWidth": 2,
-    "singleQuote": true,
-    "printWidth": 120,
-    "bracketSpacing": true
-  },
   "_moduleAliases": {
     "@cents-ideas/enums": "./packages/enums",
     "@cents-ideas/utils": "./packages/utils",
     "@cents-ideas/event-sourcing": "./packages/event-sourcing",
     "@cents-ideas/models": "./packages/models"
-  },
-  "renovate": {
-    "extends": [
-      "config:base"
-    ],
-    "baseBranches": [
-      "dev"
-    ],
-    "assignees": [
-      "flolu"
-    ],
-    "schedule": "every weekend"
   }
 }
