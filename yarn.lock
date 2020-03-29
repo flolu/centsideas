@@ -1277,6 +1277,16 @@
   resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.14.tgz#0e0810a0a174e50e22dfe8edb30599840712f22d"
   integrity sha512-518yewjSga1jLdiLrcmpMFlaba5P+50b0TWNFUpC+SL9Yzf0kMi57qw+bMl+rQ08cGqH1vLx4eg9YFUbZXgZ0Q==
 
+"@ngrx/store-devtools@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-9.0.0.tgz#2eba2739f4a4c90f6cdd0036fb935162643ed435"
+  integrity sha512-Vj8sj8GclbSbnYCS8eqZXTOYDdip1nnjKhkYClUg2oFPh67haaCmvh7TXITnX8PpgDtj5akF84Xw9/1HRiG8mg==
+
+"@ngrx/store@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-9.0.0.tgz#ef45e241ba9cf401d5280fa99b09f2fb3fc3278d"
+  integrity sha512-QnmfXJ4G2jp+vFaqT5Qfp6h0J9OHxfDKI2RbnMU93Tq1Xd/WVPzXnOQGjILBjwwWI6RFkSdIpUoQONr7VOW63g==
+
 "@ngtools/webpack@9.1.0":
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-9.1.0.tgz#c082d9e64e5900189e4612f657d68e5b81ae277c"
