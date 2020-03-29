@@ -17,26 +17,64 @@ const initialState: IdeasState = adapter.getInitialState({
 
 const ideasReducer = createReducer(
   initialState,
-  on(IdeasActions.getIdeas, state => ({ ...state, loading: true, loaded: false, error: null })),
+  on(IdeasActions.getIdeas, state => ({
+    ...state,
+    loading: true,
+    loaded: false,
+    error: null,
+  })),
   on(IdeasActions.getIdeasDone, (state, action) =>
-    adapter.addMany(action.ideas, { ...state, loaded: true, loading: false, error: null }),
+    adapter.addMany(action.ideas, {
+      ...state,
+      loaded: true,
+      loading: false,
+      error: null,
+    }),
   ),
-  on(IdeasActions.getIdeasFail, (state, { error }) => ({ ...state, loaded: false, loading: false, error })),
-  on(IdeasActions.createIdea, state => ({ ...state, loading: true, loaded: false, error: null })),
+  on(IdeasActions.getIdeasFail, (state, { error }) => ({
+    ...state,
+    loaded: false,
+    loading: false,
+    error,
+  })),
+  on(IdeasActions.createIdea, state => ({
+    ...state,
+    loading: true,
+    loaded: false,
+    error: null,
+  })),
   on(IdeasActions.createIdeaDone, (state, action) =>
     adapter.upsertOne(
       { ...action.created, reviews: [], scores: null, reviewCount: -1 },
       { ...state, loading: false, loaded: true, error: null },
     ),
   ),
-  on(IdeasActions.getIdeaById, state => ({ ...state, loading: true, loaded: false, error: null })),
+  on(IdeasActions.getIdeaById, state => ({
+    ...state,
+    loading: true,
+    loaded: false,
+    error: null,
+  })),
   on(IdeasActions.getIdeaByIdDone, (state, action) =>
-    adapter.upsertOne(action.idea, { ...state, loaded: true, loading: false, error: null }),
+    adapter.upsertOne(action.idea, {
+      ...state,
+      loaded: true,
+      loading: false,
+      error: null,
+    }),
   ),
-  on(IdeasActions.getIdeaByIdFail, (state, { error }) => ({ ...state, loading: false, loaded: false, error })),
+  on(IdeasActions.getIdeaByIdFail, (state, { error }) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error,
+  })),
   on(ReviewsActions.publishReviewDone, (state, { published }) => {
     const idea = state.entities[published.ideaId];
-    const updated: IIdeaViewModel = { ...idea, reviews: [published, ...idea.reviews] };
+    const updated: IIdeaViewModel = {
+      ...idea,
+      reviews: [published, ...idea.reviews],
+    };
     return {
       ...state,
       entities: { ...state.entities, [idea.id]: updated },

@@ -22,6 +22,9 @@ export class ReviewScoresRangeError extends EntityError {
     const message = isToBig
       ? `Score can't be bigger than ${ReviewScoresRangeError.max}.`
       : `Score shouldn't be smaller than ${ReviewScoresRangeError.min}.`;
-    super(`${message} You've set ${invalidScoreName} to ${actualValue}`, HttpStatusCodes.BadRequest);
+    super(
+      `${message} You've set ${invalidScoreName} to ${actualValue}`,
+      HttpStatusCodes.BadRequest,
+    );
   }
 }

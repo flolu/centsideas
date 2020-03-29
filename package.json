@@ -16,7 +16,8 @@
     "client:serve-prod": "bazelisk run //services/client/src:prodserver",
     "client:serve-ssr": "bazelisk run //services/client/src:universal_server_dev_server",
     "postinstall": "ngcc",
-    "prettier": "prettier --check \"**\""
+    "prettier:check": "prettier --check \"**\"",
+    "prettier": "prettier --write \"**\""
   },
   "dependencies": {
     "@angular/animations": "9.1.0",

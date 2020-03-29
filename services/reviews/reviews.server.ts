@@ -12,7 +12,11 @@ import env from './environment';
 export class ReviewsServer {
   private app = express();
 
-  constructor(private logger: Logger, private reviewsService: ReviewsService, private expressAdapter: ExpressAdapter) {}
+  constructor(
+    private logger: Logger,
+    private reviewsService: ReviewsService,
+    private expressAdapter: ExpressAdapter,
+  ) {}
 
   start = () => {
     this.logger.debug('initialized with env: ', env);
@@ -20,16 +24,33 @@ export class ReviewsServer {
 
     this.app.use(bodyParser.json());
 
-    this.app.post(`/${ReviewsApiRoutes.Create}`, this.expressAdapter.json(this.reviewsService.createEmptyReview));
-    this.app.post(`/${ReviewsApiRoutes.SaveDraft}`, this.expressAdapter.json(this.reviewsService.saveDraft));
-    this.app.post(`/${ReviewsApiRoutes.Publish}`, this.expressAdapter.json(this.reviewsService.publish));
-    this.app.post(`/${ReviewsApiRoutes.Update}`, this.expressAdapter.json(this.reviewsService.update));
-    this.app.post(`/${ReviewsApiRoutes.Unpublish}`, this.expressAdapter.json(this.reviewsService.unpublish));
+    this.app.post(
+      `/${ReviewsApiRoutes.Create}`,
+      this.expressAdapter.json(this.reviewsService.createEmptyReview),
+    );
+    this.app.post(
+      `/${ReviewsApiRoutes.SaveDraft}`,
+      this.expressAdapter.json(this.reviewsService.saveDraft),
+    );
+    this.app.post(
+      `/${ReviewsApiRoutes.Publish}`,
+      this.expressAdapter.json(this.reviewsService.publish),
+    );
+    this.app.post(
+      `/${ReviewsApiRoutes.Update}`,
+      this.expressAdapter.json(this.reviewsService.update),
+    );
+    this.app.post(
+      `/${ReviewsApiRoutes.Unpublish}`,
+      this.expressAdapter.json(this.reviewsService.unpublish),
+    );
 
     this.app.get('/alive', (_req, res) => {
       return res.status(200).send();
     });
 
-    this.app.listen(port, () => this.logger.debug('reviews service listening on internal port', port));
+    this.app.listen(port, () =>
+      this.logger.debug('reviews service listening on internal port', port),
+    );
   };
 }

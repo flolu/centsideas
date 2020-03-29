@@ -11,9 +11,9 @@ export class SaveReviewPayloadRequiredError extends EntityError {
 
   constructor(contentMissing: boolean, scoresMissing: boolean) {
     super(
-      `Review content and scores are required to save an review. Missing: ${contentMissing ? 'content' : ''} ${
-        scoresMissing ? ', scores' : ''
-      }`,
+      `Review content and scores are required to save an review. Missing: ${
+        contentMissing ? 'content' : ''
+      } ${scoresMissing ? ', scores' : ''}`,
       HttpStatusCodes.BadRequest,
     );
   }

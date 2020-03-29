@@ -7,9 +7,7 @@ import { UsersActions } from '..';
 
 @Component({
   selector: 'ci-confirm-sign-up',
-  template: `
-    <h1>Confirm Sign Up</h1>
-  `,
+  template: ` <h1>Confirm Sign Up</h1> `,
   styles: [``],
 })
 export class ConfirmSignUpContainer implements OnInit {

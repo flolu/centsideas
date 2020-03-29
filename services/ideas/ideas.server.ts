@@ -12,7 +12,11 @@ import env from './environment';
 export class IdeasServer {
   private app = express();
 
-  constructor(private logger: Logger, private ideasService: IdeasService, private expressAdapter: ExpressAdapter) {}
+  constructor(
+    private logger: Logger,
+    private ideasService: IdeasService,
+    private expressAdapter: ExpressAdapter,
+  ) {}
 
   start = () => {
     this.logger.debug('initialized with env: ', env);
@@ -28,6 +32,8 @@ export class IdeasServer {
       return res.status(200).send();
     });
 
-    this.app.listen(port, () => this.logger.debug('ideas service listening on internal port', port));
+    this.app.listen(port, () =>
+      this.logger.debug('ideas service listening on internal port', port),
+    );
   };
 }

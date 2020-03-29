@@ -4,7 +4,12 @@ import { injectable } from 'inversify';
 import { Logger, renameObjectProperty } from '@cents-ideas/utils';
 import { IEvent } from '@cents-ideas/event-sourcing';
 import { IdeaEvents } from '@cents-ideas/enums';
-import { IIdeaCreatedEvent, IIdeaDeletedEvent, IIdeaUpdatedEvent, IIdeaViewModel } from '@cents-ideas/models';
+import {
+  IIdeaCreatedEvent,
+  IIdeaDeletedEvent,
+  IIdeaUpdatedEvent,
+  IIdeaViewModel,
+} from '@cents-ideas/models';
 
 import { ProjectionDatabase } from './projection-database';
 
@@ -67,7 +72,9 @@ export class IdeasProjection {
   };
 
   private ideaUpdated = async (event: IEvent<IIdeaUpdatedEvent>) => {
-    const current: IIdeaViewModel | null = await this.ideasCollection.findOne({ _id: event.aggregateId });
+    const current: IIdeaViewModel | null = await this.ideasCollection.findOne({
+      _id: event.aggregateId,
+    });
     if (!current) return;
 
     await this.ideasCollection.findOneAndUpdate(

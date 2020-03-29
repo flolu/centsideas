@@ -24,7 +24,9 @@ export class ProjectionDatabase {
       try {
         this.logger.debug(`initialize projection database with ${env.database.url}`);
         this.client = await retry(async () => {
-          this.logger.debug(`retry to connect to projection database with url: ${env.database.url}`);
+          this.logger.debug(
+            `retry to connect to projection database with url: ${env.database.url}`,
+          );
           let connection: MongoClient;
           try {
             connection = await MongoClient.connect(env.database.url, {

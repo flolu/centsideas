@@ -4,7 +4,9 @@ import { EntityError } from '@cents-ideas/utils';
 export class ReviewAlreadyUnpublishedError extends EntityError {
   static validate = (published: boolean, reviewId: string): void => {
     if (!published) {
-      throw new ReviewAlreadyUnpublishedError(`Review with id: ${reviewId} has already been unpublished`);
+      throw new ReviewAlreadyUnpublishedError(
+        `Review with id: ${reviewId} has already been unpublished`,
+      );
     }
   };
 

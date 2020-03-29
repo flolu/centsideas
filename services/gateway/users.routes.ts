@@ -13,11 +13,15 @@ export class UsersRoutes {
   setup = (host: string, consumerHost: string): express.Router => {
     this.router.get(
       `/`,
-      this.expressAdapter.makeJsonAdapter(`${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`),
+      this.expressAdapter.makeJsonAdapter(
+        `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
+      ),
     );
     this.router.get(
       `/:id`,
-      this.expressAdapter.makeJsonAdapter(`${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`),
+      this.expressAdapter.makeJsonAdapter(
+        `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
+      ),
     );
     this.router.post(
       `/${UsersApiRoutes.Login}`,
@@ -31,7 +35,10 @@ export class UsersRoutes {
       `/${UsersApiRoutes.Authenticate}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Authenticate}`),
     );
-    this.router.put(`/:id`, this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`));
+    this.router.put(
+      `/:id`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`),
+    );
     this.router.put(
       `/${UsersApiRoutes.ConfirmEmailChange}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmEmailChange}`),

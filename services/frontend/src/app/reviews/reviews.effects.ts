@@ -17,7 +17,11 @@ export class ReviewsEffects {
         this.reviewsServices.createReview(ideaId).pipe(
           switchMap(created => [
             ReviewsActions.createReviewDone({ created }),
-            ReviewsActions.updateReview({ reviewId: created.id, content, scores }),
+            ReviewsActions.updateReview({
+              reviewId: created.id,
+              content,
+              scores,
+            }),
           ]),
           catchError(error => of(ReviewsActions.createReviewFail({ error }))),
         ),

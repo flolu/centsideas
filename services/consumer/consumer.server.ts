@@ -58,6 +58,8 @@ export class ConsumerServer {
       return res.status(200).send();
     });
 
-    this.app.listen(env.port, () => this.logger.debug('consumer service listening on internal port', env.port));
+    this.app.listen(env.port, () =>
+      this.logger.debug('consumer service listening on internal port', env.port),
+    );
   };
 }

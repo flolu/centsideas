@@ -12,8 +12,13 @@ describe('IdeasService', () => {
 
 describe('IdeasService', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [HttpClientModule], providers: [IdeasService, SettingsService] });
-    TestBed.overrideProvider(SettingsService, { useValue: new SettingsMockService() });
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule],
+      providers: [IdeasService, SettingsService],
+    });
+    TestBed.overrideProvider(SettingsService, {
+      useValue: new SettingsMockService(),
+    });
   });
 
   it('should be created', () => {

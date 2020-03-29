@@ -16,7 +16,10 @@ export class MessageBroker {
     this.kafka = new Kafka(config);
   };
 
-  send = async (topic: string = 'test-topic', messages: Message[] = []): Promise<RecordMetadata[]> => {
+  send = async (
+    topic: string = 'test-topic',
+    messages: Message[] = [],
+  ): Promise<RecordMetadata[]> => {
     if (!this.producer) {
       if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
       this.producer = this.kafka.producer();
@@ -29,11 +32,7 @@ export class MessageBroker {
   subscribe = async (topic: string, callback: (event: IEvent) => void) => {
     if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
     const consumer: Consumer = this.kafka.consumer({
-      groupId:
-        'test-group' +
-        Math.random()
-          .toString(36)
-          .substr(2, 9),
+      groupId: 'test-group' + Math.random().toString(36).substr(2, 9),
       rebalanceTimeout: 1000,
     });
     await consumer.connect();

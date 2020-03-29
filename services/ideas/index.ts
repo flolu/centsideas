@@ -13,7 +13,15 @@ import { IdeasService } from './ideas.service';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Ideas;
 
-registerProviders(Logger, IdeasServer, IdeaCommandHandler, IdeaRepository, IdeasService, MessageBroker, ExpressAdapter);
+registerProviders(
+  Logger,
+  IdeasServer,
+  IdeaCommandHandler,
+  IdeaRepository,
+  IdeasService,
+  MessageBroker,
+  ExpressAdapter,
+);
 
 const server: IdeasServer = getProvider(IdeasServer);
 server.start();

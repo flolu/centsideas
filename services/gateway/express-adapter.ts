@@ -35,7 +35,10 @@ export class ExpressAdapter {
     res.status(httpResponse.status).send(httpResponse.body);
   };
 
-  private makeHttpRequestFromExpressRequest = (req: express.Request, res: express.Response): HttpRequest => {
+  private makeHttpRequestFromExpressRequest = (
+    req: express.Request,
+    res: express.Response,
+  ): HttpRequest => {
     return {
       body: req.body,
       ip: req.ip,

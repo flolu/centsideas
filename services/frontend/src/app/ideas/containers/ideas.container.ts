@@ -32,7 +32,11 @@ import { IdeasSelectors, IdeasActions } from '@ci-frontend/ideas';
         <button (click)="onCreate()">Create</button>
       </form>
       <h1>All Ideas</h1>
-      <ci-ideas-card *ngFor="let i of ideas$ | async" [idea]="i" (clickedTitle)="onIdeaTitleClicked(i)"></ci-ideas-card>
+      <ci-ideas-card
+        *ngFor="let i of ideas$ | async"
+        [idea]="i"
+        (clickedTitle)="onIdeaTitleClicked(i)"
+      ></ci-ideas-card>
       <div *ngIf="!(ideas$ | async)?.length">No ideas found</div>
     </div>
   `,
@@ -66,7 +70,10 @@ export class IdeasContainer {
 
   onCreate = (): void => {
     this.store.dispatch(
-      IdeasActions.createIdea({ title: this.form.value.title, description: this.form.value.description }),
+      IdeasActions.createIdea({
+        title: this.form.value.title,
+        description: this.form.value.description,
+      }),
     );
     this.form.reset();
   };

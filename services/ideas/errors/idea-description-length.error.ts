@@ -21,6 +21,9 @@ export class IdeaDescriptionLengthError extends EntityError {
     const message = isToLong
       ? `Idea description should not be longer than ${IdeaDescriptionLengthError.max} characters.`
       : `Idea description should at least be ${IdeaDescriptionLengthError.min} characters long.`;
-    super(`${message} You provided a description with a length of ${actualLength}`, HttpStatusCodes.BadRequest);
+    super(
+      `${message} You provided a description with a length of ${actualLength}`,
+      HttpStatusCodes.BadRequest,
+    );
   }
 }

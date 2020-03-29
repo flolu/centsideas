@@ -21,6 +21,9 @@ export class IdeaTitleLengthError extends EntityError {
     const message = isToLong
       ? `Idea title should not be longer than ${IdeaTitleLengthError.max} characters.`
       : `Idea title should at least be ${IdeaTitleLengthError.min} characters long.`;
-    super(`${message} You provided a title with a length of ${actualLength}`, HttpStatusCodes.BadRequest);
+    super(
+      `${message} You provided a title with a length of ${actualLength}`,
+      HttpStatusCodes.BadRequest,
+    );
   }
 }

@@ -47,7 +47,11 @@ export class LoginContainer implements OnInit {
     email: new FormControl(''),
   });
 
-  constructor(private route: ActivatedRoute, private store: Store<AppState>, private usersService: UsersService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private store: Store<AppState>,
+    private usersService: UsersService,
+  ) {}
 
   ngOnInit() {
     const token = this.route.snapshot.queryParams['token'];

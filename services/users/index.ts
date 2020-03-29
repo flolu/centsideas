@@ -12,7 +12,15 @@ import { UsersService } from './users.service';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Users;
 
-registerProviders(Logger, UsersServer, UsersService, UserCommandHandler, UserRepository, MessageBroker, ExpressAdapter);
+registerProviders(
+  Logger,
+  UsersServer,
+  UsersService,
+  UserCommandHandler,
+  UserRepository,
+  MessageBroker,
+  ExpressAdapter,
+);
 
 const server: UsersServer = getProvider(UsersServer);
 server.start();
