@@ -47,7 +47,7 @@ This is a project with the purpose of learning the architecture of complex web a
 
 - `yarn` to install all necessary dependencies for local development
 - `yarn dev` to start all backend services locally (gateway is available under http://localhost:3000)
-- `yarn client:start` to start the frontend application (live url is printed in logs)
+- `yarn client:start` to start the frontend application (live at http://localhost:5432)
 - `yarn test` to run all unit tests
 
 ## Requirements
