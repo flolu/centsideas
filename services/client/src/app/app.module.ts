@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppStoreModule } from './app-store.module';
+import { IdeasModule } from './ideas/ideas.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -11,6 +12,7 @@ import { AppStoreModule } from './app-store.module';
     BrowserModule.withServerTransition({ appId: 'client' }),
     AppRoutingModule,
     AppStoreModule,
+    IdeasModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

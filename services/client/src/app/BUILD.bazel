@@ -4,7 +4,12 @@ package(default_visibility = ["//:__subpackages__"])
 
 ng_module(
     name = "store",
-    srcs = ["app-store.module.ts"],
+    srcs = glob([
+        "ideas/store/*.ts",
+    ]) + [
+        "app-store.module.ts",
+        "app.state.ts",
+    ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
         "@npm//@angular/core",
@@ -18,7 +23,20 @@ ng_module(
     srcs = ["app-routing.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
+        ":ideas",
         "@npm//@angular/core",
+        "@npm//@angular/router",
+    ],
+)
+
+ng_module(
+    name = "ideas",
+    srcs = glob(["ideas/containers/*.ts"]) + ["ideas/ideas.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
         "@npm//@angular/router",
     ],
 )
@@ -31,14 +49,14 @@ ng_module(
     ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
+        ":ideas",
         ":routing",
         ":store",
         "//packages/enums:lib",
         "//services/client/src/app/hello-world",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
-        "@npm//@ngrx/store",
-        "@npm//@ngrx/store-devtools",
+        "@npm//rxjs",
     ],
 )
 
