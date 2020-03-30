@@ -2,4 +2,6 @@ steps:
   - id: 'unit tests'
     name: gcr.io/cloud-builders/bazel
     args: ['test', '--google_default_credentials', '//...', '--', '-services/client/...']
-timeout: 900s
+timeout: 1800s
+options:
+  machineType: 'N1_HIGHCPU_8'

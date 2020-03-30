@@ -15,15 +15,7 @@ const DIST_FOLDER = join(process.cwd(), 'services/client/src/prodapp');
 
 import { AppServerModule } from './app/app.server.module';
 
-app.engine(
-  'html',
-  ngExpressEngine({
-    bootstrap: AppServerModule,
-    providers: [
-      // provideModuleMap(LAZY_MODULE_MAP)
-    ],
-  }) as any,
-);
+app.engine('html', ngExpressEngine({ bootstrap: AppServerModule }) as any);
 
 app.set('view engine', 'html');
 app.set('views', DIST_FOLDER);
