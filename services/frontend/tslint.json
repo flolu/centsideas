@@ -29,7 +29,6 @@
     "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
-    "no-use-before-declare": true,
     "no-var-requires": false,
     "object-literal-key-quotes": [true, "as-needed"],
     "object-literal-sort-keys": false,
@@ -48,7 +47,8 @@
     "template-no-negated-async": true,
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
-    "no-submodule-imports": false
+    "no-submodule-imports": false,
+    "no-string-literal": false
   },
   "rulesDirectory": ["codelyzer"],
   "extends": ["tslint:latest", "tslint-config-prettier"]

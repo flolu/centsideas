@@ -20,8 +20,8 @@ export class GatewayServer {
   constructor(
     private logger: Logger,
     private ideasRoutes: IdeasRoutes,
-    private reviewsRoutes: ReviewsRoutes,
     private usersRoutes: UsersRoutes,
+    private reviewsRoutes: ReviewsRoutes,
   ) {}
 
   start = () => {

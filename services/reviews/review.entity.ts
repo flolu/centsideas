@@ -6,8 +6,9 @@ import {
   ReviewCreatedEvent,
   ReviewUnpublishedEvent,
   ReviewUpdatedEvent,
+  ReviewDraftSavedEvent,
+  ReviewPublishedEvent,
 } from './events';
-import { ReviewDraftSavedEvent, ReviewPublishedEvent } from './events';
 
 export class Review extends EventEntity<IReviewState> {
   static initialState: IReviewState = {

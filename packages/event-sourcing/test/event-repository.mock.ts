@@ -33,7 +33,7 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
       throw new Error('concurrency issue!');
     }
 
-    let eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
+    const eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
       eventNumber = eventNumber + 1;
       return { ...event, eventNumber };
     });
@@ -75,7 +75,7 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
   };
 
   generateUniqueId = (): Promise<string> => {
-    const checkAvailability = (resolve: Function) => {
+    const checkAvailability = (resolve: (id: string) => any) => {
       const id = Identifier.makeUniqueId();
       const result = Object.keys(this.events).includes(id);
       result ? checkAvailability(resolve) : resolve(id);

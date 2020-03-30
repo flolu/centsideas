@@ -4,10 +4,10 @@ steps:
     args: [
         'test',
         #"--remote_cache=https://storage.googleapis.com/cents-ideas-bazel-cache",
-        '--test_output=all',
+        #'--test_output=errors',
         '--google_default_credentials',
         '//...',
+        '--',
+        '-services/client/...',
       ]
-timeout: 1000s
-options:
-  machineType: 'N1_HIGHCPU_8'
+timeout: 900s

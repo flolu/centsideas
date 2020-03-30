@@ -22,7 +22,7 @@ describe('IdeasService', () => {
   });
 
   it('should be created', () => {
-    const service: IdeasService = TestBed.get(IdeasService);
+    const service: IdeasService = TestBed.inject(IdeasService);
     expect(service).toBeTruthy();
   });
 });

@@ -9,9 +9,7 @@ import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
 import { IEvent, MessageBroker } from '.';
 
-export interface IEntityConstructor<Entity> {
-  new (snapshot?: ISnapshot): Entity;
-}
+export type IEntityConstructor<Entity> = new (snapshot?: ISnapshot) => Entity;
 
 export interface IEventRepository<Entity> {
   initialize: (
@@ -139,7 +137,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
       throw new Error('concurrency issue!');
     }
 
-    let eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
+    const eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
       eventNumber = eventNumber + 1;
       return { ...event, eventNumber };
     });
@@ -165,7 +163,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     return entity.confirmEvents();
   };
 
-  findById = async (id: string, log: boolean = true): Promise<Entity> => {
+  findById = async (id: string): Promise<Entity> => {
     await this.waitUntilInitialized();
     const snapshot = await this.getSnapshot(id);
 
@@ -182,12 +180,12 @@ export abstract class EventRepository<Entity extends IEventEntity>
       );
     }
 
-    log && this.logger.debug(`found entity with id: ${id}`);
+    this.logger.debug(`found entity with id: ${id}`);
     return entity.confirmEvents();
   };
 
   generateUniqueId = (): Promise<string> => {
-    const checkAvailability = async (resolve: Function) => {
+    const checkAvailability = async (resolve: (id: string) => any) => {
       await this.waitUntilInitialized();
       const id = Identifier.makeUniqueId();
       const result = await this.eventCollection.findOne({ aggregateId: id });
@@ -298,6 +296,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
       if (this.hasInitialized) {
         return res(true);
       }
+      // tslint:disable-next-line:no-return-await
       await retry(async () => await this.initialize);
       res(true);
     });

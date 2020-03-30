@@ -112,12 +112,15 @@ export class UserCommandHandler {
     const user = await this.repository.findById(userId);
     const pendingEmail = user.persistedState.email !== email ? email : null;
     if (pendingEmail) {
+      // ...
     }
     user.update(username, pendingEmail);
     return this.repository.save(user);
   };
 
-  confirmEmailChange = () => {};
+  confirmEmailChange = () => {
+    // ...
+  };
 
   private createAuthToken = (userId: string, expiresIn: string = '7d'): string => {
     const data: IAuthTokenData = { userId };

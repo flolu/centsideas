@@ -1,4 +1,4 @@
-export const expectAsyncError = async (check: Function, expectedError: any) => {
+export const expectAsyncError = async (check: () => any, expectedError: any) => {
   let error;
   try {
     await check();
@@ -7,7 +7,7 @@ export const expectAsyncError = async (check: Function, expectedError: any) => {
   }
   expect(error).toEqual(expectedError);
 };
-export const expectNoAsyncError = async (check: Function) => {
+export const expectNoAsyncError = async (check: () => any) => {
   let error;
   try {
     await check();

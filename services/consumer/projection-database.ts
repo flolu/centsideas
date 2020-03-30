@@ -77,6 +77,7 @@ export class ProjectionDatabase {
       if (this.hasInitialized) {
         return res(true);
       }
+      // tslint:disable-next-line:no-return-await
       await retry(async () => await this.initialize);
       res(true);
     });

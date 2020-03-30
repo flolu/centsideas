@@ -1,0 +1,13 @@
+{
+  "extends": ["tslint:latest", "tslint-config-prettier"],
+  "rules": {
+    "object-literal-sort-keys": false,
+    "no-implicit-dependencies": [true, ["@cents-ideas"]],
+    "no-submodule-imports": false,
+    "no-console": [true, "log"],
+    "no-empty-interface": false
+  },
+  "linterOptions": {
+    "exclude": ["node_modules/**", "**/node_modules/**", "**/*.d.ts"]
+  }
+}

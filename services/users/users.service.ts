@@ -123,5 +123,7 @@ export class UsersService {
     });
 
   confirmEmailChange = (req: HttpRequest<IConfirmEmailChangeDto>): Promise<HttpResponse<any>> =>
-    new Promise(async resolve => {});
+    new Promise(async resolve => {
+      // ...
+    });
 }

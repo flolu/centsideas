@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { CentsCommandments } from '@cents-ideas/enums';
 
 @Component({
-  selector: 'app-component',
+  selector: 'ci-component',
   template: `
     <p>CENTS: {{ cents }}</p>
     <router-outlet></router-outlet>
