@@ -1,5 +1,8 @@
-import 'module-alias/register';
 import 'reflect-metadata';
+if (process.env.ENV === 'dev') {
+  // tslint:disable-next-line:no-var-requires
+  require('../../register-aliases').registerAliases();
+}
 
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 import { LoggerPrefixes } from '@cents-ideas/enums';

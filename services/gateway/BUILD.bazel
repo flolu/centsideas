@@ -1,9 +1,27 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
-load("//:config.bzl", "CONTAINER_REGISTRY")
 
 package(default_visibility = ["//visibility:public"])
+
+lib_deps = [
+    "//:register-aliases.js",
+    "//packages/enums:lib",
+    "//packages/models:lib",
+    "//packages/utils:lib",
+    "@npm//@types/body-parser",
+    "@npm//@types/cors",
+    "@npm//@types/express",
+    "@npm//@types/jsonwebtoken",
+    "@npm//axios",
+    "@npm//body-parser",
+    "@npm//cors",
+    "@npm//express",
+    "@npm//inversify",
+    "@npm//jsonwebtoken",
+    "@npm//module-alias",
+    "@npm//reflect-metadata",
+]
 
 ts_library(
     name = "lib",
@@ -11,31 +29,12 @@ ts_library(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = [
-        "//packages/enums:lib",
-        "//packages/models:lib",
-        "//packages/utils:lib",
-        "@npm//@types/body-parser",
-        "@npm//@types/cors",
-        "@npm//@types/express",
-        "@npm//@types/jsonwebtoken",
-        "@npm//axios",
-        "@npm//body-parser",
-        "@npm//cors",
-        "@npm//express",
-        "@npm//inversify",
-        "@npm//jsonwebtoken",
-        "@npm//module-alias",
-        "@npm//reflect-metadata",
-    ],
+    deps = lib_deps,
 )
 
 nodejs_image(
     name = "image",
-    data = [
-        ":lib",
-        "//:package.json",
-    ],
+    data = [":lib"],
     entry_point = ":index.ts",
 )
 

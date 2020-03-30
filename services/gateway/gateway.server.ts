@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';
 
 import { Logger } from '@cents-ideas/utils';
-import { ApiEndpoints, HeaderKeys } from '@cents-ideas/enums';
+import { ApiEndpoints, HeaderKeys, CentsCommandments } from '@cents-ideas/enums';
 import { IAuthTokenData } from '@cents-ideas/models';
 
 import env from './environment';
@@ -63,7 +63,15 @@ export class GatewayServer {
     });
 
     this.app.listen(env.port, () =>
-      this.logger.debug('gateway listening on internal port', env.port),
+      this.logger.debug(
+        'gateway listening on internal port',
+        env.port,
+        CentsCommandments.Control,
+        CentsCommandments.Entry,
+        CentsCommandments.Need,
+        CentsCommandments.Time,
+        CentsCommandments.Scale,
+      ),
     );
   };
 }

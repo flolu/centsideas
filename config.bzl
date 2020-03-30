@@ -1,4 +1,3 @@
-# TODO read from .env file
 GOOGLE_CLOUD_PROJECT_ID = "centsideas"
 
 CLUSTER_ZONE = "europe-west3-b"

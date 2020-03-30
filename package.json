@@ -1,6 +1,38 @@
 {
   "name": "cents-ideas",
+  "description": "Modern Web Application with a Microservices Architecture (in development)",
+  "keywords": [
+    "monorepo",
+    "typescript",
+    "docker",
+    "docker-compose",
+    "gateway",
+    "microservices",
+    "jest",
+    "event-sourcing",
+    "kafka",
+    "nodejs",
+    "angular",
+    "bazel",
+    "kubernetes",
+    "google-kubernetes-engine",
+    "server-side-rendering"
+  ],
+  "homepage": "https://github.com/flolu/cents-ideas",
+  "bugs": {
+    "url": "https://github.com/flolu/cents-ideas/issues",
+    "email": "fllu@pm.me"
+  },
   "license": "MIT",
+  "author": {
+    "name": "Florian Ludewig",
+    "email": "fllu@pm.me",
+    "url": "https://flolu.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flolu/cents-ideas.git"
+  },
   "scripts": {
     "dev": "yarn setup && yarn docker:dev",
     "test": "bazelisk test //...",

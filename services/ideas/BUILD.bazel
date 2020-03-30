@@ -2,11 +2,11 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@cents_ideas//:jest.bzl", "jest_test")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
-load("//:config.bzl", "CONTAINER_REGISTRY")
 
 package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
+    "//:register-aliases.js",
     "//packages/enums:lib",
     "//packages/models:lib",
     "//packages/utils:lib",
@@ -33,20 +33,15 @@ ts_library(
 
 nodejs_image(
     name = "image",
-    data = [
-        ":lib",
-        "//:package.json",
-    ],
+    data = [":lib"],
     entry_point = ":index.ts",
 )
-
-lib_deps.insert(0, ":lib")
 
 ts_library(
     name = "test_lib",
     srcs = glob(include = ["**/*.spec.ts"]),
     tsconfig = "//:tsconfig.jest.json",
-    deps = lib_deps,
+    deps = [":lib"] + lib_deps,
 )
 
 filegroup(
