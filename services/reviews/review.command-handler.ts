@@ -27,7 +27,11 @@ export class ReviewCommandHandler {
     return this.repository.save(review);
   };
 
-  saveDraft = async (reviewId: string, content?: string, scores?: IReviewScores): Promise<Review> => {
+  saveDraft = async (
+    reviewId: string,
+    content?: string,
+    scores?: IReviewScores,
+  ): Promise<Review> => {
     ReviewIdeaIdRequiredError.validate(reviewId);
     content = sanitizeHtml(content || '');
     if (content) {
@@ -45,7 +49,10 @@ export class ReviewCommandHandler {
     ReviewIdeaIdRequiredError.validate(reviewId);
     const review = await this.repository.findById(reviewId);
     ReviewAlreadyPublishedError.validate(review.persistedState.published, review.persistedState.id);
-    SaveReviewPayloadRequiredError.validate(review.persistedState.content, review.persistedState.scores);
+    SaveReviewPayloadRequiredError.validate(
+      review.persistedState.content,
+      review.persistedState.scores,
+    );
     ReviewContentLengthError.validate(review.persistedState.content);
     ReviewScoresRangeError.validate(review.persistedState.scores);
     review.publish();
@@ -55,7 +62,10 @@ export class ReviewCommandHandler {
   unpublish = async (reviewId: string): Promise<Review> => {
     ReviewIdeaIdRequiredError.validate(reviewId);
     const review = await this.repository.findById(reviewId);
-    ReviewAlreadyUnpublishedError.validate(review.persistedState.published, review.persistedState.id);
+    ReviewAlreadyUnpublishedError.validate(
+      review.persistedState.published,
+      review.persistedState.id,
+    );
     review.unpublish();
     return this.repository.save(review);
   };

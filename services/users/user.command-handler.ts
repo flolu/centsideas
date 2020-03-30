@@ -31,7 +31,9 @@ export class UserCommandHandler {
 
     if (existing && existing.userId) {
       const token = this.createAuthToken(existing.userId, '2h');
-      this.logger.debug(`Found existing user with email: ${email}. Send an email with the login URL`);
+      this.logger.debug(
+        `Found existing user with email: ${email}. Send an email with the login URL`,
+      );
       const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Login}?token=${token}`;
       await sendMail(
         env.mailing.fromAddress,
@@ -74,10 +76,7 @@ export class UserCommandHandler {
       throw new EmailAlreadySignedUpError(email);
     }
     const userId = await this.repository.generateUniqueId();
-    const username: string = faker.internet
-      .userName()
-      .toLowerCase()
-      .toString();
+    const username: string = faker.internet.userName().toLowerCase().toString();
     const user = User.create(userId, email, username);
     await this.repository.insertEmail(userId, email);
     const updatedUser: User = await this.repository.save(user);
@@ -113,12 +112,15 @@ export class UserCommandHandler {
     const user = await this.repository.findById(userId);
     const pendingEmail = user.persistedState.email !== email ? email : null;
     if (pendingEmail) {
+      // ...
     }
     user.update(username, pendingEmail);
     return this.repository.save(user);
   };
 
-  confirmEmailChange = () => {};
+  confirmEmailChange = () => {
+    // ...
+  };
 
   private createAuthToken = (userId: string, expiresIn: string = '7d'): string => {
     const data: IAuthTokenData = { userId };

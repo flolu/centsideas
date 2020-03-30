@@ -31,23 +31,35 @@ export class ReviewsService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });
 
-  saveDraft = (req: HttpRequest<ISaveReviewDto, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
+  saveDraft = (
+    req: HttpRequest<ISaveReviewDto, IQueryReviewDto>,
+  ): Promise<HttpResponse<IReviewState>> =>
     new Promise(async resolve => {
       const _loggerName = 'save draft';
       try {
-        const review = await this.commandHandler.saveDraft(req.params.id, req.body.content, req.body.scores);
+        const review = await this.commandHandler.saveDraft(
+          req.params.id,
+          req.body.content,
+          req.body.scores,
+        );
         resolve({
           status: HttpStatusCodes.Accepted,
           body: review.persistedState,
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });
@@ -63,7 +75,10 @@ export class ReviewsService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });
@@ -79,23 +94,35 @@ export class ReviewsService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });
 
-  update = (req: HttpRequest<IUpdateReviewDto, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
+  update = (
+    req: HttpRequest<IUpdateReviewDto, IQueryReviewDto>,
+  ): Promise<HttpResponse<IReviewState>> =>
     new Promise(async resolve => {
       const _loggerName = 'update';
       try {
-        const review = await this.commandHandler.update(req.params.id, req.body.content, req.body.scores);
+        const review = await this.commandHandler.update(
+          req.params.id,
+          req.body.content,
+          req.body.scores,
+        );
         resolve({
           status: HttpStatusCodes.Accepted,
           body: review.persistedState,
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });

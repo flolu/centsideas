@@ -9,5 +9,5 @@
     },
     "types": ["reflect-metadata", "node", "jest"]
   },
-  "exclude": ["bazel-*", "node_modules"]
+  "exclude": ["bazel-out", "node_modules", "dist"]
 }

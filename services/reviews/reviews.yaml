@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: reviews
-          image: gcr.io/cents-ideas/reviews:latest
+          image: reviews:placeholder_name
           imagePullPolicy: Always
           envFrom:
             - configMapRef:

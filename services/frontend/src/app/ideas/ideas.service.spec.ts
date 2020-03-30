@@ -12,12 +12,17 @@ describe('IdeasService', () => {
 
 describe('IdeasService', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [HttpClientModule], providers: [IdeasService, SettingsService] });
-    TestBed.overrideProvider(SettingsService, { useValue: new SettingsMockService() });
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule],
+      providers: [IdeasService, SettingsService],
+    });
+    TestBed.overrideProvider(SettingsService, {
+      useValue: new SettingsMockService(),
+    });
   });
 
   it('should be created', () => {
-    const service: IdeasService = TestBed.get(IdeasService);
+    const service: IdeasService = TestBed.inject(IdeasService);
     expect(service).toBeTruthy();
   });
 });

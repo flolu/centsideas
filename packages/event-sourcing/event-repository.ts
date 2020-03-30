@@ -9,9 +9,7 @@ import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
 import { IEvent, MessageBroker } from '.';
 
-export interface IEntityConstructor<Entity> {
-  new (snapshot?: ISnapshot): Entity;
-}
+export type IEntityConstructor<Entity> = new (snapshot?: ISnapshot) => Entity;
 
 export interface IEventRepository<Entity> {
   initialize: (
@@ -28,7 +26,8 @@ export interface IEventRepository<Entity> {
 }
 
 @injectable()
-export abstract class EventRepository<Entity extends IEventEntity> implements IEventRepository<Entity> {
+export abstract class EventRepository<Entity extends IEventEntity>
+  implements IEventRepository<Entity> {
   protected _Entity!: IEntityConstructor<Entity>;
 
   private client!: MongoClient;
@@ -43,7 +42,9 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
   private hasInitialized: boolean = false;
 
   constructor(private messageBroker: MessageBroker, private logger: Logger) {
-    this.messageBroker.initialize({ brokers: [process.env.KAFKA_BROKER_HOST || 'localhost:9092'] });
+    this.messageBroker.initialize({
+      brokers: [process.env.KAFKA_BROKER_HOST || 'localhost:9092'],
+    });
   }
 
   initialize = (
@@ -66,7 +67,11 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
 
         this.client = await retry(async () => {
           this.logger.debug(`retry to connect to ${this.namespace} database`);
-          const connection = await MongoClient.connect(url, { w: 1, useNewUrlParser: true, useUnifiedTopology: true });
+          const connection = await MongoClient.connect(url, {
+            w: 1,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+          });
           return connection;
         });
         this.db = this.client.db(this.namespace);
@@ -132,7 +137,7 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
       throw new Error('concurrency issue!');
     }
 
-    let eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
+    const eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
       eventNumber = eventNumber + 1;
       return { ...event, eventNumber };
     });
@@ -144,7 +149,11 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
       } event store`,
     );
 
-    await Promise.all(appendedEvents.map(e => this.messageBroker.send(this.topicName, [{ value: JSON.stringify(e) }])));
+    await Promise.all(
+      appendedEvents.map(e =>
+        this.messageBroker.send(this.topicName, [{ value: JSON.stringify(e) }]),
+      ),
+    );
 
     for (const event of appendedEvents) {
       if (event.eventNumber % this.snapshotThreshold === 0) {
@@ -154,24 +163,29 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     return entity.confirmEvents();
   };
 
-  findById = async (id: string, log: boolean = true): Promise<Entity> => {
+  findById = async (id: string): Promise<Entity> => {
     await this.waitUntilInitialized();
     const snapshot = await this.getSnapshot(id);
 
-    const events: IEvent[] = await (snapshot ? this.getEventsAfterSnapshot(snapshot) : this.getEventStream(id));
+    const events: IEvent[] = await (snapshot
+      ? this.getEventsAfterSnapshot(snapshot)
+      : this.getEventStream(id));
 
     const entity = new this._Entity(snapshot || undefined);
     entity.pushEvents(...events);
     if (!entity.currentState.id) {
-      throw new EntityError(`Event repository couldn't find entity with id: ${id}`, HttpStatusCodes.NotFound);
+      throw new EntityError(
+        `Event repository couldn't find entity with id: ${id}`,
+        HttpStatusCodes.NotFound,
+      );
     }
 
-    log && this.logger.debug(`found entity with id: ${id}`);
+    this.logger.debug(`found entity with id: ${id}`);
     return entity.confirmEvents();
   };
 
   generateUniqueId = (): Promise<string> => {
-    const checkAvailability = async (resolve: Function) => {
+    const checkAvailability = async (resolve: (id: string) => any) => {
       await this.waitUntilInitialized();
       const id = Identifier.makeUniqueId();
       const result = await this.eventCollection.findOne({ aggregateId: id });
@@ -210,7 +224,10 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     const seq = await this.getNextSequence();
 
     const payload = renameObjectProperty(event, 'id', '_id');
-    const result = await this.eventCollection.insertOne({ ...payload, position: seq });
+    const result = await this.eventCollection.insertOne({
+      ...payload,
+      position: seq,
+    });
     return renameObjectProperty(result.ops[0], '_id', 'id');
   };
 
@@ -221,7 +238,11 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
   private getEventStream = async (streamId: string, from: number = 1, to: number = 2 ** 31 - 1) => {
     const result = await this.eventCollection.find(
       {
-        $and: [{ aggregateId: streamId }, { eventNumber: { $gte: from } }, { eventNumber: { $lte: to } }],
+        $and: [
+          { aggregateId: streamId },
+          { eventNumber: { $gte: from } },
+          { eventNumber: { $lte: to } },
+        ],
       },
       { sort: { eventNumber: 1 } },
     );
@@ -233,7 +254,9 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     const streamId = snapshot.state.id;
     const lastEventId = snapshot.lastEventId;
 
-    const lastEvent: IEvent | null = await this.eventCollection.findOne({ _id: lastEventId });
+    const lastEvent: IEvent | null = await this.eventCollection.findOne({
+      _id: lastEventId,
+    });
     if (!lastEvent) {
       return [];
     }
@@ -250,7 +273,13 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
     }
     await this.snapshotCollection.updateOne(
       { aggregateId: streamId },
-      { $set: { aggregateId: streamId, lastEventId: lastEvent.id, state: entity.persistedState } },
+      {
+        $set: {
+          aggregateId: streamId,
+          lastEventId: lastEvent.id,
+          state: entity.persistedState,
+        },
+      },
       { upsert: true },
     );
     this.logger.debug(`saved ${this.namespace} snapshot for stream: ${streamId}`);
@@ -260,11 +289,14 @@ export abstract class EventRepository<Entity extends IEventEntity> implements IE
   private waitUntilInitialized = (): Promise<boolean> => {
     return new Promise(async res => {
       if (!this.hasInitializedBeenCalled) {
-        throw new Error(`You need to call ${this.initialize.name} in the constructor of the EventRepository`);
+        throw new Error(
+          `You need to call ${this.initialize.name} in the constructor of the EventRepository`,
+        );
       }
       if (this.hasInitialized) {
         return res(true);
       }
+      // tslint:disable-next-line:no-return-await
       await retry(async () => await this.initialize);
       res(true);
     });

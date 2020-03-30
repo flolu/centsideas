@@ -1,4 +1,6 @@
 {
   "extends": ["config:base"],
-  "baseBranches": ["dev"]
+  "baseBranches": ["dev"],
+  "assignees": ["flolu"],
+  "schedule": "every weekend"
 }

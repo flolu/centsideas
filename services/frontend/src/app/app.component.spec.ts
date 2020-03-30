@@ -17,7 +17,9 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       providers: [IdeasService, SettingsService, provideMockStore({}), UsersService],
     }).compileComponents();
-    TestBed.overrideProvider(SettingsService, { useValue: new SettingsMockService() });
+    TestBed.overrideProvider(SettingsService, {
+      useValue: new SettingsMockService(),
+    });
   }));
 
   it('should create the app', () => {

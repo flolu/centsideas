@@ -1,6 +1,5 @@
 import { Reducer } from './reducer';
-import { IEvent } from './event';
-import { Event } from './event';
+import { IEvent, Event } from './event';
 
 export interface IEventEntity {
   lastPersistedEventId: string | null;

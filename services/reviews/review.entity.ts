@@ -1,8 +1,14 @@
 import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 import { IReviewScores, IReviewState } from '@cents-ideas/models';
 
-import { commitFunctions, ReviewCreatedEvent, ReviewUnpublishedEvent, ReviewUpdatedEvent } from './events';
-import { ReviewDraftSavedEvent, ReviewPublishedEvent } from './events';
+import {
+  commitFunctions,
+  ReviewCreatedEvent,
+  ReviewUnpublishedEvent,
+  ReviewUpdatedEvent,
+  ReviewDraftSavedEvent,
+  ReviewPublishedEvent,
+} from './events';
 
 export class Review extends EventEntity<IReviewState> {
   static initialState: IReviewState = {

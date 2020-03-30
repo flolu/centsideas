@@ -17,68 +17,83 @@ services:
       - 'zookeeper'
 
   gateway:
-    build:
-      context: ./
-      dockerfile: ./services/gateway/Dockerfile
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./register-aliases.ts:/register-aliases.ts
+      - ./services/gateway:/services/gateway
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/gateway
     ports:
       - 3000:3000
-    volumes:
-      - ./services/gateway:/usr/app/src/services/gateway
-      - ./packages:/usr/app/src/packages
-      - ./node_modules:/usr/app/src/node_modules
-    env_file: .env
 
   ideas:
-    build:
-      context: ./
-      dockerfile: ./services/ideas/Dockerfile
+    image: node:lts-alpine
+    working_dir: /
     volumes:
-      - ./services/ideas:/usr/app/src/services/ideas
-      - ./packages:/usr/app/src/packages
-      - ./node_modules:/usr/app/src/node_modules
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./register-aliases.ts:/register-aliases.ts
+      - ./services/ideas:/services/ideas
+      - ./packages:/packages
+      - ./node_modules:/node_modules
     env_file: .env
+    command: yarn run ts-node-dev services/ideas
   ideas-event-store:
     image: mongo:4.2
     logging:
       driver: none
 
   reviews:
-    build:
-      context: ./
-      dockerfile: ./services/reviews/Dockerfile
+    image: node:lts-alpine
+    working_dir: /
     volumes:
-      - ./services/reviews:/usr/app/src/services/reviews
-      - ./packages:/usr/app/src/packages
-      - ./node_modules:/usr/app/src/node_modules
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./register-aliases.ts:/register-aliases.ts
+      - ./services/reviews:/services/reviews
+      - ./packages:/packages
+      - ./node_modules:/node_modules
     env_file: .env
+    command: yarn run ts-node-dev services/reviews
   reviews-event-store:
     image: mongo:4.2
     logging:
       driver: none
 
   users:
-    build:
-      context: ./
-      dockerfile: ./services/users/Dockerfile
+    image: node:lts-alpine
+    working_dir: /
     volumes:
-      - ./services/users:/usr/app/src/services/users
-      - ./packages:/usr/app/src/packages
-      - ./node_modules:/usr/app/src/node_modules
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./register-aliases.ts:/register-aliases.ts
+      - ./services/users:/services/users
+      - ./packages:/packages
+      - ./node_modules:/node_modules
     env_file: .env
+    command: yarn run ts-node-dev services/users
   users-event-store:
     image: mongo:4.2
     logging:
       driver: none
 
   consumer:
-    build:
-      context: ./
-      dockerfile: ./services/consumer/Dockerfile
+    image: node:lts-alpine
+    working_dir: /
     volumes:
-      - ./services/consumer:/usr/app/src/services/consumer
-      - ./packages:/usr/app/src/packages
-      - ./node_modules:/usr/app/src/node_modules
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./register-aliases.ts:/register-aliases.ts
+      - ./services/consumer:/services/consumer
+      - ./packages:/packages
+      - ./node_modules:/node_modules
     env_file: .env
+    command: yarn run ts-node-dev services/consumer
     depends_on:
       - 'kafka'
   projection-database:

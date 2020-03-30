@@ -27,7 +27,6 @@ This is a project with the purpose of learning the architecture of complex web a
 | Gateway           | discovery, entry point, auth           | ✔️     |
 | Static pages      | homepage, static content               | ❌     |
 | Search            | indexing, realtime search              | ❌     |
-| Cross platform    | electron, nativescript?                | ❌     |
 | Authentication    | passwordless, 2f auth, google login    | ❌     |
 | Admin panel       | monitoring, event handling, logs       | ❌     |
 | Backups           | automatic, manual, restore             | ❌     |
@@ -48,18 +47,67 @@ This is a project with the purpose of learning the architecture of complex web a
 
 - `yarn` to install all necessary dependencies for local development
 - `yarn dev` to start all backend services locally (gateway is available under http://localhost:3000)
-- `yarn client:start` to start the frontend application (live url is printed in logs)
+- `yarn client:start` to start the frontend application (live at http://localhost:5432)
 - `yarn test` to run all unit tests
-- `yarn deploy` to deploy all services to your Kubernetes cluster (works only if kubectl and google-cloud-sdk are installed, and your need to authenticated to push containers to google container registry and deploy configurations to your kubernetes cluster)
 
 ## Requirements
 
 - Yarn
 - Docker-Compose
 - NodeJs
-- _kubectl_
-- _google-cloud-sdk_
-- _Bazel_
+
+# Deployment
+
+### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster
+
+```
+gcloud beta container --project "centsideas" clusters create "cents-ideas" --zone "europe-west3-b"
+```
+
+### 2. Connect to cluster
+
+```
+gcloud container clusters get-credentials cents-ideas --zone europe-west3-b --project centsideas
+```
+
+### 3. Setup [Helm](https://helm.sh/)
+
+```
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo add jetstack https://charts.jetstack.io/
+helm repo update
+```
+
+### 3. Create an [NGINX Ingress](https://github.com/kubernetes/ingress-nginx)
+
+```
+kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $(gcloud config get-value account)
+
+helm install nginx-ingress stable/nginx-ingress
+```
+
+### 4. Point Domain to IP
+
+Go to the created [Load Balancer](https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list) and point your domain to this IP address via an "A" record.
+
+| Record Type | Domain                    | Value      |
+| ----------- | ------------------------- | ---------- |
+| A           | cents-ideas.flolu.com     | IP address |
+| A           | api.cents-ideas.flolu.com | IP address |
+
+### 5. Setup [Cert Manager](https://github.com/helm/charts/tree/master/stable/cert-manager)
+
+```
+kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.0/deploy/manifests/00-crds.yaml
+kubectl create namespace cert-manager
+helm install cert-manager jetstack/cert-manager --namespace cert-manager
+```
+
+### 6. Deploy services
+
+```
+yarn deploy
+```
 
 ## Git Flow
 

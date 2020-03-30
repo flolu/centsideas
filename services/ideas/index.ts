@@ -1,5 +1,8 @@
-import 'module-alias/register';
 import 'reflect-metadata';
+if (process.env.ENV === 'dev') {
+  // tslint:disable-next-line:no-var-requires
+  require('../../register-aliases').registerAliases();
+}
 
 import { registerProviders, Logger, getProvider, ExpressAdapter } from '@cents-ideas/utils';
 
@@ -13,7 +16,15 @@ import { IdeasService } from './ideas.service';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Ideas;
 
-registerProviders(Logger, IdeasServer, IdeaCommandHandler, IdeaRepository, IdeasService, MessageBroker, ExpressAdapter);
+registerProviders(
+  Logger,
+  IdeasServer,
+  IdeaCommandHandler,
+  IdeaRepository,
+  IdeasService,
+  MessageBroker,
+  ExpressAdapter,
+);
 
 const server: IdeasServer = getProvider(IdeasServer);
 server.start();

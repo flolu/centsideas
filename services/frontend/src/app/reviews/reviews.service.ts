@@ -14,17 +14,28 @@ export class ReviewsService {
   constructor(private http: HttpClient, private settingsService: SettingsService) {}
 
   createReview = (ideaId: string): Observable<IReviewViewModel> => {
-    return this.http.post<IReviewViewModel>(`${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}`, { ideaId });
+    return this.http.post<IReviewViewModel>(
+      `${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}`,
+      { ideaId },
+    );
   };
 
-  saveReviewDraft = (reviewId: string, content: string, scores: IReviewScores): Observable<IReviewViewModel> => {
+  saveReviewDraft = (
+    reviewId: string,
+    content: string,
+    scores: IReviewScores,
+  ): Observable<IReviewViewModel> => {
     return this.http.put<IReviewViewModel>(
       `${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}/${reviewId}/${ReviewsApiRoutes.SaveDraft}`,
       { content, scores },
     );
   };
 
-  updateReview = (reviewId: string, content: string, scores: IReviewScores): Observable<IReviewViewModel> => {
+  updateReview = (
+    reviewId: string,
+    content: string,
+    scores: IReviewScores,
+  ): Observable<IReviewViewModel> => {
     return this.http.put<IReviewViewModel>(
       `${this.settingsService.settings.apiUrl}/${this.API_ENDPOINT}/${reviewId}/${ReviewsApiRoutes.Update}`,
       { content, scores },

@@ -4,7 +4,12 @@ import { Collection } from 'mongodb';
 import { Logger, renameObjectProperty } from '@cents-ideas/utils';
 import { IEvent } from '@cents-ideas/event-sourcing';
 import { ReviewEvents } from '@cents-ideas/enums';
-import { IReviewViewModel, IReviewCreatedEvent, IIdeaViewModel, IReviewScores } from '@cents-ideas/models';
+import {
+  IReviewViewModel,
+  IReviewCreatedEvent,
+  IIdeaViewModel,
+  IReviewScores,
+} from '@cents-ideas/models';
 
 import { ProjectionDatabase } from './projection-database';
 
@@ -19,7 +24,10 @@ export class ReviewsProjection {
 
   private initialize = async () => {
     this.logger.debug('initialize collections in reviews projection...');
-    const collections = await Promise.all([this.projectionDatabase.reviews(), this.projectionDatabase.ideas()]);
+    const collections = await Promise.all([
+      this.projectionDatabase.reviews(),
+      this.projectionDatabase.ideas(),
+    ]);
     this.reviewsCollection = collections[0];
     this.ideasCollection = collections[1];
   };
@@ -58,7 +66,9 @@ export class ReviewsProjection {
   };
 
   private reviewUpdated = async (event: IEvent<any>) => {
-    const currentReview: IReviewViewModel | null = await this.reviewsCollection.findOne({ _id: event.aggregateId });
+    const currentReview: IReviewViewModel | null = await this.reviewsCollection.findOne({
+      _id: event.aggregateId,
+    });
     if (!currentReview) return;
     const newReviewScores: IReviewScores = event.data.scores || currentReview.scores;
     await this.reviewsCollection.findOneAndUpdate(
@@ -72,7 +82,9 @@ export class ReviewsProjection {
         },
       },
     );
-    const idea: IIdeaViewModel | null = await this.ideasCollection.findOne({ _id: currentReview.ideaId });
+    const idea: IIdeaViewModel | null = await this.ideasCollection.findOne({
+      _id: currentReview.ideaId,
+    });
     if (!idea) throw new Error(`didn't ind idea, although it must exist!`);
 
     if (currentReview.published) {
@@ -84,11 +96,21 @@ export class ReviewsProjection {
         scale: idea.scores.scale * idea.reviewCount,
       };
       const updatedScores: IReviewScores = {
-        control: (scoreTotals.control + (newReviewScores.control - currentReview.scores.control)) / idea.reviewCount,
-        entry: (scoreTotals.entry + (newReviewScores.entry - currentReview.scores.entry)) / idea.reviewCount,
-        need: (scoreTotals.need + (newReviewScores.need - currentReview.scores.need)) / idea.reviewCount,
-        time: (scoreTotals.time + (newReviewScores.time - currentReview.scores.time)) / idea.reviewCount,
-        scale: (scoreTotals.scale + (newReviewScores.scale - currentReview.scores.scale)) / idea.reviewCount,
+        control:
+          (scoreTotals.control + (newReviewScores.control - currentReview.scores.control)) /
+          idea.reviewCount,
+        entry:
+          (scoreTotals.entry + (newReviewScores.entry - currentReview.scores.entry)) /
+          idea.reviewCount,
+        need:
+          (scoreTotals.need + (newReviewScores.need - currentReview.scores.need)) /
+          idea.reviewCount,
+        time:
+          (scoreTotals.time + (newReviewScores.time - currentReview.scores.time)) /
+          idea.reviewCount,
+        scale:
+          (scoreTotals.scale + (newReviewScores.scale - currentReview.scores.scale)) /
+          idea.reviewCount,
       };
       await this.ideasCollection.findOneAndUpdate(
         { _id: currentReview.ideaId },
@@ -113,9 +135,13 @@ export class ReviewsProjection {
         },
       },
     );
-    const review: IReviewViewModel | null = await this.reviewsCollection.findOne({ _id: event.aggregateId });
+    const review: IReviewViewModel | null = await this.reviewsCollection.findOne({
+      _id: event.aggregateId,
+    });
     if (!review) throw new Error(`didn't find review, although it must exist!`);
-    const idea: IIdeaViewModel | null = await this.ideasCollection.findOne({ _id: review.ideaId });
+    const idea: IIdeaViewModel | null = await this.ideasCollection.findOne({
+      _id: review.ideaId,
+    });
     if (!idea) throw new Error(`didn't ind idea, although it must exist!`);
 
     const scoreTotals: IReviewScores = {

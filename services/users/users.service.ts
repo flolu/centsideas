@@ -13,7 +13,12 @@ import {
   IUserQueryDto,
   IUserState,
 } from '@cents-ideas/models';
-import { Logger, handleHttpResponseError, NotAuthenticatedError, NoPermissionError } from '@cents-ideas/utils';
+import {
+  Logger,
+  handleHttpResponseError,
+  NotAuthenticatedError,
+  NoPermissionError,
+} from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
 
@@ -33,7 +38,10 @@ export class UsersService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });
@@ -45,54 +53,77 @@ export class UsersService {
       const _loggerName = 'confirm sign up';
       try {
         this.logger.debug(_loggerName, req);
-        const { user, token } = await this.commandHandler.confirmSignUp(req.headers[HeaderKeys.Auth]);
+        const { user, token } = await this.commandHandler.confirmSignUp(
+          req.headers[HeaderKeys.Auth],
+        );
         resolve({
           status: HttpStatusCodes.Created,
           body: { user, token },
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });
 
-  authenticate = (req: HttpRequest<null, null, null, IAuthenticateDto>): Promise<HttpResponse<IAuthenticatedDto>> =>
+  authenticate = (
+    req: HttpRequest<null, null, null, IAuthenticateDto>,
+  ): Promise<HttpResponse<IAuthenticatedDto>> =>
     new Promise(async resolve => {
       const _loggerName = 'authenticate';
       try {
         this.logger.debug(_loggerName);
-        const { token, user } = await this.commandHandler.authenticate(req.headers[HeaderKeys.Auth]);
+        const { token, user } = await this.commandHandler.authenticate(
+          req.headers[HeaderKeys.Auth],
+        );
         resolve({
           status: HttpStatusCodes.Accepted,
           body: { token, user },
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });
 
-  updateUser = (req: HttpRequest<IUpdateUserDto, IUserQueryDto>): Promise<HttpResponse<IUserState>> =>
+  updateUser = (
+    req: HttpRequest<IUpdateUserDto, IUserQueryDto>,
+  ): Promise<HttpResponse<IUserState>> =>
     new Promise(async resolve => {
       const _loggerName = 'update user';
       try {
         this.logger.debug(_loggerName, req);
         NotAuthenticatedError.validate(req.locals.userId);
         NoPermissionError.validate(req.locals.userId, req.params.id);
-        const updatedUser = await this.commandHandler.updateUser(req.params.id, req.body.username, req.body.email);
+        const updatedUser = await this.commandHandler.updateUser(
+          req.params.id,
+          req.body.username,
+          req.body.email,
+        );
         resolve({
           status: HttpStatusCodes.Accepted,
           body: updatedUser.persistedState,
           headers: {},
         });
       } catch (error) {
-        this.logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
         resolve(handleHttpResponseError(error));
       }
     });
 
   confirmEmailChange = (req: HttpRequest<IConfirmEmailChangeDto>): Promise<HttpResponse<any>> =>
-    new Promise(async resolve => {});
+    new Promise(async resolve => {
+      // ...
+    });
 }

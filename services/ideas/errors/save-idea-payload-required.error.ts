@@ -10,9 +10,9 @@ export class SaveIdeaPayloadRequiredError extends EntityError {
 
   constructor(titleMissing: boolean, descriptionMissing: boolean) {
     super(
-      `Title and description are required to save an idea. Missing: ${titleMissing ? 'title' : ''} ${
-        descriptionMissing ? ', description' : ''
-      }`,
+      `Title and description are required to save an idea. Missing: ${
+        titleMissing ? 'title' : ''
+      } ${descriptionMissing ? ', description' : ''}`,
       HttpStatusCodes.BadRequest,
     );
   }

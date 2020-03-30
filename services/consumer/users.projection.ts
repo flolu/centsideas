@@ -68,7 +68,12 @@ export class UsersProjection {
   private emailChangeConfirmed = async (event: IEvent<IEmailChangeConfirmedEvent>) => {
     await this.usersCollection.findOneAndUpdate(
       { _id: event.aggregateId },
-      { $set: { 'private.email': event.data.newEmail, 'private.pendingEmail': null } },
+      {
+        $set: {
+          'private.email': event.data.newEmail,
+          'private.pendingEmail': null,
+        },
+      },
     );
   };
 

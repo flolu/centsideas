@@ -7,7 +7,7 @@ function shorten(s: string, length: number) {
 }
 
 @Component({
-  selector: 'hello-world',
+  selector: 'ci-hello-world',
   template: `
     <div id="greeting">Hello {{ name }}</div>
     <p>Today is {{ date }}</p>

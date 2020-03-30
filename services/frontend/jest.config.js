@@ -17,5 +17,7 @@ module.exports = {
       astTransformers: [require.resolve('jest-preset-angular/InlineHtmlStripStylesTransformer')],
     },
   },
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>/',
+  }),
 };

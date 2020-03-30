@@ -11,7 +11,12 @@ const initialState: ReviewsState = {
 
 const reviewsReducer = createReducer(
   initialState,
-  on(ReviewsActions.createReview, state => ({ ...state, loading: true, loaded: false, error: null })),
+  on(ReviewsActions.createReview, state => ({
+    ...state,
+    loading: true,
+    loaded: false,
+    error: null,
+  })),
   on(ReviewsActions.createReviewFail, (state, action) => ({
     ...state,
     loading: false,

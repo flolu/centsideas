@@ -15,7 +15,9 @@ export class UserRepository extends EventRepository<User> {
 
   constructor(private _messageBroker: MessageBroker, private _logger: Logger) {
     super(_messageBroker, _logger);
-    this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, [this.initializeEmailCollection]);
+    this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, [
+      this.initializeEmailCollection,
+    ]);
   }
 
   private initializeEmailCollection = async (): Promise<boolean> => {
@@ -37,7 +39,10 @@ export class UserRepository extends EventRepository<User> {
   insertEmail = async (userId: string, email: string): Promise<IUserIdEmailMapping> => {
     const db = await this.getDatabase();
     const inserted = await db.collection(this.emailCollectionName).insertOne({ userId, email });
-    this._logger.debug('inserted email into emails collection', { userId, email });
+    this._logger.debug('inserted email into emails collection', {
+      userId,
+      email,
+    });
     return inserted.ops[0];
   };
 
@@ -46,13 +51,18 @@ export class UserRepository extends EventRepository<User> {
     const updated = await db
       .collection(this.emailCollectionName)
       .findOneAndUpdate({ userId }, { $set: { email: newEmail } });
-    this._logger.debug('updated email in emails collection', { userId, newEmail });
+    this._logger.debug('updated email in emails collection', {
+      userId,
+      newEmail,
+    });
     return updated.value;
   };
 
   getUserIdEmailMapping = async (email: string): Promise<IUserIdEmailMapping | null> => {
     const db = await this.getDatabase();
-    const result: IUserIdEmailMapping | null = await db.collection(this.emailCollectionName).findOne({ email });
+    const result: IUserIdEmailMapping | null = await db
+      .collection(this.emailCollectionName)
+      .findOne({ email });
     return result;
   };
 }

@@ -18,6 +18,9 @@ export class ReviewContentLengthError extends EntityError {
     const message = isToLong
       ? `Review content should not be longer than ${ReviewContentLengthError.max} characters.`
       : `Review content should at least be ${ReviewContentLengthError.min} characters long.`;
-    super(`${message} You provided a content with a length of ${actualLength}`, HttpStatusCodes.BadRequest);
+    super(
+      `${message} You provided a content with a length of ${actualLength}`,
+      HttpStatusCodes.BadRequest,
+    );
   }
 }

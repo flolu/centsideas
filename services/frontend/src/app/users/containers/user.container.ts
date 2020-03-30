@@ -53,7 +53,10 @@ export class UserContainer {
       .pipe(
         tap(user => {
           if (user) {
-            this.form.patchValue({ username: user.username, email: user.email });
+            this.form.patchValue({
+              username: user.username,
+              email: user.email,
+            });
           }
         }),
         takeWhile(user => !user),
@@ -62,6 +65,11 @@ export class UserContainer {
   }
 
   onUpdate = () => {
-    this.store.dispatch(UsersActions.updateUser({ email: this.form.value.email, username: this.form.value.username }));
+    this.store.dispatch(
+      UsersActions.updateUser({
+        email: this.form.value.email,
+        username: this.form.value.username,
+      }),
+    );
   };
 }

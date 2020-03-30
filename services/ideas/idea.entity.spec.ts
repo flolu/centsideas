@@ -4,7 +4,14 @@ import { ISnapshot } from '@cents-ideas/event-sourcing';
 import { IIdeaState } from '@cents-ideas/models';
 
 import { Idea } from './idea.entity';
-import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeEventId, fakeIdeaState, fakeUserId } from './test';
+import {
+  fakeIdeaId,
+  fakeIdeaTitle,
+  fakeIdeaDescription,
+  fakeEventId,
+  fakeIdeaState,
+  fakeUserId,
+} from './test';
 
 describe('Idea Entity', () => {
   it('should initialize correctly', () => {

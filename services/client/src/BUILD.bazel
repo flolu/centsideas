@@ -8,6 +8,7 @@ load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -56,14 +57,14 @@ html_insert_assets(
     name = "inject_scripts_for_dev",
     outs = ["index.html"],
     args = [
-        "--html=$(execpath //services/client/src:_index.html)",
+        "--html=$(execpath //services/client/src:index.dev.html)",
         "--out=$@",
         "--roots=. $(RULEDIR)",
         "--assets",
     ] + ["$(execpath %s)" % s for s in _ASSETS] + [
         "./_/ts_scripts.js",
     ],
-    data = [":_index.html"] + _ASSETS,
+    data = [":index.dev.html"] + _ASSETS,
 )
 
 ts_devserver(
@@ -139,13 +140,13 @@ html_insert_assets(
     name = "inject_scripts_for_prod",
     outs = ["_prodapp/services/client/src/index.html"],
     args = [
-               "--html=$(execpath //services/client/src:_index.html)",
+               "--html=$(execpath //services/client/src:index.prod.html)",
                "--out=$@",
                "--roots=. $(RULEDIR) npm/node_modules/core-js/client npm/node_modules/systemjs/dist",
                "--assets",
            ] + ["$(execpath %s)" % s for s in _ASSETS + _PROD_ASSETS] +
            ["$(execpath %s)/index.js" % s for s in _BUNDLE_ASSETS],
-    data = [":_index.html"] + _ASSETS + _PROD_ASSETS + _BUNDLE_ASSETS,
+    data = [":index.prod.html"] + _ASSETS + _PROD_ASSETS + _BUNDLE_ASSETS,
 )
 
 pkg_web(
@@ -203,10 +204,27 @@ ts_library(
 )
 
 nodejs_binary(
+    name = "universal_server_dev_server",
+    data = [
+        ":prodapp",
+        ":universal_server_lib",
+    ],
+    entry_point = ":server.ts",
+)
+
+nodejs_image(
     name = "universal_server",
     data = [
         ":prodapp",
         ":universal_server_lib",
     ],
     entry_point = ":server.ts",
+)
+
+k8s_deploy(
+    name = "k8s",
+    images = {
+        "client:placeholder_name": ":universal_server",
+    },
+    template = ":client.yaml",
 )

@@ -22,7 +22,9 @@ import { AuthGuard } from './auth.guard';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserModule.withServerTransition({ appId: 'cents-ideas' }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+    }),
     IdeasModule,
     UsersModule,
     AppStoreModule,
@@ -32,7 +34,8 @@ import { AuthGuard } from './auth.guard';
     { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
     {
       provide: APP_INITIALIZER,
-      useFactory: (settingsHttpService: SettingsService) => () => settingsHttpService.initializeApp(),
+      useFactory: (settingsHttpService: SettingsService) => () =>
+        settingsHttpService.initializeApp(),
       deps: [SettingsService],
       multi: true,
     },

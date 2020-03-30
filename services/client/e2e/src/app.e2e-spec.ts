@@ -9,6 +9,6 @@ describe('angular example application', () => {
 
   it('should display title', async () => {
     await page.navigateTo();
-    expect(await page.getTitleText()).toEqual(`Client Angular App`);
+    expect(await page.getTitleText()).toContain(`CENTS`);
   });
 });

@@ -13,9 +13,23 @@ const initialState: IUsersState = {
 
 const usersReducer = createReducer(
   initialState,
-  on(UsersActions.login, state => ({ ...state, loading: true, loaded: false, error: null })),
-  on(UsersActions.loginFail, (state, { error }) => ({ ...state, loading: false, loaded: false, error })),
-  on(UsersActions.loginDone, state => ({ loading: false, loaded: true, error: null })),
+  on(UsersActions.login, state => ({
+    ...state,
+    loading: true,
+    loaded: false,
+    error: null,
+  })),
+  on(UsersActions.loginFail, (state, { error }) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error,
+  })),
+  on(UsersActions.loginDone, state => ({
+    loading: false,
+    loaded: true,
+    error: null,
+  })),
   on(UsersActions.confirmSignUpDone, (state, action) => ({
     ...state,
     loading: false,
@@ -35,8 +49,18 @@ const usersReducer = createReducer(
     token: action.token,
     initialized: true,
   })),
-  on(UsersActions.updateUser, state => ({ ...state, loading: true, loaded: false, error: null })),
-  on(UsersActions.updateUserFail, (state, { error }) => ({ ...state, loading: false, loaded: false, error })),
+  on(UsersActions.updateUser, state => ({
+    ...state,
+    loading: true,
+    loaded: false,
+    error: null,
+  })),
+  on(UsersActions.updateUserFail, (state, { error }) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error,
+  })),
   on(UsersActions.updateUserDone, (state, { updated }) => ({
     ...state,
     loading: false,

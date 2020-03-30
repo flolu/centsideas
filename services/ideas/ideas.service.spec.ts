@@ -5,7 +5,13 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 import { makeFakeHttpRequest } from '@cents-ideas/models';
 
 import { IdeasService } from './ideas.service';
-import { IdeaCommandHandlerMock, fakeIdeaId, fakeUserId, fakeIdeaTitle, fakeIdeaDescription } from './test';
+import {
+  IdeaCommandHandlerMock,
+  fakeIdeaId,
+  fakeUserId,
+  fakeIdeaTitle,
+  fakeIdeaDescription,
+} from './test';
 import { Idea } from './idea.entity';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';

@@ -1,11 +1,12 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("@cents_ideas//:jest.bzl", "jest_test")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@cents_ideas//:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
+    "//:register-aliases.js",
     "//packages/enums:lib",
     "//packages/models:lib",
     "//packages/utils:lib",
@@ -32,20 +33,23 @@ ts_library(
 
 nodejs_image(
     name = "image",
-    data = [
-        ":lib",
-        "//:package.json",
-    ],
+    data = [":lib"],
     entry_point = ":index.ts",
 )
 
-lib_deps.insert(0, ":lib")
+k8s_deploy(
+    name = "k8s",
+    images = {
+        "ideas:placeholder_name": ":image",
+    },
+    template = ":ideas.yaml",
+)
 
 ts_library(
     name = "test_lib",
     srcs = glob(include = ["**/*.spec.ts"]),
     tsconfig = "//:tsconfig.jest.json",
-    deps = lib_deps,
+    deps = [":lib"] + lib_deps,
 )
 
 filegroup(
@@ -59,12 +63,4 @@ jest_test(
     srcs = [":test_lib.js"],
     jest_config = "//:jest.config.js",
     deps = [":lib"],
-)
-
-k8s_deploy(
-    name = "k8s",
-    images = {
-        "gcr.io/cents-ideas/ideas:latest": ":image",
-    },
-    template = ":ideas.yaml",
 )

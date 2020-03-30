@@ -10,7 +10,7 @@ export class Logger {
   constructor() {
     this.prefix = process.env.LOGGER_PREFIX || '●';
   }
-
+  /* tslint:disable:no-console */
   log = (...parts: any[]) => console.log(this.header(), this.resetColor, ...parts, this.resetColor);
   debug = (...parts: any[]) => console.log(this.header(), this.dimmed, ...parts, this.resetColor);
   error = (...parts: any[]) => console.log(this.header(), this.red, ...parts, this.resetColor);

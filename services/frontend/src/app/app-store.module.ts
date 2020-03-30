@@ -15,7 +15,11 @@ import { UsersEffects } from './users/users.effects';
 
 @NgModule({
   imports: [
-    StoreModule.forRoot({ ideas: ideas.reducer, reviews: reviews.reducer, users: users.reducer }),
+    StoreModule.forRoot({
+      ideas: ideas.reducer,
+      reviews: reviews.reducer,
+      users: users.reducer,
+    }),
     EffectsModule.forRoot([IdeasEffects, ReviewsEffects, UsersEffects]),
     environment.production ? [] : StoreDevtoolsModule.instrument(),
   ],
