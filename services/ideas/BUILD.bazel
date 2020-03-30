@@ -1,7 +1,7 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("@cents_ideas//:jest.bzl", "jest_test")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@cents_ideas//:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -37,6 +37,14 @@ nodejs_image(
     entry_point = ":index.ts",
 )
 
+k8s_deploy(
+    name = "k8s",
+    images = {
+        "ideas:placeholder_name": ":image",
+    },
+    template = ":ideas.yaml",
+)
+
 ts_library(
     name = "test_lib",
     srcs = glob(include = ["**/*.spec.ts"]),
@@ -55,12 +63,4 @@ jest_test(
     srcs = [":test_lib.js"],
     jest_config = "//:jest.config.js",
     deps = [":lib"],
-)
-
-k8s_deploy(
-    name = "k8s",
-    images = {
-        "ideas:placeholder_name": ":image",
-    },
-    template = ":ideas.yaml",
 )

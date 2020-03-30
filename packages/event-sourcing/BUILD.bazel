@@ -1,6 +1,20 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("@cents_ideas//:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
+
+lib_deps = [
+    "//packages/enums:lib",
+    "//packages/utils:lib",
+    "@npm//@types/async-retry",
+    "@npm//@types/inversify",
+    "@npm//@types/kafkajs",
+    "@npm//@types/mongodb",
+    "@npm//async-retry",
+    "@npm//inversify",
+    "@npm//kafkajs",
+    "@npm//mongodb",
+]
 
 ts_library(
     name = "lib",
@@ -9,16 +23,25 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     module_name = "@cents-ideas/event-sourcing",
-    deps = [
-        "//packages/enums:lib",
-        "//packages/utils:lib",
-        "@npm//@types/async-retry",
-        "@npm//@types/inversify",
-        "@npm//@types/kafkajs",
-        "@npm//@types/mongodb",
-        "@npm//async-retry",
-        "@npm//inversify",
-        "@npm//kafkajs",
-        "@npm//mongodb",
-    ],
+    deps = lib_deps,
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = glob(include = ["**/*.spec.ts"]),
+    tsconfig = "//:tsconfig.jest.json",
+    deps = [":lib"] + lib_deps,
+)
+
+filegroup(
+    name = "test_lib.js",
+    srcs = [":test_lib"],
+    output_group = "es5_sources",
+)
+
+jest_test(
+    name = "test",
+    srcs = [":test_lib.js"],
+    jest_config = "//:jest.config.js",
+    deps = [":lib"],
 )

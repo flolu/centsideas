@@ -11,7 +11,10 @@ exports_files([
 ts_library(
     name = "register-aliases.js",
     srcs = ["register-aliases.ts"],
-    deps = ["@npm//@types/node"],
+    deps = [
+        "@npm//@types/node",
+        "@npm//module-alias",
+    ],
 )
 
 ts_config(
@@ -30,8 +33,8 @@ k8s_objects(
         "//kubernetes:ingress",
         "//kubernetes:database_storage",
         "//kubernetes:kafka",
-        "//services/consumer:k8s",
         "//services/gateway:k8s",
+        "//services/consumer:k8s",
         "//services/ideas:k8s",
         "//services/reviews:k8s",
         "//services/users:k8s",

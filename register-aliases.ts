@@ -1,4 +1,5 @@
-import * as moduleAlias from 'module-alias';
+// tslint:disable-next-line:no-var-requires
+const moduleAlias = require('module-alias');
 import * as fs from 'fs';
 
 export const registerAliases = () => {
