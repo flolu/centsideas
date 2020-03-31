@@ -1,17 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AppStoreModule } from './app-store.module';
 import { IdeasModule } from './ideas/ideas.module';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'client' }),
+    StoreModule.forRoot({}),
+    // TODO only in dev mode
+    StoreDevtoolsModule.instrument(),
     AppRoutingModule,
-    AppStoreModule,
     IdeasModule,
   ],
   providers: [],

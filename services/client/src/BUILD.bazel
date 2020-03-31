@@ -1,27 +1,23 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_web")
-load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@npm//@babel/cli:index.bzl", "babel")
 load("@npm//history-server:index.bzl", "history_server")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
-load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
+load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 
 package(default_visibility = ["//:__subpackages__"])
 
 ts_library(
     name = "initialize_testbed",
-    testonly = 1,
-    srcs = [
-        "initialize_testbed.ts",
-    ],
+    testonly = True,
+    srcs = ["initialize_testbed.ts"],
     deps = [
         "@npm//@angular/core",
         "@npm//@angular/platform-browser-dynamic",
-        "@npm//@types",
     ],
 )
 
@@ -32,13 +28,7 @@ ng_module(
         "main.prod.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
-    deps = [
-        "//services/client/src/app",
-        "@npm//@angular/core",
-        "@npm//@angular/platform-browser",
-        "@npm//@angular/router",
-        #"@npm//@ngrx/store",
-    ],
+    deps = ["//services/client/src/app"],
 )
 
 filegroup(
@@ -51,6 +41,8 @@ filegroup(
 
 _ASSETS = [
     "@npm//:node_modules/zone.js/dist/zone.min.js",
+    ":styles.css",
+    "favicon.ico",
 ]
 
 html_insert_assets(
@@ -78,7 +70,6 @@ ts_devserver(
     ],
     static_files = _ASSETS + [
         ":inject_scripts_for_dev",
-        ":styles.css",
         "//services/client/src/assets",
     ],
     deps = ["//services/client/src"],
@@ -92,7 +83,7 @@ rollup_bundle(
     },
     output_dir = True,
     deps = [
-        "//services/client/src",
+        ":src",
         "@npm//rollup-plugin-commonjs",
         "@npm//rollup-plugin-node-resolve",
     ],
@@ -125,12 +116,6 @@ terser_minified(
     src = ":bundle-es5",
 )
 
-_PROD_ASSETS = [
-    "@npm//:node_modules/systemjs/dist/system.js",
-    "@npm//:node_modules/core-js/client/core.min.js",
-    "@npm//:node_modules/core-js/client/core.min.js.map",
-]
-
 _BUNDLE_ASSETS = [
     "//services/client/src:bundle-es2015.min",
     "//services/client/src:bundle-es5.min",
@@ -144,18 +129,19 @@ html_insert_assets(
                "--out=$@",
                "--roots=. $(RULEDIR) npm/node_modules/core-js/client npm/node_modules/systemjs/dist",
                "--assets",
-           ] + ["$(execpath %s)" % s for s in _ASSETS + _PROD_ASSETS] +
+           ] + ["$(execpath %s)" % s for s in _ASSETS] +
            ["$(execpath %s)/index.js" % s for s in _BUNDLE_ASSETS],
-    data = [":index.prod.html"] + _ASSETS + _PROD_ASSETS + _BUNDLE_ASSETS,
+    data = [":index.prod.html"] + _ASSETS + _BUNDLE_ASSETS,
 )
 
 pkg_web(
     name = "prodapp",
-    srcs = _ASSETS + _PROD_ASSETS + _BUNDLE_ASSETS + [
+    srcs = _ASSETS + _BUNDLE_ASSETS + [
         ":inject_scripts_for_prod",
-        "styles.css",
-        "favicon.ico",
         "//services/client/src/assets",
+        "@npm//:node_modules/systemjs/dist/system.js",
+        "@npm//:node_modules/core-js/client/core.min.js",
+        "@npm//:node_modules/core-js/client/core.min.js.map",
     ],
     additional_root_paths = [
         "npm/node_modules/core-js/client",
@@ -170,22 +156,6 @@ history_server(
         "-a",
         "$(rlocation cents_ideas/services/client/src/prodapp)",
     ],
-)
-
-nodejs_image(
-    name = "nodejs_image",
-    data = [":prodapp"],
-    entry_point = "@npm//:node_modules/history-server/modules/cli.js",
-    node_modules = "@npm//:node_modules",
-    tags = ["local"],
-    templated_args = ["services/client/src/prodapp"],
-)
-
-container_image(
-    name = "image",
-    base = ":nodejs_image",
-    tags = ["local"],
-    workdir = "/app/src/nodejs_image.binary.runfiles/cents_ideas/services/client",
 )
 
 ts_library(

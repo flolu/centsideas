@@ -1,0 +1,16 @@
+load("@npm_angular_bazel//:index.bzl", "ng_module")
+
+package(default_visibility = ["//:__subpackages__"])
+
+ng_module(
+    name = "ideas",
+    srcs = glob(["*.ts"]),
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
+        "@npm//@angular/router",
+        "@npm//@ngrx/store",
+    ],
+)
