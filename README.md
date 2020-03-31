@@ -18,8 +18,7 @@ This is a project with the purpose of learning the architecture of complex web a
 | Database(s)       | data storage, event store              | ✅     |
 | File storage      | blob storage                           | ❌     |
 | Redux frontend    | reactive, actions, effects             | ✅     |
-| GDPR              | legal, privacy                         | ❌     |
-| SEO               | server side rendering, marketing       | ❌     |
+| SEO               | server side rendering, marketing       | ✅     |
 | Monorepo          | all packages and services in one repo  | ✔️     |
 | Typescript        | types everywhere!                      | ✔️     |
 | Local development | hot reload, docker-compose, vscode     | ✔️     |
@@ -27,19 +26,18 @@ This is a project with the purpose of learning the architecture of complex web a
 | Gateway           | discovery, entry point, auth           | ✔️     |
 | Static pages      | homepage, static content               | ❌     |
 | Search            | indexing, realtime search              | ❌     |
-| Authentication    | passwordless, 2f auth, google login    | ❌     |
+| Authentication    | passwordless, 2f auth, google login    | ✔️     |
 | Admin panel       | monitoring, event handling, logs       | ❌     |
 | Backups           | automatic, manual, restore             | ❌     |
 | Realtime          | some kind of realtime integration      | ❌     |
+| GDPR              | legal, privacy                         | ❌     |
 | User Interface    | modern, unique, reusable               | ❌     |
 
 ### Status
 
 ✔️ Completely implemented
 
-✅ Implemented in certain parts
-
-⏳ Figuring out how to implement
+✅ Partly implemented
 
 ❌ Not (yet) implemented
 
