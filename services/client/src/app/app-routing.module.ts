@@ -5,7 +5,6 @@ const routes: Routes = [
   { path: '', redirectTo: 'ideas', pathMatch: 'full' },
   {
     path: 'ideas',
-    pathMatch: 'full',
     loadChildren: () => import('./ideas/ideas.module').then(m => m.IdeasModule),
   },
   { path: '**', redirectTo: 'ideas', pathMatch: 'full' },
