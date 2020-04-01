@@ -153,12 +153,6 @@
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.8.3"
   },
-  "_moduleAliases": {
-    "@cents-ideas/enums": "./packages/enums",
-    "@cents-ideas/utils": "./packages/utils",
-    "@cents-ideas/event-sourcing": "./packages/event-sourcing",
-    "@cents-ideas/models": "./packages/models"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
