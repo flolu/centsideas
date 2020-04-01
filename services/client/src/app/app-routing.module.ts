@@ -7,6 +7,10 @@ const routes: Routes = [
     path: 'ideas',
     loadChildren: () => import('./ideas/ideas.module').then(m => m.IdeasModule),
   },
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+  },
   { path: '**', redirectTo: 'ideas', pathMatch: 'full' },
 ];
 

@@ -6,6 +6,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { IdeasModule } from './ideas/ideas.module';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,6 +17,7 @@ import { IdeasModule } from './ideas/ideas.module';
     StoreDevtoolsModule.instrument(),
     AppRoutingModule,
     IdeasModule,
+    AuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
