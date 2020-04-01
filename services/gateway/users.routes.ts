@@ -28,20 +28,12 @@ export class UsersRoutes {
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Login}`),
     );
     this.router.post(
-      `/${UsersApiRoutes.ConfirmSignUp}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmSignUp}`),
-    );
-    this.router.post(
       `/${UsersApiRoutes.Authenticate}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Authenticate}`),
     );
     this.router.put(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`),
-    );
-    this.router.put(
-      `/${UsersApiRoutes.ConfirmEmailChange}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmEmailChange}`),
     );
 
     return this.router;
