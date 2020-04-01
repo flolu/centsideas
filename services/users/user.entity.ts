@@ -4,7 +4,6 @@ import { IUserState } from '@cents-ideas/models';
 import { commitFunctions } from './events';
 import { UserUpdatedEvent } from './events/user-updated.event';
 import { UserCreatedEvent } from './events/user-created.event';
-import { EmailChangeRequestedEvent } from './events/email-change-requested.event';
 
 export class User extends EventEntity<IUserState> {
   static initialState: IUserState = {

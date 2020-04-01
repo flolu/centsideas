@@ -7,8 +7,6 @@ import {
   ILoginDto,
   IAuthenticateDto,
   IAuthenticatedDto,
-  IConfirmSignUpResponseDto,
-  IConfirmEmailChangeDto,
   IUpdateUserDto,
   IUserQueryDto,
   IUserState,
@@ -46,37 +44,13 @@ export class UsersService {
       }
     });
 
-  confirmSignUp = (
-    req: HttpRequest<null, null, null, IAuthenticateDto>,
-  ): Promise<HttpResponse<IConfirmSignUpResponseDto>> =>
-    new Promise(async resolve => {
-      const _loggerName = 'confirm sign up';
-      try {
-        this.logger.debug(_loggerName, req);
-        const { user, token } = await this.commandHandler.confirmSignUp(
-          req.headers[HeaderKeys.Auth],
-        );
-        resolve({
-          status: HttpStatusCodes.Created,
-          body: { user, token },
-          headers: {},
-        });
-      } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
-        resolve(handleHttpResponseError(error));
-      }
-    });
-
   authenticate = (
     req: HttpRequest<null, null, null, IAuthenticateDto>,
   ): Promise<HttpResponse<IAuthenticatedDto>> =>
     new Promise(async resolve => {
       const _loggerName = 'authenticate';
       try {
-        this.logger.debug(_loggerName);
+        this.logger.debug(_loggerName, `${req.headers[HeaderKeys.Auth].slice(0, 10)}...`);
         const { token, user } = await this.commandHandler.authenticate(
           req.headers[HeaderKeys.Auth],
         );
@@ -120,10 +94,5 @@ export class UsersService {
         );
         resolve(handleHttpResponseError(error));
       }
-    });
-
-  confirmEmailChange = (req: HttpRequest<IConfirmEmailChangeDto>): Promise<HttpResponse<any>> =>
-    new Promise(async resolve => {
-      // ...
     });
 }

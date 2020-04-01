@@ -25,20 +25,13 @@ export class UsersServer {
 
     this.app.post(`/${UsersApiRoutes.Login}`, this.expressAdapter.json(this.usersService.login));
     this.app.post(
-      `/${UsersApiRoutes.ConfirmSignUp}`,
-      this.expressAdapter.json(this.usersService.confirmSignUp),
-    );
-    this.app.post(
       `/${UsersApiRoutes.Authenticate}`,
       this.expressAdapter.json(this.usersService.authenticate),
     );
+
     this.app.post(
       `/${UsersApiRoutes.Update}`,
       this.expressAdapter.json(this.usersService.updateUser),
-    );
-    this.app.post(
-      `/${UsersApiRoutes.ConfirmEmailChange}`,
-      this.expressAdapter.json(this.usersService.confirmEmailChange),
     );
 
     this.app.get(`/${UsersApiRoutes.Alive}`, (_req, res) => {

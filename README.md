@@ -12,7 +12,7 @@ This is a project with the purpose of learning the architecture of complex web a
 | ----------------- | -------------------------------------- | ------ |
 | Event sourcing    | event-driven, commands, message broker | ✅     |
 | Deployment        | ci, cd, build automation, bazel        | ✅     |
-| Testing           | unit Tests, integration Tests          | ✔️     |
+| Testing           | unit Tests, integration Tests          | ✅     |
 | Microservices     | small services, docker                 | ✔️     |
 | Kubernetes        | container orchestration                | ✅     |
 | Database(s)       | data storage, event store              | ✅     |

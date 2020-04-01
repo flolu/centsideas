@@ -6,9 +6,7 @@ export default {
   loginDatabaseName: 'logins',
   jwtSecret: process.env.JWT_SECRET || 'default-jwt-secret',
   mailing: {
-    service: process.env.NODE_MAILER_SERVICE || 'Mailjet',
-    user: process.env.NODE_MAILER_AUTH_USER || 'user',
-    password: process.env.NODE_MAILER_AUTH_PASSWORD || 'pass',
+    apiKey: process.env.SEND_GRID_API_KEY || '',
     fromAddress: 'CENTS Ideas <dev@flolu.com>',
   },
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:4200',

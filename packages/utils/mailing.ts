@@ -1,10 +1,4 @@
-import * as nodemailer from 'nodemailer';
-
-interface ISendMailOptions {
-  service: string;
-  user: string;
-  password: string;
-}
+import * as sgMail from '@sendgrid/mail';
 
 export const sendMail = (
   from: string,
@@ -12,15 +6,9 @@ export const sendMail = (
   subject: string,
   text: string,
   html: string,
-  options: ISendMailOptions,
+  apiKey: string,
 ): Promise<any> => {
-  const message: nodemailer.SendMailOptions = { from, to, subject, text, html };
-  const transporter = nodemailer.createTransport({
-    service: options.service,
-    auth: {
-      user: options.user,
-      pass: options.password,
-    },
-  });
-  return transporter.sendMail(message);
+  sgMail.setApiKey(apiKey);
+  const message = { to, from, subject, text, html };
+  return sgMail.send(message);
 };

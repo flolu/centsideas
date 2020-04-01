@@ -12,6 +12,7 @@ export class UserCreatedEvent extends Event<IUserCreatedEvent> {
   static commit(state: IUserState, event: UserCreatedEvent): IUserState {
     state.id = event.aggregateId;
     state.updatedAt = event.timestamp;
+    state.createdAt = event.timestamp;
     state.email = event.data.email;
     state.username = event.data.username;
     return state;
