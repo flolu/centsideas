@@ -2,37 +2,23 @@ import { injectable } from 'inversify';
 import * as faker from 'faker';
 import * as jwt from 'jsonwebtoken';
 
-import { sanitizeHtml, sendMail, Logger, decodeToken } from '@cents-ideas/utils';
+import { sanitizeHtml, sendMail, Logger, decodeToken, TokenInvalidError } from '@cents-ideas/utils';
 import {
   IAuthenticatedDto,
   ITokenData,
   IAuthTokenPayload,
   ILoginTokenPayload,
-  ITokenDataFull,
   IEmailChangeTokenPayload,
 } from '@cents-ideas/models';
 import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
-// TODO import as something like UserErrors
-import {
-  UserIdRequiredError,
-  UsernameRequiredError,
-  UsernameInvalidError,
-  EmailRequiredError,
-  EmailInvalidError,
-  EmailAlreadySignedUpError,
-  NoUserWithEmailError,
-  EmailNotAvailableError,
-} from './errors';
+import { UserErrors } from './errors';
 import env from './environment';
-import { TokenInvalidError } from '../../packages/utils/errors/token-invalid.error';
 import { Login } from './login.entity';
 import { LoginRepository } from './login.repository';
-import { LoginConfirmedEvent } from './events/login-confirmed.event';
-import { EmailMatchesCurrentEmailError } from './errors/email-matches-current-email.error';
-import { EmailChangeConfirmedEvent } from './events/email-change-confirmed.event';
+import { LoginEvents, UserEvents } from './events';
 
 @injectable()
 export class UserCommandHandler {
@@ -43,8 +29,8 @@ export class UserCommandHandler {
   ) {}
 
   login = async (email: string): Promise<boolean> => {
-    EmailRequiredError.validate(email);
-    EmailInvalidError.validate(email);
+    UserErrors.EmailRequiredError.validate(email);
+    UserErrors.EmailInvalidError.validate(email);
 
     const emailUserMapping = await this.repository.getUserIdEmailMapping(email);
     const firstLogin = !emailUserMapping;
@@ -78,18 +64,22 @@ export class UserCommandHandler {
         const createdUser = await this.handleUserCreation(payload.email, payload.loginId);
         const updatedToken = this.generateAuthToken(createdUser.persistedState.id);
 
-        login.pushEvents(new LoginConfirmedEvent(payload.loginId, createdUser.persistedState.id));
+        login.pushEvents(
+          new LoginEvents.LoginConfirmedEvent(payload.loginId, createdUser.persistedState.id),
+        );
         return { user: createdUser.persistedState, token: updatedToken };
       }
 
       this.logger.log(`login of ${payload.email}`);
       const emailUserMapping = await this.repository.getUserIdEmailMapping(payload.email);
-      if (!emailUserMapping) throw new NoUserWithEmailError(payload.email);
+      if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
 
       const user = await this.repository.findById(emailUserMapping.userId);
       if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
-      login.pushEvents(new LoginConfirmedEvent(payload.loginId, user.persistedState.id));
+      login.pushEvents(
+        new LoginEvents.LoginConfirmedEvent(payload.loginId, user.persistedState.id),
+      );
       return {
         user: user.persistedState,
         token: this.renewAuthToken(token, data.iat, emailUserMapping.userId),
@@ -120,19 +110,19 @@ export class UserCommandHandler {
     username: string | null,
     email: string | null,
   ): Promise<User> => {
-    UserIdRequiredError.validate(userId);
+    UserErrors.UserIdRequiredError.validate(userId);
 
     if (username) {
       username = sanitizeHtml(username);
-      UsernameRequiredError.validate(username);
-      UsernameInvalidError.validate(username);
+      UserErrors.UsernameRequiredError.validate(username);
+      UserErrors.UsernameInvalidError.validate(username);
 
       // FIXME check username uniqueness
     }
 
     if (email) {
-      EmailRequiredError.validate(email);
-      EmailInvalidError.validate(email);
+      UserErrors.EmailRequiredError.validate(email);
+      UserErrors.EmailInvalidError.validate(email);
     }
 
     const user = await this.repository.findById(userId);
@@ -152,7 +142,7 @@ export class UserCommandHandler {
     const payload: IEmailChangeTokenPayload = data.payload as any;
 
     const user = await this.repository.findById(payload.userId);
-    user.pushEvents(new EmailChangeConfirmedEvent(payload.userId, payload.newEmail));
+    user.pushEvents(new UserEvents.EmailChangeConfirmedEvent(payload.userId, payload.newEmail));
 
     const subject = 'CENTS Ideas Email Was Changed';
     const text = `You have changed your email adress from ${payload.currentEmail} to ${payload.newEmail}`;
@@ -169,14 +159,14 @@ export class UserCommandHandler {
   };
 
   private requestEmailChange = async (userId: string, newEmail: string): Promise<any> => {
-    EmailRequiredError.validate(newEmail);
-    EmailInvalidError.validate(newEmail);
+    UserErrors.EmailRequiredError.validate(newEmail);
+    UserErrors.EmailInvalidError.validate(newEmail);
 
     const user = await this.repository.findById(userId);
-    EmailMatchesCurrentEmailError.validate(user.persistedState.email, newEmail);
+    UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, newEmail);
 
     const emailUserMapping = await this.repository.getUserIdEmailMapping(newEmail);
-    if (emailUserMapping) throw new EmailNotAvailableError(newEmail);
+    if (emailUserMapping) throw new UserErrors.EmailNotAvailableError(newEmail);
 
     const tokenPayload: IEmailChangeTokenPayload = {
       currentEmail: user.persistedState.email,
@@ -196,11 +186,11 @@ export class UserCommandHandler {
   };
 
   private handleUserCreation = async (email: string, loginId: string): Promise<User> => {
-    EmailRequiredError.validate(email);
-    EmailInvalidError.validate(email);
+    UserErrors.EmailRequiredError.validate(email);
+    UserErrors.EmailInvalidError.validate(email);
 
     const emailUserMapping = await this.repository.getUserIdEmailMapping(email);
-    if (emailUserMapping) throw new EmailAlreadySignedUpError(email);
+    if (emailUserMapping) throw new UserErrors.EmailAlreadySignedUpError(email);
 
     const userId = await this.repository.generateUniqueId();
     // FIXME username uniqueness?!
