@@ -48,7 +48,6 @@
   "todo-tree.regex.regex": "(//|/\\*\\*|/\\*|\\*|<!--|#)\\s*($TAGS).*(\\n\\s*//\\s{2,}.*)*",
   "todo-tree.tree.showCountsInTree": true,
   "workbench.statusBar.visible": true,
-  "workbench.colorTheme": "Horizon Bold",
   "git.confirmSync": false,
   "blender.executables": [
     {

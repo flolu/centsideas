@@ -134,24 +134,35 @@ export class UserCommandHandler {
     return this.repository.save(user);
   };
 
-  updateUser = async (userId: string, username: string, email: string): Promise<User> => {
+  updateUser = async (
+    userId: string,
+    username: string | null,
+    email: string | null,
+  ): Promise<User> => {
     UserIdRequiredError.validate(userId);
-    username = sanitizeHtml(username);
-    UsernameRequiredError.validate(username);
-    EmailRequiredError.validate(email);
-    UsernameInvalidError.validate(username);
-    EmailInvalidError.validate(email);
-    const user = await this.repository.findById(userId);
-    const pendingEmail = user.persistedState.email !== email ? email : null;
-    if (pendingEmail) {
-      // ...
-    }
-    user.update(username, pendingEmail);
-    return this.repository.save(user);
-  };
 
-  confirmEmailChange = () => {
-    // ...
+    if (username) {
+      username = sanitizeHtml(username);
+      UsernameRequiredError.validate(username);
+      UsernameInvalidError.validate(username);
+    }
+
+    if (email) {
+      EmailRequiredError.validate(email);
+      EmailInvalidError.validate(email);
+    }
+
+    const user = await this.repository.findById(userId);
+
+    const isNewEmail = email && user.persistedState.email !== email;
+    const isNewUsername = username && user.persistedState.username !== username;
+
+    if (isNewEmail) {
+      // TODO handle email change requested
+    }
+
+    user.update(isNewUsername ? username : null, isNewEmail ? email : null);
+    return this.repository.save(user);
   };
 
   private renewAuthToken = (oldToken: string, tokenCreatedTime: number, userId: string): string => {

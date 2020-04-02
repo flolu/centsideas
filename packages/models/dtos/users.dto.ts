@@ -7,8 +7,8 @@ export interface IConfirmEmailChangeDto {
 }
 
 export interface IUpdateUserDto {
-  username: string;
-  email: string;
+  username: string | null;
+  email: string | null;
 }
 
 export interface IUserQueryDto {

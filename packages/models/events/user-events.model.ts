@@ -7,7 +7,7 @@ export interface IEmailChangeRequestedEvent {
 }
 
 export interface IUserUpdatedEvent {
-  username: string;
+  username: string | null;
   pendingEmail: string | null;
 }
 
