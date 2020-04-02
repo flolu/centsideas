@@ -2,13 +2,14 @@ import { injectable } from 'inversify';
 import * as faker from 'faker';
 import * as jwt from 'jsonwebtoken';
 
-import { sanitizeHtml, sendMail, Logger } from '@cents-ideas/utils';
+import { sanitizeHtml, sendMail, Logger, decodeToken } from '@cents-ideas/utils';
 import {
   IAuthenticatedDto,
   ITokenData,
   IAuthTokenPayload,
   ILoginTokenPayload,
   ITokenDataFull,
+  IEmailChangeTokenPayload,
 } from '@cents-ideas/models';
 import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
 
@@ -23,12 +24,15 @@ import {
   EmailInvalidError,
   EmailAlreadySignedUpError,
   NoUserWithEmailError,
+  EmailNotAvailableError,
 } from './errors';
 import env from './environment';
-import { TokenInvalidError } from './errors/token-invalid.error';
+import { TokenInvalidError } from '../../packages/utils/errors/token-invalid.error';
 import { Login } from './login.entity';
 import { LoginRepository } from './login.repository';
 import { LoginConfirmedEvent } from './events/login-confirmed.event';
+import { EmailMatchesCurrentEmailError } from './errors/email-matches-current-email.error';
+import { EmailChangeConfirmedEvent } from './events/email-change-confirmed.event';
 
 @injectable()
 export class UserCommandHandler {
@@ -61,14 +65,7 @@ export class UserCommandHandler {
   };
 
   authenticate = async (token: string): Promise<IAuthenticatedDto> => {
-    let decoded: any;
-    try {
-      decoded = jwt.verify(token, env.jwtSecret);
-    } catch (err) {
-      throw new TokenInvalidError(token);
-    }
-
-    const data: ITokenDataFull = decoded;
+    const data = decodeToken(token, env.jwtSecret);
     this.logger.debug('authenticate', data);
 
     if (data.type === 'login') {
@@ -118,6 +115,86 @@ export class UserCommandHandler {
     throw new TokenInvalidError(token);
   };
 
+  updateUser = async (
+    userId: string,
+    username: string | null,
+    email: string | null,
+  ): Promise<User> => {
+    UserIdRequiredError.validate(userId);
+
+    if (username) {
+      username = sanitizeHtml(username);
+      UsernameRequiredError.validate(username);
+      UsernameInvalidError.validate(username);
+
+      // FIXME check username uniqueness
+    }
+
+    if (email) {
+      EmailRequiredError.validate(email);
+      EmailInvalidError.validate(email);
+    }
+
+    const user = await this.repository.findById(userId);
+
+    const isNewEmail = email && user.persistedState.email !== email;
+    const isNewUsername = username && user.persistedState.username !== username;
+
+    if (email && isNewEmail) await this.requestEmailChange(userId, email);
+
+    user.update(isNewUsername ? username : null, isNewEmail ? email : null);
+    return this.repository.save(user);
+  };
+
+  confirmEmailChange = async (token: string): Promise<User> => {
+    const data = decodeToken(token, env.jwtSecret);
+    if (data.type !== 'email-change') throw new TokenInvalidError(token);
+    const payload: IEmailChangeTokenPayload = data.payload as any;
+
+    const user = await this.repository.findById(payload.userId);
+    user.pushEvents(new EmailChangeConfirmedEvent(payload.userId, payload.newEmail));
+
+    const subject = 'CENTS Ideas Email Was Changed';
+    const text = `You have changed your email adress from ${payload.currentEmail} to ${payload.newEmail}`;
+    await sendMail(
+      env.mailing.fromAddress,
+      payload.newEmail,
+      subject,
+      text,
+      text,
+      env.mailing.apiKey,
+    );
+
+    return this.repository.save(user);
+  };
+
+  private requestEmailChange = async (userId: string, newEmail: string): Promise<any> => {
+    EmailRequiredError.validate(newEmail);
+    EmailInvalidError.validate(newEmail);
+
+    const user = await this.repository.findById(userId);
+    EmailMatchesCurrentEmailError.validate(user.persistedState.email, newEmail);
+
+    const emailUserMapping = await this.repository.getUserIdEmailMapping(newEmail);
+    if (emailUserMapping) throw new EmailNotAvailableError(newEmail);
+
+    const tokenPayload: IEmailChangeTokenPayload = {
+      currentEmail: user.persistedState.email,
+      newEmail,
+      userId,
+    };
+    const tokenData: ITokenData = { type: 'email-change', payload: tokenPayload };
+    const token = jwt.sign(tokenData, env.jwtSecret, {
+      expiresIn: env.emailChangeTokenExpirationTime,
+    });
+
+    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}?confirmEmailChangeToken=${token}`;
+    const expirationTimeHours = Math.floor(env.emailChangeTokenExpirationTime / 3600);
+    const text = `URL to change your email: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
+    const subject = 'CENTS Ideas Email Change';
+    return sendMail(env.mailing.fromAddress, newEmail, subject, text, text, env.mailing.apiKey);
+  };
+
   private handleUserCreation = async (email: string, loginId: string): Promise<User> => {
     EmailRequiredError.validate(email);
     EmailInvalidError.validate(email);
@@ -131,37 +208,6 @@ export class UserCommandHandler {
     const user = User.create(userId, email, username);
 
     await this.repository.insertEmail(userId, email);
-    return this.repository.save(user);
-  };
-
-  updateUser = async (
-    userId: string,
-    username: string | null,
-    email: string | null,
-  ): Promise<User> => {
-    UserIdRequiredError.validate(userId);
-
-    if (username) {
-      username = sanitizeHtml(username);
-      UsernameRequiredError.validate(username);
-      UsernameInvalidError.validate(username);
-    }
-
-    if (email) {
-      EmailRequiredError.validate(email);
-      EmailInvalidError.validate(email);
-    }
-
-    const user = await this.repository.findById(userId);
-
-    const isNewEmail = email && user.persistedState.email !== email;
-    const isNewUsername = username && user.persistedState.username !== username;
-
-    if (isNewEmail) {
-      // TODO handle email change requested
-    }
-
-    user.update(isNewUsername ? username : null, isNewEmail ? email : null);
     return this.repository.save(user);
   };
 

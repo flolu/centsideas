@@ -34,6 +34,11 @@ export class UsersServer {
       this.expressAdapter.json(this.usersService.updateUser),
     );
 
+    this.app.post(
+      `/${UsersApiRoutes.ConfirmEmailChange}`,
+      this.expressAdapter.json(this.usersService.confirmEmailChange),
+    );
+
     this.app.get(`/${UsersApiRoutes.Alive}`, (_req, res) => {
       return res.status(200).send();
     });

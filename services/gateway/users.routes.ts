@@ -35,6 +35,10 @@ export class UsersRoutes {
       `/:id`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`),
     );
+    this.router.post(
+      `/${UsersApiRoutes.ConfirmEmailChange}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmEmailChange}`),
+    );
 
     return this.router;
   };

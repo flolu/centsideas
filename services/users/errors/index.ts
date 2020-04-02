@@ -7,3 +7,4 @@ export { EmailRequiredError } from './email-required.error';
 export { EmailInvalidError } from './email-invalid.error';
 export { EmailAlreadySignedUpError } from './email-already-signed-up.error';
 export { NoUserWithEmailError } from './no-user-with-email.error';
+export { EmailNotAvailableError } from './email-not-available.error';

@@ -10,6 +10,7 @@ import {
   IUpdateUserDto,
   IUserQueryDto,
   IUserState,
+  IConfirmEmailChangeDto,
 } from '@cents-ideas/models';
 import {
   Logger,
@@ -82,6 +83,28 @@ export class UsersService {
           req.body.username,
           req.body.email,
         );
+        resolve({
+          status: HttpStatusCodes.Accepted,
+          body: updatedUser.persistedState,
+          headers: {},
+        });
+      } catch (error) {
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
+        resolve(handleHttpResponseError(error));
+      }
+    });
+
+  confirmEmailChange = (
+    req: HttpRequest<IConfirmEmailChangeDto>,
+  ): Promise<HttpResponse<IUserState>> =>
+    new Promise(async resolve => {
+      const _loggerName = 'confirm email change';
+      try {
+        this.logger.debug(_loggerName, req);
+        const updatedUser = await this.commandHandler.confirmEmailChange(req.body.token);
         resolve({
           status: HttpStatusCodes.Accepted,
           body: updatedUser.persistedState,
