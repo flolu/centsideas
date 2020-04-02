@@ -7,6 +7,7 @@
     "paths": {
       "@cents-ideas/*": ["./packages/*"]
     },
+    "target": "es5",
     "types": ["reflect-metadata", "node", "jest"]
   },
   "exclude": ["bazel-out", "node_modules", "dist"]

@@ -10,4 +10,7 @@ export default {
     fromAddress: 'CENTS Ideas <dev@flolu.com>',
   },
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:4200',
+  loginTokenExpirationTime: 2 * 60 * 60,
+  timeUntilGenerateNewToken: 1 * 24 * 60 * 60,
+  authTokenExpirationTime: 7 * 24 * 60 * 60,
 };
