@@ -3,4 +3,9 @@ export enum TopLevelFrontendRoutes {
   ConfirmSignUp = 'confirm-sign-up',
   User = 'user',
   Ideas = 'ideas',
+  Auth = 'auth',
+}
+
+export enum AuthFrontendRoutes {
+  Login = 'login',
 }

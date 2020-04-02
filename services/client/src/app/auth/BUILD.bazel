@@ -11,6 +11,8 @@ ng_module(
     ),
     tsconfig = "//services/client:tsconfig.json",
     deps = [
+        # TODO remove :lib from all package imports
+        "//packages/enums:lib",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
