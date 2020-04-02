@@ -27,6 +27,7 @@ export abstract class EventEntity<IEntityState> implements IEventEntity {
   }
 
   pushEvents = (...events: IEvent[]): EventEntity<IEntityState> => {
+    // FIXME check if the events are valid (are known to the commitFunctions)
     this.pendingEvents = this.pendingEvents.concat(events);
     return this;
   };

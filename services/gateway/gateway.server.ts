@@ -6,7 +6,7 @@ import { injectable } from 'inversify';
 
 import { Logger } from '@cents-ideas/utils';
 import { ApiEndpoints, HeaderKeys, CentsCommandments } from '@cents-ideas/enums';
-import { IAuthTokenData } from '@cents-ideas/models';
+import { ITokenDataFull, IAuthTokenPayload } from '@cents-ideas/models';
 
 import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';
@@ -31,16 +31,25 @@ export class GatewayServer {
     this.app.use(cors());
 
     this.app.use((req, res, next) => {
-      let decoded: any;
-      const token: string = req.headers[HeaderKeys.Auth] || '';
+      res.locals.userId = null;
+
+      const token = req.headers[HeaderKeys.Auth];
+      if (!token) return next();
+
       try {
-        decoded = jwt.verify(token, env.jwtSecret);
-        const payload: IAuthTokenData = { userId: decoded.userId };
-        res.locals.userId = payload.userId;
-        this.logger.debug(`found valid auth token (${payload.userId} is authenticated)`);
-      } catch (err) {
-        res.locals.userId = null;
-      }
+        const decoded = jwt.verify(token, env.jwtSecret);
+        const data: ITokenDataFull = decoded as any;
+
+        if (data.type === 'auth') {
+          const payload: IAuthTokenPayload = data.payload as any;
+          res.locals.userId = payload.userId;
+        }
+        // tslint:disable-next-line:no-empty
+      } catch (err) {}
+
+      this.logger.debug(
+        `request was made by ${res.locals.userId ? res.locals.userId : 'a not authenticated user'}`,
+      );
       next();
     });
 
