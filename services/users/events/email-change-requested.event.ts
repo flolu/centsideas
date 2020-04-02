@@ -3,7 +3,7 @@ import { UserEvents } from '@cents-ideas/enums';
 import { IEmailChangeRequestedEvent, IUserState } from '@cents-ideas/models';
 
 export class EmailChangeRequestedEvent extends Event<IEmailChangeRequestedEvent> {
-  static readonly eventName: string = UserEvents.EmailChangeConfirmed;
+  static readonly eventName: string = UserEvents.EmailChangeRequested;
 
   constructor(userId: string, email: string) {
     super(EmailChangeRequestedEvent.eventName, { email }, userId);

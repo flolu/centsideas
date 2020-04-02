@@ -1,7 +1,7 @@
 import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 import { IIdeaState } from '@cents-ideas/models';
 
-import { IdeaCreatedEvent, IdeaUpdatedEvent, IdeaDeletedEvent, commitFunctions } from './events';
+import { commitFunctions, IdeasEvents } from './events';
 
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
@@ -25,17 +25,17 @@ export class Idea extends EventEntity<IIdeaState> {
 
   static create(ideaId: string, userId: string, title: string, description: string): Idea {
     const idea = new Idea();
-    idea.pushEvents(new IdeaCreatedEvent(ideaId, userId, title, description));
+    idea.pushEvents(new IdeasEvents.IdeaCreatedEvent(ideaId, userId, title, description));
     return idea;
   }
 
   update(title?: string, description?: string): Idea {
-    this.pushEvents(new IdeaUpdatedEvent(this.persistedState.id, title, description));
+    this.pushEvents(new IdeasEvents.IdeaUpdatedEvent(this.persistedState.id, title, description));
     return this;
   }
 
   delete(): Idea {
-    this.pushEvents(new IdeaDeletedEvent(this.persistedState.id));
+    this.pushEvents(new IdeasEvents.IdeaDeletedEvent(this.persistedState.id));
     return this;
   }
 }
