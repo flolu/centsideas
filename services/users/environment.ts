@@ -13,4 +13,5 @@ export default {
   loginTokenExpirationTime: 2 * 60 * 60,
   timeUntilGenerateNewToken: 1 * 24 * 60 * 60,
   authTokenExpirationTime: 7 * 24 * 60 * 60,
+  emailChangeTokenExpirationTime: 2 * 60 * 60,
 };

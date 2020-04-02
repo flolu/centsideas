@@ -6,7 +6,7 @@ import { injectable } from 'inversify';
 
 import { Logger } from '@cents-ideas/utils';
 import { ApiEndpoints, HeaderKeys, CentsCommandments } from '@cents-ideas/enums';
-import { ITokenDataFull, IAuthTokenPayload } from '@cents-ideas/models';
+import { ITokenDataFull, IAuthTokenPayload, ITokenData } from '@cents-ideas/models';
 
 import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';

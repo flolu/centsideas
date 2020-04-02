@@ -19,6 +19,8 @@ lib_deps = [
     "@npm//module-alias",
     "@npm//sanitize-html",
     "@npm//shortid",
+    "@npm//jsonwebtoken",
+    "@npm//@types/jsonwebtoken",
     "@npm//uuid",
 ]
 
