@@ -1,1 +1,1 @@
-export { makeFakeHttpRequest } from './http-request.mock';
+export * from './http-request.mock';
