@@ -1,10 +1,12 @@
-version: '3'
+version: "3"
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - '2181'
+      - "2181"
     hostname: zookeeper
+    logging:
+      driver: none
   kafka:
     image: wurstmeister/kafka:2.12-2.4.0
     hostname: kafka
@@ -14,7 +16,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - 'zookeeper'
+      - "zookeeper"
+    logging:
+      driver: none
 
   gateway:
     image: node:lts-alpine
@@ -95,7 +99,7 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/consumer
     depends_on:
-      - 'kafka'
+      - "kafka"
   projection-database:
     image: mongo:4.2
     logging:
