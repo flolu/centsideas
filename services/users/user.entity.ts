@@ -1,9 +1,7 @@
 import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
 import { IUserState } from '@cents-ideas/models';
 
-import { commitFunctions } from './events';
-import { UserUpdatedEvent } from './events/user-updated.event';
-import { UserCreatedEvent } from './events/user-created.event';
+import { commitFunctions, UserEvents } from './events';
 
 export class User extends EventEntity<IUserState> {
   static initialState: IUserState = {
@@ -25,13 +23,15 @@ export class User extends EventEntity<IUserState> {
 
   static create(userId: string, email: string, username: string): User {
     const user = new User();
-    user.pushEvents(new UserCreatedEvent(userId, email, username));
+    user.pushEvents(new UserEvents.UserCreatedEvent(userId, email, username));
     return user;
   }
 
   update(username: string | null, pendingEmail: string | null) {
     if (!username && !pendingEmail) return this;
-    this.pushEvents(new UserUpdatedEvent(this.persistedState.id, username, pendingEmail));
+    this.pushEvents(
+      new UserEvents.UserUpdatedEvent(this.persistedState.id, username, pendingEmail),
+    );
     return this;
   }
 }
