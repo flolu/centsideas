@@ -4,6 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 
+import { AuthFrontendRoutes } from '@cents-ideas/enums';
+
 import { LoginContainer } from './login.container';
 import * as fromAuth from './auth.reducer';
 
@@ -11,8 +13,7 @@ import * as fromAuth from './auth.reducer';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    // TODO dont' hardcode routes
-    RouterModule.forChild([{ path: 'login', component: LoginContainer }]),
+    RouterModule.forChild([{ path: AuthFrontendRoutes.Login, component: LoginContainer }]),
     StoreModule.forFeature('auth', { auth: fromAuth.reducer }),
   ],
   declarations: [LoginContainer],
