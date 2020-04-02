@@ -1,1 +1,1 @@
-export { IUserIdEmailMapping } from './email-collection';
+export * from './email-collection';

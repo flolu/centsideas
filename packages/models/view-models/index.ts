@@ -1,3 +1,3 @@
-export { IIdeaViewModel } from './idea.view-model';
-export { IReviewViewModel } from './review.view-model';
-export { IUserViewModel } from './user.view-model';
+export * from './idea.view-model';
+export * from './review.view-model';
+export * from './user.view-model';

@@ -1,1 +1,1 @@
-export { EventRepositoryMock } from './event-repository.mock';
+export * from './event-repository.mock';

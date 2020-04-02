@@ -1,1 +1,1 @@
-export { expectAsyncError, expectNoAsyncError } from './expect-async-error';
+export * from './expect-async-error';
