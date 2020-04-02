@@ -11,7 +11,7 @@ ng_module(
     ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
-        "//packages/enums:lib",
+        "//packages/enums",
         "//services/client/src/app/auth",
         "//services/client/src/app/ideas",
         "@npm//@angular/core",

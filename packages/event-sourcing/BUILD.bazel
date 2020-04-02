@@ -4,8 +4,8 @@ load("@cents_ideas//:jest.bzl", "jest_test")
 package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
-    "//packages/enums:lib",
-    "//packages/utils:lib",
+    "//packages/enums",
+    "//packages/utils",
     "@npm//@types/async-retry",
     "@npm//@types/inversify",
     "@npm//@types/kafkajs",
@@ -17,7 +17,7 @@ lib_deps = [
 ]
 
 ts_library(
-    name = "lib",
+    name = "event-sourcing",
     srcs = glob(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
@@ -30,7 +30,7 @@ ts_library(
     name = "test_lib",
     srcs = glob(include = ["**/*.spec.ts"]),
     tsconfig = "//:tsconfig.jest.json",
-    deps = [":lib"] + lib_deps,
+    deps = [":event-sourcing"] + lib_deps,
 )
 
 filegroup(
@@ -43,5 +43,5 @@ jest_test(
     name = "test",
     srcs = [":test_lib.js"],
     jest_config = "//:jest.config.js",
-    deps = [":lib"],
+    deps = [":event-sourcing"],
 )

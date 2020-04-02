@@ -7,10 +7,10 @@ package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
     "//:register-aliases.js",
-    "//packages/enums:lib",
-    "//packages/event-sourcing:lib",
-    "//packages/models:lib",
-    "//packages/utils:lib",
+    "//packages/enums",
+    "//packages/event-sourcing",
+    "//packages/models",
+    "//packages/utils",
     "@npm//@types/async-retry",
     "@npm//@types/body-parser",
     "@npm//@types/express",
