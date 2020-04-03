@@ -78,6 +78,9 @@ export class UserCommandHandler {
       const payload: ILoginTokenPayload = data.payload as any;
       const login = await this.loginRepository.findById(payload.loginId);
 
+      if (login.persistedState.confirmedAt)
+        throw new TokenInvalidError(token, `This login was already confirmed`);
+
       if (payload.firstLogin && payload.loginId) {
         this.logger.log(`first login of ${payload.email}`);
 
@@ -87,6 +90,7 @@ export class UserCommandHandler {
         login.pushEvents(
           new LoginEvents.LoginConfirmedEvent(payload.loginId, createdUser.persistedState.id),
         );
+        await this.loginRepository.save(login);
         return { user: createdUser.persistedState, token: updatedToken };
       }
 
@@ -100,6 +104,7 @@ export class UserCommandHandler {
       login.pushEvents(
         new LoginEvents.LoginConfirmedEvent(payload.loginId, user.persistedState.id),
       );
+      await this.loginRepository.save(login);
       return {
         user: user.persistedState,
         token: this.renewAuthToken(token, data.iat, emailUserMapping.userId),
