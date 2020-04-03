@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { HeaderKeys } from '@cents-ideas/enums';
 
-import { TOKEN_KEY } from './users/users.service';
+import { TOKEN_KEY } from './user/user.service';
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {

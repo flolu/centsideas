@@ -1,8 +1,8 @@
-import { IAuthenticatedDto, IUpdateUserDto, IUserState } from '@cents-ideas/models';
+import { IAuthenticatedDto, IUserState } from '@cents-ideas/models';
 
 import { createAction, props } from '@ngrx/store';
 
-const PREFIX = '[users]';
+const PREFIX = '[auth]';
 const FAIL = 'fail';
 const DONE = 'done';
 
@@ -36,14 +36,6 @@ const confirmLoginFail: any = createAction(
   props<{ error: string }>(),
 );
 
-const UPDATE = 'update';
-const updateUser: any = createAction(`${PREFIX} ${UPDATE}`, props<IUpdateUserDto>());
-const updateUserDone: any = createAction(
-  `${PREFIX} ${UPDATE} ${DONE}`,
-  props<{ updated: IUserState }>(),
-);
-const updateUserFail: any = createAction(`${PREFIX} ${UPDATE} ${FAIL}`, props<{ error: string }>());
-
 const CONFIRM_EMAIL_CHANGE = 'confirm email change';
 const confirmEmailChange: any = createAction(
   `${PREFIX} ${CONFIRM_EMAIL_CHANGE}`,
@@ -58,7 +50,7 @@ const confirmEmailChangeFail: any = createAction(
   props<{ error: string }>(),
 );
 
-export const UsersActions = {
+export const AuthActions = {
   login,
   loginDone,
   loginFail,
@@ -68,9 +60,6 @@ export const UsersActions = {
   confirmLogin,
   confirmLoginDone,
   confirmLoginFail,
-  updateUser,
-  updateUserDone,
-  updateUserFail,
   confirmEmailChange,
   confirmEmailChangeDone,
   confirmEmailChangeFail,

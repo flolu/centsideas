@@ -1,11 +1,12 @@
 export enum TopLevelFrontendRoutes {
   Login = 'login',
   ConfirmSignUp = 'confirm-sign-up',
-  Users = 'users',
+  User = 'user',
   Ideas = 'ideas',
   Auth = 'auth',
 }
 
 export enum AuthFrontendRoutes {
   Login = 'login',
+  Me = 'me',
 }

@@ -4,26 +4,26 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { UsersService } from './users.service';
-import { UsersActions } from './users.actions';
+import { UserService } from './user.service';
+import { AuthActions } from './auth.actions';
 import { Store } from '@ngrx/store';
 
 @Injectable()
-export class UsersEffects {
+export class AuthEffects {
   constructor(
     private actions$: Actions,
-    private usersService: UsersService,
+    private usersService: UserService,
     // TODO type
     private store: Store<any>,
   ) {}
 
   login$: any = createEffect(() =>
     this.actions$.pipe(
-      ofType(UsersActions.login),
+      ofType(AuthActions.login),
       switchMap(({ email }) =>
         this.usersService.login(email).pipe(
-          map(() => UsersActions.loginDone()),
-          catchError(error => of(UsersActions.loginFail({ error }))),
+          map(() => AuthActions.loginDone()),
+          catchError(error => of(AuthActions.loginFail({ error }))),
         ),
       ),
     ),
@@ -31,11 +31,11 @@ export class UsersEffects {
 
   confirmLogin$: any = createEffect(() =>
     this.actions$.pipe(
-      ofType(UsersActions.confirmLogin),
+      ofType(AuthActions.confirmLogin),
       switchMap(action =>
         this.usersService.confirmLogin(action.token).pipe(
-          map(({ token, user }) => UsersActions.confirmLoginDone({ token, user })),
-          catchError(error => of(UsersActions.confirmLoginFail({ error }))),
+          map(({ token, user }) => AuthActions.confirmLoginDone({ token, user })),
+          catchError(error => of(AuthActions.confirmLoginFail({ error }))),
         ),
       ),
     ),
@@ -44,7 +44,7 @@ export class UsersEffects {
   confirmLoginDone$: any = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(UsersActions.confirmLoginDone),
+        ofType(AuthActions.confirmLoginDone),
         tap(action => this.usersService.saveToken(action.token)),
         // TODO router navigation
         // tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
@@ -54,11 +54,11 @@ export class UsersEffects {
 
   authenticate$: any = createEffect(() =>
     this.actions$.pipe(
-      ofType(UsersActions.authenticate),
+      ofType(AuthActions.authenticate),
       switchMap(() =>
         this.usersService.authenticate().pipe(
-          map(data => UsersActions.authenticateDone(data)),
-          catchError(error => of(UsersActions.authenticateFail({ error }))),
+          map(data => AuthActions.authenticateDone(data)),
+          catchError(error => of(AuthActions.authenticateFail({ error }))),
         ),
       ),
     ),
@@ -67,7 +67,7 @@ export class UsersEffects {
   authenticateDone$: any = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(UsersActions.authenticateDone),
+        ofType(AuthActions.authenticateDone),
         tap(action => this.usersService.saveToken(action.token)),
         // TODO navigation
         // tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
@@ -78,23 +78,9 @@ export class UsersEffects {
   authenticateFail$: any = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(UsersActions.authenticateFail),
+        ofType(AuthActions.authenticateFail),
         tap(() => this.usersService.removeToken()),
       ),
     { dispatch: false },
   );
-
-  // TODO create selector
-  /* updateUser$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(UsersActions.updateUser),
-      withLatestFrom(this.store.select(UsersSelectors.selectUser)),
-      switchMap(([payload, user]) =>
-        this.usersService.updateUser(payload, user.id).pipe(
-          map(updated => UsersActions.updateUserDone({ updated })),
-          catchError(error => of(UsersActions.updateUserFail({ error }))),
-        ),
-      ),
-    ),
-  ); */
 }
