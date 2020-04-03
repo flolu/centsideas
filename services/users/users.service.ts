@@ -11,6 +11,7 @@ import {
   IUserQueryDto,
   IUserState,
   IConfirmEmailChangeDto,
+  IConfirmLoginDto,
 } from '@cents-ideas/models';
 import {
   Logger,
@@ -51,10 +52,30 @@ export class UsersService {
     new Promise(async resolve => {
       const _loggerName = 'authenticate';
       try {
-        this.logger.debug(_loggerName, `${req.headers[HeaderKeys.Auth].slice(0, 10)}...`);
+        this.logger.debug(_loggerName);
         const { token, user } = await this.commandHandler.authenticate(
           req.headers[HeaderKeys.Auth],
         );
+        resolve({
+          status: HttpStatusCodes.Accepted,
+          body: { token, user },
+          headers: {},
+        });
+      } catch (error) {
+        this.logger.error(
+          _loggerName,
+          error.status && error.status < 500 ? error.message : error.stack,
+        );
+        resolve(handleHttpResponseError(error));
+      }
+    });
+
+  confirmLogin = (req: HttpRequest<IConfirmLoginDto>): Promise<HttpResponse<IAuthenticatedDto>> =>
+    new Promise(async resolve => {
+      const _loggerName = 'confirm login';
+      try {
+        this.logger.debug(_loggerName);
+        const { token, user } = await this.commandHandler.confirmLogin(req.body.token);
         resolve({
           status: HttpStatusCodes.Accepted,
           body: { token, user },

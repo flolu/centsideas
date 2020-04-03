@@ -12,11 +12,12 @@ ng_module(
     tsconfig = "//services/client:tsconfig.json",
     deps = [
         "//packages/enums",
-        "//services/client/src/app/auth",
         "//services/client/src/app/ideas",
+        "//services/client/src/app/users",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
+        "@npm//@ngrx/effects",
         "@npm//@ngrx/store",
         "@npm//@ngrx/store-devtools",
         "@npm//rxjs",

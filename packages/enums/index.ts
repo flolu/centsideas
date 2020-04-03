@@ -6,3 +6,4 @@ export * from './event-topics.enum';
 export * from './headers.enum';
 export * from './logger-prefixes.enum';
 export * from './frontend-routing';
+export * from './query-params.enum';

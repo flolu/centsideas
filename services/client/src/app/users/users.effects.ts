@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { switchMap, catchError, map, tap, withLatestFrom } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { Router } from '@angular/router';
 
-import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
+import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import { UsersService } from './users.service';
-import { UsersActions, UsersSelectors } from '.';
-import { AppState } from '..';
+import { UsersActions } from './users.actions';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class UsersEffects {
   constructor(
     private actions$: Actions,
     private usersService: UsersService,
-    private router: Router,
-    private store: Store<AppState>,
+    // TODO type
+    private store: Store<any>,
   ) {}
 
-  login$ = createEffect(() =>
+  login$: any = createEffect(() =>
     this.actions$.pipe(
       ofType(UsersActions.login),
       switchMap(({ email }) =>
@@ -32,29 +29,30 @@ export class UsersEffects {
     ),
   );
 
-  confirmSignUp$ = createEffect(() =>
+  confirmLogin$: any = createEffect(() =>
     this.actions$.pipe(
-      ofType(UsersActions.confirmSignUp),
-      switchMap(({ token }) =>
-        this.usersService.confirmSignUp(token).pipe(
-          map(data => UsersActions.confirmSignUpDone(data)),
-          catchError(error => of(UsersActions.confirmSignUpFail({ error }))),
+      ofType(UsersActions.confirmLogin),
+      switchMap(action =>
+        this.usersService.confirmLogin(action.token).pipe(
+          map(({ token, user }) => UsersActions.confirmLoginDone({ token, user })),
+          catchError(error => of(UsersActions.confirmLoginFail({ error }))),
         ),
       ),
     ),
   );
 
-  confirmSignUpDone$ = createEffect(
+  confirmLoginDone$: any = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(UsersActions.confirmSignUpDone),
+        ofType(UsersActions.confirmLoginDone),
         tap(action => this.usersService.saveToken(action.token)),
-        tap(() => this.router.navigate([TopLevelFrontendRoutes.Users])),
+        // TODO router navigation
+        // tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
       ),
     { dispatch: false },
   );
 
-  authenticate$ = createEffect(() =>
+  authenticate$: any = createEffect(() =>
     this.actions$.pipe(
       ofType(UsersActions.authenticate),
       switchMap(() =>
@@ -66,17 +64,18 @@ export class UsersEffects {
     ),
   );
 
-  authenticateDone$ = createEffect(
+  authenticateDone$: any = createEffect(
     () =>
       this.actions$.pipe(
         ofType(UsersActions.authenticateDone),
         tap(action => this.usersService.saveToken(action.token)),
-        tap(() => this.router.navigate([TopLevelFrontendRoutes.Users])),
+        // TODO navigation
+        // tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
       ),
     { dispatch: false },
   );
 
-  authenticateFail$ = createEffect(
+  authenticateFail$: any = createEffect(
     () =>
       this.actions$.pipe(
         ofType(UsersActions.authenticateFail),
@@ -85,16 +84,8 @@ export class UsersEffects {
     { dispatch: false },
   );
 
-  confirmSignUpFail$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(UsersActions.confirmSignUpFail),
-        tap(() => this.router.navigate['']),
-      ),
-    { dispatch: false },
-  );
-
-  updateUser$ = createEffect(() =>
+  // TODO create selector
+  /* updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UsersActions.updateUser),
       withLatestFrom(this.store.select(UsersSelectors.selectUser)),
@@ -105,5 +96,5 @@ export class UsersEffects {
         ),
       ),
     ),
-  );
+  ); */
 }

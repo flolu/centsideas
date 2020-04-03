@@ -25,6 +25,10 @@ export class UsersServer {
 
     this.app.post(`/${UsersApiRoutes.Login}`, this.expressAdapter.json(this.usersService.login));
     this.app.post(
+      `/${UsersApiRoutes.ConfirmLogin}`,
+      this.expressAdapter.json(this.usersService.confirmLogin),
+    );
+    this.app.post(
       `/${UsersApiRoutes.Authenticate}`,
       this.expressAdapter.json(this.usersService.authenticate),
     );

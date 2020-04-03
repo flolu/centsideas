@@ -10,7 +10,7 @@ import {
   ILoginTokenPayload,
   IEmailChangeTokenPayload,
 } from '@cents-ideas/models';
-import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes, AuthFrontendRoutes, QueryParamKeys } from '@cents-ideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -39,7 +39,7 @@ export class UserCommandHandler {
     const tokenData: ITokenData = { type: 'login', payload: { loginId, email, firstLogin } };
 
     const token = jwt.sign(tokenData, env.jwtSecret, { expiresIn: env.loginTokenExpirationTime });
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Login}?token=${token}`;
+    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Users}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
     const expirationTimeHours = Math.floor(env.loginTokenExpirationTime / 3600);
     const text = `URL to login into your account: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Login';
@@ -53,6 +53,26 @@ export class UserCommandHandler {
   authenticate = async (token: string): Promise<IAuthenticatedDto> => {
     const data = decodeToken(token, env.jwtSecret);
     this.logger.debug('authenticate', data);
+
+    if (data.type === 'auth') {
+      const payload: IAuthTokenPayload = data.payload as any;
+      this.logger.log(`authentication of ${payload.userId}`);
+
+      const user = await this.repository.findById(payload.userId);
+      if (!user) throw new TokenInvalidError(token, 'invalid userId');
+
+      return {
+        user: user.persistedState,
+        token: this.renewAuthToken(token, data.iat, payload.userId),
+      };
+    }
+    this.logger.error(`You wanted to authenticate. But no auth token was found`);
+    throw new TokenInvalidError(token);
+  };
+
+  confirmLogin = async (token: string): Promise<IAuthenticatedDto> => {
+    const data = decodeToken(token, env.jwtSecret);
+    this.logger.debug('confirm login', data);
 
     if (data.type === 'login') {
       const payload: ILoginTokenPayload = data.payload as any;
@@ -86,22 +106,7 @@ export class UserCommandHandler {
       };
     }
 
-    if (data.type === 'auth') {
-      const payload: IAuthTokenPayload = data.payload as any;
-      this.logger.log(`authentication of ${payload.userId}`);
-
-      const user = await this.repository.findById(payload.userId);
-      if (!user) throw new TokenInvalidError(token, 'invalid userId');
-
-      return {
-        user: user.persistedState,
-        token: this.renewAuthToken(token, data.iat, payload.userId),
-      };
-    }
-
-    this.logger.error(
-      `no authentication method could be used. it was neither a login nor a general authentication`,
-    );
+    this.logger.error(`You wanted to confirm your login. But no login token was found`);
     throw new TokenInvalidError(token);
   };
 
@@ -178,7 +183,7 @@ export class UserCommandHandler {
       expiresIn: env.emailChangeTokenExpirationTime,
     });
 
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}?confirmEmailChangeToken=${token}`;
+    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Users}?confirmEmailChangeToken=${token}`;
     const expirationTimeHours = Math.floor(env.emailChangeTokenExpirationTime / 3600);
     const text = `URL to change your email: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Email Change';

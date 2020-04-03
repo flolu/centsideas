@@ -28,6 +28,10 @@ export class UsersRoutes {
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Login}`),
     );
     this.router.post(
+      `/${UsersApiRoutes.ConfirmLogin}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmLogin}`),
+    );
+    this.router.post(
       `/${UsersApiRoutes.Authenticate}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Authenticate}`),
     );
