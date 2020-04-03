@@ -32,6 +32,8 @@ export class LoginContainer implements OnInit {
       this.store.dispatch(UsersActions.confirmLogin({ token }));
       this.router.navigate([], { queryParams: { token: null }, queryParamsHandling: 'merge' });
     }
+
+    this.store.dispatch(UsersActions.authenticate());
   }
 
   onLogin = () => {
