@@ -8,6 +8,7 @@ ng_module(
         "app.component.ts",
         "app.module.ts",
         "app-routing.module.ts",
+        "auth-token.interceptor.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [

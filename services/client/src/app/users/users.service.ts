@@ -24,7 +24,6 @@ export class UsersService {
   };
 
   authenticate = (): Observable<IAuthenticatedDto> => {
-    // TODO auth token interceptor
     const url = `${this.baseUrl}/${UsersApiRoutes.Authenticate}`;
     return this.http.post<IAuthenticatedDto>(url, {});
   };
