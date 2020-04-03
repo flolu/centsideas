@@ -2,7 +2,13 @@ import { injectable } from 'inversify';
 import * as faker from 'faker';
 import * as jwt from 'jsonwebtoken';
 
-import { sanitizeHtml, sendMail, Logger, decodeToken, TokenInvalidError } from '@cents-ideas/utils';
+import {
+  sanitizeHtml,
+  sendMail,
+  decodeToken,
+  TokenInvalidError,
+  LoggerThread,
+} from '@cents-ideas/utils';
 import {
   IAuthenticatedDto,
   ITokenData,
@@ -22,19 +28,17 @@ import { LoginEvents, UserEvents } from './events';
 
 @injectable()
 export class UserCommandHandler {
-  constructor(
-    private repository: UserRepository,
-    private loginRepository: LoginRepository,
-    private logger: Logger,
-  ) {}
+  constructor(private repository: UserRepository, private loginRepository: LoginRepository) {}
 
-  login = async (email: string): Promise<boolean> => {
+  login = async (email: string, t: LoggerThread): Promise<Login> => {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
+    t.debug('login with email', email);
 
     const emailUserMapping = await this.repository.getUserIdEmailMapping(email);
     const firstLogin = !emailUserMapping;
     const loginId = await this.repository.generateUniqueId();
+    t.debug(firstLogin ? 'first' : '', 'login with loginId:', loginId);
 
     const tokenData: ITokenData = { type: 'login', payload: { loginId, email, firstLogin } };
 
@@ -45,44 +49,49 @@ export class UserCommandHandler {
     const subject = 'CENTS Ideas Login';
     // FIXME consider outsourcing sending mails into its own mailing service, which listens for event liks LoginRequested
     await sendMail(env.mailing.fromAddress, email, subject, text, text, env.mailing.apiKey);
+    t.debug('sent login confirmation email to', email);
 
     const login = Login.create(loginId, email, firstLogin);
+    t.debug('start saving newly created login with id:', loginId);
     return this.loginRepository.save(login);
   };
 
-  authenticate = async (token: string): Promise<IAuthenticatedDto> => {
+  authenticate = async (token: string, t: LoggerThread): Promise<IAuthenticatedDto> => {
     const data = decodeToken(token, env.jwtSecret);
-    this.logger.debug('authenticate', data);
+    t.debug('authenticate with token', token ? token.slice(0, 30) : token);
 
     if (data.type === 'auth') {
       const payload: IAuthTokenPayload = data.payload as any;
-      this.logger.log(`authentication of ${payload.userId}`);
+      t.debug('authentication of user with id', payload.userId);
 
       const user = await this.repository.findById(payload.userId);
       if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
+      t.debug('confirmed that user exists');
       return {
         user: user.persistedState,
         token: this.renewAuthToken(token, data.iat, payload.userId),
       };
     }
-    this.logger.error(`You wanted to authenticate. But no auth token was found`);
-    throw new TokenInvalidError(token);
+    t.error('no auth token found');
+    throw new TokenInvalidError(token, 'token is not an auth token');
   };
 
-  confirmLogin = async (token: string): Promise<IAuthenticatedDto> => {
+  confirmLogin = async (token: string, t: LoggerThread): Promise<IAuthenticatedDto> => {
     const data = decodeToken(token, env.jwtSecret);
-    this.logger.debug('confirm login', data);
+    t.debug('confirming login of token', token ? token.slice(0, 30) : token);
 
     if (data.type === 'login') {
       const payload: ILoginTokenPayload = data.payload as any;
       const login = await this.loginRepository.findById(payload.loginId);
+      if (!login) throw new UserErrors.LoginNotFoundError(payload.loginId);
+      t.debug('found login', login.persistedState.id);
 
-      if (login.persistedState.confirmedAt)
+      if (login && login.persistedState.confirmedAt)
         throw new TokenInvalidError(token, `This login was already confirmed`);
 
       if (payload.firstLogin && payload.loginId) {
-        this.logger.log(`first login of ${payload.email}`);
+        t.log('first login of user with email', payload.email);
 
         const createdUser = await this.handleUserCreation(payload.email, payload.loginId);
         const updatedToken = this.generateAuthToken(createdUser.persistedState.id);
@@ -91,10 +100,13 @@ export class UserCommandHandler {
           new LoginEvents.LoginConfirmedEvent(payload.loginId, createdUser.persistedState.id),
         );
         await this.loginRepository.save(login);
+        t.debug('created user with id', createdUser.persistedState.id);
+        t.debug('confirmed login', login.persistedState.id);
+
         return { user: createdUser.persistedState, token: updatedToken };
       }
 
-      this.logger.log(`login of ${payload.email}`);
+      t.debug('normal login of user with email', payload.email);
       const emailUserMapping = await this.repository.getUserIdEmailMapping(payload.email);
       if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
 
@@ -105,27 +117,33 @@ export class UserCommandHandler {
         new LoginEvents.LoginConfirmedEvent(payload.loginId, user.persistedState.id),
       );
       await this.loginRepository.save(login);
+      t.debug('confirmed login', login.persistedState.id);
+
       return {
         user: user.persistedState,
         token: this.renewAuthToken(token, data.iat, emailUserMapping.userId),
       };
     }
 
-    this.logger.error(`You wanted to confirm your login. But no login token was found`);
-    throw new TokenInvalidError(token);
+    t.error('not a login token');
+    throw new TokenInvalidError(token, 'token is not a login token');
   };
 
   updateUser = async (
     userId: string,
     username: string | null,
     email: string | null,
+    t: LoggerThread,
   ): Promise<User> => {
     UserErrors.UserIdRequiredError.validate(userId);
+    t.debug('update user with id', userId);
+    t.debug('username: ', username, ', email:', email);
 
     if (username) {
       username = sanitizeHtml(username);
       UserErrors.UsernameRequiredError.validate(username);
       UserErrors.UsernameInvalidError.validate(username);
+      t.debug('username', username, 'is valid');
 
       // FIXME check username uniqueness
     }
@@ -133,9 +151,11 @@ export class UserCommandHandler {
     if (email) {
       UserErrors.EmailRequiredError.validate(email);
       UserErrors.EmailInvalidError.validate(email);
+      t.debug('email', email, 'is valid');
     }
 
     const user = await this.repository.findById(userId);
+    t.debug('found corresponding user');
 
     const isNewEmail = email && user.persistedState.email !== email;
     const isNewUsername = username && user.persistedState.username !== username;
@@ -146,10 +166,11 @@ export class UserCommandHandler {
     return this.repository.save(user);
   };
 
-  confirmEmailChange = async (token: string): Promise<User> => {
+  confirmEmailChange = async (token: string, t: LoggerThread): Promise<User> => {
     const data = decodeToken(token, env.jwtSecret);
     if (data.type !== 'email-change') throw new TokenInvalidError(token);
     const payload: IEmailChangeTokenPayload = data.payload as any;
+    t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
 
     const user = await this.repository.findById(payload.userId);
     user.pushEvents(new UserEvents.EmailChangeConfirmedEvent(payload.userId, payload.newEmail));
@@ -163,6 +184,12 @@ export class UserCommandHandler {
       text,
       text,
       env.mailing.apiKey,
+    );
+    t.debug(
+      'sent email to notify user, that his email has changed from',
+      payload.currentEmail,
+      'to',
+      payload.newEmail,
     );
 
     return this.repository.save(user);

@@ -19,8 +19,6 @@ export class UsersServer {
   ) {}
 
   start = () => {
-    this.logger.debug('initialized with env: ', env);
-
     this.app.use(bodyParser.json());
 
     this.app.post(`/${UsersApiRoutes.Login}`, this.expressAdapter.json(this.usersService.login));

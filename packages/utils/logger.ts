@@ -33,9 +33,10 @@ export class Logger {
     return thread;
   };
 
-  prefixLog = () => this.prefixStyle(this.prefix);
+  private prefixLog = () => this.prefixStyle(this.prefix);
 }
-class LoggerThread {
+
+export class LoggerThread {
   private indent = '  ';
   private startTime: number = Date.now();
   private logs: string[] = [];
@@ -58,6 +59,8 @@ class LoggerThread {
   };
 
   // FIXME consider timeout?
+  // FIXME prevent new logs after completion
+  // TODO thwo an error if this thread has no complete registered
   complete = () => {
     console.log(chalk.bold(this.prefix), chalk.reset(this.title));
     for (const line of this.logs) {
