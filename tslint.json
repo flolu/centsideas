@@ -5,7 +5,8 @@
     "no-implicit-dependencies": [true, ["@cents-ideas"]],
     "no-submodule-imports": false,
     "no-console": [true, "log"],
-    "no-empty-interface": false
+    "no-empty-interface": false,
+    "max-classes-per-file": false
   },
   "linterOptions": {
     "exclude": ["node_modules/**", "**/node_modules/**", "**/*.d.ts"]

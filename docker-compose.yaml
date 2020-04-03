@@ -1,9 +1,9 @@
-version: "3"
+version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - "2181"
+      - '2181'
     hostname: zookeeper
     logging:
       driver: none
@@ -16,7 +16,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - "zookeeper"
+      - 'zookeeper'
     logging:
       driver: none
 
@@ -31,7 +31,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: .env
-    command: yarn run ts-node-dev services/gateway
+    command: yarn run ts-node-dev services/gateway --colors
     ports:
       - 3000:3000
 
@@ -46,7 +46,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: .env
-    command: yarn run ts-node-dev services/ideas
+    command: yarn run ts-node-dev services/ideas --colors
   ideas-event-store:
     image: mongo:4.2
     logging:
@@ -63,7 +63,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: .env
-    command: yarn run ts-node-dev services/reviews
+    command: yarn run ts-node-dev services/reviews --colors
   reviews-event-store:
     image: mongo:4.2
     logging:
@@ -80,7 +80,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: .env
-    command: yarn run ts-node-dev services/users
+    command: yarn run ts-node-dev services/users --colors
   users-event-store:
     image: mongo:4.2
     logging:
@@ -97,9 +97,9 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: .env
-    command: yarn run ts-node-dev services/consumer
+    command: yarn run ts-node-dev services/consumer --colors
     depends_on:
-      - "kafka"
+      - 'kafka'
   projection-database:
     image: mongo:4.2
     logging:
