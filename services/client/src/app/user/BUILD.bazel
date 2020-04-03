@@ -5,7 +5,7 @@ load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
 package(default_visibility = ["//:__subpackages__"])
 
 ng_module(
-    name = "users",
+    name = "user",
     srcs = glob(
         include = ["*.ts"],
         exclude = ["*.spec.ts"],
@@ -30,7 +30,7 @@ ts_library(
     srcs = glob(["*.spec.ts"]),
     tsconfig = "//services/client:tsconfig-test",
     deps = [
-        ":users",
+        ":user",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",

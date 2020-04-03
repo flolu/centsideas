@@ -14,7 +14,7 @@ import {
 export const TOKEN_KEY = 'token';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(private http: HttpClient) {}
 
   login = (email: string): Observable<{}> => {

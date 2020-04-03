@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { UsersActions } from './users.actions';
+import { AuthActions } from './auth.actions';
 import { QueryParamKeys } from '@cents-ideas/enums';
 
 @Component({
@@ -29,14 +29,14 @@ export class LoginContainer implements OnInit {
   ngOnInit() {
     const token = this.route.snapshot.queryParams[QueryParamKeys.Token];
     if (token) {
-      this.store.dispatch(UsersActions.confirmLogin({ token }));
+      this.store.dispatch(AuthActions.confirmLogin({ token }));
       this.router.navigate([], { queryParams: { token: null }, queryParamsHandling: 'merge' });
     }
 
-    this.store.dispatch(UsersActions.authenticate());
+    this.store.dispatch(AuthActions.authenticate());
   }
 
   onLogin = () => {
-    this.store.dispatch(UsersActions.login({ email: this.form.value.email }));
+    this.store.dispatch(AuthActions.login({ email: this.form.value.email }));
   };
 }

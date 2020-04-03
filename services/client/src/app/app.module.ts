@@ -8,7 +8,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { IdeasModule } from './ideas/ideas.module';
-import { AuthModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
 
 @NgModule({
@@ -21,7 +21,7 @@ import { AuthTokenInterceptor } from './auth-token.interceptor';
     StoreDevtoolsModule.instrument(),
     AppRoutingModule,
     IdeasModule,
-    AuthModule,
+    UserModule,
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true }],
   bootstrap: [AppComponent],

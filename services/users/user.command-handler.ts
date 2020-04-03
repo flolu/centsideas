@@ -43,7 +43,7 @@ export class UserCommandHandler {
     const tokenData: ITokenData = { type: 'login', payload: { loginId, email, firstLogin } };
 
     const token = jwt.sign(tokenData, env.jwtSecret, { expiresIn: env.loginTokenExpirationTime });
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Users}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
+    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
     const expirationTimeHours = Math.floor(env.loginTokenExpirationTime / 3600);
     const text = `URL to login into your account: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Login';
@@ -215,7 +215,7 @@ export class UserCommandHandler {
       expiresIn: env.emailChangeTokenExpirationTime,
     });
 
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Users}?confirmEmailChangeToken=${token}`;
+    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}?confirmEmailChangeToken=${token}`;
     const expirationTimeHours = Math.floor(env.emailChangeTokenExpirationTime / 3600);
     const text = `URL to change your email: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Email Change';

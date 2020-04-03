@@ -49,7 +49,7 @@ export class UsersEffects {
       this.actions$.pipe(
         ofType(UsersActions.confirmSignUpDone),
         tap(action => this.usersService.saveToken(action.token)),
-        tap(() => this.router.navigate([TopLevelFrontendRoutes.Users])),
+        tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
       ),
     { dispatch: false },
   );
@@ -71,7 +71,7 @@ export class UsersEffects {
       this.actions$.pipe(
         ofType(UsersActions.authenticateDone),
         tap(action => this.usersService.saveToken(action.token)),
-        tap(() => this.router.navigate([TopLevelFrontendRoutes.Users])),
+        tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
       ),
     { dispatch: false },
   );
