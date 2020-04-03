@@ -28,20 +28,17 @@ export class UsersService {
 
   login = (req: HttpRequest<ILoginDto>): Promise<HttpResponse> =>
     new Promise(async resolve => {
-      const _loggerName = 'login';
+      const t = this.logger.thread('login');
       try {
-        this.logger.debug(_loggerName);
-        await this.commandHandler.login(req.body.email);
+        const createdLogin = await this.commandHandler.login(req.body.email, t);
+        t.log('created login with id', createdLogin.persistedState.id).complete();
         resolve({
           status: HttpStatusCodes.Accepted,
           body: {},
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        t.error(error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -50,42 +47,37 @@ export class UsersService {
     req: HttpRequest<null, null, null, IAuthenticateDto>,
   ): Promise<HttpResponse<IAuthenticatedDto>> =>
     new Promise(async resolve => {
-      const _loggerName = 'authenticate';
+      const t = this.logger.thread('authenticate');
       try {
-        this.logger.debug(_loggerName);
         const { token, user } = await this.commandHandler.authenticate(
           req.headers[HeaderKeys.Auth],
+          t,
         );
+        t.log('user with id', user.id, 'authenticated').complete();
         resolve({
           status: HttpStatusCodes.Accepted,
           body: { token, user },
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        t.error(error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
 
   confirmLogin = (req: HttpRequest<IConfirmLoginDto>): Promise<HttpResponse<IAuthenticatedDto>> =>
     new Promise(async resolve => {
-      const _loggerName = 'confirm login';
+      const t = this.logger.thread('confirm login');
       try {
-        this.logger.debug(_loggerName);
-        const { token, user } = await this.commandHandler.confirmLogin(req.body.token);
+        const { token, user } = await this.commandHandler.confirmLogin(req.body.token, t);
+        t.log('confirmed login of user', user.id).complete();
         resolve({
           status: HttpStatusCodes.Accepted,
           body: { token, user },
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        t.error(error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -94,26 +86,24 @@ export class UsersService {
     req: HttpRequest<IUpdateUserDto, IUserQueryDto>,
   ): Promise<HttpResponse<IUserState>> =>
     new Promise(async resolve => {
-      const _loggerName = 'update user';
+      const t = this.logger.thread('update user');
       try {
-        this.logger.debug(_loggerName, req);
         NotAuthenticatedError.validate(req.locals.userId);
         NoPermissionError.validate(req.locals.userId, req.params.id);
         const updatedUser = await this.commandHandler.updateUser(
           req.params.id,
           req.body.username,
           req.body.email,
+          t,
         );
+        t.log('updated user').complete();
         resolve({
           status: HttpStatusCodes.Accepted,
           body: updatedUser.persistedState,
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        t.error(error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -122,20 +112,17 @@ export class UsersService {
     req: HttpRequest<IConfirmEmailChangeDto>,
   ): Promise<HttpResponse<IUserState>> =>
     new Promise(async resolve => {
-      const _loggerName = 'confirm email change';
+      const t = this.logger.thread('confirm email change');
       try {
-        this.logger.debug(_loggerName, req);
-        const updatedUser = await this.commandHandler.confirmEmailChange(req.body.token);
+        const updatedUser = await this.commandHandler.confirmEmailChange(req.body.token, t);
+        t.log('confirmed email change').complete();
         resolve({
           status: HttpStatusCodes.Accepted,
           body: updatedUser.persistedState,
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        t.error(error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
