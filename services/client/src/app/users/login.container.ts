@@ -11,9 +11,7 @@ import { QueryParamKeys } from '@cents-ideas/enums';
   template: `
     <h1>Login</h1>
     <form [formGroup]="form">
-      <label for="email">
-        Email
-      </label>
+      <label for="email">Email</label>
       <br />
       <input name="email" type="text" formControlName="email" />
       <br />

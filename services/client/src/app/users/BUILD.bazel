@@ -1,6 +1,6 @@
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
-# load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
+load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -31,32 +31,31 @@ ts_library(
     tsconfig = "//services/client:tsconfig-test",
     deps = [
         ":users",
+        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//@ngrx/store",
         "@npm//@types/jasmine",
     ],
 )
 
-# TODO this test times out
-#karma_web_test_suite(
-#    name = "test",
-#    srcs = [
-#        "@npm//date-fns:date-fns.umd.js",
-#    ],
-#    bootstrap = [
-#        "@npm//:node_modules/zone.js/dist/zone-testing-bundle.js",
-#        "@npm//:node_modules/reflect-metadata/Reflect.js",
-#    ],
-#    browsers = [
-#        "@io_bazel_rules_webtesting//browsers:chromium-local",
-#        "@io_bazel_rules_webtesting//browsers:firefox-local",
-#    ],
-#    tags = ["native"],
-#    runtime_deps = [
-#        "//services/client/src:initialize_testbed",
-#    ],
-#    deps = [
-#        ":test_lib",
-#        "//services/client/src:rxjs_umd_modules",
-#    ],
-#)
+karma_web_test_suite(
+    name = "test",
+    srcs = ["@npm//date-fns:date-fns.umd.js"],
+    bootstrap = [
+        "@npm//:node_modules/zone.js/dist/zone-testing-bundle.js",
+        "@npm//:node_modules/reflect-metadata/Reflect.js",
+    ],
+    browsers = [
+        "@io_bazel_rules_webtesting//browsers:chromium-local",
+        "@io_bazel_rules_webtesting//browsers:firefox-local",
+    ],
+    tags = ["native"],
+    runtime_deps = ["//services/client/src:initialize_testbed"],
+    deps = [
+        ":test_lib",
+        "//services/client/src:rxjs_umd_modules",
+        "@npm//:node_modules/tslib/tslib.js",
+    ],
+)
