@@ -9,8 +9,8 @@ const routes: Routes = [
     loadChildren: () => import('./ideas/ideas.module').then(m => m.IdeasModule),
   },
   {
-    path: TopLevelFrontendRoutes.Auth,
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+    path: TopLevelFrontendRoutes.Users,
+    loadChildren: () => import('./users/users.module').then(m => m.AuthModule),
   },
   { path: '**', redirectTo: TopLevelFrontendRoutes.Ideas, pathMatch: 'full' },
 ];

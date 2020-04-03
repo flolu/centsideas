@@ -1,5 +1,6 @@
 export enum UsersApiRoutes {
   Login = 'login',
+  ConfirmLogin = 'confirm-login',
   Update = 'update',
   ConfirmEmailChange = 'confirm-email-change',
   Authenticate = 'authenticate',

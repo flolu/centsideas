@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: TopLevelFrontendRoutes.Ideas, component: IdeasContainer },
   { path: `${TopLevelFrontendRoutes.Ideas}/:id`, component: IdeaContainer },
   {
-    path: `${TopLevelFrontendRoutes.User}`,
+    path: `${TopLevelFrontendRoutes.Users}`,
     component: UserContainer,
     canActivate: [AuthGuard],
   },

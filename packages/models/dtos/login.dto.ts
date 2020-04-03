@@ -12,3 +12,7 @@ export interface IAuthenticatedDto {
   token: string;
   user: IUserState;
 }
+
+export interface IConfirmLoginDto {
+  token: string;
+}
