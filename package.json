@@ -82,7 +82,7 @@
     "module-alias": "2.2.2",
     "mongodb": "3.5.5",
     "reflect-metadata": "0.1.13",
-    "rxjs": "6.5.4",
+    "rxjs": "6.5.5",
     "sanitize-html": "1.22.1",
     "shortid": "2.2.15",
     "systemjs": "6.2.6",
