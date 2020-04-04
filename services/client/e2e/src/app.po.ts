@@ -6,7 +6,7 @@ export class AppPage {
     return browser.waitForAngular();
   }
 
-  async waitForElement(el, timeout = 10000) {
+  async waitForElement(el, timeout = 5000) {
     await browser.wait(() => el.isPresent(), timeout);
     await browser.wait(() => el.isDisplayed(), timeout);
     return el;

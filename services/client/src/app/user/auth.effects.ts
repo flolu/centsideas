@@ -20,7 +20,6 @@ export class AuthEffects {
     private actions$: Actions,
     private usersService: UserService,
     private router: Router,
-    private store: Store,
   ) {}
 
   login$ = createEffect(() =>
