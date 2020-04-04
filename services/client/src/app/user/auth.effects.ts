@@ -7,12 +7,13 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import { switchMap, map, catchError, tap } from 'rxjs/operators';
+import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { UserService } from './user.service';
 import { AuthActions } from './auth.actions';
 import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
+import { UserSelectors } from './user.selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -20,6 +21,7 @@ export class AuthEffects {
     private actions$: Actions,
     private usersService: UserService,
     private router: Router,
+    private store: Store,
   ) {}
 
   login$ = createEffect(() =>
@@ -37,12 +39,20 @@ export class AuthEffects {
   confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),
-      switchMap(action =>
-        this.usersService.confirmLogin(action.token).pipe(
+      withLatestFrom(this.store.select(UserSelectors.selectAuthState)),
+      switchMap(([action, authState]) => {
+        if (authState.token && !this.usersService.token) {
+          console.log(
+            'a token was transfered from the server, but no token is saved in local storage',
+          );
+          this.usersService.saveToken(authState.token);
+          return [];
+        }
+        return this.usersService.confirmLogin(action.token).pipe(
           map(({ token, user }) => AuthActions.confirmLoginDone({ token, user })),
           catchError(error => of(AuthActions.confirmLoginFail({ error }))),
-        ),
-      ),
+        );
+      }),
     ),
   );
 

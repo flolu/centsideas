@@ -9,6 +9,7 @@ export interface IAuthReducerState {
   error: string;
   initialized: boolean;
   authenticationTryCount: number;
+  token: string;
 }
 
 const initialState: IAuthReducerState = {
@@ -17,6 +18,7 @@ const initialState: IAuthReducerState = {
   error: '',
   initialized: false,
   authenticationTryCount: 0,
+  token: '',
 };
 
 const authReducer = createReducer(
@@ -52,6 +54,7 @@ const authReducer = createReducer(
     ...state,
     ...LOADING_DONE,
     initialized: true,
+    token: action.token,
   })),
   on(AuthActions.confirmLogin, state => ({ ...state, ...LOADING })),
   on(AuthActions.confirmLoginFail, (state, { error }) => ({
@@ -61,6 +64,7 @@ const authReducer = createReducer(
   on(AuthActions.confirmLoginDone, (state, action) => ({
     ...state,
     ...LOADING_DONE,
+    token: action.token,
   })),
 );
 
