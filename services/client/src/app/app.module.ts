@@ -10,22 +10,29 @@ import { AppComponent } from './app.component';
 import { IdeasModule } from './ideas/ideas.module';
 import { UserModule } from './user/user.module';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
+import { NgRxStateTransferService, setTransferedState } from './ngrx-state-transfer.service';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'client' }),
     BrowserTransferStateModule,
-    // TODO I will probably need to move auth and user related reducers into root
-    StoreModule.forRoot({}),
+    StoreModule.forRoot({}, { metaReducers: [setTransferedState] }),
     EffectsModule.forRoot([]),
-    // TODO only in dev mode
+    // TODO only in dev mode (maybe inject at runtime in dev mode?)
     StoreDevtoolsModule.instrument(),
     AppRoutingModule,
     IdeasModule,
     UserModule,
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true }],
+  providers: [
+    NgRxStateTransferService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private stateTransferService: NgRxStateTransferService) {
+    this.stateTransferService.handleStateTransfer();
+  }
+}

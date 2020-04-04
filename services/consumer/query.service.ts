@@ -15,7 +15,7 @@ export class QueryService {
       const _loggerName = 'get all ideas';
       try {
         const ideasCollection = await this.projectionDatabase.ideas();
-        const reviewsCollection = await this.projectionDatabase.reviews();
+        // const reviewsCollection = await this.projectionDatabase.reviews();
         const ideas = await ideasCollection.find({ deleted: false }).toArray();
         res({
           status: HttpStatusCodes.Ok,

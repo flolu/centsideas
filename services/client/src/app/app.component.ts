@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-
 import { CentsCommandments } from '@cents-ideas/enums';
 import { Store } from '@ngrx/store';
 import { AuthActions } from './user/auth.actions';
-import { UserService } from './user/user.service';
+import { UserSelectors } from './user/user.selectors';
+import { take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ci-component',
@@ -15,7 +15,17 @@ import { UserService } from './user/user.service';
 export class AppComponent {
   cents = `${CentsCommandments.Control}, ${CentsCommandments.Entry}, ${CentsCommandments.Need}, ${CentsCommandments.Time}, ${CentsCommandments.Scale}`;
 
-  constructor(private store: Store, private userService: UserService) {
-    this.store.dispatch(AuthActions.authenticate());
+  constructor(private store: Store) {
+    this.store
+      .select(UserSelectors.selectAuthState)
+      .pipe(
+        take(1),
+        tap(state => {
+          if (state.authenticationTryCount < 1) {
+            this.store.dispatch(AuthActions.authenticate());
+          }
+        }),
+      )
+      .subscribe();
   }
 }
