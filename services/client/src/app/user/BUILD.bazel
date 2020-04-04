@@ -4,23 +4,46 @@ load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
 
 package(default_visibility = ["//:__subpackages__"])
 
+store_srcs_matcher = [
+    "*.actions.ts",
+    "*.effects.ts",
+    "*.reducer.ts",
+    "*.state.ts",
+    "*.selectors.ts",
+]
+
 ng_module(
-    name = "user",
-    srcs = glob(
-        include = ["*.ts"],
-        exclude = ["*.spec.ts"],
-    ),
+    name = "store",
+    srcs = glob(include = store_srcs_matcher) + [
+        "user-store.module.ts",
+        "user.service.ts",
+    ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
         "//packages/enums",
         "//packages/models",
         "//services/client/src/shared/helpers",
         "@npm//@angular/common",
-        "@npm//@angular/core",
-        "@npm//@angular/forms",
         "@npm//@angular/router",
         "@npm//@ngrx/effects",
         "@npm//@ngrx/store",
+    ],
+)
+
+ng_module(
+    name = "user",
+    srcs = [
+        "auth.guard.ts",
+        "login.container.ts",
+        "me.container.ts",
+        "user.module.ts",
+    ],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        ":store",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
     ],
 )
 
@@ -30,6 +53,7 @@ ts_library(
     srcs = glob(["*.spec.ts"]),
     tsconfig = "//services/client:tsconfig-test",
     deps = [
+        ":store",
         ":user",
         "@npm//@angular/common",
         "@npm//@angular/core",
