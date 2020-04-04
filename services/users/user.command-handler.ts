@@ -38,11 +38,13 @@ export class UserCommandHandler {
     const emailUserMapping = await this.repository.getUserIdEmailMapping(email);
     const firstLogin = !emailUserMapping;
     const loginId = await this.repository.generateUniqueId();
-    t.debug(firstLogin ? 'first' : '', 'login with loginId:', loginId);
+    t.debug(firstLogin ? 'first' : 'normal', 'login with loginId:', loginId);
 
     const tokenData: ITokenData = { type: 'login', payload: { loginId, email, firstLogin } };
 
     const token = jwt.sign(tokenData, env.jwtSecret, { expiresIn: env.loginTokenExpirationTime });
+
+    t.debug('sendng login mail to ', email);
     const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
     const expirationTimeHours = Math.floor(env.loginTokenExpirationTime / 3600);
     const text = `URL to login into your account: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;

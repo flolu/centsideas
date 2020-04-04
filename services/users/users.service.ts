@@ -38,7 +38,7 @@ export class UsersService {
           headers: {},
         });
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
+        t.error(error.status && error.status < 500 ? error.message : error.stack).complete();
         resolve(handleHttpResponseError(error));
       }
     });
@@ -60,7 +60,7 @@ export class UsersService {
           headers: {},
         });
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
+        t.error(error.status && error.status < 500 ? error.message : error.stack).complete();
         resolve(handleHttpResponseError(error));
       }
     });
@@ -77,7 +77,7 @@ export class UsersService {
           headers: {},
         });
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
+        t.error(error.status && error.status < 500 ? error.message : error.stack).complete();
         resolve(handleHttpResponseError(error));
       }
     });
@@ -103,7 +103,7 @@ export class UsersService {
           headers: {},
         });
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
+        t.error(error.status && error.status < 500 ? error.message : error.stack).complete();
         resolve(handleHttpResponseError(error));
       }
     });
@@ -122,7 +122,7 @@ export class UsersService {
           headers: {},
         });
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
+        t.error(error.status && error.status < 500 ? error.message : error.stack).complete();
         resolve(handleHttpResponseError(error));
       }
     });

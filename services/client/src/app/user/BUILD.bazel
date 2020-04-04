@@ -14,7 +14,7 @@ ng_module(
     deps = [
         "//packages/enums",
         "//packages/models",
-        "//services/client/src/helpers",
+        "//services/client/src/shared/helpers",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",

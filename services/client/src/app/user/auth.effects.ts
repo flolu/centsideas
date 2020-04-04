@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
-import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
+import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { UserService } from './user.service';
 import { AuthActions } from './auth.actions';
-import { Store } from '@ngrx/store';
+import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
 
 @Injectable()
 export class AuthEffects {
   constructor(
     private actions$: Actions,
     private usersService: UserService,
+    private router: Router,
     // TODO type
     private store: Store<any>,
   ) {}
@@ -46,8 +49,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.confirmLoginDone),
         tap(action => this.usersService.saveToken(action.token)),
-        // TODO router navigation
-        // tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
+        tap(() => this.router.navigate([TopLevelFrontendRoutes.User, AuthFrontendRoutes.Me])),
       ),
     { dispatch: false },
   );
@@ -55,12 +57,16 @@ export class AuthEffects {
   authenticate$: any = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.authenticate),
-      switchMap(() =>
-        this.usersService.authenticate().pipe(
-          map(data => AuthActions.authenticateDone(data)),
-          catchError(error => of(AuthActions.authenticateFail({ error }))),
-        ),
-      ),
+      switchMap(() => {
+        if (this.usersService.token) {
+          return this.usersService.authenticate().pipe(
+            map(data => AuthActions.authenticateDone(data)),
+            catchError(error => of(AuthActions.authenticateFail({ error }))),
+          );
+        } else {
+          return [AuthActions.authenticateNoToken()];
+        }
+      }),
     ),
   );
 
@@ -69,8 +75,6 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.authenticateDone),
         tap(action => this.usersService.saveToken(action.token)),
-        // TODO navigation
-        // tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
       ),
     { dispatch: false },
   );

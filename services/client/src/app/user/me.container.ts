@@ -9,7 +9,7 @@ import { UserActions } from './user.actions';
 @Component({
   selector: 'ci-me',
   template: `
-    <h1><MeLogin</h1>
+    <h1>Me</h1>
 
     <form [formGroup]="form">
       <label for="username">
@@ -40,9 +40,8 @@ export class MeContainer {
       .select(UserSelectors.selectUserState)
       .pipe(
         tap(state => {
-          console.log(state);
+          this.form.patchValue(state.user);
         }),
-        //  takeWhile(user => !user),
       )
       .subscribe();
   }

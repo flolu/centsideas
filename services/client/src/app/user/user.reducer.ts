@@ -1,7 +1,8 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { IUserState } from '@cents-ideas/models';
 import { UserActions } from './user.actions';
-import { LOADING_DONE, LOADING_FAIL, LOADING } from '../../helpers/state.helper';
+import { LOADING_DONE, LOADING_FAIL, LOADING } from '../../shared/helpers/state.helper';
+import { AuthActions } from './auth.actions';
 
 interface IUserReducerState {
   loading: boolean;
@@ -19,7 +20,6 @@ const initialState: IUserReducerState = {
 
 const userReducer = createReducer(
   initialState,
-
   on(UserActions.updateUser, state => ({
     ...state,
     ...LOADING,
@@ -32,6 +32,27 @@ const userReducer = createReducer(
     ...state,
     ...LOADING_DONE,
     user: updated,
+  })),
+  on(UserActions.confirmEmailChange, state => ({
+    ...state,
+    ...LOADING,
+  })),
+  on(UserActions.confirmEmailChangeFail, (state, { error }) => ({
+    ...state,
+    ...LOADING_FAIL(error),
+  })),
+  on(UserActions.confirmEmailChangeDone, (state, action) => ({
+    ...state,
+    ...LOADING_DONE,
+    user: action.updated,
+  })),
+  on(AuthActions.confirmLoginDone, (state, action) => ({
+    ...state,
+    user: action.user,
+  })),
+  on(AuthActions.authenticateDone, (state, action) => ({
+    ...state,
+    user: action.user,
   })),
 );
 
