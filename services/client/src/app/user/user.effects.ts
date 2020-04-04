@@ -1,3 +1,7 @@
+import * as __ngrxEffectsTypes from '@ngrx/effects/src/models';
+import * as __ngrxStoreTypes from '@ngrx/store/src/models';
+import * as __rxjsTypes from 'rxjs';
+
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -17,7 +21,7 @@ export class UserEffects {
     private store: Store<any>,
   ) {}
 
-  updateUser$: any = createEffect(() =>
+  updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.updateUser),
       withLatestFrom(this.store.select(UserSelectors.selectUser)),
