@@ -1,6 +1,5 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -14,7 +13,7 @@ describe('LoginContainer', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [LoginContainer],
-      imports: [BrowserAnimationsModule, RouterTestingModule],
+      imports: [RouterTestingModule],
       providers: [provideMockStore()],
     });
     TestBed.compileComponents();
