@@ -4,7 +4,7 @@ import { UserActions } from './user.actions';
 import { LOADING_DONE, LOADING_FAIL, LOADING } from '../../shared/helpers/state.helper';
 import { AuthActions } from './auth.actions';
 
-interface IUserReducerState {
+export interface IUserReducerState {
   loading: boolean;
   loaded: boolean;
   error: string;

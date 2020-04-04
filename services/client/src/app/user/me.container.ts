@@ -34,8 +34,7 @@ export class MeContainer {
     email: new FormControl(''),
   });
 
-  // TODO type
-  constructor(private store: Store<any>) {
+  constructor(private store: Store) {
     this.store
       .select(UserSelectors.selectUserState)
       .pipe(

@@ -15,7 +15,7 @@ import { UserService } from './user/user.service';
 export class AppComponent {
   cents = `${CentsCommandments.Control}, ${CentsCommandments.Entry}, ${CentsCommandments.Need}, ${CentsCommandments.Time}, ${CentsCommandments.Scale}`;
 
-  constructor(private store: Store<any>, private userService: UserService) {
+  constructor(private store: Store, private userService: UserService) {
     this.store.dispatch(AuthActions.authenticate());
   }
 }

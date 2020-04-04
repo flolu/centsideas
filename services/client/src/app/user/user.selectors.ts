@@ -2,7 +2,9 @@ import * as __ngrxStore from '@ngrx/store/store';
 
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
-const selectUserFeatureState = createFeatureSelector<any>('users');
+import { IUserFeatureReducerState } from './user.state';
+
+const selectUserFeatureState = createFeatureSelector<IUserFeatureReducerState>('users');
 
 const selectUserState = createSelector(selectUserFeatureState, state => state.user);
 const selectAuthState = createSelector(selectUserFeatureState, state => state.auth);
