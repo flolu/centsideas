@@ -24,6 +24,7 @@ const authenticateFail: any = createAction(
   `${PREFIX} ${AUTHENTICATE} ${FAIL}`,
   props<{ error: string }>(),
 );
+const authenticateNoToken: any = createAction(`${PREFIX} ${AUTHENTICATE} no token`);
 
 const CONFIRM_LOGIN = 'confirm login';
 const confirmLogin: any = createAction(`${PREFIX} ${CONFIRM_LOGIN}`, props<{ token: string }>());
@@ -36,20 +37,6 @@ const confirmLoginFail: any = createAction(
   props<{ error: string }>(),
 );
 
-const CONFIRM_EMAIL_CHANGE = 'confirm email change';
-const confirmEmailChange: any = createAction(
-  `${PREFIX} ${CONFIRM_EMAIL_CHANGE}`,
-  props<{ token: string }>(),
-);
-const confirmEmailChangeDone: any = createAction(
-  `${PREFIX} ${CONFIRM_EMAIL_CHANGE} ${DONE}`,
-  props<{ updated: IUserState }>(),
-);
-const confirmEmailChangeFail: any = createAction(
-  `${PREFIX} ${CONFIRM_EMAIL_CHANGE} ${FAIL}`,
-  props<{ error: string }>(),
-);
-
 export const AuthActions = {
   login,
   loginDone,
@@ -57,10 +44,8 @@ export const AuthActions = {
   authenticate,
   authenticateDone,
   authenticateFail,
+  authenticateNoToken,
   confirmLogin,
   confirmLoginDone,
   confirmLoginFail,
-  confirmEmailChange,
-  confirmEmailChangeDone,
-  confirmEmailChangeFail,
 };

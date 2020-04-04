@@ -14,8 +14,25 @@ const updateUserDone: any = createAction(
 );
 const updateUserFail: any = createAction(`${PREFIX} ${UPDATE} ${FAIL}`, props<{ error: string }>());
 
+const CONFIRM_EMAIL_CHANGE = 'confirm email change';
+const confirmEmailChange: any = createAction(
+  `${PREFIX} ${CONFIRM_EMAIL_CHANGE}`,
+  props<{ token: string }>(),
+);
+const confirmEmailChangeDone: any = createAction(
+  `${PREFIX} ${CONFIRM_EMAIL_CHANGE} ${DONE}`,
+  props<{ updated: IUserState }>(),
+);
+const confirmEmailChangeFail: any = createAction(
+  `${PREFIX} ${CONFIRM_EMAIL_CHANGE} ${FAIL}`,
+  props<{ error: string }>(),
+);
+
 export const UserActions = {
   updateUser,
   updateUserDone,
   updateUserFail,
+  confirmEmailChange,
+  confirmEmailChangeDone,
+  confirmEmailChangeFail,
 };

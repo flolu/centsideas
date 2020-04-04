@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 import { AuthEffects } from './auth.effects';
 import * as fromAuth from './auth.reducer';
 import * as fromUser from './user.reducer';
+import { AuthGuard } from './auth.guard';
 
 @NgModule({
   imports: [
@@ -21,14 +22,14 @@ import * as fromUser from './user.reducer';
     ReactiveFormsModule,
     RouterModule.forChild([
       { path: AuthFrontendRoutes.Login, component: LoginContainer },
-      { path: AuthFrontendRoutes.Me, component: MeContainer },
+      { path: AuthFrontendRoutes.Me, component: MeContainer, canActivate: [AuthGuard] },
     ]),
     // TODO don't hardcode name
     StoreModule.forFeature('users', { auth: fromAuth.reducer, user: fromUser.reducer }),
     EffectsModule.forFeature([AuthEffects]),
     HttpClientModule,
   ],
-  providers: [UserService, AuthEffects],
+  providers: [UserService, AuthEffects, AuthGuard],
   declarations: [LoginContainer, MeContainer],
 })
 export class UserModule {}
