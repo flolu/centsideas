@@ -1,3 +1,7 @@
+import * as __ngrxEffectsTypes from '@ngrx/effects/src/models';
+import * as __ngrxStoreTypes from '@ngrx/store/src/models';
+import * as __rxjsTypes from 'rxjs';
+
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
@@ -20,7 +24,7 @@ export class AuthEffects {
     private store: Store<any>,
   ) {}
 
-  login$: any = createEffect(() =>
+  login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
       switchMap(({ email }) =>
@@ -32,7 +36,7 @@ export class AuthEffects {
     ),
   );
 
-  confirmLogin$: any = createEffect(() =>
+  confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),
       switchMap(action =>
@@ -44,7 +48,7 @@ export class AuthEffects {
     ),
   );
 
-  confirmLoginDone$: any = createEffect(
+  confirmLoginDone$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthActions.confirmLoginDone),
@@ -54,7 +58,7 @@ export class AuthEffects {
     { dispatch: false },
   );
 
-  authenticate$: any = createEffect(() =>
+  authenticate$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.authenticate),
       switchMap(() => {
@@ -70,7 +74,7 @@ export class AuthEffects {
     ),
   );
 
-  authenticateDone$: any = createEffect(
+  authenticateDone$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthActions.authenticateDone),
@@ -79,7 +83,7 @@ export class AuthEffects {
     { dispatch: false },
   );
 
-  authenticateFail$: any = createEffect(
+  authenticateFail$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthActions.authenticateFail),

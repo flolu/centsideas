@@ -1,7 +1,5 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
-import { IUserState } from '@cents-ideas/models';
-
 import { AuthActions } from './auth.actions';
 import { LOADING, LOADING_FAIL, LOADING_DONE } from '../../shared/helpers/state.helper';
 
