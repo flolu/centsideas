@@ -11,8 +11,7 @@ import { AuthActions } from './auth.actions';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  // TODO type
-  constructor(private store: Store<any>, private router: Router) {}
+  constructor(private store: Store, private router: Router) {}
 
   canActivate(): Observable<boolean> {
     return this.store.select(UserSelectors.selectUserFeatureState).pipe(

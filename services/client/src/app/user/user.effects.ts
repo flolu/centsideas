@@ -14,12 +14,7 @@ import { UserSelectors } from './user.selectors';
 
 @Injectable()
 export class UserEffects {
-  constructor(
-    private actions$: Actions,
-    private usersService: UserService,
-    // TODO type
-    private store: Store<any>,
-  ) {}
+  constructor(private actions$: Actions, private usersService: UserService, private store: Store) {}
 
   updateUser$ = createEffect(() =>
     this.actions$.pipe(

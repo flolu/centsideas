@@ -20,8 +20,7 @@ export class AuthEffects {
     private actions$: Actions,
     private usersService: UserService,
     private router: Router,
-    // TODO type
-    private store: Store<any>,
+    private store: Store,
   ) {}
 
   login$ = createEffect(() =>

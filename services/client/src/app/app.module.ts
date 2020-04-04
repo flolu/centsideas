@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { IdeasModule } from './ideas/ideas.module';
 import { UserModule } from './user/user.module';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
-import { AuthGuard } from './user/auth.guard';
 
 @NgModule({
   declarations: [AppComponent],
