@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,12 +10,13 @@ import {
   IConfirmEmailChangeDto,
   IConfirmLoginDto,
 } from '@cents-ideas/models';
+import { isPlatformServer } from '@angular/common';
 
 export const TOKEN_KEY = 'token';
 
 @Injectable()
 export class UserService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platform: string) {}
 
   login = (email: string): Observable<{}> => {
     const payload: ILoginDto = { email };
@@ -50,10 +51,12 @@ export class UserService {
   };
 
   saveToken = (token: string) => {
+    if (isPlatformServer(this.platform)) return;
     localStorage.setItem(TOKEN_KEY, token);
   };
 
   removeToken = () => {
+    if (isPlatformServer(this.platform)) return;
     localStorage.removeItem(TOKEN_KEY);
   };
 
@@ -64,6 +67,7 @@ export class UserService {
   }
 
   get token() {
+    if (isPlatformServer(this.platform)) return '';
     return localStorage.getItem(TOKEN_KEY);
   }
 }

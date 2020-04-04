@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -15,6 +15,7 @@ import { AuthTokenInterceptor } from './auth-token.interceptor';
   declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'client' }),
+    BrowserTransferStateModule,
     // TODO I will probably need to move auth and user related reducers into root
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
