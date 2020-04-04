@@ -16,6 +16,7 @@ export class AppComponent {
   cents = `${CentsCommandments.Control}, ${CentsCommandments.Entry}, ${CentsCommandments.Need}, ${CentsCommandments.Time}, ${CentsCommandments.Scale}`;
 
   constructor(private store: Store) {
+    // TODO consider moving this stuff somewhere else
     this.store
       .select(UserSelectors.selectAuthState)
       .pipe(
