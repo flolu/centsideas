@@ -34,8 +34,10 @@ export abstract class EventEntity<IEntityState> implements IEventEntity {
 
   confirmEvents = (): EventEntity<IEntityState> => {
     this.persistedState = this.reducer.reduce(this.persistedState, this.pendingEvents);
-    this.lastPersistedEventId = this.pendingEvents[this.pendingEvents.length - 1].id;
-    this.pendingEvents = [];
+    if (this.pendingEvents.length) {
+      this.lastPersistedEventId = this.pendingEvents[this.pendingEvents.length - 1].id;
+      this.pendingEvents = [];
+    }
     return this;
   };
 

@@ -133,6 +133,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     const streamId: string = entity.currentState.id;
     const lastPersistedEvent = await this.getLastEventOfStream(streamId);
     let eventNumber = (lastPersistedEvent && lastPersistedEvent.eventNumber) || 0;
+    // TODO this won't work if multiple processes save events... instead use eventNumber! (https://youtu.be/GzrZworHpIk?t=1028)
     if (lastPersistedEvent && entity.lastPersistedEventId !== lastPersistedEvent.id) {
       throw new Error('concurrency issue!');
     }

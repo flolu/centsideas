@@ -3,6 +3,7 @@ import { IIdeaState } from '@cents-ideas/models';
 
 import { commitFunctions, IdeasEvents } from './events';
 
+// FIXME consider creating "locked values" (e.g. userId should be locked after first set, because it must never change)
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
     id: '',

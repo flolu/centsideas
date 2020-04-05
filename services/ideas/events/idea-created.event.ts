@@ -15,7 +15,6 @@ export class IdeaCreatedEvent extends Event<IIdeaCreatedEvent> {
     state.createdAt = event.timestamp;
     state.title = event.data.title;
     state.description = event.data.description;
-    state.deleted = false;
     return state;
   }
 }

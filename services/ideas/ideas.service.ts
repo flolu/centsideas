@@ -8,7 +8,12 @@ import {
   IIdeaQueryDto,
   ISaveIdeaDto,
 } from '@cents-ideas/models';
-import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
+import {
+  Logger,
+  handleHttpResponseError,
+  NotAuthenticatedError,
+  NoPermissionError,
+} from '@cents-ideas/utils';
 
 import { IdeaCommandHandler } from './idea.command-handler';
 
@@ -18,65 +23,62 @@ export class IdeasService {
 
   create = (req: HttpRequest<ISaveIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
-      const _loggerName = 'create';
+      const t = this.logger.thread('create');
       try {
-        this.logger.debug(_loggerName);
-        const userId: string = req.locals.userId || '';
-        const idea = await this.commandHandler.create(userId, req.body.title, req.body.description);
+        const idea = await this.commandHandler.create(
+          req.locals.userId,
+          req.body.title,
+          req.body.description,
+          t,
+        );
+        t.log('idea with title', idea.persistedState.title, 'was created').complete();
         resolve({
           status: HttpStatusCodes.Accepted,
           body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        t.error(error.status && error.status < 500 ? error.message : error.stack).complete();
         resolve(handleHttpResponseError(error));
       }
     });
 
   update = (req: HttpRequest<ISaveIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
-      const _loggerName = 'update';
+      const t = this.logger.thread('update');
       try {
-        this.logger.debug(_loggerName);
         const idea = await this.commandHandler.update(
+          req.locals.userId,
           req.params.id,
           req.body.title,
           req.body.description,
+          t,
         );
+        t.log('idea', idea.persistedState.id, 'successfully updated').complete();
         resolve({
           status: HttpStatusCodes.Accepted,
           body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        t.error(error.status && error.status < 500 ? error.message : error.stack).complete();
         resolve(handleHttpResponseError(error));
       }
     });
 
   delete = (req: HttpRequest<{}, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(async resolve => {
-      const _loggerName = 'delete';
+      const t = this.logger.thread('delete');
       try {
-        this.logger.debug(_loggerName);
-        const idea = await this.commandHandler.delete(req.params.id);
+        const idea = await this.commandHandler.delete(req.locals.userId, req.params.id, t);
+        t.log('deleted idea', idea.persistedState.id).complete();
         resolve({
           status: HttpStatusCodes.Accepted,
           body: idea.persistedState,
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        t.error(error.status && error.status < 500 ? error.message : error.stack).complete();
         resolve(handleHttpResponseError(error));
       }
     });

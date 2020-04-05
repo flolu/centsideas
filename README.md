@@ -8,30 +8,30 @@ This is a project with the purpose of learning the architecture of complex web a
 
 ## Essential
 
-| Requirement       | Keywords                               | Status |
-| ----------------- | -------------------------------------- | ------ |
-| Event sourcing    | event-driven, commands, message broker | ✅     |
-| Deployment        | ci, cd, build automation, bazel        | ✅     |
-| Testing           | unit Tests, integration Tests          | ✅     |
-| Microservices     | small services, docker                 | ✔️     |
-| Kubernetes        | container orchestration                | ✅     |
-| Database(s)       | data storage, event store              | ✅     |
-| File storage      | blob storage                           | ❌     |
-| Redux frontend    | reactive, actions, effects             | ✅     |
-| SEO               | server side rendering, marketing       | ✅     |
-| Monorepo          | all packages and services in one repo  | ✔️     |
-| Typescript        | types everywhere!                      | ✔️     |
-| Local development | hot reload, docker-compose, vscode     | ✔️     |
-| Git flow          | branching, releases, rebasing          | ✔️     |
-| Gateway           | discovery, entry point, auth           | ✔️     |
-| Static pages      | homepage, static content               | ❌     |
-| Search            | indexing, realtime search              | ❌     |
-| Authentication    | passwordless, 2f auth, google login    | ✔️     |
-| Admin panel       | monitoring, event handling, logs       | ❌     |
-| Backups           | automatic, manual, restore             | ❌     |
-| Realtime          | some kind of realtime integration      | ❌     |
-| GDPR              | legal, privacy                         | ❌     |
-| User Interface    | modern, unique, reusable               | ❌     |
+| Requirement                                    | Keywords                               | Status |
+| ---------------------------------------------- | -------------------------------------- | ------ |
+| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker | ✅     |
+| Deployment                                     | ci, cd, build automation, bazel        | ✅     |
+| Testing                                        | unit Tests, integration Tests          | ✅     |
+| Microservices                                  | small services, docker                 | ✔️     |
+| Kubernetes                                     | container orchestration                | ✅     |
+| Database(s)                                    | data storage, event store              | ✅     |
+| File storage                                   | blob storage                           | ❌     |
+| Redux frontend                                 | reactive, actions, effects             | ✅     |
+| SEO                                            | server side rendering, marketing       | ✅     |
+| Monorepo                                       | all packages and services in one repo  | ✔️     |
+| Typescript                                     | types everywhere!                      | ✔️     |
+| Local development                              | hot reload, docker-compose, vscode     | ✔️     |
+| Git flow                                       | branching, releases, rebasing          | ✔️     |
+| Gateway                                        | discovery, entry point, auth           | ✔️     |
+| Static pages                                   | homepage, static content               | ❌     |
+| Search                                         | indexing, realtime search              | ❌     |
+| Authentication                                 | passwordless, 2f auth, google login    | ✔️     |
+| Admin panel                                    | monitoring, event handling, logs       | ❌     |
+| Backups                                        | automatic, manual, restore             | ❌     |
+| Realtime                                       | some kind of realtime integration      | ❌     |
+| GDPR                                           | legal, privacy                         | ❌     |
+| User Interface                                 | modern, unique, reusable               | ❌     |
 
 ### Status
 

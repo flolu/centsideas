@@ -88,9 +88,8 @@ export class UsersService {
     new Promise(async resolve => {
       const t = this.logger.thread('update user');
       try {
-        NotAuthenticatedError.validate(req.locals.userId);
-        NoPermissionError.validate(req.locals.userId, req.params.id);
         const updatedUser = await this.commandHandler.updateUser(
+          req.locals.userId,
           req.params.id,
           req.body.username,
           req.body.email,

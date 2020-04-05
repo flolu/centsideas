@@ -8,6 +8,8 @@ import {
   decodeToken,
   TokenInvalidError,
   LoggerThread,
+  NotAuthenticatedError,
+  NoPermissionError,
 } from '@cents-ideas/utils';
 import {
   IAuthenticatedDto,
@@ -132,11 +134,14 @@ export class UserCommandHandler {
   };
 
   updateUser = async (
+    authenticatedUserId: string | null,
     userId: string,
     username: string | null,
     email: string | null,
     t: LoggerThread,
   ): Promise<User> => {
+    if (!authenticatedUserId) throw new NotAuthenticatedError();
+    NoPermissionError.validate(authenticatedUserId, userId);
     UserErrors.UserIdRequiredError.validate(userId);
     t.debug('update user with id', userId);
     t.debug('username: ', username, ', email:', email);
@@ -151,6 +156,7 @@ export class UserCommandHandler {
     }
 
     if (email) {
+      email = sanitizeHtml(email);
       UserErrors.EmailRequiredError.validate(email);
       UserErrors.EmailInvalidError.validate(email);
       t.debug('email', email, 'is valid');
@@ -160,11 +166,9 @@ export class UserCommandHandler {
     t.debug('found corresponding user');
 
     const isNewEmail = email && user.persistedState.email !== email;
-    const isNewUsername = username && user.persistedState.username !== username;
-
     if (email && isNewEmail) await this.requestEmailChange(userId, email);
 
-    user.update(isNewUsername ? username : null, isNewEmail ? email : null);
+    user.update(username, isNewEmail ? email : null);
     return this.repository.save(user);
   };
 
