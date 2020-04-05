@@ -11,6 +11,7 @@ import { IdeasModule } from './ideas/ideas.module';
 import { UserModule } from './user/user.module';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { NgRxStateTransferService, setTransferedState } from './ngrx-state-transfer.service';
+import { env } from '../environments';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +21,7 @@ import { NgRxStateTransferService, setTransferedState } from './ngrx-state-trans
     StoreModule.forRoot({}, { metaReducers: [setTransferedState] }),
     EffectsModule.forRoot([]),
     // TODO only in dev mode (maybe inject at runtime in dev mode?)
-    StoreDevtoolsModule.instrument(),
+    StoreDevtoolsModule.instrument({ logOnly: env.production }),
     AppRoutingModule,
     IdeasModule,
     UserModule,
@@ -34,5 +35,6 @@ import { NgRxStateTransferService, setTransferedState } from './ngrx-state-trans
 export class AppModule {
   constructor(private stateTransferService: NgRxStateTransferService) {
     this.stateTransferService.handleStateTransfer();
+    console.log('[AppModule] launching app in', env.production ? 'production' : 'dev', 'mode');
   }
 }

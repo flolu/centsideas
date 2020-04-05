@@ -16,6 +16,7 @@ ng_module(
         "//packages/enums",
         "//services/client/src/app/ideas",
         "//services/client/src/app/user",
+        "//services/client/src/environments",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
