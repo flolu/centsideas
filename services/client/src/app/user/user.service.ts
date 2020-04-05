@@ -11,6 +11,7 @@ import {
   IConfirmLoginDto,
 } from '@cents-ideas/models';
 import { isPlatformServer } from '@angular/common';
+import { env } from '../../environments';
 
 export const TOKEN_KEY = 'token';
 
@@ -61,9 +62,7 @@ export class UserService {
   };
 
   get baseUrl() {
-    // TODO dont hardcode (depends on issue with prod and dev envs)
-    return `http://localhost:3000/${ApiEndpoints.Users}`;
-    // return `${this.settingsService.settings.apiUrl}/${ApiEndpoints.Users}`;
+    return `${env.gatewayHost}/${ApiEndpoints.Users}`;
   }
 
   get token() {

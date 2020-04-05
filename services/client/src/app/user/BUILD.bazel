@@ -22,6 +22,7 @@ ng_module(
     deps = [
         "//packages/enums",
         "//packages/models",
+        "//services/client/src/environments",
         "//services/client/src/shared/helpers",
         "@npm//@angular/common",
         "@npm//@angular/router",

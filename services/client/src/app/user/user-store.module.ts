@@ -13,7 +13,6 @@ export const featureKey = 'user';
 @NgModule({
   imports: [
     CommonModule,
-    // TODO don't hardcode name
     StoreModule.forFeature(featureKey, { auth: fromAuth.reducer, user: fromUser.reducer }),
     EffectsModule.forFeature([AuthEffects]),
   ],
