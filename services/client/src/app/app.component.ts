@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { CentsCommandments } from '@cents-ideas/enums';
 import { Store } from '@ngrx/store';
-import { AuthActions } from './user/auth.actions';
-import { UserSelectors } from './user/user.selectors';
 import { take, tap } from 'rxjs/operators';
+
+import { CentsCommandments } from '@cents-ideas/enums';
+
+import { AuthActions } from './auth/auth.actions';
+import { AuthSelectors } from './auth/auth.selectors';
 
 @Component({
   selector: 'ci-component',
@@ -21,7 +23,7 @@ export class AppComponent {
 
   handleAuthentication = () => {
     this.store
-      .select(UserSelectors.selectAuthState)
+      .select(AuthSelectors.selectAuthState)
       .pipe(
         take(1),
         tap(state => {

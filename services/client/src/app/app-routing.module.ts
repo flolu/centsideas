@@ -5,6 +5,10 @@ import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
 const routes: Routes = [
   { path: '', redirectTo: TopLevelFrontendRoutes.Ideas, pathMatch: 'full' },
   {
+    path: TopLevelFrontendRoutes.Auth,
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+  },
+  {
     path: TopLevelFrontendRoutes.Ideas,
     loadChildren: () => import('./ideas/ideas.module').then(m => m.IdeasModule),
   },

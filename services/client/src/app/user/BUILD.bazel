@@ -4,6 +4,7 @@ load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
 
 package(default_visibility = ["//:__subpackages__"])
 
+# TODO outsource
 store_srcs_matcher = [
     "*.actions.ts",
     "*.effects.ts",
@@ -24,6 +25,8 @@ ng_module(
         "//packages/models",
         "//services/client/src/environments",
         "//services/client/src/shared/helpers",
+        # TODO to import auth guard and auth actions???? does this work?
+        "//services/client/src/app/auth:store",
         "@npm//@angular/common",
         "@npm//@angular/router",
         "@npm//@ngrx/effects",
@@ -34,8 +37,6 @@ ng_module(
 ng_module(
     name = "user",
     srcs = [
-        "auth.guard.ts",
-        "login.container.ts",
         "me.container.ts",
         "user.module.ts",
     ],

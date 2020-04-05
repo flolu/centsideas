@@ -19,7 +19,6 @@ const selectChangeEmailToken = createSelector(
   selector: 'ci-me',
   template: `
     <h1>Me</h1>
-
     <form [formGroup]="form">
       <label for="username">
         Username

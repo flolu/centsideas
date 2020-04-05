@@ -4,12 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AuthFrontendRoutes } from '@cents-ideas/enums';
+import { UserFrontendRoutes } from '@cents-ideas/enums';
 
-import { LoginContainer } from './login.container';
 import { MeContainer } from './me.container';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { UserStoreModule } from './user-store.module';
+import { UserService } from './user.service';
 
 @NgModule({
   imports: [
@@ -18,12 +18,11 @@ import { UserStoreModule } from './user-store.module';
     HttpClientModule,
     UserStoreModule,
     RouterModule.forChild([
-      { path: AuthFrontendRoutes.Login, component: LoginContainer },
-      { path: AuthFrontendRoutes.Me, component: MeContainer, canActivate: [AuthGuard] },
-      { path: '**', redirectTo: AuthFrontendRoutes.Me, pathMatch: 'full' },
+      { path: UserFrontendRoutes.Me, component: MeContainer, canActivate: [AuthGuard] },
+      { path: '**', redirectTo: UserFrontendRoutes.Me, pathMatch: 'full' },
     ]),
   ],
-  providers: [AuthGuard],
-  declarations: [LoginContainer, MeContainer],
+  providers: [AuthGuard, UserService],
+  declarations: [MeContainer],
 })
 export class UserModule {}

@@ -6,27 +6,32 @@ import { map, skipWhile } from 'rxjs/operators';
 
 import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
 
-import { UserSelectors } from './user.selectors';
 import { AuthActions } from './auth.actions';
+import { AuthSelectors } from './auth.selectors';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private store: Store, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    return this.store.select(UserSelectors.selectUserFeatureState).pipe(
+    return this.store.select(AuthSelectors.selectAuthState).pipe(
       skipWhile(state => {
-        if (state.auth.authenticationTryCount === 0) {
+        if (state.authenticationTryCount === 0) {
           this.store.dispatch(AuthActions.authenticate());
           return true;
         }
-        return !state.auth.initialized;
+        return !state.initialized;
       }),
       map(state => {
-        if (!state.user.user) {
+        // TODO figure out a way to revert to old method
+        /*  if (!state.user.user) {
           this.router.navigate([TopLevelFrontendRoutes.User, AuthFrontendRoutes.Login]);
         }
-        return !!(state.user.user && state.user.user.id);
+        return !!(state.user.user && state.user.user.id); */
+        if (!state.token) {
+          this.router.navigate([TopLevelFrontendRoutes.Auth, AuthFrontendRoutes.Login]);
+        }
+        return !!state.token;
       }),
     );
   }

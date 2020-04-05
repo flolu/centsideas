@@ -14,6 +14,7 @@ import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { NgRxStateTransferService, setTransferedState } from './ngrx-state-transfer.service';
 import { env } from '../environments';
 import { CustomSerializer } from './custom-route-serializer';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +27,7 @@ import { CustomSerializer } from './custom-route-serializer';
     // TODO only in dev mode (maybe inject at runtime in dev mode?)
     StoreDevtoolsModule.instrument({ logOnly: env.production }),
     AppRoutingModule,
+    AuthModule,
     IdeasModule,
     UserModule,
   ],

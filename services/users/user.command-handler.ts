@@ -18,7 +18,12 @@ import {
   ILoginTokenPayload,
   IEmailChangeTokenPayload,
 } from '@cents-ideas/models';
-import { TopLevelFrontendRoutes, AuthFrontendRoutes, QueryParamKeys } from '@cents-ideas/enums';
+import {
+  TopLevelFrontendRoutes,
+  AuthFrontendRoutes,
+  QueryParamKeys,
+  UserFrontendRoutes,
+} from '@cents-ideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -222,7 +227,7 @@ export class UserCommandHandler {
       expiresIn: env.emailChangeTokenExpirationTime,
     });
 
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}/${AuthFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
+    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}/${UserFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
     const expirationTimeHours = Math.floor(env.emailChangeTokenExpirationTime / 3600);
     const text = `URL to change your email: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Email Change';

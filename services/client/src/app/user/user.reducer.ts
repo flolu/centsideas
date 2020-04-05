@@ -2,7 +2,7 @@ import { createReducer, on, Action } from '@ngrx/store';
 import { IUserState } from '@cents-ideas/models';
 import { UserActions } from './user.actions';
 import { LOADING_DONE, LOADING_FAIL, LOADING } from '../../shared/helpers/state.helper';
-import { AuthActions } from './auth.actions';
+import { AuthActions } from '../auth/auth.actions';
 
 export interface IUserReducerState {
   loading: boolean;

@@ -9,17 +9,17 @@ import { Store } from '@ngrx/store';
 import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes, UserFrontendRoutes } from '@cents-ideas/enums';
 
-import { UserService } from './user.service';
 import { AuthActions } from './auth.actions';
-import { UserSelectors } from './user.selectors';
+import { AuthService } from './auth.service';
+import { AuthSelectors } from './auth.selectors';
 
 @Injectable()
 export class AuthEffects {
   constructor(
     private actions$: Actions,
-    private usersService: UserService,
+    private authService: AuthService,
     private router: Router,
     private store: Store,
   ) {}
@@ -28,7 +28,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.login),
       switchMap(({ email }) =>
-        this.usersService.login(email).pipe(
+        this.authService.login(email).pipe(
           map(() => AuthActions.loginDone()),
           catchError(error => of(AuthActions.loginFail({ error }))),
         ),
@@ -39,13 +39,13 @@ export class AuthEffects {
   confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),
-      withLatestFrom(this.store.select(UserSelectors.selectAuthState)),
+      withLatestFrom(this.store.select(AuthSelectors.selectAuthState)),
       switchMap(([action, authState]) => {
         if (authState.token) {
-          this.usersService.saveToken(authState.token);
+          this.authService.saveToken(authState.token);
           return [];
         }
-        return this.usersService.confirmLogin(action.token).pipe(
+        return this.authService.confirmLogin(action.token).pipe(
           map(({ token, user }) => AuthActions.confirmLoginDone({ token, user })),
           catchError(error => of(AuthActions.confirmLoginFail({ error }))),
         );
@@ -57,8 +57,8 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.confirmLoginDone),
-        tap(action => this.usersService.saveToken(action.token)),
-        tap(() => this.router.navigate([TopLevelFrontendRoutes.User, AuthFrontendRoutes.Me])),
+        tap(action => this.authService.saveToken(action.token)),
+        tap(() => this.router.navigate([TopLevelFrontendRoutes.User, UserFrontendRoutes.Me])),
       ),
     { dispatch: false },
   );
@@ -67,8 +67,8 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.authenticate),
       switchMap(() => {
-        if (this.usersService.token) {
-          return this.usersService.authenticate().pipe(
+        if (this.authService.token) {
+          return this.authService.authenticate().pipe(
             map(data => AuthActions.authenticateDone(data)),
             catchError(error => of(AuthActions.authenticateFail({ error }))),
           );
@@ -83,7 +83,7 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.authenticateDone),
-        tap(action => this.usersService.saveToken(action.token)),
+        tap(action => this.authService.saveToken(action.token)),
       ),
     { dispatch: false },
   );
@@ -92,7 +92,7 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.authenticateFail),
-        tap(() => this.usersService.removeToken()),
+        tap(() => this.authService.removeToken()),
       ),
     { dispatch: false },
   );

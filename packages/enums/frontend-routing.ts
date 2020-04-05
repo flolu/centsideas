@@ -8,5 +8,8 @@ export enum TopLevelFrontendRoutes {
 
 export enum AuthFrontendRoutes {
   Login = 'login',
+}
+
+export enum UserFrontendRoutes {
   Me = 'me',
 }
