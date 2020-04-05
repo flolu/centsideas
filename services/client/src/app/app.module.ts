@@ -38,6 +38,5 @@ import { CustomSerializer } from './custom-route-serializer';
 export class AppModule {
   constructor(private stateTransferService: NgRxStateTransferService) {
     this.stateTransferService.handleStateTransfer();
-    console.log('[AppModule] launching app in', env.production ? 'production' : 'dev', 'mode');
   }
 }

@@ -40,27 +40,30 @@ export class LoggerThread {
   private indent = '  ';
   private startTime: number = Date.now();
   private logs: string[] = [];
+  private completed = false;
 
   constructor(private title: string, private prefix: string) {}
 
   log = (...parts: any[]) => {
+    this.checkComplete();
     this.logs.push(chalk.reset(...parts));
     return this;
   };
 
   debug = (...parts: any[]) => {
+    this.checkComplete();
     this.logs.push(chalk.dim(...parts));
     return this;
   };
 
   error = (...parts: any[]) => {
+    this.checkComplete();
     this.logs.push(chalk.red(...parts));
     return this;
   };
 
   // FIXME consider timeout?
-  // FIXME prevent new logs after completion
-  // TODO thwo an error if this thread has no complete registered
+  // FIXME throw an error if this thread has no complete registered (https://stackoverflow.com/questions/61042157)
   complete = () => {
     console.log(chalk.bold(this.prefix), chalk.reset(this.title));
     for (const line of this.logs) {
@@ -70,5 +73,12 @@ export class LoggerThread {
     const ms = endTime - this.startTime;
     console.log(this.indent, chalk.dim(`│`), chalk.dim.italic(`${ms}ms`));
     console.log(this.indent, chalk.dim(`└──────────`));
+    this.completed = true;
+  };
+
+  private checkComplete = () => {
+    if (this.completed) {
+      throw new Error(`you can't log after the logger thread has been completed!`);
+    }
   };
 }

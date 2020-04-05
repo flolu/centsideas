@@ -10,7 +10,7 @@ import { tap, take } from 'rxjs/operators';
 
 const selectAuthToken = createSelector(
   createFeatureSelector<any>('router'),
-  router => router.state.queryParams[QueryParamKeys.Token],
+  router => router && router.state.queryParams[QueryParamKeys.Token],
 );
 
 @Component({

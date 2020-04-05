@@ -42,9 +42,6 @@ export class AuthEffects {
       withLatestFrom(this.store.select(UserSelectors.selectAuthState)),
       switchMap(([action, authState]) => {
         if (authState.token) {
-          console.log(
-            '[AuthEffects] a token was transfered from the server, login was already confirmed on the server',
-          );
           this.usersService.saveToken(authState.token);
           return [];
         }

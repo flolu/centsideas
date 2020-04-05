@@ -175,6 +175,7 @@ export class UserCommandHandler {
     t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
 
     const user = await this.repository.findById(payload.userId);
+    UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, payload.newEmail);
     user.pushEvents(new UserEvents.EmailChangeConfirmedEvent(payload.userId, payload.newEmail));
 
     const subject = 'CENTS Ideas Email Was Changed';
@@ -187,7 +188,6 @@ export class UserCommandHandler {
       text,
       env.mailing.apiKey,
     );
-    // TODO invalidate token (shouldn't be used twice)
     t.debug(
       'sent email to notify user, that his email has changed from',
       payload.currentEmail,
