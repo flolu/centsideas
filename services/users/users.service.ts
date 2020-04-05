@@ -13,7 +13,7 @@ import {
   IConfirmEmailChangeDto,
   IConfirmLoginDto,
 } from '@cents-ideas/models';
-import { handleHttpResponseError, ThreadLogger } from '@cents-ideas/utils';
+import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
 
@@ -23,7 +23,7 @@ export class UsersService {
 
   login = (req: HttpRequest<ILoginDto>): Promise<HttpResponse> =>
     new Promise(resolve => {
-      ThreadLogger.thread('login', async t => {
+      Logger.thread('login', async t => {
         try {
           const createdLogin = await this.commandHandler.login(req.body.email, t);
           t.log('created login with id', createdLogin.persistedState.id);
@@ -43,7 +43,7 @@ export class UsersService {
     req: HttpRequest<null, null, null, IAuthenticateDto>,
   ): Promise<HttpResponse<IAuthenticatedDto>> =>
     new Promise(resolve => {
-      ThreadLogger.thread('authenticate', async t => {
+      Logger.thread('authenticate', async t => {
         try {
           const { token, user } = await this.commandHandler.authenticate(
             req.headers[HeaderKeys.Auth],
@@ -64,7 +64,7 @@ export class UsersService {
 
   confirmLogin = (req: HttpRequest<IConfirmLoginDto>): Promise<HttpResponse<IAuthenticatedDto>> =>
     new Promise(resolve => {
-      ThreadLogger.thread('confirm login', async t => {
+      Logger.thread('confirm login', async t => {
         try {
           const { token, user } = await this.commandHandler.confirmLogin(req.body.token, t);
           t.log('confirmed login of user', user.id);
@@ -84,7 +84,7 @@ export class UsersService {
     req: HttpRequest<IUpdateUserDto, IUserQueryDto>,
   ): Promise<HttpResponse<IUserState>> =>
     new Promise(resolve => {
-      ThreadLogger.thread('update user', async t => {
+      Logger.thread('update user', async t => {
         try {
           const updatedUser = await this.commandHandler.updateUser(
             req.locals.userId,
@@ -110,7 +110,7 @@ export class UsersService {
     req: HttpRequest<IConfirmEmailChangeDto>,
   ): Promise<HttpResponse<IUserState>> =>
     new Promise(resolve => {
-      ThreadLogger.thread('confirm email change', async t => {
+      Logger.thread('confirm email change', async t => {
         try {
           const updatedUser = await this.commandHandler.confirmEmailChange(req.body.token, t);
           t.log('confirmed email change');

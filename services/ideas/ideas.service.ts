@@ -8,7 +8,7 @@ import {
   IIdeaQueryDto,
   ISaveIdeaDto,
 } from '@cents-ideas/models';
-import { handleHttpResponseError, ThreadLogger } from '@cents-ideas/utils';
+import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
 import { IdeaCommandHandler } from './idea.command-handler';
 
@@ -18,7 +18,7 @@ export class IdeasService {
 
   create = (req: HttpRequest<ISaveIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(resolve => {
-      ThreadLogger.thread('create', async t => {
+      Logger.thread('create', async t => {
         try {
           const idea = await this.commandHandler.create(
             req.locals.userId,
@@ -41,7 +41,7 @@ export class IdeasService {
 
   update = (req: HttpRequest<ISaveIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(resolve => {
-      ThreadLogger.thread('update', async t => {
+      Logger.thread('update', async t => {
         try {
           const idea = await this.commandHandler.update(
             req.locals.userId,
@@ -65,7 +65,7 @@ export class IdeasService {
 
   delete = (req: HttpRequest<{}, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(resolve => {
-      ThreadLogger.thread('delete', async t => {
+      Logger.thread('delete', async t => {
         try {
           const idea = await this.commandHandler.delete(req.locals.userId, req.params.id, t);
           t.log('deleted idea', idea.persistedState.id);

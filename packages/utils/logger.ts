@@ -19,8 +19,19 @@ export class Logger {
   static log = (...parts: any[]) => console.log(getPrefixLog(), chalk.reset(...parts));
   static debug = (...parts: any[]) => console.log(getPrefixLog(), chalk.dim(...parts));
   static error = (...parts: any[]) => console.log(getPrefixLog(), chalk.red(...parts));
-  // TODO would be awesome to move threadlogger into this function
-  // static thread = (title: string, cb: any) => {};
+
+  // FIXME this implementation could be improved (currently _complete is public when it should be private)
+  static thread<T>(title: string, callback: (loggerThread: ThreadLogger) => T): T {
+    const loggerThread = new ThreadLogger(title);
+    const r = callback(loggerThread);
+    if (r instanceof Promise) {
+      // tslint:disable-next-line:ban-comma-operator
+      return (r.then(x => (loggerThread._complete(), x)) as any) as T;
+    } else {
+      loggerThread._complete();
+      return r;
+    }
+  }
 }
 
 export class ThreadLogger {
@@ -36,25 +47,13 @@ export class ThreadLogger {
   debug = (...parts: any[]) => this.addLog(chalk.dim, ...parts);
   error = (...parts: any[]) => this.addLog(chalk.red, ...parts);
 
-  // credits go to: https://stackoverflow.com/a/61044275/8586803
-  static thread<T>(title: string, callback: (loggerThread: ThreadLogger) => T): T {
-    const loggerThread = new ThreadLogger(title);
-    const r = callback(loggerThread);
-    if (r instanceof Promise) {
-      // tslint:disable-next-line:ban-comma-operator
-      return (r.then(x => (loggerThread.complete(), x)) as any) as T;
-    } else {
-      loggerThread.complete();
-      return r;
-    }
-  }
-
   private addLog = (style: any, ...parts: any[]) => {
     this.logs.push(style(...parts));
     return this;
   };
 
-  private complete = () => {
+  public _complete = () => {
+    // don't ever call this method!
     console.log(chalk.bold(getPrefixLog()), chalk.reset(this.title));
     for (const line of this.logs) {
       console.log(' '.repeat(prefixMinLength), chalk.dim(`│`), line);

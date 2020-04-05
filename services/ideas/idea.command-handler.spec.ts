@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { getProvider, registerProviders, overrideProvider, ThreadLogger } from '@cents-ideas/utils';
+import { getProvider, registerProviders, overrideProvider, Logger } from '@cents-ideas/utils';
 
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
@@ -15,7 +15,7 @@ describe('Idea Command Handler', () => {
 
   describe('create', () => {
     it('should work', () => {
-      ThreadLogger.thread('create idea', async t => {
+      Logger.thread('create idea', async t => {
         const created = await commandHandler.create(
           fakeUserId,
           fakeIdeaTitle,

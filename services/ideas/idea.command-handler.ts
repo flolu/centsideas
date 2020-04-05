@@ -3,8 +3,8 @@ import { injectable } from 'inversify';
 import {
   sanitizeHtml,
   NotAuthenticatedError,
-  ThreadLogger,
   NoPermissionError,
+  ThreadLogger,
 } from '@cents-ideas/utils';
 
 import { IdeaErrors } from './errors';
