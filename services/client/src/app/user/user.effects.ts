@@ -28,4 +28,16 @@ export class UserEffects {
       ),
     ),
   );
+
+  confirmEmailChange$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.confirmEmailChange),
+      switchMap(action =>
+        this.usersService.confirmEmailChange(action.token).pipe(
+          map(updated => UserActions.confirmEmailChangeDone({ updated })),
+          catchError(error => of(UserActions.confirmEmailChangeFail({ error }))),
+        ),
+      ),
+    ),
+  );
 }

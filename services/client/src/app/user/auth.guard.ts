@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { map, skipWhile } from 'rxjs/operators';
 
-import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
 
 import { UserSelectors } from './user.selectors';
 import { AuthActions } from './auth.actions';
@@ -26,9 +26,9 @@ export class AuthGuard implements CanActivate {
       }),
       map(state => {
         if (!state.user.user) {
-          // FIXME use logger frontend
+          // TODO use logger frontend
           console.log('[AuthGuard] not authenticated', state);
-          this.router.navigate([TopLevelFrontendRoutes.Login]);
+          this.router.navigate([TopLevelFrontendRoutes.User, AuthFrontendRoutes.Login]);
         }
         return !!(state.user.user && state.user.user.id);
       }),

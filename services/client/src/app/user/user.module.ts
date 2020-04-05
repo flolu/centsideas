@@ -20,6 +20,7 @@ import { UserStoreModule } from './user-store.module';
     RouterModule.forChild([
       { path: AuthFrontendRoutes.Login, component: LoginContainer },
       { path: AuthFrontendRoutes.Me, component: MeContainer, canActivate: [AuthGuard] },
+      { path: '**', redirectTo: AuthFrontendRoutes.Me, pathMatch: 'full' },
     ]),
   ],
   providers: [AuthGuard],

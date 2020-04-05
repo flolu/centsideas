@@ -8,13 +8,14 @@ import * as fromUser from './user.reducer';
 import { AuthEffects } from './auth.effects';
 import { UserService } from './user.service';
 import { featureKey } from './user.state';
+import { UserEffects } from './user.effects';
 
 @NgModule({
   imports: [
     CommonModule,
     StoreModule.forFeature(featureKey, { auth: fromAuth.reducer, user: fromUser.reducer }),
-    EffectsModule.forFeature([AuthEffects]),
+    EffectsModule.forFeature([AuthEffects, UserEffects]),
   ],
-  providers: [AuthEffects, UserService],
+  providers: [AuthEffects, UserEffects, UserService],
 })
 export class UserStoreModule {}

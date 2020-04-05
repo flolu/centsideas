@@ -181,12 +181,13 @@ export class UserCommandHandler {
     const text = `You have changed your email adress from ${payload.currentEmail} to ${payload.newEmail}`;
     await sendMail(
       env.mailing.fromAddress,
-      payload.newEmail,
+      payload.currentEmail,
       subject,
       text,
       text,
       env.mailing.apiKey,
     );
+    // TODO invalidate token (shouldn't be used twice)
     t.debug(
       'sent email to notify user, that his email has changed from',
       payload.currentEmail,
@@ -217,7 +218,7 @@ export class UserCommandHandler {
       expiresIn: env.emailChangeTokenExpirationTime,
     });
 
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}?confirmEmailChangeToken=${token}`;
+    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}/${AuthFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
     const expirationTimeHours = Math.floor(env.emailChangeTokenExpirationTime / 3600);
     const text = `URL to change your email: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Email Change';
