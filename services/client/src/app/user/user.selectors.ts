@@ -3,7 +3,7 @@ import * as __ngrxStore from '@ngrx/store/store';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
 import { IUserFeatureReducerState } from './user.state';
-import { featureKey } from './user-store.module';
+import { featureKey } from './user.state';
 
 const selectUserFeatureState = createFeatureSelector<IUserFeatureReducerState>(featureKey);
 

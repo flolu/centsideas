@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { AuthEffects } from './auth.effects';
 import * as fromAuth from './auth.reducer';
 import * as fromUser from './user.reducer';
+import { AuthEffects } from './auth.effects';
 import { UserService } from './user.service';
-
-export const featureKey = 'user';
+import { featureKey } from './user.state';
 
 @NgModule({
   imports: [

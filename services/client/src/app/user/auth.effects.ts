@@ -6,13 +6,13 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-
 import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 
+import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
+
 import { UserService } from './user.service';
 import { AuthActions } from './auth.actions';
-import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
 import { UserSelectors } from './user.selectors';
 
 @Injectable()

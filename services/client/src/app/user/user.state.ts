@@ -5,3 +5,5 @@ export interface IUserFeatureReducerState {
   user: IUserReducerState;
   auth: IAuthReducerState;
 }
+
+export const featureKey = 'user';
