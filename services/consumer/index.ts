@@ -4,7 +4,7 @@ if (process.env.ENV === 'dev') require('../../register-aliases').registerAliases
 
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 import { LoggerPrefixes } from '@cents-ideas/enums';
-import { getProvider, registerProviders, Logger, ExpressAdapter } from '@cents-ideas/utils';
+import { getProvider, registerProviders, ExpressAdapter } from '@cents-ideas/utils';
 
 import { ConsumerServer } from './consumer.server';
 import { ProjectionDatabase } from './projection-database';
@@ -16,7 +16,6 @@ import { UsersProjection } from './users.projection';
 process.env.LOGGER_PREFIX = LoggerPrefixes.Consumer;
 
 registerProviders(
-  Logger,
   MessageBroker,
   ConsumerServer,
   ProjectionDatabase,

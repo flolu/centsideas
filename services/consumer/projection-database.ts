@@ -15,18 +15,16 @@ export class ProjectionDatabase {
   private usersCollection!: Collection;
   private hasInitialized = false;
 
-  constructor(private logger: Logger) {
+  constructor() {
     this.initialize();
   }
 
   initialize = async () => {
     return new Promise(async (res, rej) => {
       try {
-        this.logger.debug(`initialize projection database with ${env.database.url}`);
+        Logger.debug(`initialize projection database with ${env.database.url}`);
         this.client = await retry(async () => {
-          this.logger.debug(
-            `retry to connect to projection database with url: ${env.database.url}`,
-          );
+          Logger.debug(`retry to connect to projection database with url: ${env.database.url}`);
           let connection: MongoClient;
           try {
             connection = await MongoClient.connect(env.database.url, {
@@ -35,7 +33,7 @@ export class ProjectionDatabase {
               useUnifiedTopology: true,
             });
           } catch (e) {
-            this.logger.error('error while connecting to projection database', e);
+            Logger.error('error while connecting to projection database', e);
             connection = await MongoClient.connect(env.database.url, {
               w: 1,
               useNewUrlParser: true,
@@ -48,7 +46,7 @@ export class ProjectionDatabase {
         this.ideasCollection = this.db.collection('ideas');
         this.reviewsCollection = this.db.collection('reviews');
         this.usersCollection = this.db.collection('users');
-        this.logger.debug('projection database initialized');
+        Logger.debug('projection database initialized');
         this.hasInitialized = true;
         res();
       } catch (error) {

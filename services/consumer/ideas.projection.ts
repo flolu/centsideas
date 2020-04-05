@@ -17,7 +17,7 @@ import { ProjectionDatabase } from './projection-database';
 export class IdeasProjection {
   private ideasCollection!: Collection;
 
-  constructor(private logger: Logger, private projectionDatabase: ProjectionDatabase) {
+  constructor(private projectionDatabase: ProjectionDatabase) {
     this.initialize();
   }
 
@@ -29,7 +29,7 @@ export class IdeasProjection {
     if (!this.ideasCollection) {
       await this.initialize();
     }
-    this.logger.debug('handle incoming ideas event', event);
+    Logger.debug('handle incoming ideas event', event);
     switch (event.name) {
       case IdeaEvents.IdeaCreated:
         return this.ideaCreated(event);

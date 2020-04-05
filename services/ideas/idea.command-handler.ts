@@ -3,7 +3,7 @@ import { injectable } from 'inversify';
 import {
   sanitizeHtml,
   NotAuthenticatedError,
-  LoggerThread,
+  ThreadLogger,
   NoPermissionError,
 } from '@cents-ideas/utils';
 
@@ -19,7 +19,7 @@ export class IdeaCommandHandler {
     userId: string | null,
     title: string,
     description: string,
-    t: LoggerThread,
+    t: ThreadLogger,
   ): Promise<Idea> => {
     if (!userId) throw new NotAuthenticatedError();
     t.debug('user', userId, 'is authenticated to create an idea');
@@ -45,7 +45,7 @@ export class IdeaCommandHandler {
     ideaId: string,
     title: string,
     description: string,
-    t: LoggerThread,
+    t: ThreadLogger,
   ): Promise<Idea> => {
     if (!userId) throw new NotAuthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
@@ -68,7 +68,7 @@ export class IdeaCommandHandler {
     return this.repository.save(idea);
   };
 
-  delete = async (userId: string | null, ideaId: string, t: LoggerThread): Promise<Idea> => {
+  delete = async (userId: string | null, ideaId: string, t: ThreadLogger): Promise<Idea> => {
     if (!userId) throw new NotAuthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
     t.debug('user', userId, 'requests to delete an idea');

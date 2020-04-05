@@ -2,7 +2,7 @@ import 'reflect-metadata';
 // tslint:disable-next-line:no-var-requires
 if (process.env.ENV === 'dev') require('../../register-aliases').registerAliases();
 
-import { registerProviders, Logger, getProvider, ExpressAdapter } from '@cents-ideas/utils';
+import { registerProviders, getProvider, ExpressAdapter } from '@cents-ideas/utils';
 import { LoggerPrefixes } from '@cents-ideas/enums';
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 
@@ -14,7 +14,6 @@ import { IdeasService } from './ideas.service';
 process.env.LOGGER_PREFIX = LoggerPrefixes.Ideas;
 
 registerProviders(
-  Logger,
   IdeasServer,
   IdeaCommandHandler,
   IdeaRepository,

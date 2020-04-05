@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { Logger, ExpressAdapter } from '@cents-ideas/utils';
+import { ExpressAdapter, Logger } from '@cents-ideas/utils';
 import { UsersApiRoutes } from '@cents-ideas/enums';
 
 import env from './environment';
@@ -12,11 +12,7 @@ import { UsersService } from './users.service';
 export class UsersServer {
   private app = express();
 
-  constructor(
-    private logger: Logger,
-    private usersService: UsersService,
-    private expressAdapter: ExpressAdapter,
-  ) {}
+  constructor(private usersService: UsersService, private expressAdapter: ExpressAdapter) {}
 
   start = () => {
     this.app.use(bodyParser.json());
@@ -46,7 +42,7 @@ export class UsersServer {
     });
 
     this.app.listen(env.port, () =>
-      this.logger.debug('users service listening on internal port', env.port),
+      Logger.debug('users service listening on internal port', env.port),
     );
   };
 }

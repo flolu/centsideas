@@ -9,10 +9,8 @@ export class MessageBroker {
   private kafka: Kafka | undefined;
   private producer: Producer | undefined;
 
-  constructor(private logger: Logger) {}
-
   initialize = (config: KafkaConfig) => {
-    this.logger.debug(`initialize message broker with config: `, config);
+    Logger.debug(`initialize message broker with config: `, config);
     this.kafka = new Kafka({ ...config, logLevel: logLevel.WARN });
   };
 
@@ -25,7 +23,7 @@ export class MessageBroker {
       this.producer = this.kafka.producer();
     }
     await this.producer.connect();
-    this.logger.debug('send a message to topic', topic);
+    Logger.debug('send a message to topic', topic);
     return this.producer.send({ topic, messages });
   };
 
@@ -40,7 +38,7 @@ export class MessageBroker {
     await consumer.run({
       eachMessage: async ({ message }) => {
         const event: IEvent = JSON.parse(message.value.toString());
-        this.logger.debug(`consumed ${event.name} event from topic: ${topic}`);
+        Logger.debug(`consumed ${event.name} event from topic: ${topic}`);
         callback(event);
       },
     });

@@ -8,10 +8,11 @@ import { HttpStatusCodes } from '@cents-ideas/enums';
 
 @injectable()
 export class QueryService {
-  constructor(private logger: Logger, private projectionDatabase: ProjectionDatabase) {}
+  constructor(private projectionDatabase: ProjectionDatabase) {}
 
   getAllIdeas = (_req: HttpRequest): Promise<HttpResponse> =>
     new Promise(async res => {
+      // TODO use new logger
       const _loggerName = 'get all ideas';
       try {
         const ideasCollection = await this.projectionDatabase.ideas();
@@ -91,6 +92,6 @@ export class QueryService {
     });
 
   private logError = (error: any, loggerName: string) => {
-    this.logger.error(loggerName, error.status && error.status < 500 ? error.message : error.stack);
+    Logger.error(loggerName, error.status && error.status < 500 ? error.message : error.stack);
   };
 }

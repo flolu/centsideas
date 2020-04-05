@@ -13,8 +13,8 @@ import { IUserIdEmailMapping } from './models';
 export class UserRepository extends EventRepository<User> {
   private readonly emailCollectionName = 'emails';
 
-  constructor(private _messageBroker: MessageBroker, private _logger: Logger) {
-    super(_messageBroker, _logger);
+  constructor(private _messageBroker: MessageBroker) {
+    super(_messageBroker);
     this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, [
       this.initializeEmailCollection,
     ]);
@@ -26,7 +26,7 @@ export class UserRepository extends EventRepository<User> {
       await collection.createIndex({ email: 1 }, { unique: true });
       return true;
     } catch (error) {
-      this._logger.error('Error while initializing email collection', error);
+      Logger.error('Error while initializing email collection', error);
       return false;
     }
   };
@@ -39,7 +39,7 @@ export class UserRepository extends EventRepository<User> {
   insertEmail = async (userId: string, email: string): Promise<IUserIdEmailMapping> => {
     const db = await this.getDatabase();
     const inserted = await db.collection(this.emailCollectionName).insertOne({ userId, email });
-    this._logger.debug('inserted email into emails collection', {
+    Logger.debug('inserted email into emails collection', {
       userId,
       email,
     });
@@ -51,7 +51,7 @@ export class UserRepository extends EventRepository<User> {
     const updated = await db
       .collection(this.emailCollectionName)
       .findOneAndUpdate({ userId }, { $set: { email: newEmail } });
-    this._logger.debug('updated email in emails collection', {
+    Logger.debug('updated email in emails collection', {
       userId,
       newEmail,
     });

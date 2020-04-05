@@ -18,12 +18,12 @@ export class ReviewsProjection {
   private reviewsCollection!: Collection;
   private ideasCollection!: Collection;
 
-  constructor(private logger: Logger, private projectionDatabase: ProjectionDatabase) {
+  constructor(private projectionDatabase: ProjectionDatabase) {
     this.initialize();
   }
 
   private initialize = async () => {
-    this.logger.debug('initialize collections in reviews projection...');
+    Logger.debug('initialize collections in reviews projection...');
     const collections = await Promise.all([
       this.projectionDatabase.reviews(),
       this.projectionDatabase.ideas(),

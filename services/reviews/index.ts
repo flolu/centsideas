@@ -2,7 +2,7 @@ import 'reflect-metadata';
 // tslint:disable-next-line:no-var-requires
 if (process.env.ENV === 'dev') require('../../register-aliases').registerAliases();
 
-import { registerProviders, Logger, getProvider, ExpressAdapter } from '@cents-ideas/utils';
+import { registerProviders, getProvider, ExpressAdapter } from '@cents-ideas/utils';
 import { MessageBroker } from '@cents-ideas/event-sourcing';
 import { LoggerPrefixes } from '@cents-ideas/enums';
 
@@ -14,7 +14,6 @@ import { ReviewsService } from './reviews.service';
 process.env.LOGGER_PREFIX = LoggerPrefixes.Reviews;
 
 registerProviders(
-  Logger,
   ReviewsServer,
   ReviewCommandHandler,
   ReviewRepository,

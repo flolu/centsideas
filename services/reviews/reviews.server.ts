@@ -12,14 +12,10 @@ import env from './environment';
 export class ReviewsServer {
   private app = express();
 
-  constructor(
-    private logger: Logger,
-    private reviewsService: ReviewsService,
-    private expressAdapter: ExpressAdapter,
-  ) {}
+  constructor(private reviewsService: ReviewsService, private expressAdapter: ExpressAdapter) {}
 
   start = () => {
-    this.logger.debug('initialized with env: ', env);
+    Logger.debug('initialized with env: ', env);
     const { port } = env;
 
     this.app.use(bodyParser.json());
@@ -49,8 +45,6 @@ export class ReviewsServer {
       return res.status(200).send();
     });
 
-    this.app.listen(port, () =>
-      this.logger.debug('reviews service listening on internal port', port),
-    );
+    this.app.listen(port, () => Logger.debug('reviews service listening on internal port', port));
   };
 }

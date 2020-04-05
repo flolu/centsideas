@@ -8,13 +8,11 @@ import { Logger } from '@cents-ideas/utils';
 
 @injectable()
 export class ExpressAdapter {
-  constructor(private logger: Logger) {}
-
   public makeJsonAdapter(url: string): express.RequestHandler {
     return async (req: express.Request, res: express.Response) => {
       try {
         const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req, res);
-        this.logger.log(`${httpRequest.method} request to ${url}`);
+        Logger.log(`${httpRequest.method} request to ${url}`);
         const response = await axios.post(url, httpRequest);
         const httpResponse: HttpResponse = response.data;
         this.handleExpressHttpResponse(res, httpResponse);

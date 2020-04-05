@@ -16,13 +16,13 @@ import { ReviewCommandHandler } from './review.command-handler';
 
 @injectable()
 export class ReviewsService {
-  constructor(private commandHandler: ReviewCommandHandler, private logger: Logger) {}
+  constructor(private commandHandler: ReviewCommandHandler) {}
 
   createEmptyReview = (req: HttpRequest<ICreateReviewDto>): Promise<HttpResponse<IReviewState>> =>
     new Promise(async resolve => {
       const _loggerName = 'create';
       try {
-        this.logger.debug(_loggerName, req.body);
+        Logger.debug(_loggerName, req.body);
         const userId: string = req.locals.userId || '';
         const review = await this.commandHandler.create(req.body.ideaId, userId);
         resolve({
@@ -31,10 +31,7 @@ export class ReviewsService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -56,10 +53,7 @@ export class ReviewsService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -75,10 +69,7 @@ export class ReviewsService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -94,10 +85,7 @@ export class ReviewsService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });
@@ -119,10 +107,7 @@ export class ReviewsService {
           headers: {},
         });
       } catch (error) {
-        this.logger.error(
-          _loggerName,
-          error.status && error.status < 500 ? error.message : error.stack,
-        );
+        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
         resolve(handleHttpResponseError(error));
       }
     });

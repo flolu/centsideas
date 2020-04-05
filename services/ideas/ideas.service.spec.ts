@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { registerProviders, getProvider, overrideProvider, Logger } from '@cents-ideas/utils';
+import { registerProviders, getProvider, overrideProvider } from '@cents-ideas/utils';
 import { HttpStatusCodes } from '@cents-ideas/enums';
 import { makeFakeHttpRequest } from '@cents-ideas/models';
 
@@ -18,7 +18,7 @@ import { IdeaRepository } from './idea.repository';
 import { IdeaRepositoryMock } from './test/idea.repository.mock';
 
 describe('Ideas Service', () => {
-  registerProviders(IdeasService, IdeaCommandHandler, Logger, IdeaRepository);
+  registerProviders(IdeasService, IdeaCommandHandler, IdeaRepository);
   overrideProvider(IdeaCommandHandler, IdeaCommandHandlerMock);
   overrideProvider(IdeaRepository, IdeaRepositoryMock);
 

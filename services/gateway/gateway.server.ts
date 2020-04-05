@@ -18,14 +18,13 @@ export class GatewayServer {
   private app = express();
 
   constructor(
-    private logger: Logger,
     private ideasRoutes: IdeasRoutes,
     private usersRoutes: UsersRoutes,
     private reviewsRoutes: ReviewsRoutes,
   ) {}
 
   start = () => {
-    this.logger.debug('initialized with env: ', env);
+    Logger.debug('initialized with env: ', env);
 
     this.app.use(bodyParser.json());
     this.app.use(cors());
@@ -47,7 +46,7 @@ export class GatewayServer {
         // tslint:disable-next-line:no-empty
       } catch (err) {}
 
-      this.logger.debug(
+      Logger.debug(
         `request was made by ${res.locals.userId ? res.locals.userId : 'a not authenticated user'}`,
       );
       next();
@@ -72,7 +71,7 @@ export class GatewayServer {
     });
 
     this.app.listen(env.port, () =>
-      this.logger.debug(
+      Logger.debug(
         'gateway listening on internal port',
         env.port,
         CentsCommandments.Control,

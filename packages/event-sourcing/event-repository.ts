@@ -41,7 +41,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
   private hasInitializedBeenCalled: boolean = false;
   private hasInitialized: boolean = false;
 
-  constructor(private messageBroker: MessageBroker, private logger: Logger) {
+  constructor(private messageBroker: MessageBroker) {
     this.messageBroker.initialize({
       brokers: [process.env.KAFKA_BROKER_HOST || 'localhost:9092'],
     });
@@ -63,10 +63,10 @@ export abstract class EventRepository<Entity extends IEventEntity>
         this.namespace = name;
         this.topicName = topicName;
 
-        this.logger.debug(`initialize ${this.namespace} event repository (${url})`);
+        Logger.debug(`initialize ${this.namespace} event repository (${url})`);
 
         this.client = await retry(async () => {
-          this.logger.debug(`retry to connect to ${this.namespace} database`);
+          Logger.debug(`retry to connect to ${this.namespace} database`);
           const connection = await MongoClient.connect(url, {
             w: 1,
             useNewUrlParser: true,
@@ -75,10 +75,10 @@ export abstract class EventRepository<Entity extends IEventEntity>
           return connection;
         });
         this.db = this.client.db(this.namespace);
-        this.logger.debug(`connected to ${this.namespace} database`);
+        Logger.debug(`connected to ${this.namespace} database`);
 
         this.db.on('close', () => {
-          this.logger.debug(`disconnected from ${this.namespace} database`);
+          Logger.debug(`disconnected from ${this.namespace} database`);
         });
 
         this.eventCollection = this.db.collection(`${this.namespace}_events`);
@@ -114,7 +114,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
 
         await Promise.all(initFunctions.map(f => f()));
 
-        this.logger.debug(`${name} event repository initialized`);
+        Logger.debug(`${name} event repository initialized`);
         this.hasInitialized = true;
         res();
       } catch (error) {
@@ -133,7 +133,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     const streamId: string = entity.currentState.id;
     const lastPersistedEvent = await this.getLastEventOfStream(streamId);
     let eventNumber = (lastPersistedEvent && lastPersistedEvent.eventNumber) || 0;
-    // TODO this won't work if multiple processes save events... instead use eventNumber! (https://youtu.be/GzrZworHpIk?t=1028)
+    // FIXME this won't work if multiple processes save events... instead use eventNumber! (https://youtu.be/GzrZworHpIk?t=1028)
     if (lastPersistedEvent && entity.lastPersistedEventId !== lastPersistedEvent.id) {
       throw new Error('concurrency issue!');
     }
@@ -144,7 +144,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     });
 
     const appendedEvents = await Promise.all(eventsToInsert.map(event => this.appendEvent(event)));
-    this.logger.debug(
+    Logger.debug(
       `saved ${appendedEvents.length} ${appendedEvents.length === 1 ? 'event' : 'events'} into ${
         this.namespace
       } event store`,
@@ -182,7 +182,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
       );
     }
 
-    this.logger.debug(`found entity with id: ${id}`);
+    Logger.debug(`found entity with id: ${id}`);
     return entity.confirmEvents();
   };
 
@@ -284,7 +284,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
       },
       { upsert: true },
     );
-    this.logger.debug(`saved ${this.namespace} snapshot for stream: ${streamId}`);
+    Logger.debug(`saved ${this.namespace} snapshot for stream: ${streamId}`);
     return true;
   };
 

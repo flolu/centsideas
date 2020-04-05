@@ -7,7 +7,7 @@ import {
   sendMail,
   decodeToken,
   TokenInvalidError,
-  LoggerThread,
+  ThreadLogger,
   NotAuthenticatedError,
   NoPermissionError,
 } from '@cents-ideas/utils';
@@ -37,7 +37,7 @@ import { LoginEvents, UserEvents } from './events';
 export class UserCommandHandler {
   constructor(private repository: UserRepository, private loginRepository: LoginRepository) {}
 
-  login = async (email: string, t: LoggerThread): Promise<Login> => {
+  login = async (email: string, t: ThreadLogger): Promise<Login> => {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
     t.debug('login with email', email);
@@ -65,7 +65,7 @@ export class UserCommandHandler {
     return this.loginRepository.save(login);
   };
 
-  authenticate = async (token: string, t: LoggerThread): Promise<IAuthenticatedDto> => {
+  authenticate = async (token: string, t: ThreadLogger): Promise<IAuthenticatedDto> => {
     const data = decodeToken(token, env.jwtSecret);
     t.debug('authenticate with token', token ? token.slice(0, 30) : token);
 
@@ -86,7 +86,7 @@ export class UserCommandHandler {
     throw new TokenInvalidError(token, 'token is not an auth token');
   };
 
-  confirmLogin = async (token: string, t: LoggerThread): Promise<IAuthenticatedDto> => {
+  confirmLogin = async (token: string, t: ThreadLogger): Promise<IAuthenticatedDto> => {
     const data = decodeToken(token, env.jwtSecret);
     t.debug('confirming login of token', token ? token.slice(0, 30) : token);
 
@@ -143,7 +143,7 @@ export class UserCommandHandler {
     userId: string,
     username: string | null,
     email: string | null,
-    t: LoggerThread,
+    t: ThreadLogger,
   ): Promise<User> => {
     if (!authenticatedUserId) throw new NotAuthenticatedError();
     NoPermissionError.validate(authenticatedUserId, userId);
@@ -177,7 +177,7 @@ export class UserCommandHandler {
     return this.repository.save(user);
   };
 
-  confirmEmailChange = async (token: string, t: LoggerThread): Promise<User> => {
+  confirmEmailChange = async (token: string, t: ThreadLogger): Promise<User> => {
     const data = decodeToken(token, env.jwtSecret);
     if (data.type !== 'email-change') throw new TokenInvalidError(token);
     const payload: IEmailChangeTokenPayload = data.payload as any;

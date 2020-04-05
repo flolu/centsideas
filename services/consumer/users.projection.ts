@@ -18,7 +18,7 @@ import { ProjectionDatabase } from './projection-database';
 export class UsersProjection {
   private usersCollection!: Collection;
 
-  constructor(private logger: Logger, private projectionDatabase: ProjectionDatabase) {
+  constructor(private projectionDatabase: ProjectionDatabase) {
     this.initialize();
   }
 
@@ -30,7 +30,7 @@ export class UsersProjection {
     if (!this.usersCollection) {
       await this.initialize();
     }
-    this.logger.debug('handle incoming users event', event);
+    Logger.debug('handle incoming users event', event);
     switch (event.name) {
       case UserEvents.UserCreated:
         return this.userCreated(event);

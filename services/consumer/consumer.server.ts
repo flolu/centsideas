@@ -17,7 +17,6 @@ export class ConsumerServer {
   private app = express();
 
   constructor(
-    private logger: Logger,
     private messageBroker: MessageBroker,
     private expressAdapter: ExpressAdapter,
     private queryService: QueryService,
@@ -27,7 +26,7 @@ export class ConsumerServer {
   ) {}
 
   start = () => {
-    this.logger.debug('initialized with env: ', env);
+    Logger.debug('initialized with env: ', env);
 
     this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
@@ -59,7 +58,7 @@ export class ConsumerServer {
     });
 
     this.app.listen(env.port, () =>
-      this.logger.debug('consumer service listening on internal port', env.port),
+      Logger.debug('consumer service listening on internal port', env.port),
     );
   };
 }
