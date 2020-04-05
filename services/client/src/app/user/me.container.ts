@@ -1,14 +1,19 @@
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, OnDestroy } from '@angular/core';
+import { Store, createSelector, createFeatureSelector } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';
-import { tap } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { tap, take, takeWhile } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 import { QueryParamKeys } from '@cents-ideas/enums';
 import { IUserState } from '@cents-ideas/models';
 
 import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';
+
+const selectChangeEmailToken = createSelector(
+  createFeatureSelector<any>('router'),
+  router => router.state.queryParams[QueryParamKeys.ConfirmEmailChangeToken],
+);
 
 @Component({
   selector: 'ci-me',
@@ -36,31 +41,18 @@ import { UserActions } from './user.actions';
     </form>
   `,
 })
-export class MeContainer {
+export class MeContainer implements OnDestroy {
   user: IUserState;
+  alive = true;
 
   form = new FormGroup({
     username: new FormControl(''),
     email: new FormControl(''),
   });
 
-  constructor(private store: Store, private route: ActivatedRoute) {
-    // TODO fetch from router store
-    const changeEmailToken = this.route.snapshot.queryParams[
-      QueryParamKeys.ConfirmEmailChangeToken
-    ];
-    if (changeEmailToken) {
-      this.store.dispatch(UserActions.confirmEmailChange({ token: changeEmailToken }));
-    }
-    this.store
-      .select(UserSelectors.selectUserState)
-      .pipe(
-        tap(state => {
-          this.form.patchValue(state.user);
-          this.user = state.user;
-        }),
-      )
-      .subscribe();
+  constructor(private store: Store, private router: Router) {
+    this.handleConfirmEmailChange();
+    this.updateUserForm();
   }
 
   onUpdate = () => {
@@ -71,4 +63,39 @@ export class MeContainer {
       }),
     );
   };
+
+  updateUserForm = () => {
+    this.store
+      .select(UserSelectors.selectUserState)
+      .pipe(
+        tap(state => {
+          this.form.patchValue(state.user);
+          this.user = state.user;
+        }),
+        takeWhile(() => this.alive),
+      )
+      .subscribe();
+  };
+
+  handleConfirmEmailChange = () => {
+    this.store
+      .select(selectChangeEmailToken)
+      .pipe(
+        tap(token => {
+          if (token) {
+            this.store.dispatch(UserActions.confirmEmailChange({ token }));
+            this.router.navigate([], {
+              queryParams: { [QueryParamKeys.ConfirmEmailChangeToken]: null },
+              queryParamsHandling: 'merge',
+            });
+          }
+        }),
+        take(1),
+      )
+      .subscribe();
+  };
+
+  ngOnDestroy() {
+    this.alive = false;
+  }
 }
