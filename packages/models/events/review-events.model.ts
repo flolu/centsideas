@@ -4,11 +4,8 @@ export interface IReviewCreatedEvent {
   reviewId: string;
   ideaId: string;
   userId: string;
-}
-
-export interface IReviewDraftSavedEvent {
-  content?: string;
-  scores?: IReviewScores;
+  content: string;
+  scores: IReviewScores;
 }
 
 export interface IReviewUpdatedEvent {
@@ -16,4 +13,4 @@ export interface IReviewUpdatedEvent {
   scores?: IReviewScores;
 }
 
-export interface IReviewPublishedEvent {}
+export interface IReviewDeletedEvent {}

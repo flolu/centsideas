@@ -14,16 +14,12 @@ export class ReviewsRoutes {
   setup = (host: string): express.Router => {
     this.router.post(``, this.expressAdapter.makeJsonAdapter(`${host}/${ReviewsApiRoutes.Create}`));
     this.router.put(
-      `/:id/${ReviewsApiRoutes.SaveDraft}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${ReviewsApiRoutes.SaveDraft}`),
-    );
-    this.router.put(
       `/:id/${ReviewsApiRoutes.Update}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${ReviewsApiRoutes.Update}`),
     );
-    this.router.put(
-      `/:id/${ReviewsApiRoutes.Publish}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${ReviewsApiRoutes.Publish}`),
+    this.router.delete(
+      `/:id/${ReviewsApiRoutes.Delete}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${ReviewsApiRoutes.Delete}`),
     );
 
     return this.router;

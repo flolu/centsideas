@@ -2,11 +2,8 @@ import { IReviewScores } from '../';
 
 export interface ICreateReviewDto {
   ideaId: string;
-}
-
-export interface ISaveReviewDto {
-  content?: string;
-  scores?: IReviewScores;
+  content: string;
+  scores: IReviewScores;
 }
 
 export interface IUpdateReviewDto {

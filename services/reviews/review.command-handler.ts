@@ -1,78 +1,79 @@
 import { injectable } from 'inversify';
 
-import { sanitizeHtml, NotAuthenticatedError } from '@cents-ideas/utils';
+import {
+  sanitizeHtml,
+  NotAuthenticatedError,
+  ThreadLogger,
+  NoPermissionError,
+} from '@cents-ideas/utils';
 import { IReviewScores } from '@cents-ideas/models';
 
 import { ReviewErrors } from './errors';
 import { Review } from './review.entity';
 import { ReviewRepository } from './review.repository';
+import { ReviewDeletedEvent } from './events/review-deleted.event';
 
 @injectable()
 export class ReviewCommandHandler {
   constructor(private repository: ReviewRepository) {}
 
-  create = async (ideaId: string, userId: string): Promise<Review> => {
-    NotAuthenticatedError.validate(userId);
-    ReviewErrors.ReviewIdeaIdRequiredError.validate(ideaId);
-    const reviewId = await this.repository.generateUniqueId();
-    const review = Review.create(reviewId, ideaId, userId);
-    return this.repository.save(review);
-  };
-
-  saveDraft = async (
-    reviewId: string,
-    content?: string,
-    scores?: IReviewScores,
+  create = async (
+    ideaId: string,
+    userId: string,
+    content: string,
+    scores: IReviewScores,
+    t: ThreadLogger,
   ): Promise<Review> => {
-    ReviewErrors.ReviewIdeaIdRequiredError.validate(reviewId);
-    content = sanitizeHtml(content || '');
-    if (content) {
-      ReviewErrors.ReviewContentLengthError.validate(content, true);
-    }
-    if (scores) {
-      ReviewErrors.ReviewScoresRangeError.validate(scores);
-    }
-    const review = await this.repository.findById(reviewId);
-    review.saveDraft(content, scores);
-    return this.repository.save(review);
-  };
-
-  publish = async (reviewId: string): Promise<Review> => {
-    ReviewErrors.ReviewIdeaIdRequiredError.validate(reviewId);
-    const review = await this.repository.findById(reviewId);
-    ReviewErrors.ReviewAlreadyPublishedError.validate(
-      review.persistedState.published,
-      review.persistedState.id,
-    );
-    ReviewErrors.SaveReviewPayloadRequiredError.validate(
-      review.persistedState.content,
-      review.persistedState.scores,
-    );
-    ReviewErrors.ReviewContentLengthError.validate(review.persistedState.content);
-    ReviewErrors.ReviewScoresRangeError.validate(review.persistedState.scores);
-    review.publish();
-    return this.repository.save(review);
-  };
-
-  unpublish = async (reviewId: string): Promise<Review> => {
-    ReviewErrors.ReviewIdeaIdRequiredError.validate(reviewId);
-    const review = await this.repository.findById(reviewId);
-    ReviewErrors.ReviewAlreadyUnpublishedError.validate(
-      review.persistedState.published,
-      review.persistedState.id,
-    );
-    review.unpublish();
-    return this.repository.save(review);
-  };
-
-  update = async (reviewId: string, content: string, scores: IReviewScores): Promise<Review> => {
-    ReviewErrors.ReviewIdeaIdRequiredError.validate(reviewId);
-    content = sanitizeHtml(content || '');
+    NotAuthenticatedError.validate(userId);
+    ReviewErrors.IdeaIdRequiredError.validate(ideaId);
+    content = sanitizeHtml(content);
     ReviewErrors.SaveReviewPayloadRequiredError.validate(content, scores);
     ReviewErrors.ReviewContentLengthError.validate(content);
     ReviewErrors.ReviewScoresRangeError.validate(scores);
+    t.debug('paylod is valid');
+
+    const reviewId = await this.repository.generateUniqueId();
+    const review = Review.create(reviewId, ideaId, userId, content, scores);
+    t.debug(`create review with id ${reviewId}`);
+
+    return this.repository.save(review);
+  };
+
+  update = async (
+    userId: string,
+    reviewId: string,
+    content: string,
+    scores: IReviewScores,
+    t: ThreadLogger,
+  ): Promise<Review> => {
+    NotAuthenticatedError.validate(userId);
+    ReviewErrors.ReviewIdRequiredError.validate(reviewId);
+    content = sanitizeHtml(content);
+    ReviewErrors.SaveReviewPayloadRequiredError.validate(content, scores);
+    ReviewErrors.ReviewContentLengthError.validate(content);
+    ReviewErrors.ReviewScoresRangeError.validate(scores);
+    t.debug('payload is valid');
+
     const review = await this.repository.findById(reviewId);
+    NoPermissionError.validate(userId, review.persistedState.userId);
+    t.debug('user has permission');
+
     review.update(content, scores);
+    t.debug('start updating review');
+    return this.repository.save(review);
+  };
+
+  delete = async (userId: string, reviewId: string, t: ThreadLogger): Promise<Review> => {
+    NotAuthenticatedError.validate(userId);
+    ReviewErrors.ReviewIdRequiredError.validate(reviewId);
+    t.debug('payload is valid');
+
+    const review = await this.repository.findById(reviewId);
+    NoPermissionError.validate(userId, review.persistedState.userId);
+    t.debug('user has permision');
+
+    review.pushEvents(new ReviewDeletedEvent(reviewId));
+    t.debug('start deleting review');
     return this.repository.save(review);
   };
 }

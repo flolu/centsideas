@@ -22,23 +22,15 @@ export class ReviewsServer {
 
     this.app.post(
       `/${ReviewsApiRoutes.Create}`,
-      this.expressAdapter.json(this.reviewsService.createEmptyReview),
-    );
-    this.app.post(
-      `/${ReviewsApiRoutes.SaveDraft}`,
-      this.expressAdapter.json(this.reviewsService.saveDraft),
-    );
-    this.app.post(
-      `/${ReviewsApiRoutes.Publish}`,
-      this.expressAdapter.json(this.reviewsService.publish),
+      this.expressAdapter.json(this.reviewsService.create),
     );
     this.app.post(
       `/${ReviewsApiRoutes.Update}`,
       this.expressAdapter.json(this.reviewsService.update),
     );
     this.app.post(
-      `/${ReviewsApiRoutes.Unpublish}`,
-      this.expressAdapter.json(this.reviewsService.unpublish),
+      `/${ReviewsApiRoutes.Delete}`,
+      this.expressAdapter.json(this.reviewsService.delete),
     );
 
     this.app.get('/alive', (_req, res) => {

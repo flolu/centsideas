@@ -4,12 +4,10 @@ export interface IReviewState {
   userId: string;
   content: string;
   scores: IReviewScores;
+  deleted: boolean;
   createdAt: string | null;
-  published: boolean;
-  publishedAt: string | null;
-  unpublishedAt: string | null;
   updatedAt: string | null;
-  draft: { content: string; scores: IReviewScores } | null;
+  deletedAt: string | null;
   lastEventId: string;
 }
 

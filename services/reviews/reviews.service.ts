@@ -7,7 +7,6 @@ import {
   IReviewState,
   ICreateReviewDto,
   IQueryReviewDto,
-  ISaveReviewDto,
   IUpdateReviewDto,
 } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
@@ -18,97 +17,78 @@ import { ReviewCommandHandler } from './review.command-handler';
 export class ReviewsService {
   constructor(private commandHandler: ReviewCommandHandler) {}
 
-  createEmptyReview = (req: HttpRequest<ICreateReviewDto>): Promise<HttpResponse<IReviewState>> =>
-    new Promise(async resolve => {
-      const _loggerName = 'create';
-      try {
-        Logger.debug(_loggerName, req.body);
-        const userId: string = req.locals.userId || '';
-        const review = await this.commandHandler.create(req.body.ideaId, userId);
-        resolve({
-          status: HttpStatusCodes.Accepted,
-          body: review.persistedState,
-          headers: {},
-        });
-      } catch (error) {
-        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
-        resolve(handleHttpResponseError(error));
-      }
-    });
+  create = (req: HttpRequest<ICreateReviewDto>): Promise<HttpResponse<IReviewState>> =>
+    new Promise(resolve => {
+      Logger.thread('create', async t => {
+        try {
+          const userId = req.locals.userId || '';
+          const ideaId = req.body.ideaId;
+          const content = req.body.content;
+          const scores = req.body.scores;
 
-  saveDraft = (
-    req: HttpRequest<ISaveReviewDto, IQueryReviewDto>,
-  ): Promise<HttpResponse<IReviewState>> =>
-    new Promise(async resolve => {
-      const _loggerName = 'save draft';
-      try {
-        const review = await this.commandHandler.saveDraft(
-          req.params.id,
-          req.body.content,
-          req.body.scores,
-        );
-        resolve({
-          status: HttpStatusCodes.Accepted,
-          body: review.persistedState,
-          headers: {},
-        });
-      } catch (error) {
-        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
-        resolve(handleHttpResponseError(error));
-      }
-    });
+          t.debug(`user ${userId} requests to create review for idea ${ideaId}`);
+          const review = await this.commandHandler.create(ideaId, userId, content, scores, t);
+          t.log(`review created`);
 
-  publish = (req: HttpRequest<{}, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
-    new Promise(async resolve => {
-      const _loggerName = 'publish';
-      try {
-        const review = await this.commandHandler.publish(req.params.id);
-        resolve({
-          status: HttpStatusCodes.Accepted,
-          body: review.persistedState,
-          headers: {},
-        });
-      } catch (error) {
-        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
-        resolve(handleHttpResponseError(error));
-      }
-    });
-
-  unpublish = (req: HttpRequest<{}, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
-    new Promise(async resolve => {
-      const _loggerName = 'unpublish';
-      try {
-        const review = await this.commandHandler.unpublish(req.params.id);
-        resolve({
-          status: HttpStatusCodes.Accepted,
-          body: review.persistedState,
-          headers: {},
-        });
-      } catch (error) {
-        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
-        resolve(handleHttpResponseError(error));
-      }
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: review.persistedState,
+            headers: {},
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
     });
 
   update = (
     req: HttpRequest<IUpdateReviewDto, IQueryReviewDto>,
   ): Promise<HttpResponse<IReviewState>> =>
-    new Promise(async resolve => {
-      const _loggerName = 'update';
-      try {
-        const review = await this.commandHandler.update(
-          req.params.id,
-          req.body.content,
-          req.body.scores,
-        );
-        resolve({
-          status: HttpStatusCodes.Accepted,
-          body: review.persistedState,
-          headers: {},
-        });
-      } catch (error) {
-        Logger.error(_loggerName, error.status && error.status < 500 ? error.message : error.stack);
-        resolve(handleHttpResponseError(error));
-      }
+    new Promise(resolve => {
+      Logger.thread('update', async t => {
+        try {
+          const userId = req.locals.userId || '';
+          const reviewId = req.params.id;
+          const content = req.body.content;
+          const scores = req.body.scores;
+
+          t.debug(`${userId} wants to update review ${reviewId}`);
+          const review = await this.commandHandler.update(userId, reviewId, content, scores, t);
+          t.log(`review updated`);
+
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: review.persistedState,
+            headers: {},
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  delete = (req: HttpRequest<null, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
+    new Promise(resolve => {
+      Logger.thread('delete', async t => {
+        try {
+          const userId = req.locals.userId || '';
+          const reviewId = req.params.id;
+
+          t.log(`user ${userId} wants to delete ${reviewId}`);
+          const review = await this.commandHandler.delete(userId, reviewId, t);
+          t.log('review deleted');
+
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: review.persistedState,
+            headers: {},
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
     });
 }
