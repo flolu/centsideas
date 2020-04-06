@@ -1,17 +1,9 @@
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
+load("//services/client:client-utils.bzl", "store_srcs_matcher")
 
 package(default_visibility = ["//:__subpackages__"])
-
-# TODO outsource
-store_srcs_matcher = [
-    "*.actions.ts",
-    "*.effects.ts",
-    "*.reducer.ts",
-    "*.state.ts",
-    "*.selectors.ts",
-]
 
 ng_module(
     name = "store",
@@ -25,7 +17,6 @@ ng_module(
         "//packages/models",
         "//services/client/src/environments",
         "//services/client/src/shared/helpers",
-        # TODO to import auth guard and auth actions???? does this work?
         "//services/client/src/app/auth:store",
         "@npm//@angular/common",
         "@npm//@angular/router",
