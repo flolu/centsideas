@@ -23,11 +23,6 @@ export class AuthGuard implements CanActivate {
         return !state.initialized;
       }),
       map(state => {
-        // TODO figure out a way to revert to old method
-        /*  if (!state.user.user) {
-          this.router.navigate([TopLevelFrontendRoutes.User, AuthFrontendRoutes.Login]);
-        }
-        return !!(state.user.user && state.user.user.id); */
         if (!state.token) {
           this.router.navigate([TopLevelFrontendRoutes.Auth, AuthFrontendRoutes.Login]);
         }

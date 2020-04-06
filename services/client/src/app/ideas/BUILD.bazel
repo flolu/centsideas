@@ -28,6 +28,7 @@ ng_module(
     srcs = [
         "idea.container.ts",
         "idea-card.component.ts",
+        "idea-loaded.guard.ts",
         "ideas.container.ts",
         "ideas.module.ts",
     ],

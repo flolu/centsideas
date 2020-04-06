@@ -7,6 +7,7 @@ import { IdeasContainer } from './ideas.container';
 import { IdeaContainer } from './idea.container';
 import { IdeasStoreModule } from './ideas-store.module';
 import { IdeaCardComponent } from './idea-card.component';
+import { IdeaLoadedGuard } from './idea-loaded.guard';
 
 @NgModule({
   imports: [
@@ -14,10 +15,11 @@ import { IdeaCardComponent } from './idea-card.component';
     ReactiveFormsModule,
     RouterModule.forChild([
       { path: '', component: IdeasContainer },
-      { path: ':id', component: IdeaContainer },
+      { path: ':id', component: IdeaContainer, canActivate: [IdeaLoadedGuard] },
     ]),
     IdeasStoreModule,
   ],
   declarations: [IdeasContainer, IdeaContainer, IdeaCardComponent],
+  providers: [IdeaLoadedGuard],
 })
 export class IdeasModule {}

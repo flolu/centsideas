@@ -1,14 +1,14 @@
 import { Params, RouterStateSnapshot } from '@angular/router';
 import { RouterStateSerializer } from '@ngrx/router-store';
 
-export interface RouterStateUrl {
+export interface IRouterStateUrl {
   url: string;
   params: Params;
   queryParams: Params;
 }
 
-export class CustomSerializer implements RouterStateSerializer<RouterStateUrl> {
-  serialize(routerState: RouterStateSnapshot): RouterStateUrl {
+export class CustomSerializer implements RouterStateSerializer<IRouterStateUrl> {
+  serialize(routerState: RouterStateSnapshot): IRouterStateUrl {
     let route = routerState.root;
 
     while (route.firstChild) {

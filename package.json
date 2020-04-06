@@ -48,6 +48,7 @@
     "client:dev": "ibazel run //services/client/src:devserver --define configuration=dev",
     "client:prod": "bazelisk run //services/client/src:prodserver --define configuration=prod",
     "client:ssr": "bazelisk run //services/client/src:universal_server_dev_server --define configuration=prod",
+    "client:ssr:dev": "bazelisk run //services/client/src:universal_server_dev_server --define configuration=dev",
     "postinstall": "ngcc",
     "prettier:check": "prettier --check \"**\"",
     "prettier": "prettier --write \"**\"",

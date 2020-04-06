@@ -1,3 +1,5 @@
+// TODO enforce correctness of chained urls (currently a wrong url can be composed)
+
 export enum TopLevelFrontendRoutes {
   Login = 'login',
   ConfirmSignUp = 'confirm-sign-up',

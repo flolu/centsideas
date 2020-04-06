@@ -1,16 +1,15 @@
 import * as __rxjsTypes from 'rxjs';
+import * as __ngrxStore from '@ngrx/store/store';
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { take, tap } from 'rxjs/operators';
 
 import { IdeasSelectors } from './ideas.selectors';
-import { IdeasActions } from './ideas.actions';
 
 @Component({
   selector: 'ci-idea',
   template: `
+    <pre>{{ idea$ | async | json }}</pre>
     <div class="container">
       <ci-ideas-card *ngIf="idea$ | async" [idea]="idea$ | async"></ci-ideas-card>
       <p>{{ (idea$ | async)?.description }}</p>
@@ -22,20 +21,7 @@ import { IdeasActions } from './ideas.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdeaContainer {
-  // TODO use router store in selector to auto-fetch current idea (+idea-loaded guard)
-  ideaId: string = this.route.snapshot.params.id;
-  idea$ = this.store.select(IdeasSelectors.selectIdea(this.ideaId));
+  idea$ = this.store.select(IdeasSelectors.selectSelectedIdea);
 
-  constructor(private store: Store, private route: ActivatedRoute) {
-    this.idea$
-      .pipe(
-        take(1),
-        tap(idea => {
-          this.store.dispatch(IdeasActions.getIdeaById({ id: this.ideaId }));
-          if (!idea) {
-          }
-        }),
-      )
-      .subscribe();
-  }
+  constructor(private store: Store) {}
 }
