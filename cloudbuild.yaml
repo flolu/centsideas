@@ -1,14 +1,25 @@
 steps:
-  - id: "unit tests"
+  - id: "consumer-service"
     name: gcr.io/cloud-builders/bazel
-    args:
-      [
-        "test",
-        "--google_default_credentials",
-        "//...",
-        "--",
-        "-services/client/...",
-      ]
+    args: ["test", "//services/consumer/..."]
+  - id: "gateway-service"
+    name: gcr.io/cloud-builders/bazel
+    args: ["test", "//services/gateway/..."]
+  - id: "ideas-service"
+    name: gcr.io/cloud-builders/bazel
+    args: ["test", "//services/ideas/..."]
+  - id: "reviews-service"
+    name: gcr.io/cloud-builders/bazel
+    args: ["test", "//services/reviews/..."]
+  - id: "users-service"
+    name: gcr.io/cloud-builders/bazel
+    args: ["test", "//services/users/..."]
+  - id: "event-sourcing-package"
+    name: gcr.io/cloud-builders/bazel
+    args: ["test", "//packages/event-sourcing/..."]
+  - id: "utils-package"
+    name: gcr.io/cloud-builders/bazel
+    args: ["test", "//packages/utils/..."]
 timeout: 1800s
 options:
   machineType: "N1_HIGHCPU_8"
