@@ -2,11 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
 
 import { IdeasContainer } from './ideas.container';
 import { IdeaContainer } from './idea.container';
-import * as fromReducer from './ideas.reducer';
+import { IdeasStoreModule } from './ideas-store.module';
 
 @NgModule({
   imports: [
@@ -16,7 +15,7 @@ import * as fromReducer from './ideas.reducer';
       { path: '', component: IdeasContainer },
       { path: ':id', component: IdeaContainer },
     ]),
-    StoreModule.forFeature('ideas', { ideas: fromReducer.reducer }),
+    IdeasStoreModule,
   ],
   declarations: [IdeasContainer, IdeaContainer],
 })

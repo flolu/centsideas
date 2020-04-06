@@ -6,7 +6,8 @@ import {
   HttpResponse,
   IIdeaState,
   IIdeaQueryDto,
-  ISaveIdeaDto,
+  ICreateIdeaDto,
+  IUpdateIdeaDto,
 } from '@cents-ideas/models';
 import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
@@ -16,7 +17,7 @@ import { IdeaCommandHandler } from './idea.command-handler';
 export class IdeasService {
   constructor(private commandHandler: IdeaCommandHandler) {}
 
-  create = (req: HttpRequest<ISaveIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  create = (req: HttpRequest<ICreateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(resolve => {
       Logger.thread('create', async t => {
         try {
@@ -39,7 +40,7 @@ export class IdeasService {
       });
     });
 
-  update = (req: HttpRequest<ISaveIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  update = (req: HttpRequest<IUpdateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     new Promise(resolve => {
       Logger.thread('update', async t => {
         try {

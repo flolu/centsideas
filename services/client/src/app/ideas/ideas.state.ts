@@ -3,3 +3,9 @@ export interface IIdeasState {
   loaded: boolean;
   error: string;
 }
+
+export interface IIdeasFeatureReducerState {
+  ideas: IIdeasState;
+}
+
+export const featureKey = 'ideas';

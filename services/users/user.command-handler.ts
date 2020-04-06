@@ -52,7 +52,7 @@ export class UserCommandHandler {
     const token = jwt.sign(tokenData, env.jwtSecret, { expiresIn: env.loginTokenExpirationTime });
 
     t.debug('sendng login mail to ', email);
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
+    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
     const expirationTimeHours = Math.floor(env.loginTokenExpirationTime / 3600);
     const text = `URL to login into your account: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Login';

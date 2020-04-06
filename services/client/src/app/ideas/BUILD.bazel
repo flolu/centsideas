@@ -2,15 +2,47 @@ load("@npm_angular_bazel//:index.bzl", "ng_module")
 
 package(default_visibility = ["//:__subpackages__"])
 
+# TODO outsource
+store_srcs_matcher = [
+    "*.actions.ts",
+    "*.effects.ts",
+    "*.reducer.ts",
+    "*.state.ts",
+    "*.selectors.ts",
+]
+
 ng_module(
-    name = "ideas",
-    srcs = glob(["*.ts"]),
+    name = "store",
+    srcs = glob(include = store_srcs_matcher) + [
+        "ideas-store.module.ts",
+        "ideas.service.ts",
+    ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
+        "//packages/enums",
+        "//packages/models",
+        "//services/client/src/environments",
+        "//services/client/src/shared/helpers",
+        "@npm//@angular/common",
+        "@npm//@angular/router",
+        "@npm//@ngrx/effects",
+        "@npm//@ngrx/store",
+    ],
+)
+
+ng_module(
+    name = "ideas",
+    srcs = [
+        "idea.container.ts",
+        "ideas.container.ts",
+        "ideas.module.ts",
+    ],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        ":store",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@angular/router",
-        "@npm//@ngrx/store",
     ],
 )

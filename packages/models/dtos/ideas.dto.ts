@@ -1,6 +1,10 @@
-export interface ISaveIdeaDto {
+export interface ICreateIdeaDto {
   title: string;
   description: string;
+}
+
+export interface IUpdateIdeaDto extends ICreateIdeaDto {
+  id: string;
 }
 
 export interface IIdeaQueryDto {
