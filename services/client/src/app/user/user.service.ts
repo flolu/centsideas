@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 import { IUpdateUserDto, IUserState, IConfirmEmailChangeDto } from '@cents-ideas/models';
 
-import { env } from '../../environments';
+import * as env from '../../environments/environment';
 
 export const TOKEN_KEY = 'token';
 

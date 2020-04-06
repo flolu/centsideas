@@ -6,7 +6,7 @@ import { isPlatformServer } from '@angular/common';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 import { IAuthenticatedDto, ILoginDto, IConfirmLoginDto } from '@cents-ideas/models';
 
-import { env } from '../../environments';
+import * as env from '../../environments/environment';
 
 export const TOKEN_KEY = 'token';
 

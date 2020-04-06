@@ -12,9 +12,9 @@ import { IdeasModule } from './ideas/ideas.module';
 import { UserModule } from './user/user.module';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { NgRxStateTransferService, setTransferedState } from './ngrx-state-transfer.service';
-import { env } from '../environments';
 import { CustomSerializer } from './custom-route-serializer';
 import { AuthModule } from './auth/auth.module';
+import * as env from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,8 +24,7 @@ import { AuthModule } from './auth/auth.module';
     StoreModule.forRoot({ router: routerReducer }, { metaReducers: [setTransferedState] }),
     EffectsModule.forRoot([]),
     StoreRouterConnectingModule.forRoot({ serializer: CustomSerializer }),
-    // TODO only in dev mode (maybe inject at runtime in dev mode?)
-    StoreDevtoolsModule.instrument({ logOnly: env.production }),
+    env.production ? [] : StoreDevtoolsModule.instrument(),
     AppRoutingModule,
     AuthModule,
     IdeasModule,
@@ -40,5 +39,7 @@ import { AuthModule } from './auth/auth.module';
 export class AppModule {
   constructor(private stateTransferService: NgRxStateTransferService) {
     this.stateTransferService.handleStateTransfer();
+
+    console.log('[AppModule] launching app with', { env });
   }
 }
