@@ -1,11 +1,14 @@
 import * as __rxjsTypes from 'rxjs';
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
 import { IdeasActions } from './ideas.actions';
 import { IdeasSelectors } from './ideas.selectors';
+import { IIdeaViewModel } from '@cents-ideas/models';
+import { Router } from '@angular/router';
+import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
 
 @Component({
   selector: 'ci-ideas',
@@ -29,14 +32,15 @@ import { IdeasSelectors } from './ideas.selectors';
         <button (click)="onCreate()">Create</button>
       </form>
       <h1>All Ideas</h1>
-      <!--<ci-ideas-card
+      <ci-ideas-card
         *ngFor="let i of ideas$ | async"
         [idea]="i"
         (clickedTitle)="onIdeaTitleClicked(i)"
-      ></ci-ideas-card>-->
+      ></ci-ideas-card>
       <div *ngIf="!(ideas$ | async)?.length">No ideas found</div>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdeasContainer {
   ideas$ = this.store.select(IdeasSelectors.selectIdeas);
@@ -47,7 +51,9 @@ export class IdeasContainer {
     description: new FormControl(''),
   });
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private router: Router) {
+    this.store.dispatch(IdeasActions.getIdeas());
+  }
 
   onCreate = () => {
     this.store.dispatch(
@@ -56,5 +62,9 @@ export class IdeasContainer {
         description: this.form.value.description,
       }),
     );
+  };
+
+  onIdeaTitleClicked = (idea: IIdeaViewModel) => {
+    this.router.navigate([TopLevelFrontendRoutes.Ideas, idea.id]);
   };
 }

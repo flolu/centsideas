@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { IdeasContainer } from './ideas.container';
 import { IdeaContainer } from './idea.container';
 import { IdeasStoreModule } from './ideas-store.module';
+import { IdeaCardComponent } from './idea-card.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { IdeasStoreModule } from './ideas-store.module';
     ]),
     IdeasStoreModule,
   ],
-  declarations: [IdeasContainer, IdeaContainer],
+  declarations: [IdeasContainer, IdeaContainer, IdeaCardComponent],
 })
 export class IdeasModule {}
