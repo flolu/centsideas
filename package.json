@@ -37,7 +37,7 @@
     "dev": "yarn setup && yarn docker:dev",
     "test": "bazelisk test //...",
     "deploy": "bazelisk run :kubernetes_deployment.apply",
-    "clean": "rm -rf node_modules && yarn bazel:clean",
+    "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
     "setup": "ts-node setup",
     "docker:dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "docker:dev:verbose": "docker-compose up --build",
@@ -50,10 +50,9 @@
     "client:ssr": "bazelisk run //services/client/src:universal_server_dev_server --define configuration=prod",
     "client:ssr:dev": "bazelisk run //services/client/src:universal_server_dev_server --define configuration=dev",
     "postinstall": "ngcc",
-    "prettier:check": "prettier --check \"**\"",
-    "prettier": "prettier --write \"**\"",
     "lint": "tslint --project .",
-    "lint:fix": "tslint --fix --project ."
+    "lint:fix": "tslint --fix --project .",
+    "up": "yarn upgrade-interactive --latest"
   },
   "dependencies": {
     "@angular/animations": "9.1.0",
@@ -145,7 +144,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "lint-staged": "10.1.2",
     "npm-run-all": "4.1.5",
-    "prettier": "2.0.2",
+    "prettier": "2.0.4",
     "protractor": "5.4.3",
     "requirejs": "2.3.6",
     "rimraf": "3.0.2",

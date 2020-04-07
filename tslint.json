@@ -6,8 +6,7 @@
     "no-submodule-imports": false,
     "no-console": [true, "log"],
     "no-empty-interface": false,
-    "max-classes-per-file": false,
-    "no-unused-variable": [true, { "ignore-pattern": "^_" }]
+    "max-classes-per-file": false
   },
   "linterOptions": {
     "exclude": ["node_modules/**", "**/node_modules/**", "**/*.d.ts"]

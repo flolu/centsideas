@@ -6,47 +6,45 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Goals
 
-## Essential
-
 | Requirement                                    | Keywords                               | Status |
 | ---------------------------------------------- | -------------------------------------- | ------ |
-| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker | ✅     |
-| Deployment                                     | ci, cd, build automation, bazel        | ✅     |
-| Testing                                        | unit Tests, integration Tests          | ✅     |
 | Microservices                                  | small services, docker                 | ✔️     |
-| Kubernetes                                     | container orchestration                | ✅     |
-| Database(s)                                    | data storage, event store              | ✅     |
-| File storage                                   | blob storage                           | ❌     |
-| Redux frontend                                 | reactive, actions, effects             | ✅     |
-| SEO                                            | server side rendering, marketing       | ✅     |
+| Redux frontend                                 | reactive, actions, effects             | ✔️     |
 | Monorepo                                       | all packages and services in one repo  | ✔️     |
 | Typescript                                     | types everywhere!                      | ✔️     |
 | Local development                              | hot reload, docker-compose, vscode     | ✔️     |
 | Git flow                                       | branching, releases, rebasing          | ✔️     |
 | Gateway                                        | discovery, entry point, auth           | ✔️     |
+| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker | ✅     |
+| Deployment                                     | ci, cd, build automation, bazel        | ✅     |
+| Testing                                        | unit Tests, integration Tests          | ✅     |
+| Kubernetes                                     | container orchestration                | ✅     |
+| Database(s)                                    | data storage, event store              | ✅     |
+| SEO                                            | server side rendering, marketing       | ✅     |
+| Authentication                                 | passwordless, 2f auth, google login    | ✅     |
+| File storage                                   | blob storage                           | ❌     |
 | Static pages                                   | homepage, static content               | ❌     |
 | Search                                         | indexing, realtime search              | ❌     |
-| Authentication                                 | passwordless, 2f auth, google login    | ✔️     |
 | Admin panel                                    | monitoring, event handling, logs       | ❌     |
 | Backups                                        | automatic, manual, restore             | ❌     |
 | Realtime                                       | some kind of realtime integration      | ❌     |
 | GDPR                                           | legal, privacy                         | ❌     |
 | User Interface                                 | modern, unique, reusable               | ❌     |
 
-### Status
-
 ✔️ Completely implemented
-
 ✅ Partly implemented
-
-❌ Not (yet) implemented
+❌ Not yet implemented
 
 # Development
 
 - `yarn` to install all necessary dependencies for local development
 - `yarn dev` to start all backend services locally (gateway is available under http://localhost:3000)
-- `yarn client:start` to start the frontend application (live at http://localhost:5432)
+- `yarn client:dev` to start the frontend application (live at http://localhost:5432)
 - `yarn test` to run all unit tests
+- `yarn client:ssr:dev` to start the frontend application with server side rendering (live at http://localhost:4000)
+- `yarn clean` to clear node_modules, Bazel and Docker
+- `yarn lint` to detect linting problems
+- `yarn up` to find node module updates
 
 ## Requirements
 
@@ -56,19 +54,14 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Deployment
 
-### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster
+### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster and connect to it
 
 ```
 gcloud beta container --project "centsideas" clusters create "cents-ideas" --zone "europe-west3-b"
-```
-
-### 2. Connect to cluster
-
-```
 gcloud container clusters get-credentials cents-ideas --zone europe-west3-b --project centsideas
 ```
 
-### 3. Setup [Helm](https://helm.sh/)
+### 2. Setup [Helm](https://helm.sh/)
 
 ```
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/
