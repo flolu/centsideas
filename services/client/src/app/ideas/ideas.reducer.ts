@@ -40,15 +40,13 @@ const ideasReducer = createReducer(
     ),
   ),
   on(IdeasActions.createIdeaFail, (state, { error }) => ({ ...state, ...LOADING_FAIL(error) })),
-  on(IdeasActions.updateIdea, state => ({ ...state, ...LOADING })),
   on(IdeasActions.updateIdeaDone, (state, { updated }) =>
     adapter.upsertOne(
       // TODO merge with existing or reload from backend
       { ...updated, reviews: [], scores: null, reviewCount: -1 },
-      { ...state, ...LOADING_DONE },
+      { ...state },
     ),
   ),
-  on(IdeasActions.updateIdeaFail, (state, { error }) => ({ ...state, ...LOADING_FAIL(error) })),
   on(IdeasActions.deleteIdea, state => ({ ...state, ...LOADING })),
   on(IdeasActions.deleteIdeaDone, (state, { deleted }) =>
     adapter.upsertOne(

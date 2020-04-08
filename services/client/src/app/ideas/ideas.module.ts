@@ -8,6 +8,7 @@ import { IdeaContainer } from './idea.container';
 import { IdeasStoreModule } from './ideas-store.module';
 import { IdeaCardComponent } from './idea-card.component';
 import { IdeaLoadedGuard } from './idea-loaded.guard';
+import { EditIdeaComponent } from './edit-idea.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,7 @@ import { IdeaLoadedGuard } from './idea-loaded.guard';
     ]),
     IdeasStoreModule,
   ],
-  declarations: [IdeasContainer, IdeaContainer, IdeaCardComponent],
+  declarations: [IdeasContainer, IdeaContainer, IdeaCardComponent, EditIdeaComponent],
   providers: [IdeaLoadedGuard],
 })
 export class IdeasModule {}

@@ -7,8 +7,23 @@ export interface IIdeasState extends EntityState<IIdeaViewModel> {
   error: string;
 }
 
+export interface IIdeaForm {
+  title: string;
+  description: string;
+}
+
+export interface IIdeaEditState {
+  loading: boolean;
+  loaded: boolean;
+  error: string;
+  editing: boolean;
+  form: IIdeaForm;
+  ideaId: string;
+}
+
 export interface IIdeasFeatureReducerState {
   ideas: IIdeasState;
+  edit: IIdeaEditState;
 }
 
 export const featureKey = 'ideas';

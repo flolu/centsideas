@@ -3,17 +3,22 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import * as __rxjsTypes from 'rxjs';
 
 import { Injectable } from '@angular/core';
-
+import { Store } from '@ngrx/store';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { switchMap, catchError, map, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { IdeasActions } from './ideas.actions';
 import { IdeasService } from './ideas.service';
+import { IdeasSelectors } from './ideas.selectors';
 
 @Injectable()
 export class IdeasEffects {
-  constructor(private actions$: Actions, private ideasService: IdeasService) {}
+  constructor(
+    private actions$: Actions,
+    private ideasService: IdeasService,
+    private store: Store,
+  ) {}
 
   getIdeas$ = createEffect(() =>
     this.actions$.pipe(
@@ -54,12 +59,36 @@ export class IdeasEffects {
   updateIdea$ = createEffect(() =>
     this.actions$.pipe(
       ofType(IdeasActions.updateIdea),
-      switchMap(({ id, title, description }) =>
-        this.ideasService.updateIdea(id, title, description).pipe(
-          switchMap(updated => [IdeasActions.updateIdeaDone({ updated })]),
-          catchError(error => of(IdeasActions.updateIdeaFail({ error }))),
+      withLatestFrom(this.store.select(IdeasSelectors.selectEditIdeaState)),
+      switchMap(([_action, editState]) =>
+        this.ideasService
+          .updateIdea(editState.ideaId, editState.form.title, editState.form.description)
+          .pipe(
+            switchMap(updated => [IdeasActions.updateIdeaDone({ updated })]),
+            catchError(error => of(IdeasActions.updateIdeaFail({ error }))),
+          ),
+      ),
+    ),
+  );
+
+  deleteIdea$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(IdeasActions.deleteIdea),
+      withLatestFrom(this.store.select(IdeasSelectors.selectSelectedIdeaId)),
+      switchMap(([_action, ideaId]) =>
+        this.ideasService.deleteIdea(ideaId).pipe(
+          switchMap(deleted => [IdeasActions.deleteIdeaDone({ deleted })]),
+          catchError(error => of(IdeasActions.deleteIdeaFail({ error }))),
         ),
       ),
+    ),
+  );
+
+  editIdea$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(IdeasActions.editIdea),
+      withLatestFrom(this.store.select(IdeasSelectors.selectSelectedIdea)),
+      map(([_action, selectedIdea]) => IdeasActions.editIdeaSetForm({ idea: selectedIdea })),
     ),
   );
 }

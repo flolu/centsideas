@@ -2,13 +2,8 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
 
-import {
-  IIdeaViewModel,
-  IIdeaState,
-  ICreateIdeaDto,
-  IIdeaQueryDto,
-  IUpdateIdeaDto,
-} from '@cents-ideas/models';
+import { IIdeaViewModel, IIdeaState, ICreateIdeaDto } from '@cents-ideas/models';
+import { IIdeaForm } from './ideas.state';
 
 const PREFIX = '[ideas]';
 const FAIL = 'fail';
@@ -36,7 +31,7 @@ const createIdeaDone = createAction(
 const createIdeaFail = createAction(`${PREFIX} ${CREATE} ${FAIL}`, props<{ error: string }>());
 
 const UPDATE = 'update';
-const updateIdea = createAction(`${PREFIX} ${UPDATE}`, props<IUpdateIdeaDto>());
+const updateIdea = createAction(`${PREFIX} ${UPDATE}`);
 const updateIdeaDone = createAction(
   `${PREFIX} ${UPDATE} ${DONE}`,
   props<{ updated: IIdeaState }>(),
@@ -44,12 +39,20 @@ const updateIdeaDone = createAction(
 const updateIdeaFail = createAction(`${PREFIX} ${UPDATE} ${FAIL}`, props<{ error: string }>());
 
 const DELETE = 'delete';
-const deleteIdea = createAction(`${PREFIX} ${DELETE}`, props<IIdeaQueryDto>());
+const deleteIdea = createAction(`${PREFIX} ${DELETE}`);
 const deleteIdeaDone = createAction(
   `${PREFIX} ${DELETE} ${DONE}`,
   props<{ deleted: IIdeaState }>(),
 );
 const deleteIdeaFail = createAction(`${PREFIX} ${DELETE} ${FAIL}`, props<{ error: string }>());
+
+const editIdea = createAction(`${PREFIX} edit`);
+const editIdeaSetForm = createAction(
+  `${PREFIX} edit - set form`,
+  props<{ idea: IIdeaViewModel }>(),
+);
+const ideaFormChanged = createAction(`${PREFIX} form changed`, props<{ value: IIdeaForm }>());
+const cancelEditIdea = createAction(`${PREFIX} cancel edit`);
 
 export const IdeasActions = {
   getIdeas,
@@ -67,4 +70,8 @@ export const IdeasActions = {
   deleteIdea,
   deleteIdeaDone,
   deleteIdeaFail,
+  editIdea,
+  editIdeaSetForm,
+  ideaFormChanged,
+  cancelEditIdea,
 };

@@ -33,4 +33,8 @@ export class IdeasService {
       description,
     });
   };
+
+  deleteIdea = (ideaId: string): Observable<IIdeaState> => {
+    return this.http.delete<IIdeaState>(`${env.gatewayHost}/${ApiEndpoints.Ideas}/${ideaId}`);
+  };
 }
