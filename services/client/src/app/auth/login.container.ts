@@ -9,14 +9,12 @@ import { AuthActions } from './auth.actions';
 import { tap, take } from 'rxjs/operators';
 
 const selectAuthToken = createSelector(createFeatureSelector<any>('router'), router => {
-  console.log({ router });
   return router && router.state.queryParams[QueryParamKeys.Token];
 });
 
 @Component({
   selector: 'ci-login',
   template: `
-    <h2>hlklkjkjlk</h2>
     <h1>Login</h1>
     <form [formGroup]="form">
       <label for="email">Email</label>

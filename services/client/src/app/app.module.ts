@@ -39,7 +39,5 @@ import * as env from '../environments/environment';
 export class AppModule {
   constructor(private stateTransferService: NgRxStateTransferService) {
     this.stateTransferService.handleStateTransfer();
-
-    console.log('[AppModule] launching app with', { env });
   }
 }

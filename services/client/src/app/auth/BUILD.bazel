@@ -20,6 +20,7 @@ ng_module(
         "@npm//@angular/router",
         "@npm//@ngrx/effects",
         "@npm//@ngrx/store",
+        "@npm//@nguniversal/express-engine",
     ],
 )
 
@@ -35,5 +36,6 @@ ng_module(
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
+        "@npm//@nguniversal/express-engine",
     ],
 )

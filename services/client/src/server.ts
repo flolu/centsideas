@@ -2,6 +2,7 @@ import 'zone.js/dist/zone-node';
 
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
+import * as compression from 'compression';
 import { join } from 'path';
 
 import { enableProdMode } from '@angular/core';
@@ -15,6 +16,8 @@ const DIST_FOLDER = join(process.cwd(), 'services/client/src/prodapp');
 
 import { AppServerModule } from './app/app.server.module';
 
+app.use(compression());
+
 app.engine('html', ngExpressEngine({ bootstrap: AppServerModule }) as any);
 
 app.set('view engine', 'html');
@@ -27,7 +30,7 @@ app.get('/alive', (_req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.render('index', { req });
+  res.render('index', { req, res });
 });
 
 app.listen(PORT, () => {

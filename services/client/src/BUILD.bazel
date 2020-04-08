@@ -165,8 +165,10 @@ ts_library(
         "//services/client/src/app:app_server",
         "@npm//@angular/core",
         "@npm//@nguniversal/express-engine",
+        "@npm//@types/compression",
         "@npm//@types/express",
         "@npm//@types/node",
+        "@npm//compression",
         "@npm//express",
     ],
 )

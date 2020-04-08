@@ -57,7 +57,6 @@ export class EditIdeaComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.formState && this.formState !== this.form.value) {
-      console.log({ changes });
       this.form.patchValue(this.formState);
     }
   }
