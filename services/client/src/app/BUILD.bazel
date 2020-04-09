@@ -5,6 +5,7 @@ package(default_visibility = ["//:__subpackages__"])
 ng_module(
     name = "store",
     srcs = [
+        "app.selectors.ts",
         "app-store.module.ts",
         "custom-route-serializer.ts",
         "ngrx-state-transfer.service.ts",

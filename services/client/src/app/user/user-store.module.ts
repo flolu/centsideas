@@ -5,13 +5,13 @@ import { EffectsModule } from '@ngrx/effects';
 
 import * as fromUser from './user.reducer';
 import { UserService } from './user.service';
-import { featureKey } from './user.state';
 import { UserEffects } from './user.effects';
+import { FeatureKeys } from '../app.selectors';
 
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forFeature(featureKey, { user: fromUser.reducer }),
+    StoreModule.forFeature(FeatureKeys.User, { user: fromUser.reducer }),
     EffectsModule.forFeature([UserEffects]),
   ],
   providers: [UserEffects, UserService],

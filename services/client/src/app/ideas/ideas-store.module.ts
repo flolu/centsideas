@@ -5,14 +5,17 @@ import { EffectsModule } from '@ngrx/effects';
 
 import * as fromIdeas from './ideas.reducer';
 import * as fromEditIdeas from './edit-idea.reducer';
-import { featureKey } from './ideas.state';
 import { IdeasEffects } from './ideas.effects';
 import { IdeasService } from './ideas.service';
+import { FeatureKeys } from '../app.selectors';
 
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forFeature(featureKey, { ideas: fromIdeas.reducer, edit: fromEditIdeas.reducer }),
+    StoreModule.forFeature(FeatureKeys.Ideas, {
+      ideas: fromIdeas.reducer,
+      edit: fromEditIdeas.reducer,
+    }),
     EffectsModule.forFeature([IdeasEffects]),
   ],
   providers: [IdeasEffects, IdeasService],

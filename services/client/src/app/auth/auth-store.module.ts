@@ -5,12 +5,12 @@ import { EffectsModule } from '@ngrx/effects';
 
 import * as fromAuth from '../auth/auth.reducer';
 import { AuthEffects } from '../auth/auth.effects';
-import { featureKey } from './auth.state';
+import { FeatureKeys } from '../app.selectors';
 
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forFeature(featureKey, { auth: fromAuth.reducer }),
+    StoreModule.forFeature(FeatureKeys.Auth, { auth: fromAuth.reducer }),
     EffectsModule.forFeature([AuthEffects]),
   ],
   providers: [AuthEffects],

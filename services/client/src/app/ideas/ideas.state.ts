@@ -25,5 +25,3 @@ export interface IIdeasFeatureReducerState {
   ideas: IIdeasState;
   edit: IIdeaEditState;
 }
-
-export const featureKey = 'ideas';
