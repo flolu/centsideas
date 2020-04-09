@@ -3,21 +3,15 @@ load("@npm_angular_bazel//:index.bzl", "ng_module")
 package(default_visibility = ["//:__subpackages__"])
 
 ng_module(
-    name = "app",
+    name = "store",
     srcs = [
-        "app.component.ts",
-        "app.module.ts",
-        "app-routing.module.ts",
-        "auth-token.interceptor.ts",
+        "app-store.module.ts",
         "custom-route-serializer.ts",
         "ngrx-state-transfer.service.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
         "//packages/enums",
-        "//services/client/src/app/auth",
-        "//services/client/src/app/ideas",
-        "//services/client/src/app/user",
         "//services/client/src/environments",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
@@ -26,7 +20,23 @@ ng_module(
         "@npm//@ngrx/router-store",
         "@npm//@ngrx/store",
         "@npm//@ngrx/store-devtools",
-        "@npm//rxjs",
+    ],
+)
+
+ng_module(
+    name = "app",
+    srcs = [
+        "app.component.ts",
+        "app.module.ts",
+        "app-routing.module.ts",
+        "auth-token.interceptor.ts",
+    ],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        ":store",
+        "//services/client/src/app/auth",
+        "//services/client/src/app/ideas",
+        "//services/client/src/app/user",
     ],
 )
 
