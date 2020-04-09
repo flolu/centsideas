@@ -4,37 +4,25 @@ import { createAction, props } from '@ngrx/store';
 
 import { IAuthenticatedDto } from '@cents-ideas/models';
 
-const PREFIX = '[auth]';
-const FAIL = 'fail';
-const DONE = 'done';
+import { appPrefix, failSuffix, doneSuffix } from '../../shared/helpers/actions.helper';
 
-const LOGIN = 'login';
-const login = createAction(`${PREFIX} ${LOGIN}`, props<{ email: string }>());
-const loginDone = createAction(`${PREFIX} ${LOGIN} ${DONE}`);
-const loginFail = createAction(`${PREFIX} ${LOGIN} ${FAIL}`, props<{ error: string }>());
+const prefix = `${appPrefix}/auth`;
+const loginPrefix = prefix + '/login';
+const authenticatePrefix = prefix + '/authenticate';
+const confirmLoginPrefix = prefix + '/confirm-login';
 
-const AUTHENTICATE = 'authenticate';
-const authenticate = createAction(`${PREFIX} ${AUTHENTICATE}`);
-const authenticateDone = createAction(
-  `${PREFIX} ${AUTHENTICATE} ${DONE}`,
-  props<IAuthenticatedDto>(),
-);
-const authenticateFail = createAction(
-  `${PREFIX} ${AUTHENTICATE} ${FAIL}`,
-  props<{ error: string }>(),
-);
-const authenticateNoToken = createAction(`${PREFIX} ${AUTHENTICATE} no token`);
+const login = createAction(loginPrefix, props<{ email: string }>());
+const loginDone = createAction(loginPrefix + doneSuffix);
+const loginFail = createAction(loginPrefix + failSuffix, props<{ error: string }>());
 
-const CONFIRM_LOGIN = 'confirm login';
-const confirmLogin = createAction(`${PREFIX} ${CONFIRM_LOGIN}`, props<{ token: string }>());
-const confirmLoginDone = createAction(
-  `${PREFIX} ${CONFIRM_LOGIN} ${DONE}`,
-  props<IAuthenticatedDto>(),
-);
-const confirmLoginFail = createAction(
-  `${PREFIX} ${CONFIRM_LOGIN} ${FAIL}`,
-  props<{ error: string }>(),
-);
+const authenticate = createAction(prefix + authenticatePrefix);
+const authenticateDone = createAction(authenticatePrefix + doneSuffix, props<IAuthenticatedDto>());
+const authenticateFail = createAction(authenticatePrefix + failSuffix, props<{ error: string }>());
+const authenticateNoToken = createAction(authenticatePrefix + '/no-token');
+
+const confirmLogin = createAction(confirmLoginPrefix, props<{ token: string }>());
+const confirmLoginDone = createAction(confirmLoginPrefix + doneSuffix, props<IAuthenticatedDto>());
+const confirmLoginFail = createAction(confirmLoginPrefix + failSuffix, props<{ error: string }>());
 
 export const AuthActions = {
   login,

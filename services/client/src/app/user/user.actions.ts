@@ -4,29 +4,23 @@ import { createAction, props } from '@ngrx/store';
 
 import { IUserState, IUpdateUserDto } from '@cents-ideas/models';
 
-const PREFIX = '[user]';
-const FAIL = 'fail';
-const DONE = 'done';
+import { appPrefix, doneSuffix, failSuffix } from '../../shared/helpers/actions.helper';
 
-const UPDATE = 'update';
-const updateUser = createAction(`${PREFIX} ${UPDATE}`, props<IUpdateUserDto>());
-const updateUserDone = createAction(
-  `${PREFIX} ${UPDATE} ${DONE}`,
-  props<{ updated: IUserState }>(),
-);
-const updateUserFail = createAction(`${PREFIX} ${UPDATE} ${FAIL}`, props<{ error: string }>());
+const prefix = `${appPrefix}/user`;
+const updatePrefix = prefix + '/update';
+const confirmEmailChangePrefix = prefix + '/confirm-email-change';
 
-const CONFIRM_EMAIL_CHANGE = 'confirm email change';
-const confirmEmailChange = createAction(
-  `${PREFIX} ${CONFIRM_EMAIL_CHANGE}`,
-  props<{ token: string }>(),
-);
+const updateUser = createAction(updatePrefix, props<IUpdateUserDto>());
+const updateUserDone = createAction(updatePrefix + doneSuffix, props<{ updated: IUserState }>());
+const updateUserFail = createAction(updatePrefix + failSuffix, props<{ error: string }>());
+
+const confirmEmailChange = createAction(confirmEmailChangePrefix, props<{ token: string }>());
 const confirmEmailChangeDone = createAction(
-  `${PREFIX} ${CONFIRM_EMAIL_CHANGE} ${DONE}`,
+  confirmEmailChangePrefix + doneSuffix,
   props<{ updated: IUserState }>(),
 );
 const confirmEmailChangeFail = createAction(
-  `${PREFIX} ${CONFIRM_EMAIL_CHANGE} ${FAIL}`,
+  confirmEmailChangePrefix + failSuffix,
   props<{ error: string }>(),
 );
 

@@ -3,56 +3,42 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import { createAction, props } from '@ngrx/store';
 
 import { IIdeaViewModel, IIdeaState, ICreateIdeaDto } from '@cents-ideas/models';
+
+import { appPrefix, failSuffix, doneSuffix } from '../../shared/helpers/actions.helper';
 import { IIdeaForm } from './ideas.state';
 
-const PREFIX = '[ideas]';
-const FAIL = 'fail';
-const DONE = 'done';
+const prefix = `${appPrefix}/ideas`;
+const getPrefix = prefix + '/get';
+const getByIdPrefix = prefix + '/get-by-id';
+const createPrefix = prefix + '/create';
+const updatePrefix = prefix + '/update';
+const deletePrefix = prefix + '/delete';
+const uiEditPrefix = prefix + '/ui/edit';
 
-const GET = 'get';
-const getIdeas = createAction(`${PREFIX} ${GET}`);
-const getIdeasDone = createAction(`${PREFIX} ${GET} ${DONE}`, props<{ ideas: IIdeaViewModel[] }>());
-const getIdeasFail = createAction(`${PREFIX} ${GET} ${FAIL}`, props<{ error: string }>());
+const getIdeas = createAction(getPrefix);
+const getIdeasDone = createAction(getPrefix + doneSuffix, props<{ ideas: IIdeaViewModel[] }>());
+const getIdeasFail = createAction(getPrefix + failSuffix, props<{ error: string }>());
 
-const GET_BY_ID = 'get-by-id';
-const getIdeaById = createAction(`${PREFIX} ${GET_BY_ID}`, props<{ id: string }>());
-const getIdeaByIdDone = createAction(
-  `${PREFIX} ${GET_BY_ID} ${DONE}`,
-  props<{ idea: IIdeaViewModel }>(),
-);
-const getIdeaByIdFail = createAction(`${PREFIX} ${GET_BY_ID} ${FAIL}`, props<{ error: string }>());
+const getIdeaById = createAction(getByIdPrefix, props<{ id: string }>());
+const getIdeaByIdDone = createAction(getByIdPrefix + doneSuffix, props<{ idea: IIdeaViewModel }>());
+const getIdeaByIdFail = createAction(getByIdPrefix + failSuffix, props<{ error: string }>());
 
-const CREATE = 'create';
-const createIdea = createAction(`${PREFIX} ${CREATE}`, props<ICreateIdeaDto>());
-const createIdeaDone = createAction(
-  `${PREFIX} ${CREATE} ${DONE}`,
-  props<{ created: IIdeaState }>(),
-);
-const createIdeaFail = createAction(`${PREFIX} ${CREATE} ${FAIL}`, props<{ error: string }>());
+const createIdea = createAction(createPrefix, props<ICreateIdeaDto>());
+const createIdeaDone = createAction(createPrefix + doneSuffix, props<{ created: IIdeaState }>());
+const createIdeaFail = createAction(createPrefix + failSuffix, props<{ error: string }>());
 
-const UPDATE = 'update';
-const updateIdea = createAction(`${PREFIX} ${UPDATE}`);
-const updateIdeaDone = createAction(
-  `${PREFIX} ${UPDATE} ${DONE}`,
-  props<{ updated: IIdeaState }>(),
-);
-const updateIdeaFail = createAction(`${PREFIX} ${UPDATE} ${FAIL}`, props<{ error: string }>());
+const updateIdea = createAction(updatePrefix);
+const updateIdeaDone = createAction(updatePrefix + doneSuffix, props<{ updated: IIdeaState }>());
+const updateIdeaFail = createAction(updatePrefix + failSuffix, props<{ error: string }>());
 
-const DELETE = 'delete';
-const deleteIdea = createAction(`${PREFIX} ${DELETE}`);
-const deleteIdeaDone = createAction(
-  `${PREFIX} ${DELETE} ${DONE}`,
-  props<{ deleted: IIdeaState }>(),
-);
-const deleteIdeaFail = createAction(`${PREFIX} ${DELETE} ${FAIL}`, props<{ error: string }>());
+const deleteIdea = createAction(deletePrefix);
+const deleteIdeaDone = createAction(deletePrefix + doneSuffix, props<{ deleted: IIdeaState }>());
+const deleteIdeaFail = createAction(deletePrefix + failSuffix, props<{ error: string }>());
 
-const editIdea = createAction(`${PREFIX} edit`);
-const editIdeaSetForm = createAction(
-  `${PREFIX} edit - set form`,
-  props<{ idea: IIdeaViewModel }>(),
-);
-const ideaFormChanged = createAction(`${PREFIX} form changed`, props<{ value: IIdeaForm }>());
-const cancelEditIdea = createAction(`${PREFIX} cancel edit`);
+const editIdea = createAction(uiEditPrefix);
+const editIdeaSetForm = createAction(uiEditPrefix + '/set-form', props<{ idea: IIdeaViewModel }>());
+const ideaFormChanged = createAction(uiEditPrefix + '/form-changed', props<{ value: IIdeaForm }>());
+const cancelEditIdea = createAction(uiEditPrefix + '/cancel');
 
 export const IdeasActions = {
   getIdeas,
