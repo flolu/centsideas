@@ -36,7 +36,7 @@
   "scripts": {
     "dev": "yarn setup && yarn docker:dev",
     "test": "bazelisk test //...",
-    "deploy": "bazelisk run :kubernetes_deployment.apply",
+    "deploy": "bazelisk run :kubernetes_deployment.apply --define configuration=prod",
     "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
     "setup": "ts-node setup",
     "docker:dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",

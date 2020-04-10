@@ -56,6 +56,8 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Deployment
 
+_TODO: consider creating script to automate this_
+
 ### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster and connect to it
 
 ```

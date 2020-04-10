@@ -60,7 +60,7 @@ export class AuthService {
 
   removeToken = () => {
     if (isPlatformBrowser(this.platform)) {
-      localStorage.removeItem(TOKEN_KEY);
+      document.cookie = '';
     }
     if (isPlatformServer(this.platform)) {
       this.expressResponse.clearCookie(TOKEN_KEY);
