@@ -24,14 +24,14 @@ const selectChangeEmailToken = createSelector(
         Username
       </label>
       <br />
-      <input name="username" type="text" formControlName="username" />
+      <input id="username" type="text" formControlName="username" />
       <br />
       <br />
       <label for="email">
         Email
       </label>
       <br />
-      <input name="email" type="text" formControlName="email" />
+      <input id="email" type="text" formControlName="email" />
       <br />
       <span>pending email: {{ user?.pendingEmail }}</span>
       <br />

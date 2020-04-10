@@ -21,13 +21,13 @@ import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
           Title
         </label>
         <br />
-        <input name="title" type="text" formControlName="title" />
+        <input id="title" type="text" formControlName="title" />
         <br />
         <label for="description">
           Description
         </label>
         <br />
-        <input name="description" type="text" formControlName="description" />
+        <input id="description" type="text" formControlName="description" />
         <br />
         <button (click)="onCreate()">Create</button>
       </form>

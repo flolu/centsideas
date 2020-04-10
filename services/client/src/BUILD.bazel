@@ -218,7 +218,7 @@ ts_library(
 nodejs_binary(
     name = "universal_server_dev_server",
     data = [
-        ":prodapp",
+        ":pwa",
         ":universal_server_lib",
     ],
     entry_point = ":server.ts",
@@ -227,7 +227,7 @@ nodejs_binary(
 nodejs_image(
     name = "universal_server",
     data = [
-        ":prodapp",
+        ":pwa",
         ":universal_server_lib",
     ],
     entry_point = ":server.ts",

@@ -19,7 +19,7 @@ const selectAuthToken = createSelector(createFeatureSelector<any>('router'), rou
     <form [formGroup]="form">
       <label for="email">Email</label>
       <br />
-      <input name="email" type="text" formControlName="email" />
+      <input id="email" type="text" formControlName="email" />
       <br />
       <button (click)="onLogin()">Login</button>
     </form>

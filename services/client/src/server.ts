@@ -12,7 +12,7 @@ enableProdMode();
 const app = express();
 
 const PORT = process.env.PORT || 4000;
-const DIST_FOLDER = join(process.cwd(), 'services/client/src/prodapp');
+const DIST_FOLDER = join(process.cwd(), 'services/client/src/pwa');
 
 import { AppServerModule } from './app/app.server.module';
 
@@ -27,6 +27,13 @@ app.get('*.*', express.static(DIST_FOLDER, { maxAge: '1y' }));
 
 app.get('/alive', (_req, res) => {
   res.status(200).send('client is alive');
+});
+
+app.get('/robots.txt', (_req, res) => {
+  res.status(200).send(`
+User-agent: *
+Allow: /
+  `);
 });
 
 app.get('*', (req, res) => {

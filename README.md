@@ -21,7 +21,8 @@ This is a project with the purpose of learning the architecture of complex web a
 | Kubernetes                                     | container orchestration                | ✅     |
 | Database(s)                                    | data storage, event store              | ✅     |
 | SEO                                            | server side rendering, marketing       | ✅     |
-| Authentication                                 | passwordless, 2f auth, google login    | ✅     |
+| Authentication                                 | passwordless, google login             | ✅     |
+| Progressive Web App                            | pwa, service worker, mobile-friendly   | ✅     |
 | File storage                                   | blob storage                           | ❌     |
 | Static pages                                   | homepage, static content               | ❌     |
 | Search                                         | indexing, realtime search              | ❌     |
@@ -30,6 +31,7 @@ This is a project with the purpose of learning the architecture of complex web a
 | Realtime                                       | some kind of realtime integration      | ❌     |
 | GDPR                                           | legal, privacy                         | ❌     |
 | User Interface                                 | modern, unique, reusable               | ❌     |
+| Compute server                                 | non-nodejs server for high cpu tasks   | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented
