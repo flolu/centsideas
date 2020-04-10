@@ -8,6 +8,7 @@ load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("//services/client:ngsw_config.bzl", "ngsw_config")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -43,6 +44,7 @@ _ASSETS = [
     "@npm//:node_modules/zone.js/dist/zone.min.js",
     ":styles.css",
     "favicon.ico",
+    "manifest.webmanifest",
 ]
 
 html_insert_assets(
@@ -117,8 +119,8 @@ terser_minified(
 )
 
 _BUNDLE_ASSETS = [
-    "//services/client/src:bundle-es2015.min",
-    "//services/client/src:bundle-es5.min",
+    ":bundle-es2015.min",
+    ":bundle-es5.min",
 ]
 
 html_insert_assets(
@@ -156,6 +158,46 @@ history_server(
     ],
 )
 
+# PWA
+pkg_web(
+    name = "pwa_app",
+    srcs = _ASSETS + _BUNDLE_ASSETS + [
+        ":inject_scripts_for_prod",
+        "//services/client/src/assets",
+        "@npm//:node_modules/systemjs/dist/system.js",
+        "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
+    ],
+    additional_root_paths = [
+        "npm/node_modules/core-js/client",
+        "npm/node_modules/systemjs/dist",
+        "npm/node_modules/@angular/service-worker",
+    ],
+)
+
+ngsw_config(
+    name = "pwa",
+    src = ":pwa_app",
+    config = "//services/client:ngsw-config.json",
+    index_html = "//services/client/src:index.pwa.html",
+    tags = ["app"],
+)
+
+history_server(
+    name = "pwa_server",
+    data = [":pwa"],
+    templated_args = [
+        "-a",
+        "$(rlocation cents_ideas/services/client/src/pwa)",
+    ],
+)
+
+nodejs_image(
+    name = "pwa_image",
+    binary = ":pwa_server",
+    tags = ["local"],
+)
+
+# UNIVERSAL
 ts_library(
     name = "universal_server_lib",
     srcs = [

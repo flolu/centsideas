@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CENTS Ideas</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <ci-component></ci-component>
+
+    <script nomodule src="/system.js"></script>
+    <script nomodule>
+      System.import('/bundle-es5.min/index.js');
+    </script>
+    <script src="npm/node_modules/zone.js/dist/zone.min.js"></script>
+    <script type="module" src="/bundle-es2015.min/index.js"></script>
+  </body>
+</html>

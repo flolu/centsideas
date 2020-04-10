@@ -38,6 +38,7 @@ ng_module(
         "//services/client/src/app/auth",
         "//services/client/src/app/ideas",
         "//services/client/src/app/user",
+        "@npm//@angular/service-worker",
     ],
 )
 
