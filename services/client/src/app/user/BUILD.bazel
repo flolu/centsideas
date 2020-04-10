@@ -15,9 +15,9 @@ ng_module(
     deps = [
         "//packages/enums",
         "//packages/models",
+        "//services/client/src/app/auth:store",
         "//services/client/src/environments",
         "//services/client/src/shared/helpers",
-        "//services/client/src/app/auth:store",
         "@npm//@angular/common",
         "@npm//@angular/router",
         "@npm//@ngrx/effects",
@@ -48,6 +48,7 @@ ts_library(
     deps = [
         ":store",
         ":user",
+        "//services/client/src/environments",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",

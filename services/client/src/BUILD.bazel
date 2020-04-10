@@ -1,7 +1,5 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_web")
-load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
 load("@npm//@babel/cli:index.bzl", "babel")
-load("@npm//history-server:index.bzl", "history_server")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
@@ -9,6 +7,7 @@ load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("//services/client:ngsw_config.bzl", "ngsw_config")
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -23,13 +22,10 @@ ts_library(
 )
 
 ng_module(
-    name = "src",
-    srcs = [
-        "main.dev.ts",
-        "main.prod.ts",
-    ],
+    name = "dev_src",
+    srcs = ["main.dev.ts"],
     tsconfig = "//services/client:tsconfig.json",
-    deps = ["//services/client/src/app"],
+    deps = ["//services/client/src/app:dev_app"],
 )
 
 filegroup(
@@ -62,7 +58,8 @@ html_insert_assets(
 )
 
 ts_devserver(
-    name = "devserver",
+    name = "live_server",
+    # TODO what is this needed for? is it event necessary?
     additional_root_paths = ["src/example"],
     entry_module = "cents_ideas/services/client/src/main.dev",
     scripts = [
@@ -74,7 +71,14 @@ ts_devserver(
         ":inject_scripts_for_dev",
         "//services/client/src/assets",
     ],
-    deps = ["//services/client/src"],
+    deps = [":dev_src"],
+)
+
+ng_module(
+    name = "prod_src",
+    srcs = ["main.prod.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = ["//services/client/src/app:prod_app"],
 )
 
 rollup_bundle(
@@ -85,7 +89,7 @@ rollup_bundle(
     },
     output_dir = True,
     deps = [
-        ":src",
+        ":prod_src",
         "@npm//rollup-plugin-commonjs",
         "@npm//rollup-plugin-node-resolve",
     ],
@@ -137,28 +141,6 @@ html_insert_assets(
 )
 
 pkg_web(
-    name = "prodapp",
-    srcs = _ASSETS + _BUNDLE_ASSETS + [
-        ":inject_scripts_for_prod",
-        "//services/client/src/assets",
-        "@npm//:node_modules/systemjs/dist/system.js",
-    ],
-    additional_root_paths = [
-        "npm/node_modules/core-js/client",
-        "npm/node_modules/systemjs/dist",
-    ],
-)
-
-history_server(
-    name = "prodserver",
-    data = [":prodapp"],
-    templated_args = [
-        "-a",
-        "$(rlocation cents_ideas/services/client/src/prodapp)",
-    ],
-)
-
-pkg_web(
     name = "pwa_app",
     srcs = _ASSETS + _BUNDLE_ASSETS + [
         ":inject_scripts_for_prod",
@@ -178,14 +160,15 @@ ngsw_config(
     src = ":pwa_app",
     config = "//services/client:ngsw-config.json",
     index_html = ":inject_scripts_for_prod",
+    # TODO is this tag needed?
     tags = ["app"],
 )
 
 ts_library(
-    name = "universal_server_lib",
-    srcs = ["server.ts"],
+    name = "prod_server_lib",
+    srcs = ["server.prod.ts"],
     deps = [
-        "//services/client/src/app:app_server",
+        "//services/client/src/app:prod_server",
         "@npm//@angular/core",
         "@npm//@nguniversal/express-engine",
         "@npm//@types/compression",
@@ -196,28 +179,22 @@ ts_library(
     ],
 )
 
-nodejs_binary(
-    name = "universal_server_dev_server",
-    data = [
-        ":pwa",
-        ":universal_server_lib",
-    ],
-    entry_point = ":server.ts",
-)
+# TODO local ssr prod server
 
 nodejs_image(
-    name = "universal_server",
+    #nodejs_binary(
+    name = "prod_server",
     data = [
+        ":prod_server_lib",
         ":pwa",
-        ":universal_server_lib",
     ],
-    entry_point = ":server.ts",
+    entry_point = ":server.prod.ts",
 )
 
 k8s_deploy(
     name = "k8s",
     images = {
-        "client:placeholder_name": ":universal_server",
+        "client:placeholder_name": ":prod_server",
     },
     template = ":client.yaml",
 )

@@ -3,10 +3,10 @@ load("@npm_angular_bazel//:index.bzl", "ng_module")
 package(default_visibility = ["//:__subpackages__"])
 
 ng_module(
-    name = "store",
+    name = "base_store",
     srcs = [
         "app.selectors.ts",
-        "app-store.module.ts",
+        "app-base.store.module.ts",
         "custom-route-serializer.ts",
         "ngrx-state-transfer.service.ts",
     ],
@@ -20,34 +20,81 @@ ng_module(
         "@npm//@ngrx/effects",
         "@npm//@ngrx/router-store",
         "@npm//@ngrx/store",
+    ],
+)
+
+ng_module(
+    name = "prod_store",
+    srcs = ["app-prod.store.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [":base_store"],
+)
+
+ng_module(
+    name = "dev_store",
+    srcs = ["app-dev.store.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        ":base_store",
         "@npm//@ngrx/store-devtools",
     ],
 )
 
 ng_module(
-    name = "app",
+    name = "base_app",
     srcs = [
         "app.component.ts",
-        "app.module.ts",
+        "app-base.module.ts",
         "app-routing.module.ts",
         "auth-token.interceptor.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
-        ":store",
         "//services/client/src/app/auth",
         "//services/client/src/app/ideas",
         "//services/client/src/app/user",
+        "@npm//@angular/router",
+    ],
+)
+
+ng_module(
+    name = "prod_app",
+    srcs = ["app-prod.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        ":base_app",
+        ":prod_store",
         "@npm//@angular/service-worker",
     ],
 )
 
 ng_module(
-    name = "app_server",
-    srcs = ["app.server.module.ts"],
+    name = "dev_app",
+    srcs = ["app-dev.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        ":base_app",
+        ":dev_store",
+        "@npm//@angular/service-worker",
+    ],
+)
+
+ng_module(
+    name = "prod_server",
+    srcs = ["app-prod.server.module.ts"],
     tsconfig = "//services/client:tsconfig-server",
     deps = [
-        ":app",
+        ":prod_app",
+        "@npm//@angular/platform-server",
+    ],
+)
+
+ng_module(
+    name = "dev_server",
+    srcs = ["app-dev.server.module.ts"],
+    tsconfig = "//services/client:tsconfig-server",
+    deps = [
+        ":dev_app",
         "@npm//@angular/platform-server",
     ],
 )

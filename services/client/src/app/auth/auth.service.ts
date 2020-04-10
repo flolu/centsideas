@@ -7,7 +7,7 @@ import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 import { IAuthenticatedDto, ILoginDto, IConfirmLoginDto } from '@cents-ideas/models';
 
-import * as env from '../../environments/environment';
+import { ENVIRONMENT, IEnvironment } from '../../environments';
 
 export const TOKEN_KEY = 'token';
 
@@ -20,6 +20,7 @@ export class AuthService {
     private http: HttpClient,
     private injector: Injector,
     @Inject(PLATFORM_ID) private platform: string,
+    @Inject(ENVIRONMENT) private env: IEnvironment,
   ) {
     if (isPlatformServer(this.platform)) {
       this.expressRequest = this.injector.get(REQUEST);
@@ -68,7 +69,7 @@ export class AuthService {
   };
 
   get baseUrl() {
-    return `${env.gatewayHost}/${ApiEndpoints.Users}`;
+    return `${this.env.gatewayHost}/${ApiEndpoints.Users}`;
   }
 
   get token() {

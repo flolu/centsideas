@@ -1,2 +1,6 @@
-export const production = false;
-export const gatewayHost = 'http://localhost:3000';
+import { IEnvironment } from './environment.model';
+
+export const devEnv: IEnvironment = {
+  production: false,
+  gatewayHost: 'http://localhost:3000',
+};

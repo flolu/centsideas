@@ -14,11 +14,11 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const DIST_FOLDER = join(process.cwd(), 'services/client/src/pwa');
 
-import { AppServerModule } from './app/app.server.module';
+import { AppProdServerModule } from './app/app-prod.server.module';
 
 app.use(compression());
 
-app.engine('html', ngExpressEngine({ bootstrap: AppServerModule }) as any);
+app.engine('html', ngExpressEngine({ bootstrap: AppProdServerModule }) as any);
 
 app.set('view engine', 'html');
 app.set('views', DIST_FOLDER);
