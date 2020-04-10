@@ -158,7 +158,6 @@ history_server(
     ],
 )
 
-# PWA
 pkg_web(
     name = "pwa_app",
     srcs = _ASSETS + _BUNDLE_ASSETS + [
@@ -178,31 +177,13 @@ ngsw_config(
     name = "pwa",
     src = ":pwa_app",
     config = "//services/client:ngsw-config.json",
-    index_html = "//services/client/src:index.pwa.html",
+    index_html = ":inject_scripts_for_prod",
     tags = ["app"],
 )
 
-history_server(
-    name = "pwa_server",
-    data = [":pwa"],
-    templated_args = [
-        "-a",
-        "$(rlocation cents_ideas/services/client/src/pwa)",
-    ],
-)
-
-nodejs_image(
-    name = "pwa_image",
-    binary = ":pwa_server",
-    tags = ["local"],
-)
-
-# UNIVERSAL
 ts_library(
     name = "universal_server_lib",
-    srcs = [
-        "server.ts",
-    ],
+    srcs = ["server.ts"],
     deps = [
         "//services/client/src/app:app_server",
         "@npm//@angular/core",

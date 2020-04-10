@@ -19,7 +19,7 @@ protractor_web_test_suite(
     server = "//services/client/src:prodserver",
     deps = [
         ":e2e",
-        "@npm//tslib"
+        "@npm//tslib",
     ],
 )
 
