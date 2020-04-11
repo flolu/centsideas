@@ -24,23 +24,6 @@ ng_module(
 )
 
 ng_module(
-    name = "prod_store",
-    srcs = ["app-prod.store.module.ts"],
-    tsconfig = "//services/client:tsconfig.json",
-    deps = [":base_store"],
-)
-
-ng_module(
-    name = "dev_store",
-    srcs = ["app-dev.store.module.ts"],
-    tsconfig = "//services/client:tsconfig.json",
-    deps = [
-        ":base_store",
-        "@npm//@ngrx/store-devtools",
-    ],
-)
-
-ng_module(
     name = "base_app",
     srcs = [
         "app.component.ts",
@@ -58,14 +41,16 @@ ng_module(
     ],
 )
 
+##################
+# development
+##################
 ng_module(
-    name = "prod_app",
-    srcs = ["app-prod.module.ts"],
+    name = "dev_store",
+    srcs = ["app-dev.store.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
-        ":base_app",
-        ":prod_store",
-        "@npm//@angular/service-worker",
+        ":base_store",
+        "@npm//@ngrx/store-devtools",
     ],
 )
 
@@ -80,22 +65,46 @@ ng_module(
     ],
 )
 
+##################
+# local production
+##################
+ng_module(
+    name = "local_prod_app",
+    srcs = ["app-local-prod.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [":base_app"],
+)
+
+ng_module(
+    name = "local_prod_server",
+    srcs = ["app-local-prod.server.module.ts"],
+    tsconfig = "//services/client:tsconfig-server",
+    deps = [
+        ":local_prod_app",
+        "@npm//@angular/platform-server",
+    ],
+)
+
+##################
+# production
+##################
+ng_module(
+    name = "prod_app",
+    srcs = ["app-prod.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = [
+        ":base_app",
+        ":base_store",
+        # "@npm//@angular/service-worker",
+    ],
+)
+
 ng_module(
     name = "prod_server",
     srcs = ["app-prod.server.module.ts"],
     tsconfig = "//services/client:tsconfig-server",
     deps = [
         ":prod_app",
-        "@npm//@angular/platform-server",
-    ],
-)
-
-ng_module(
-    name = "dev_server",
-    srcs = ["app-dev.server.module.ts"],
-    tsconfig = "//services/client:tsconfig-server",
-    deps = [
-        ":dev_app",
         "@npm//@angular/platform-server",
     ],
 )

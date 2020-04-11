@@ -72,7 +72,7 @@ def pkg_pwa(
         ngsw_config):
     pkg_web(
         name = "%s_app" % name,
-        srcs = static_assets + bundle_assets + srcs,
+        srcs = static_assets + srcs,
         additional_root_paths = additional_root_paths,
         visibility = ["//visibility:private"],
     )

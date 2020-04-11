@@ -6,10 +6,13 @@ load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("//services/client:defaults.bzl", "babel_bundle_es5", "bundle_assets", "html_insert_assets", "pkg_pwa", "static_assets")
+load("//services/client:defaults.bzl", "bundle_assets", "html_insert_assets", "pkg_pwa", "static_assets")
 
 package(default_visibility = ["//:__subpackages__"])
 
+##################
+# testing
+##################
 ts_library(
     name = "initialize_testbed",
     testonly = True,
@@ -20,6 +23,9 @@ ts_library(
     ],
 )
 
+##################
+# development server
+##################
 ng_module(
     name = "dev_src",
     srcs = ["main.dev.ts"],
@@ -56,6 +62,91 @@ ts_devserver(
     deps = [":dev_src"],
 )
 
+##################
+# local production server
+##################
+ng_module(
+    name = "local_prod_src",
+    srcs = ["main.local-prod.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    deps = ["//services/client/src/app:local_prod_app"],
+)
+
+rollup_bundle(
+    name = "local_prod_bundle_es2015",
+    config_file = "rollup.config.js",
+    entry_points = {
+        ":main.local-prod.ts": "index",
+    },
+    output_dir = True,
+    deps = [
+        ":local_prod_src",
+        "@npm//rollup-plugin-commonjs",
+        "@npm//rollup-plugin-node-resolve",
+    ],
+)
+
+terser_minified(
+    name = "local_prod_bundle_es2015.min",
+    src = ":local_prod_bundle_es2015",
+)
+
+local_prod_bundle_assets = [":local_prod_bundle_es2015.min"]
+
+html_insert_assets(
+    name = "inject_scripts_for_local_prod",
+    outs = ["_local_prod_app/services/client/src/index.html"],
+    asset_args = ["$(execpath %s)" % s for s in static_assets] +
+                 ["$(execpath %s)/index.js" % s for s in local_prod_bundle_assets],
+    assets = static_assets + local_prod_bundle_assets,
+)
+
+pkg_pwa(
+    name = "local_prod_pwa",
+    srcs = [
+        ":inject_scripts_for_local_prod",
+        "//services/client/src/assets",
+        "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
+        "@npm//:node_modules/systemjs/dist/system.js",
+    ] + local_prod_bundle_assets,
+    additional_root_paths = [
+        "npm/node_modules/core-js/client",
+        "npm/node_modules/systemjs/dist",
+        "npm/node_modules/@angular/service-worker",
+    ],
+    index_html = ":inject_scripts_for_local_prod",
+    ngsw_config = "//services/client:ngsw-config.json",
+)
+
+ts_library(
+    name = "local_prod_server_lib",
+    srcs = ["server.local-prod.ts"],
+    deps = [
+        "//services/client/src/app:local_prod_server",
+        "@npm//@angular/core",
+        "@npm//@nguniversal/express-engine",
+        "@npm//@types/compression",
+        "@npm//@types/express",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+        "@npm//compression",
+        "@npm//express",
+        "@npm//yargs",
+    ],
+)
+
+nodejs_binary(
+    name = "local_prod_server",
+    data = [
+        ":local_prod_pwa",
+        ":local_prod_server_lib",
+    ],
+    entry_point = ":server.local-prod.ts",
+)
+
+##################
+# production server
+##################
 ng_module(
     name = "prod_src",
     srcs = ["main.prod.ts"],
@@ -77,11 +168,6 @@ rollup_bundle(
     ],
 )
 
-babel_bundle_es5(
-    name = "bundle_es5",
-    src = "bundle_es2015",
-)
-
 terser_minified(
     name = "bundle_es2015.min",
     src = ":bundle_es2015",
@@ -91,6 +177,11 @@ terser_minified(
 #terser_minified(
 #    name = "bundle_es5.min",
 #    src = ":bundle_es5",
+#)
+
+#babel_bundle_es5(
+#    name = "bundle_es5",
+#    src = "bundle_es2015",
 #)
 
 html_insert_assets(
@@ -125,32 +216,6 @@ history_server(
         "-a",
         "$(rlocation cents_ideas/services/client/src/pwa)",
     ],
-)
-
-ts_library(
-    name = "dev_server_lib",
-    srcs = ["server.dev.ts"],
-    deps = [
-        "//services/client/src/app:dev_server",
-        "@npm//@angular/core",
-        "@npm//@nguniversal/express-engine",
-        "@npm//@types/compression",
-        "@npm//@types/express",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//compression",
-        "@npm//express",
-        "@npm//yargs",
-    ],
-)
-
-nodejs_binary(
-    name = "local_server",
-    data = [
-        ":dev_server_lib",
-        ":pwa",
-    ],
-    entry_point = ":server.dev.ts",
 )
 
 ts_library(
