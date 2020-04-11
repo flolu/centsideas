@@ -1,7 +1,7 @@
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
-load("//services/client:client-utils.bzl", "store_srcs_matcher")
+load("//services/client:defaults.bzl", "store_srcs_matcher")
 
 package(default_visibility = ["//:__subpackages__"])
 
