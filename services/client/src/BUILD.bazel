@@ -1,8 +1,9 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_web")
 load("@npm//@babel/cli:index.bzl", "babel")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
+load("@npm//history-server:index.bzl", "history_server")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
@@ -59,8 +60,6 @@ html_insert_assets(
 
 ts_devserver(
     name = "live_server",
-    # TODO what is this needed for? is it event necessary?
-    additional_root_paths = ["src/example"],
     entry_module = "cents_ideas/services/client/src/main.dev",
     scripts = [
         "@npm//:node_modules/tslib/tslib.js",
@@ -160,8 +159,41 @@ ngsw_config(
     src = ":pwa_app",
     config = "//services/client:ngsw-config.json",
     index_html = ":inject_scripts_for_prod",
-    # TODO is this tag needed?
-    tags = ["app"],
+)
+
+history_server(
+    name = "pwa_server",
+    data = [":pwa"],
+    templated_args = [
+        "-a",
+        "$(rlocation cents_ideas/services/client/src/pwa)",
+    ],
+)
+
+ts_library(
+    name = "dev_server_lib",
+    srcs = ["server.dev.ts"],
+    deps = [
+        "//services/client/src/app:dev_server",
+        "@npm//@angular/core",
+        "@npm//@nguniversal/express-engine",
+        "@npm//@types/compression",
+        "@npm//@types/express",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+        "@npm//compression",
+        "@npm//express",
+        "@npm//yargs",
+    ],
+)
+
+nodejs_binary(
+    name = "local_server",
+    data = [
+        ":dev_server_lib",
+        ":pwa",
+    ],
+    entry_point = ":server.dev.ts",
 )
 
 ts_library(
@@ -179,10 +211,7 @@ ts_library(
     ],
 )
 
-# TODO local ssr prod server
-
 nodejs_image(
-    #nodejs_binary(
     name = "prod_server",
     data = [
         ":prod_server_lib",
@@ -193,8 +222,6 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
-    images = {
-        "client:placeholder_name": ":prod_server",
-    },
+    images = {"client:placeholder_name": ":prod_server"},
     template = ":client.yaml",
 )

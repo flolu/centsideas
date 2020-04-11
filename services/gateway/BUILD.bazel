@@ -41,9 +41,7 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
-    images = {
-        "gateway:placeholder_name": ":image",
-    },
+    images = {"gateway:placeholder_name": ":image"},
     template = ":gateway.yaml",
 )
 
