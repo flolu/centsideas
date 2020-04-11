@@ -20,7 +20,7 @@ static_assets = [
 
 bundle_assets = [
     ":bundle_es2015.min",
-    ":bundle_es5.min",
+    #":bundle_es5.min",
 ]
 
 root_paths = [

@@ -87,10 +87,11 @@ terser_minified(
     src = ":bundle_es2015",
 )
 
-terser_minified(
-    name = "bundle_es5.min",
-    src = ":bundle_es5",
-)
+# TODO make differential loading work (currently both bundles would have been loaded)
+#terser_minified(
+#    name = "bundle_es5.min",
+#    src = ":bundle_es5",
+#)
 
 html_insert_assets(
     name = "inject_scripts_for_prod",

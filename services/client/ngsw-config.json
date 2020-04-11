@@ -5,8 +5,39 @@
     {
       "name": "app",
       "installMode": "prefetch",
+      "updateMode": "prefetch",
       "resources": {
-        "files": ["/favicon.ico", "/index.html", "/manifest.webmanifest", "/*.css", "/*.js"]
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/**/*.css",
+          "/**/*.js",
+          "!/system.js",
+          "!/core.min.js",
+          "!/bundle-*.min/*.js",
+          "/bundle-es5.min/index.js",
+          "/bundle-es2015.min/index.js",
+          "!/node_modules/**/*.js"
+        ],
+
+        "urls": ["https://fonts.googleapis.com/**", "https://fonts.gstatic.com/s/**"]
+      }
+    },
+    {
+      "name": "app-lazy",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": ["/bundle-*.min/*.js", "/system.js", "/core.min.js"]
+      }
+    },
+    {
+      "name": "assets-eager",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": ["/assets/**"]
       }
     },
     {

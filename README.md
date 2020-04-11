@@ -181,7 +181,8 @@ yarn deploy
 
 Wait until all Workloads are up and running. Now you should be able to visit https://cents-ideas.flolu.com
 
-# Thank you
+## Thanks to:
 
-@rayman1104
-@marcus-sa
+[@rayman1104](https://github.com/rayman1104)
+
+[@marcus-sa](https://github.com/marcus-sa)

@@ -1,6 +1,9 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 def ngsw_config(name, config, index_html, src, out = None, **kwargs):
+    """
+    credits: https://github.com/marcus-sa
+    """
     if not out:
         out = name
 
