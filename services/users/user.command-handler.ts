@@ -23,6 +23,7 @@ import {
   AuthFrontendRoutes,
   QueryParamKeys,
   UserFrontendRoutes,
+  TokenExpirationTimes,
 } from '@cents-ideas/enums';
 
 import { UserRepository } from './user.repository';
@@ -49,11 +50,13 @@ export class UserCommandHandler {
 
     const tokenData: ITokenData = { type: 'login', payload: { loginId, email, firstLogin } };
 
-    const token = jwt.sign(tokenData, env.jwtSecret, { expiresIn: env.loginTokenExpirationTime });
+    const token = jwt.sign(tokenData, env.jwtSecret, {
+      expiresIn: TokenExpirationTimes.LoginToken,
+    });
 
     t.debug('sendng login mail to ', email);
     const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
-    const expirationTimeHours = Math.floor(env.loginTokenExpirationTime / 3600);
+    const expirationTimeHours = Math.floor(TokenExpirationTimes.LoginToken / 3600);
     const text = `URL to login into your account: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Login';
     // FIXME consider outsourcing sending mails into its own mailing service, which listens for event liks LoginRequested
@@ -224,11 +227,11 @@ export class UserCommandHandler {
     };
     const tokenData: ITokenData = { type: 'email-change', payload: tokenPayload };
     const token = jwt.sign(tokenData, env.jwtSecret, {
-      expiresIn: env.emailChangeTokenExpirationTime,
+      expiresIn: TokenExpirationTimes.EmailChangeToken,
     });
 
     const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}/${UserFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
-    const expirationTimeHours = Math.floor(env.emailChangeTokenExpirationTime / 3600);
+    const expirationTimeHours = Math.floor(TokenExpirationTimes.EmailChangeToken / 3600);
     const text = `URL to change your email: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Email Change';
     return sendMail(env.mailing.fromAddress, newEmail, subject, text, text, env.mailing.apiKey);
@@ -251,13 +254,13 @@ export class UserCommandHandler {
   };
 
   private renewAuthToken = (oldToken: string, tokenCreatedTime: number, userId: string): string => {
-    const generateNewToken = Date.now() - tokenCreatedTime > env.timeUntilGenerateNewToken;
+    const generateNewToken = Date.now() - tokenCreatedTime > TokenExpirationTimes.UntilGenerateNew;
     return generateNewToken ? this.generateAuthToken(userId) : oldToken;
   };
 
   private generateAuthToken = (userId: string): string => {
     const payload: IAuthTokenPayload = { userId };
     const data: ITokenData = { type: 'auth', payload };
-    return jwt.sign(data, env.jwtSecret, { expiresIn: env.authTokenExpirationTime });
+    return jwt.sign(data, env.jwtSecret, { expiresIn: TokenExpirationTimes.AuthToken });
   };
 }

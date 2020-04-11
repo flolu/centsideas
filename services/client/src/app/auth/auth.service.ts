@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { isPlatformServer, isPlatformBrowser } from '@angular/common';
 import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
 
-import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
+import { ApiEndpoints, UsersApiRoutes, TokenExpirationTimes } from '@cents-ideas/enums';
 import { IAuthenticatedDto, ILoginDto, IConfirmLoginDto } from '@cents-ideas/models';
 
 import { ENVIRONMENT, IEnvironment } from '../../environments';
@@ -52,10 +52,13 @@ export class AuthService {
   saveToken = (token: string) => {
     this.removeToken();
     if (isPlatformBrowser(this.platform)) {
-      document.cookie = `${TOKEN_KEY}=${token};`;
+      document.cookie = `${TOKEN_KEY}=${token}; ; max-age=${TokenExpirationTimes.AuthToken};`;
     }
     if (isPlatformServer(this.platform)) {
-      this.expressResponse.cookie(TOKEN_KEY, token);
+      this.expressResponse.cookie(TOKEN_KEY, token, {
+        maxAge: TokenExpirationTimes.AuthToken,
+        httpOnly: true,
+      });
     }
   };
 
