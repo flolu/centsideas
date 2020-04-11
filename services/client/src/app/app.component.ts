@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { take, tap } from 'rxjs/operators';
+import { SwUpdate } from '@angular/service-worker';
 
 import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
 
@@ -26,8 +27,9 @@ export class AppComponent {
   topLevelRoutes = TopLevelFrontendRoutes;
   authRoutes = AuthFrontendRoutes;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private swUpdate: SwUpdate) {
     this.handleAuthentication();
+    this.handleServiceWorkerUpdates();
   }
 
   handleAuthentication = () => {
@@ -42,5 +44,13 @@ export class AppComponent {
         }),
       )
       .subscribe();
+  };
+
+  handleServiceWorkerUpdates = () => {
+    this.swUpdate.available.subscribe(evt => {
+      console.log('[AppComponent] Service worker update is available', evt);
+      this.swUpdate.activateUpdate();
+      console.log('[AppComponent] Activated service worker update');
+    });
   };
 }

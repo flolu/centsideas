@@ -54,6 +54,7 @@ ng_module(
         "//services/client/src/app/ideas",
         "//services/client/src/app/user",
         "@npm//@angular/router",
+        "@npm//@angular/service-worker",
     ],
 )
 
