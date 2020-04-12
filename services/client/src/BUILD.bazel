@@ -6,7 +6,6 @@ load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("//services/client:ngsw_config.bzl", "ngsw_config")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("//services/client:defaults.bzl", "static_assets")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 
@@ -25,9 +24,6 @@ sass_binary(
     src = "styles.sass",
 )
 
-##################
-# testing
-##################
 ts_library(
     name = "initialize_testbed",
     testonly = True,
@@ -60,23 +56,31 @@ html_insert_assets(
         "--out=$@",
         "--roots=. $(RULEDIR)",
         "--assets",
-    ] + ["$(execpath %s)" % s for s in static_assets] + [
+    ] + [
+        "$(execpath %s)" % ":styles.css",
+        "$(execpath %s)" % "@npm//:node_modules/zone.js/dist/zone.min.js",
         "./_/ts_scripts.js",
     ],
-    data = [":index.dev.html"] + static_assets,
+    data = [
+        ":index.dev.html",
+        ":manifest.webmanifest",
+        ":styles.css",
+        "@npm//:node_modules/zone.js/dist/zone.min.js",
+    ],
 )
 
 ts_devserver(
     name = "live_server",
-    additional_root_paths = ["src/example"],
     entry_module = "cents_ideas/services/client/src/main.dev",
     scripts = [
         "@npm//:node_modules/tslib/tslib.js",
         ":rxjs_umd_modules",
-        "@npm//date-fns:date-fns.umd.js",
     ],
-    static_files = static_assets + [
+    static_files = [
         ":inject_scripts_for_dev",
+        ":manifest.webmanifest",
+        ":styles.css",
+        "@npm//:node_modules/zone.js/dist/zone.min.js",
         "//services/client/src/assets",
     ],
     deps = [":dev_src"],
@@ -101,7 +105,7 @@ rollup_bundle(
     name = "local_prod_bundle_es2015",
     config_file = "rollup.config.js",
     entry_points = {
-        ":main.local-prod.ts": "index",
+        ":main.local-prod.ts": "index.es2015",
     },
     output_dir = True,
     deps = [
@@ -124,27 +128,33 @@ html_insert_assets(
         "--out=$@",
         "--roots=. $(RULEDIR)",
         "--assets",
-    ] + ["$(execpath %s)" % s for s in static_assets],
-    data = [":index.local-prod.html"] + static_assets,
+    ] + [
+        "$(execpath %s)" % ":styles.css",
+        "$(execpath %s)" % "@npm//:node_modules/zone.js/dist/zone.min.js",
+        "$(execpath %s)/index.es2015.js" % ":local_prod_bundle_es2015.min",
+    ],
+    data = [
+        ":index.local-prod.html",
+        ":local_prod_bundle_es2015.min",
+        ":manifest.webmanifest",
+        ":styles.css",
+        "@npm//:node_modules/zone.js/dist/zone.min.js",
+    ],
 )
 
 pkg_web(
     name = "local_prod_pwa_app",
     srcs = [
-        ":local_prod_bundle_es2015.min",
+        "index.local-prod.html",
         ":inject_scripts_for_local_prod",
+        ":local_prod_bundle_es2015.min",
+        ":manifest.webmanifest",
+        ":styles.css",
         "//services/client/src/assets",
         "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
-        "@npm//:node_modules/systemjs/dist/system.js",
-        "@npm//:node_modules/core-js/client/core.min.js",
-        "index.local-prod.html",
-    ] + static_assets,
-    additional_root_paths = [
-        "npm/node_modules/core-js/client",
-        "npm/node_modules/systemjs/dist",
-        "npm/node_modules/@angular/service-worker",
+        "@npm//:node_modules/zone.js/dist/zone.min.js",
     ],
-    visibility = ["//visibility:private"],
+    additional_root_paths = ["npm/node_modules/@angular/service-worker"],
 )
 
 ngsw_config(
@@ -196,10 +206,10 @@ ts_library(
 )
 
 rollup_bundle(
-    name = "bundle_es2015",
+    name = "prod_bundle_es2015",
     config_file = "rollup.config.js",
     entry_points = {
-        ":main.prod.ts": "index",
+        ":main.prod.ts": "index.es2015",
     },
     output_dir = True,
     deps = [
@@ -210,20 +220,9 @@ rollup_bundle(
 )
 
 terser_minified(
-    name = "bundle_es2015.min",
-    src = ":bundle_es2015",
+    name = "prod_bundle_es2015.min",
+    src = ":prod_bundle_es2015",
 )
-
-# TODO make differential loading work (currently both bundles would have been loaded)
-#terser_minified(
-#    name = "bundle_es5.min",
-#    src = ":bundle_es5",
-#)
-
-#babel_bundle_es5(
-#    name = "bundle_es5",
-#    src = "bundle_es2015",
-#)
 
 html_insert_assets(
     name = "inject_scripts_for_prod",
@@ -233,27 +232,33 @@ html_insert_assets(
         "--out=$@",
         "--roots=. $(RULEDIR)",
         "--assets",
-    ] + ["$(execpath %s)" % s for s in static_assets],
-    data = [":index.prod.html"] + static_assets,
+    ] + [
+        "$(execpath %s)" % ":styles.css",
+        "$(execpath %s)" % "@npm//:node_modules/zone.js/dist/zone.min.js",
+        "$(execpath %s)/index.es2015.js" % ":prod_bundle_es2015.min",
+    ],
+    data = [
+        ":index.prod.html",
+        ":manifest.webmanifest",
+        ":prod_bundle_es2015.min",
+        ":styles.css",
+        "@npm//:node_modules/zone.js/dist/zone.min.js",
+    ],
 )
 
 pkg_web(
     name = "prod_pwa_app",
     srcs = [
-        ":bundle_es2015.min",
+        "index.prod.html",
         ":inject_scripts_for_prod",
+        ":manifest.webmanifest",
+        ":prod_bundle_es2015.min",
+        ":styles.css",
         "//services/client/src/assets",
         "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
-        "@npm//:node_modules/systemjs/dist/system.js",
-        "@npm//:node_modules/core-js/client/core.min.js",
-        "index.prod.html",
-    ] + static_assets,
-    additional_root_paths = [
-        "npm/node_modules/core-js/client",
-        "npm/node_modules/systemjs/dist",
-        "npm/node_modules/@angular/service-worker",
+        "@npm//:node_modules/zone.js/dist/zone.min.js",
     ],
-    visibility = ["//visibility:private"],
+    additional_root_paths = ["npm/node_modules/@angular/service-worker"],
 )
 
 ngsw_config(

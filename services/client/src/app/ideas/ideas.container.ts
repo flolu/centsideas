@@ -15,7 +15,7 @@ import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
   template: `
     <div class="container">
       <div *ngIf="(state$ | async)?.loading">Loading...</div>
-      <h1>Create Idea</h1>
+      <h1>Create an Idea</h1>
       <form [formGroup]="form">
         <label for="title">
           Title

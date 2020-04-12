@@ -70,7 +70,6 @@ ts_library(
 
 karma_web_test_suite(
     name = "test",
-    srcs = ["@npm//date-fns:date-fns.umd.js"],
     bootstrap = [
         "@npm//:node_modules/zone.js/dist/zone-testing-bundle.js",
         "@npm//:node_modules/reflect-metadata/Reflect.js",
