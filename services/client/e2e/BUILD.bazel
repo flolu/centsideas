@@ -10,6 +10,7 @@ ts_library(
         "@npm//@types/jasmine",
         "@npm//jasmine",
         "@npm//protractor",
+        "@npm//tslib",
     ],
 )
 
