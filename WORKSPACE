@@ -47,6 +47,22 @@ load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
 
 ts_setup_workspace()
 
+# TODO update to newest version
+# https://github.com/bazelbuild/rules_sass#setup
+http_archive(
+    name = "io_bazel_rules_sass",
+    sha256 = "c78be58f5e0a29a04686b628cf54faaee0094322ae0ac99da5a8a8afca59a647",
+    strip_prefix = "rules_sass-1.25.0",
+    urls = [
+        "https://github.com/bazelbuild/rules_sass/archive/1.25.0.zip",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_sass/archive/1.25.0.zip",
+    ],
+)
+
+load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
+
+sass_repositories()
+
 # https://github.com/bazelbuild/rules_docker#setup
 http_archive(
     name = "io_bazel_rules_docker",

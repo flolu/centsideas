@@ -9,6 +9,7 @@ load("//services/client:ngsw_config.bzl", "ngsw_config")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("//services/client:defaults.bzl", "static_assets")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -18,6 +19,11 @@ filegroup(
         ":rxjs_shims.js",
         "@npm//:node_modules/rxjs/bundles/rxjs.umd.js",
     ],
+)
+
+sass_binary(
+    name = "styles",
+    src = "styles.sass",
 )
 
 ##################
@@ -106,12 +112,12 @@ html_insert_assets(
     name = "inject_scripts_for_local_prod",
     outs = ["_local_prod/index.html"],
     args = [
-        "--html=$(execpath :local-prod.index.html)",
+        "--html=$(execpath :index.local-prod.html)",
         "--out=$@",
         "--roots=. $(RULEDIR)",
         "--assets",
     ] + ["$(execpath %s)" % s for s in static_assets],
-    data = [":local-prod.index.html"] + static_assets,
+    data = [":index.local-prod.html"] + static_assets,
 )
 
 pkg_web(
@@ -123,7 +129,7 @@ pkg_web(
         "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
         "@npm//:node_modules/systemjs/dist/system.js",
         "@npm//:node_modules/core-js/client/core.min.js",
-        "local-prod.index.html",
+        "index.local-prod.html",
     ] + static_assets,
     additional_root_paths = [
         "npm/node_modules/core-js/client",

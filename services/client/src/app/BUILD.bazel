@@ -1,6 +1,12 @@
 load("@npm_angular_bazel//:index.bzl", "ng_module")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 
 package(default_visibility = ["//:__subpackages__"])
+
+sass_binary(
+    name = "app_styles",
+    src = "app.component.sass",
+)
 
 ng_module(
     name = "base_store",
@@ -31,6 +37,7 @@ ng_module(
         "app-routing.module.ts",
         "auth-token.interceptor.ts",
     ],
+    assets = [":app_styles"],
     tsconfig = "//services/client:tsconfig.json",
     deps = [
         "//services/client/src/app/auth",

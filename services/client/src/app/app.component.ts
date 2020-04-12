@@ -21,6 +21,7 @@ import { AuthSelectors } from './auth/auth.selectors';
     <p>CENTS: {{ cents }}</p>
     <router-outlet></router-outlet>
   `,
+  styleUrls: ['app.component.sass'],
 })
 export class AppComponent {
   cents = `${CentsCommandments.Control}, ${CentsCommandments.Entry}, ${CentsCommandments.Need}, ${CentsCommandments.Time}, ${CentsCommandments.Scale}`;
