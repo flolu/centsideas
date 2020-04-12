@@ -1,14 +1,24 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_web")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm//history-server:index.bzl", "history_server")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("//services/client:ngsw_config.bzl", "ngsw_config")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("//services/client:defaults.bzl", "bundle_assets", "html_insert_assets", "pkg_pwa", "static_assets")
+load("//services/client:defaults.bzl", "static_assets")
+load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 
 package(default_visibility = ["//:__subpackages__"])
+
+filegroup(
+    name = "rxjs_umd_modules",
+    srcs = [
+        ":rxjs_shims.js",
+        "@npm//:node_modules/rxjs/bundles/rxjs.umd.js",
+    ],
+)
 
 ##################
 # testing
@@ -33,22 +43,23 @@ ng_module(
     deps = ["//services/client/src/app:dev_app"],
 )
 
-filegroup(
-    name = "rxjs_umd_modules",
-    srcs = [
-        ":rxjs_shims.js",
-        "@npm//:node_modules/rxjs/bundles/rxjs.umd.js",
-    ],
-)
-
 html_insert_assets(
     name = "inject_scripts_for_dev",
-    asset_args = ["$(execpath %s)" % s for s in static_assets] + ["./_/ts_scripts.js"],
-    assets = static_assets,
+    outs = ["index.html"],
+    args = [
+        "--html=$(execpath //services/client/src:index.dev.html)",
+        "--out=$@",
+        "--roots=. $(RULEDIR)",
+        "--assets",
+    ] + ["$(execpath %s)" % s for s in static_assets] + [
+        "./_/ts_scripts.js",
+    ],
+    data = [":index.dev.html"] + static_assets,
 )
 
 ts_devserver(
     name = "live_server",
+    additional_root_paths = ["src/example"],
     entry_module = "cents_ideas/services/client/src/main.dev",
     scripts = [
         "@npm//:node_modules/tslib/tslib.js",
@@ -91,31 +102,42 @@ terser_minified(
     src = ":local_prod_bundle_es2015",
 )
 
-local_prod_bundle_assets = [":local_prod_bundle_es2015.min"]
-
 html_insert_assets(
     name = "inject_scripts_for_local_prod",
-    outs = ["_local_prod_app/services/client/src/index.html"],
-    asset_args = ["$(execpath %s)" % s for s in static_assets] +
-                 ["$(execpath %s)/index.js" % s for s in local_prod_bundle_assets],
-    assets = static_assets + local_prod_bundle_assets,
+    outs = ["_local_prod/index.html"],
+    args = [
+        "--html=$(execpath :local-prod.index.html)",
+        "--out=$@",
+        "--roots=. $(RULEDIR)",
+        "--assets",
+    ] + ["$(execpath %s)" % s for s in static_assets],
+    data = [":local-prod.index.html"] + static_assets,
 )
 
-pkg_pwa(
-    name = "local_prod_pwa",
+pkg_web(
+    name = "local_prod_pwa_app",
     srcs = [
+        ":local_prod_bundle_es2015.min",
         ":inject_scripts_for_local_prod",
         "//services/client/src/assets",
         "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
         "@npm//:node_modules/systemjs/dist/system.js",
-    ] + local_prod_bundle_assets,
+        "@npm//:node_modules/core-js/client/core.min.js",
+        "local-prod.index.html",
+    ] + static_assets,
     additional_root_paths = [
         "npm/node_modules/core-js/client",
         "npm/node_modules/systemjs/dist",
         "npm/node_modules/@angular/service-worker",
     ],
+    visibility = ["//visibility:private"],
+)
+
+ngsw_config(
+    name = "local_prod_pwa",
+    src = ":local_prod_pwa_app",
+    config = "//services/client:ngsw-config.json",
     index_html = ":inject_scripts_for_local_prod",
-    ngsw_config = "//services/client:ngsw-config.json",
 )
 
 ts_library(
@@ -186,35 +208,48 @@ terser_minified(
 
 html_insert_assets(
     name = "inject_scripts_for_prod",
-    outs = ["_prodapp/services/client/src/index.html"],
-    asset_args = ["$(execpath %s)" % s for s in static_assets] +
-                 ["$(execpath %s)/index.js" % s for s in bundle_assets],
-    assets = static_assets + bundle_assets,
+    outs = ["_index.html"],
+    args = [
+        "--html=$(execpath :index.prod.html)",
+        "--out=$@",
+        "--roots=. $(RULEDIR)",
+        "--assets",
+    ] + ["$(execpath %s)" % s for s in static_assets],
+    data = [":index.prod.html"] + static_assets,
 )
 
-pkg_pwa(
-    name = "pwa",
+pkg_web(
+    name = "prod_pwa_app",
     srcs = [
+        ":bundle_es2015.min",
         ":inject_scripts_for_prod",
         "//services/client/src/assets",
         "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
         "@npm//:node_modules/systemjs/dist/system.js",
-    ],
+        "@npm//:node_modules/core-js/client/core.min.js",
+        "index.prod.html",
+    ] + static_assets,
     additional_root_paths = [
         "npm/node_modules/core-js/client",
         "npm/node_modules/systemjs/dist",
         "npm/node_modules/@angular/service-worker",
     ],
+    visibility = ["//visibility:private"],
+)
+
+ngsw_config(
+    name = "prod_pwa",
+    src = ":prod_pwa_app",
+    config = "//services/client:ngsw-config.json",
     index_html = ":inject_scripts_for_prod",
-    ngsw_config = "//services/client:ngsw-config.json",
 )
 
 history_server(
     name = "pwa_server",
-    data = [":pwa"],
+    data = [":prod_pwa"],
     templated_args = [
         "-a",
-        "$(rlocation cents_ideas/services/client/src/pwa)",
+        "$(rlocation cents_ideas/services/client/src/prod_pwa)",
     ],
 )
 
@@ -236,8 +271,8 @@ ts_library(
 nodejs_image(
     name = "prod_server",
     data = [
+        ":prod_pwa",
         ":prod_server_lib",
-        ":pwa",
     ],
     entry_point = ":server.prod.ts",
 )

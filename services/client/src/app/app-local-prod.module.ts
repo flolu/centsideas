@@ -1,5 +1,6 @@
-import { NgModule, Inject } from '@angular/core';
+import { NgModule, Inject, PLATFORM_ID } from '@angular/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { isPlatformBrowser } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { AppBaseModule } from './app-base.module';
@@ -13,7 +14,12 @@ import { AppBaseStoreModule } from './app-base.store.module';
   providers: [{ provide: ENVIRONMENT, useValue: localProdEnv }],
 })
 export class AppLocalProdModule {
-  constructor(@Inject(ENVIRONMENT) private env: IEnvironment) {
-    console.log(`🔬 Launching local production app`, { env: this.env });
+  constructor(
+    @Inject(ENVIRONMENT) private env: IEnvironment,
+    @Inject(PLATFORM_ID) private platform: string,
+  ) {
+    if (isPlatformBrowser(this.platform)) {
+      console.log(`🔬 Launching local production app`, { env: this.env });
+    }
   }
 }

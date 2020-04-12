@@ -12,10 +12,10 @@ store_srcs_matcher = [
 ]
 
 static_assets = [
-    "@npm//:node_modules/zone.js/dist/zone.min.js",
     ":styles.css",
     "favicon.ico",
     "manifest.webmanifest",
+    "@npm//:node_modules/zone.js/dist/zone.min.js",
 ]
 
 bundle_assets = [

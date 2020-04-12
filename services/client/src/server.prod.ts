@@ -12,7 +12,7 @@ enableProdMode();
 const app = express();
 
 const PORT = process.env.PORT || 4000;
-const DIST_FOLDER = join(process.cwd(), 'services/client/src/pwa');
+const DIST_FOLDER = join(process.cwd(), 'services/client/src/prod_pwa');
 
 import { AppProdServerModule } from './app/app-prod.server.module';
 

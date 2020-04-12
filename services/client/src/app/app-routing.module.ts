@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
 
 const routes: Routes = [
-  { path: '', redirectTo: TopLevelFrontendRoutes.Ideas, pathMatch: 'full' },
   {
     path: TopLevelFrontendRoutes.Auth,
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),

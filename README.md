@@ -32,6 +32,7 @@ This is a project with the purpose of learning the architecture of complex web a
 | GDPR                                           | legal, privacy                         | ❌     |
 | User Interface                                 | modern, unique, reusable               | ❌     |
 | Compute server                                 | non-nodejs server for high cpu tasks   | ❌     |
+| Frontend                                       | code splitting, ...                    | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented
