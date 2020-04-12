@@ -3,7 +3,6 @@ load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm//history-server:index.bzl", "history_server")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
-load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("//services/client:ngsw_config.bzl", "ngsw_config")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
@@ -42,11 +41,15 @@ ts_library(
 ##################
 # development server
 ##################
-ng_module(
+ts_library(
     name = "dev_src",
     srcs = ["main.dev.ts"],
     tsconfig = "//services/client:tsconfig.json",
-    deps = ["//services/client/src/app:dev_app"],
+    use_angular_plugin = True,
+    deps = [
+        "//services/client/src/app:dev_app",
+        "@npm//@angular/platform-browser",
+    ],
 )
 
 html_insert_assets(
@@ -82,11 +85,16 @@ ts_devserver(
 ##################
 # local production server
 ##################
-ng_module(
+ts_library(
     name = "local_prod_src",
     srcs = ["main.local-prod.ts"],
     tsconfig = "//services/client:tsconfig.json",
-    deps = ["//services/client/src/app:local_prod_app"],
+    use_angular_plugin = True,
+    deps = [
+        "//services/client/src/app:local_prod_app",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+    ],
 )
 
 rollup_bundle(
@@ -175,11 +183,16 @@ nodejs_binary(
 ##################
 # production server
 ##################
-ng_module(
+ts_library(
     name = "prod_src",
     srcs = ["main.prod.ts"],
     tsconfig = "//services/client:tsconfig.json",
-    deps = ["//services/client/src/app:prod_app"],
+    use_angular_plugin = True,
+    deps = [
+        "//services/client/src/app:prod_app",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+    ],
 )
 
 rollup_bundle(

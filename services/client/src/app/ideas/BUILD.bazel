@@ -1,15 +1,16 @@
-load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("//services/client:defaults.bzl", "store_srcs_matcher")
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
 
-ng_module(
+ts_library(
     name = "store",
     srcs = glob(include = store_srcs_matcher) + [
         "ideas-store.module.ts",
         "ideas.service.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
         "//packages/enums",
         "//packages/models",
@@ -18,14 +19,16 @@ ng_module(
         "//services/client/src/environments",
         "//services/client/src/shared/helpers",
         "@npm//@angular/common",
+        "@npm//@angular/core",
         "@npm//@angular/router",
         "@npm//@ngrx/effects",
         "@npm//@ngrx/entity",
         "@npm//@ngrx/store",
+        "@npm//rxjs",
     ],
 )
 
-ng_module(
+ts_library(
     name = "ideas",
     srcs = [
         "edit-idea.component.ts",
@@ -36,11 +39,16 @@ ng_module(
         "ideas.module.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
         ":store",
+        "//packages/enums",
+        "//packages/models",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@angular/router",
+        "@npm//@ngrx/store",
+        "@npm//rxjs",
     ],
 )

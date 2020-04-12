@@ -1,42 +1,52 @@
-load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
 load("//services/client:defaults.bzl", "store_srcs_matcher")
 
 package(default_visibility = ["//:__subpackages__"])
 
-ng_module(
+ts_library(
     name = "store",
     srcs = glob(include = store_srcs_matcher) + [
         "user-store.module.ts",
         "user.service.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
         "//packages/enums",
         "//packages/models",
+        "//services/client/src/app:base_store",
         "//services/client/src/app/auth:store",
         "//services/client/src/environments",
         "//services/client/src/shared/helpers",
         "@npm//@angular/common",
+        "@npm//@angular/core",
         "@npm//@angular/router",
         "@npm//@ngrx/effects",
         "@npm//@ngrx/store",
+        "@npm//rxjs",
     ],
 )
 
-ng_module(
+ts_library(
     name = "user",
     srcs = [
         "me.container.ts",
         "user.module.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
         ":store",
+        "//packages/enums",
+        "//packages/models",
+        "//services/client/src/app/auth:store",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
+        "@npm//@angular/router",
+        "@npm//@ngrx/store",
+        "@npm//rxjs",
     ],
 )
 

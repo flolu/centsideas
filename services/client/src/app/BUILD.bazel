@@ -1,5 +1,5 @@
-load("@npm_angular_bazel//:index.bzl", "ng_module")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -8,7 +8,7 @@ sass_binary(
     src = "app.component.sass",
 )
 
-ng_module(
+ts_library(
     name = "base_store",
     srcs = [
         "app.selectors.ts",
@@ -17,19 +17,23 @@ ng_module(
         "ngrx-state-transfer.service.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
         "//packages/enums",
         "//services/client/src/environments",
+        "@npm//@angular/common",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
         "@npm//@ngrx/effects",
         "@npm//@ngrx/router-store",
         "@npm//@ngrx/store",
+        "@npm//rxjs",
     ],
 )
 
-ng_module(
+ts_library(
     name = "base_app",
     srcs = [
         "app.component.ts",
@@ -37,37 +41,51 @@ ng_module(
         "app-routing.module.ts",
         "auth-token.interceptor.ts",
     ],
-    assets = [":app_styles"],
+    angular_assets = [":app_styles"],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
+        "//packages/enums",
         "//services/client/src/app/auth",
+        "//services/client/src/app/auth:store",
         "//services/client/src/app/ideas",
         "//services/client/src/app/user",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
         "@npm//@angular/router",
         "@npm//@angular/service-worker",
+        "@npm//@ngrx/store",
+        "@npm//rxjs",
     ],
 )
 
 ##################
 # development
 ##################
-ng_module(
+ts_library(
     name = "dev_store",
     srcs = ["app-dev.store.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
         ":base_store",
+        "//services/client/src/environments",
+        "@npm//@angular/core",
         "@npm//@ngrx/store-devtools",
     ],
 )
 
-ng_module(
+ts_library(
     name = "dev_app",
     srcs = ["app-dev.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
         ":base_app",
         ":dev_store",
+        "//services/client/src/environments",
+        "@npm//@angular/core",
         "@npm//@angular/service-worker",
     ],
 )
@@ -75,19 +93,30 @@ ng_module(
 ##################
 # local production
 ##################
-ng_module(
+ts_library(
     name = "local_prod_app",
     srcs = ["app-local-prod.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
-    deps = [":base_app"],
+    use_angular_plugin = True,
+    deps = [
+        ":base_app",
+        ":base_store",
+        "//services/client/src/environments",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/service-worker",
+    ],
 )
 
-ng_module(
+ts_library(
     name = "local_prod_server",
     srcs = ["app-local-prod.server.module.ts"],
     tsconfig = "//services/client:tsconfig-server",
+    use_angular_plugin = True,
     deps = [
+        ":base_app",
         ":local_prod_app",
+        "@npm//@angular/core",
         "@npm//@angular/platform-server",
     ],
 )
@@ -95,23 +124,30 @@ ng_module(
 ##################
 # production
 ##################
-ng_module(
+ts_library(
     name = "prod_app",
     srcs = ["app-prod.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
     deps = [
         ":base_app",
         ":base_store",
-        # "@npm//@angular/service-worker",
+        "//services/client/src/environments",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/service-worker",
     ],
 )
 
-ng_module(
+ts_library(
     name = "prod_server",
     srcs = ["app-prod.server.module.ts"],
     tsconfig = "//services/client:tsconfig-server",
+    use_angular_plugin = True,
     deps = [
+        ":base_app",
         ":prod_app",
+        "@npm//@angular/core",
         "@npm//@angular/platform-server",
     ],
 )

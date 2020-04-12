@@ -13,5 +13,8 @@ ts_config(
 ts_config(
     name = "tsconfig-server",
     src = ":tsconfig.server.json",
-    deps = [":tsconfig.json"],
+    deps = [
+        ":tsconfig.app.json",
+        ":tsconfig.json",
+    ],
 )
