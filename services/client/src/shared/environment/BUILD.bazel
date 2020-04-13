@@ -8,7 +8,6 @@ ts_library(
         "environment.model.ts",
         "environment.module.ts",
         "environment.service.ts",
-        "index.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,

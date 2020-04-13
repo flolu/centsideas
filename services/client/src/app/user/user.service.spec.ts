@@ -2,12 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 
 import { UserService } from './user.service';
-import { EnvironmentModule } from '../../shared/environment';
+import { EnvironmentModule } from '../../shared/environment/environment.module';
+import { BrowserTransferStateModule } from '@angular/platform-browser';
 
 describe('UserService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule, EnvironmentModule],
+      imports: [HttpClientModule, EnvironmentModule, BrowserTransferStateModule],
       providers: [UserService],
     });
   });

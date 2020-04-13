@@ -4,7 +4,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppComponent } from './app.component';
 import { AppBaseModule } from './app-base.module';
 import { AppBaseStoreModule } from './app-base.store.module';
-import { EnvironmentService } from '../shared/environment';
+import { EnvironmentService } from '../shared/environment/environment.service';
 import { isPlatformBrowser } from '@angular/common';
 
 @NgModule({

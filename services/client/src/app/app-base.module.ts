@@ -8,7 +8,7 @@ import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { EnvironmentModule } from '../shared/environment';
+import { EnvironmentModule } from '../shared/environment/environment.module';
 
 @NgModule({
   imports: [

@@ -14,12 +14,12 @@ ts_library(
     ],
 )
 
-#protractor_web_test_suite(
-#    name = "dev_server_test",
-#    on_prepare = ":dev-server.on-prepare.js",
-#    server = "//services/client/src:live_server",
-#    deps = [":e2e"],
-#)
+protractor_web_test_suite(
+    name = "dev_server_test",
+    on_prepare = ":dev-server.on-prepare.js",
+    server = "//services/client/src:live_server",
+    deps = [":e2e"],
+)
 
 protractor_web_test_suite(
     name = "pwa_server_test",
@@ -31,12 +31,13 @@ protractor_web_test_suite(
     ],
 )
 
-protractor_web_test_suite(
-    name = "prod_server_test",
-    on_prepare = ":local-server.on-prepare.js",
-    server = "//services/client/src:prod_server",
-    deps = [
-        ":e2e",
-        "@npm//tslib",
-    ],
-)
+# TODO mock backend for angular universal express server
+#protractor_web_test_suite(
+#    name = "prod_server_test",
+#    on_prepare = ":local-server.on-prepare.js",
+#    server = "//services/client/src:prod_server",
+#    deps = [
+#        ":e2e",
+#        "@npm//tslib",
+#    ],
+#)
