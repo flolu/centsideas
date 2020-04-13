@@ -16,7 +16,7 @@ ts_library(
         "//packages/models",
         "//services/client/src/app:base_store",
         "//services/client/src/app/user:store",
-        "//services/client/src/environments",
+        "//services/client/src/shared/environment",
         "//services/client/src/shared/helpers",
         "@npm//@angular/common",
         "@npm//@angular/core",

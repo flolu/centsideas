@@ -34,9 +34,6 @@ ts_library(
     ],
 )
 
-##################
-# development server
-##################
 ts_library(
     name = "dev_src",
     srcs = ["main.dev.ts"],
@@ -44,6 +41,7 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         "//services/client/src/app:dev_app",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/platform-browser",
     ],
 )
@@ -86,113 +84,6 @@ ts_devserver(
     deps = [":dev_src"],
 )
 
-##################
-# local production server
-##################
-ts_library(
-    name = "local_prod_src",
-    srcs = ["main.local-prod.ts"],
-    tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
-    deps = [
-        "//services/client/src/app:local_prod_app",
-        "@npm//@angular/core",
-        "@npm//@angular/platform-browser",
-    ],
-)
-
-rollup_bundle(
-    name = "local_prod_bundle_es2015",
-    config_file = "rollup.config.js",
-    entry_points = {
-        ":main.local-prod.ts": "index.es2015",
-    },
-    output_dir = True,
-    deps = [
-        ":local_prod_src",
-        "@npm//rollup-plugin-commonjs",
-        "@npm//rollup-plugin-node-resolve",
-    ],
-)
-
-terser_minified(
-    name = "local_prod_bundle_es2015.min",
-    src = ":local_prod_bundle_es2015",
-)
-
-html_insert_assets(
-    name = "inject_scripts_for_local_prod",
-    outs = ["_local_prod/index.html"],
-    args = [
-        "--html=$(execpath :index.local-prod.html)",
-        "--out=$@",
-        "--roots=. $(RULEDIR)",
-        "--assets",
-    ] + [
-        "$(execpath %s)" % ":styles.css",
-        "$(execpath %s)" % "@npm//:node_modules/zone.js/dist/zone.min.js",
-        "$(execpath %s)/index.es2015.js" % ":local_prod_bundle_es2015.min",
-    ],
-    data = [
-        ":index.local-prod.html",
-        ":local_prod_bundle_es2015.min",
-        ":manifest.webmanifest",
-        ":styles.css",
-        "@npm//:node_modules/zone.js/dist/zone.min.js",
-    ],
-)
-
-pkg_web(
-    name = "local_prod_pwa_app",
-    srcs = [
-        "index.local-prod.html",
-        ":inject_scripts_for_local_prod",
-        ":local_prod_bundle_es2015.min",
-        ":manifest.webmanifest",
-        ":styles.css",
-        "//services/client/src/assets",
-        "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
-        "@npm//:node_modules/zone.js/dist/zone.min.js",
-    ],
-    additional_root_paths = ["npm/node_modules/@angular/service-worker"],
-)
-
-ngsw_config(
-    name = "local_prod_pwa",
-    src = ":local_prod_pwa_app",
-    config = "//services/client:ngsw-config.json",
-    index_html = ":inject_scripts_for_local_prod",
-)
-
-ts_library(
-    name = "local_prod_server_lib",
-    srcs = ["server.local-prod.ts"],
-    deps = [
-        "//services/client/src/app:local_prod_server",
-        "@npm//@angular/core",
-        "@npm//@nguniversal/express-engine",
-        "@npm//@types/compression",
-        "@npm//@types/express",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//compression",
-        "@npm//express",
-        "@npm//yargs",
-    ],
-)
-
-nodejs_binary(
-    name = "local_prod_server",
-    data = [
-        ":local_prod_pwa",
-        ":local_prod_server_lib",
-    ],
-    entry_point = ":server.local-prod.ts",
-)
-
-##################
-# production server
-##################
 ts_library(
     name = "prod_src",
     srcs = ["main.prod.ts"],
@@ -226,7 +117,7 @@ terser_minified(
 
 html_insert_assets(
     name = "inject_scripts_for_prod",
-    outs = ["_index.html"],
+    outs = ["_prod/index.html"],
     args = [
         "--html=$(execpath :index.prod.html)",
         "--out=$@",
@@ -249,10 +140,10 @@ html_insert_assets(
 pkg_web(
     name = "prod_pwa_app",
     srcs = [
-        "index.prod.html",
         ":inject_scripts_for_prod",
         ":manifest.webmanifest",
         ":prod_bundle_es2015.min",
+        ":robots.txt",
         ":styles.css",
         "//services/client/src/assets",
         "@npm//:node_modules/@angular/service-worker/ngsw-worker.js",
@@ -279,21 +170,32 @@ history_server(
 
 ts_library(
     name = "prod_server_lib",
-    srcs = ["server.prod.ts"],
+    srcs = ["server.ts"],
     deps = [
-        "//services/client/src/app:prod_server",
+        "//services/client/src/app:server",
         "@npm//@angular/core",
         "@npm//@nguniversal/express-engine",
         "@npm//@types/compression",
         "@npm//@types/express",
         "@npm//@types/node",
+        "@npm//@types/yargs",
         "@npm//compression",
         "@npm//express",
+        "@npm//yargs",
     ],
 )
 
-nodejs_image(
+nodejs_binary(
     name = "prod_server",
+    data = [
+        ":prod_pwa",
+        ":prod_server_lib",
+    ],
+    entry_point = ":server.ts",
+)
+
+nodejs_image(
+    name = "prod_server_image",
     data = [
         ":prod_pwa",
         ":prod_server_lib",
@@ -303,6 +205,6 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
-    images = {"client:placeholder_name": ":prod_server"},
+    images = {"client:placeholder_name": ":prod_server_image"},
     template = ":client.yaml",
 )

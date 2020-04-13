@@ -1,15 +1,14 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 import { IUpdateUserDto, IUserState, IConfirmEmailChangeDto } from '@cents-ideas/models';
-
-import { ENVIRONMENT, IEnvironment } from '../../environments';
+import { EnvironmentService } from '../../shared/environment';
 
 @Injectable()
 export class UserService {
-  constructor(private http: HttpClient, @Inject(ENVIRONMENT) private env: IEnvironment) {}
+  constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
 
   confirmEmailChange = (token: string): Observable<IUserState> => {
     const payload: IConfirmEmailChangeDto = { token };
@@ -22,7 +21,7 @@ export class UserService {
     return this.http.put<IUserState>(url, payload);
   };
 
-  get baseUrl() {
-    return `${this.env.gatewayHost}/${ApiEndpoints.Users}`;
+  private get baseUrl() {
+    return `${this.environmentService.env.gatewayHost}/${ApiEndpoints.Users}`;
   }
 }

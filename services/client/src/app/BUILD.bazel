@@ -20,7 +20,6 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         "//packages/enums",
-        "//services/client/src/environments",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
@@ -29,6 +28,7 @@ ts_library(
         "@npm//@ngrx/effects",
         "@npm//@ngrx/router-store",
         "@npm//@ngrx/store",
+        "@npm//@types/node",
         "@npm//rxjs",
     ],
 )
@@ -50,6 +50,7 @@ ts_library(
         "//services/client/src/app/auth:store",
         "//services/client/src/app/ideas",
         "//services/client/src/app/user",
+        "//services/client/src/shared/environment",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
@@ -60,9 +61,6 @@ ts_library(
     ],
 )
 
-##################
-# development
-##################
 ts_library(
     name = "dev_store",
     srcs = ["app-dev.store.module.ts"],
@@ -70,7 +68,7 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         ":base_store",
-        "//services/client/src/environments",
+        "//services/client/src/shared/environment",
         "@npm//@angular/core",
         "@npm//@ngrx/store-devtools",
     ],
@@ -84,46 +82,12 @@ ts_library(
     deps = [
         ":base_app",
         ":dev_store",
-        "//services/client/src/environments",
+        "//services/client/src/shared/environment",
         "@npm//@angular/core",
         "@npm//@angular/service-worker",
     ],
 )
 
-##################
-# local production
-##################
-ts_library(
-    name = "local_prod_app",
-    srcs = ["app-local-prod.module.ts"],
-    tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
-    deps = [
-        ":base_app",
-        ":base_store",
-        "//services/client/src/environments",
-        "@npm//@angular/common",
-        "@npm//@angular/core",
-        "@npm//@angular/service-worker",
-    ],
-)
-
-ts_library(
-    name = "local_prod_server",
-    srcs = ["app-local-prod.server.module.ts"],
-    tsconfig = "//services/client:tsconfig-server",
-    use_angular_plugin = True,
-    deps = [
-        ":base_app",
-        ":local_prod_app",
-        "@npm//@angular/core",
-        "@npm//@angular/platform-server",
-    ],
-)
-
-##################
-# production
-##################
 ts_library(
     name = "prod_app",
     srcs = ["app-prod.module.ts"],
@@ -132,7 +96,7 @@ ts_library(
     deps = [
         ":base_app",
         ":base_store",
-        "//services/client/src/environments",
+        "//services/client/src/shared/environment",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/service-worker",
@@ -140,8 +104,8 @@ ts_library(
 )
 
 ts_library(
-    name = "prod_server",
-    srcs = ["app-prod.server.module.ts"],
+    name = "server",
+    srcs = ["app.server.module.ts"],
     tsconfig = "//services/client:tsconfig-server",
     use_angular_plugin = True,
     deps = [

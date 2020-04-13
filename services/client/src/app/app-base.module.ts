@@ -8,6 +8,7 @@ import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { EnvironmentModule } from '../shared/environment';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { AppRoutingModule } from './app-routing.module';
     AuthModule,
     IdeasModule,
     UserModule,
+    EnvironmentModule,
   ],
   declarations: [AppComponent],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true }],

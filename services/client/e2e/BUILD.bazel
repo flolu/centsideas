@@ -14,12 +14,12 @@ ts_library(
     ],
 )
 
-protractor_web_test_suite(
-    name = "dev_server_test",
-    on_prepare = ":dev-server.on-prepare.js",
-    server = "//services/client/src:live_server",
-    deps = [":e2e"],
-)
+#protractor_web_test_suite(
+#    name = "dev_server_test",
+#    on_prepare = ":dev-server.on-prepare.js",
+#    server = "//services/client/src:live_server",
+#    deps = [":e2e"],
+#)
 
 protractor_web_test_suite(
     name = "pwa_server_test",
@@ -32,9 +32,9 @@ protractor_web_test_suite(
 )
 
 protractor_web_test_suite(
-    name = "local_server_test",
+    name = "prod_server_test",
     on_prepare = ":local-server.on-prepare.js",
-    server = "//services/client/src:local_prod_server",
+    server = "//services/client/src:prod_server",
     deps = [
         ":e2e",
         "@npm//tslib",

@@ -17,7 +17,7 @@ ts_library(
         "//packages/models",
         "//services/client/src/app:base_store",
         "//services/client/src/app/auth:store",
-        "//services/client/src/environments",
+        "//services/client/src/shared/environment",
         "//services/client/src/shared/helpers",
         "@npm//@angular/common",
         "@npm//@angular/core",
@@ -58,7 +58,7 @@ ts_library(
     deps = [
         ":store",
         ":user",
-        "//services/client/src/environments",
+        "//services/client/src/shared/environment",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",

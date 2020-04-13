@@ -16,9 +16,9 @@ export function setTransferedState(reducer: ActionReducer<any>): ActionReducer<a
   };
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class NgRxStateTransferService {
-  private keyName = 'ci-ngrx-state';
+  private keyName = '@cents-ideas/ngrx-state';
   private key = makeStateKey(this.keyName);
 
   constructor(
