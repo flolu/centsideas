@@ -12,7 +12,6 @@ import { AppServerModule } from './app/app.server.module';
 enableProdMode();
 
 process.env.angularEnvironment = JSON.stringify({
-  // TODO does this pick up env vars from the global kubernetes config? ... would be awesome!
   gatewayHost: process.env.GATEWAY_HOST || 'https://api.cents-ideas.flolu.com',
 });
 
