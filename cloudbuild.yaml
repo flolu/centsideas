@@ -9,6 +9,8 @@ steps:
         "images/bazelisk.Dockerfile",
         ".",
       ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/centsideas/bazelisk"]
   - name: gcr.io/centsideas/bazelisk
     args: ["test", "//services/consumer/..."]
   - name: gcr.io/centsideas/bazelisk
