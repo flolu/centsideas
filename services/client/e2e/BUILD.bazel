@@ -5,7 +5,7 @@ ts_library(
     name = "e2e",
     testonly = 1,
     srcs = glob(["src/**/*.ts"]),
-    tsconfig = "//services/client:tsconfig-test",
+    tsconfig = "//services/client:tsconfig.json",
     deps = [
         "@npm//@types/jasmine",
         "@npm//jasmine",
@@ -17,26 +17,27 @@ ts_library(
 protractor_web_test_suite(
     name = "dev_server_test",
     on_prepare = ":dev-server.on-prepare.js",
-    server = "//services/client/src:live_server",
+    server = "//services/client:live_server",
     deps = [":e2e"],
 )
 
 protractor_web_test_suite(
     name = "pwa_server_test",
     on_prepare = ":pwa-server.on-prepare.js",
-    server = "//services/client/src:pwa_server",
+    server = "//services/client:pwa_server",
     deps = [
         ":e2e",
         "@npm//tslib",
     ],
 )
 
-protractor_web_test_suite(
-    name = "local_server_test",
-    on_prepare = ":local-server.on-prepare.js",
-    server = "//services/client/src:local_prod_server",
-    deps = [
-        ":e2e",
-        "@npm//tslib",
-    ],
-)
+# TODO mock backend for angular universal express server
+#protractor_web_test_suite(
+#    name = "prod_server_test",
+#    on_prepare = ":local-server.on-prepare.js",
+#    server = "//services/client:prod_server",
+#    deps = [
+#        ":e2e",
+#        "@npm//tslib",
+#    ],
+#)

@@ -1,0 +1,41 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+
+package(default_visibility = ["//:__subpackages__"])
+
+ts_library(
+    name = "store",
+    srcs = [
+        "app.selectors.ts",
+        "app.store.module.ts",
+        "custom-route-serializer.ts",
+        "ngrx-state-transfer.service.ts",
+    ],
+    tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
+    deps = [
+        "//packages/enums",
+        "@npm//@angular/common",
+        "@npm//@angular/compiler-cli",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//@ngrx/effects",
+        "@npm//@ngrx/router-store",
+        "@npm//@ngrx/store",
+        "@npm//@types/node",
+        "@npm//rxjs",
+    ],
+)
+
+ts_library(
+    name = "dev",
+    srcs = ["app-dev.store.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
+    deps = [
+        ":store",
+        "//services/client/shared/environment",
+        "@npm//@angular/core",
+        "@npm//@ngrx/store-devtools",
+    ],
+)

@@ -46,7 +46,7 @@ This is a project with the purpose of learning the architecture of complex web a
 - `yarn dev` to start all backend services locally (gateway is available under http://localhost:3000)
 - `yarn client:dev` to start the frontend application (live at http://localhost:5432)
 - `yarn test` to run all unit tests
-- `yarn client:local` to start the frontend application with server side rendering (live at http://localhost:4000)
+- `yarn client:prod` to start the frontend application with server side rendering (live at http://localhost:4000)
 - `yarn clean` to clear node_modules, Bazel and Docker
 - `yarn lint` to detect linting problems
 - `yarn up` to find node module updates

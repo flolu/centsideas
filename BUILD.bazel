@@ -38,6 +38,6 @@ k8s_objects(
         "//services/ideas:k8s",
         "//services/reviews:k8s",
         "//services/users:k8s",
-        "//services/client/src:k8s",
+        "//services/client:k8s",
     ],
 )
