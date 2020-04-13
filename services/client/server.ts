@@ -18,7 +18,7 @@ process.env.angularEnvironment = JSON.stringify({
 
 const app = express();
 const PORT = argv.port || process.env.PORT || 4000;
-const DIST_FOLDER = join(process.cwd(), 'services/client/src/pwa');
+const DIST_FOLDER = join(process.cwd(), 'services/client/pwa');
 
 app.use(compression());
 app.engine('html', ngExpressEngine({ bootstrap: AppServerModule }) as any);

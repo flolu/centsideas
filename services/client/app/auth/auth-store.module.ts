@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import * as fromAuth from '../auth/auth.reducer';
-import { AuthEffects } from '../auth/auth.effects';
+import * as fromAuth from './auth.reducer';
+import { AuthEffects } from './auth.effects';
 import { FeatureKeys } from '../store/app.selectors';
 
 @NgModule({

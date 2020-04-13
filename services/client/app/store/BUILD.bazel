@@ -34,7 +34,7 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         ":store",
-        "//services/client/src/shared/environment",
+        "//services/client/shared/environment",
         "@npm//@angular/core",
         "@npm//@ngrx/store-devtools",
     ],

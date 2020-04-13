@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AuthFrontendRoutes } from '@cents-ideas/enums';
 
-import { LoginContainer } from '../auth/login.container';
+import { LoginContainer } from './login.container';
 import { AuthStoreModule } from './auth-store.module';
 import { AuthService } from './auth.service';
 

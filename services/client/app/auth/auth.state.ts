@@ -1,4 +1,4 @@
-import { IAuthReducerState } from '../auth/auth.reducer';
+import { IAuthReducerState } from './auth.reducer';
 
 export interface IAuthFeatureReducerState {
   auth: IAuthReducerState;
