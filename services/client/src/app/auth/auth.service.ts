@@ -6,7 +6,7 @@ import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
 
 import { ApiEndpoints, UsersApiRoutes, TokenExpirationTimes } from '@cents-ideas/enums';
 import { IAuthenticatedDto, ILoginDto, IConfirmLoginDto } from '@cents-ideas/models';
-import { EnvironmentService } from '../../shared/environment';
+import { EnvironmentService } from '../../shared/environment/environment.service';
 
 export const TOKEN_KEY = 'token';
 

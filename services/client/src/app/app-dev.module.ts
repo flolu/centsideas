@@ -4,7 +4,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppDevStoreModule } from './app-dev.store.module';
 import { AppBaseModule } from './app-base.module';
 import { AppComponent } from './app.component';
-import { EnvironmentService } from '../shared/environment';
+import { EnvironmentService } from '../shared/environment/environment.service';
 
 @NgModule({
   imports: [

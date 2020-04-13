@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { ApiEndpoints } from '@cents-ideas/enums';
 import { IIdeaViewModel, IIdeaState } from '@cents-ideas/models';
-import { EnvironmentService } from '../../shared/environment';
+import { EnvironmentService } from '../../shared/environment/environment.service';
 
 @Injectable()
 export class IdeasService {

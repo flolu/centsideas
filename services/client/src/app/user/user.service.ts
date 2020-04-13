@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 import { IUpdateUserDto, IUserState, IConfirmEmailChangeDto } from '@cents-ideas/models';
-import { EnvironmentService } from '../../shared/environment';
+import { EnvironmentService } from '../../shared/environment/environment.service';
 
 @Injectable()
 export class UserService {
