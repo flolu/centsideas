@@ -97,21 +97,21 @@ sudo yarn global add @angular/cli --prefix /usr/local
 **Creating a feature branch**
 
 ```
-git checkout develop
+git checkout dev
 git checkout -b <name-of-feature-branch>
 ```
 
 **Finishing a feature branch**
 
 ```
-git checkout develop
+git checkout dev
 git merge <name-of-feature-branch>
 ```
 
 **Release branches**
 
 ```
-git checkout develop
+git checkout dev
 git checkout -b release/0.1.0
 # release work
 git checkout master
@@ -125,7 +125,7 @@ git checkout master
 git checkout -b <name-of-hotfix-branch>
 git checkout master
 git merge <name-of-hotfix-branch>
-git checkout develop
+git checkout dev
 git merge <name-of-hotfix-branch>
 git branch -D <name-of-hotfix-branch>
 ```
