@@ -14,7 +14,7 @@ import { CustomSerializer } from './custom-route-serializer';
   ],
   providers: [NgRxStateTransferService],
 })
-export class AppBaseStoreModule {
+export class AppStoreModule {
   constructor(private stateTransferService: NgRxStateTransferService) {
     this.stateTransferService.handleStateTransfer();
   }

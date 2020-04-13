@@ -3,12 +3,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { AppComponent } from './app.component';
 import { AppBaseModule } from './app-base.module';
-import { AppBaseStoreModule } from './app-base.store.module';
+import { AppStoreModule } from './store/app.store.module';
 import { EnvironmentService } from '../shared/environment/environment.service';
 import { isPlatformBrowser } from '@angular/common';
 
 @NgModule({
-  imports: [ServiceWorkerModule.register('ngsw-worker.js'), AppBaseModule, AppBaseStoreModule],
+  imports: [ServiceWorkerModule.register('ngsw-worker.js'), AppBaseModule, AppStoreModule],
   bootstrap: [AppComponent],
 })
 export class AppProdModule {

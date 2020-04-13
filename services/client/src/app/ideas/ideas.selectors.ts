@@ -8,7 +8,7 @@ import { IIdeaViewModel } from '@cents-ideas/models';
 import { IIdeasFeatureReducerState } from './ideas.state';
 import * as fromIdeas from './ideas.reducer';
 import { UserSelectors } from '../user/user.selectors';
-import { AppSelectors } from '../app.selectors';
+import { AppSelectors } from '../store/app.selectors';
 
 const selectIdeasState = createSelector(
   AppSelectors.selectIdeasFeatureState,

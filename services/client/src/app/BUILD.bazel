@@ -9,32 +9,7 @@ sass_binary(
 )
 
 ts_library(
-    name = "base_store",
-    srcs = [
-        "app.selectors.ts",
-        "app-base.store.module.ts",
-        "custom-route-serializer.ts",
-        "ngrx-state-transfer.service.ts",
-    ],
-    tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
-    deps = [
-        "//packages/enums",
-        "@npm//@angular/common",
-        "@npm//@angular/compiler-cli",
-        "@npm//@angular/core",
-        "@npm//@angular/platform-browser",
-        "@npm//@angular/router",
-        "@npm//@ngrx/effects",
-        "@npm//@ngrx/router-store",
-        "@npm//@ngrx/store",
-        "@npm//@types/node",
-        "@npm//rxjs",
-    ],
-)
-
-ts_library(
-    name = "base_app",
+    name = "base",
     srcs = [
         "app.component.ts",
         "app-base.module.ts",
@@ -62,26 +37,13 @@ ts_library(
 )
 
 ts_library(
-    name = "dev_store",
-    srcs = ["app-dev.store.module.ts"],
-    tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
-    deps = [
-        ":base_store",
-        "//services/client/src/shared/environment",
-        "@npm//@angular/core",
-        "@npm//@ngrx/store-devtools",
-    ],
-)
-
-ts_library(
-    name = "dev_app",
+    name = "dev",
     srcs = ["app-dev.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
-        ":base_app",
-        ":dev_store",
+        ":base",
+        "//services/client/src/app/store:dev",
         "//services/client/src/shared/environment",
         "@npm//@angular/core",
         "@npm//@angular/service-worker",
@@ -89,13 +51,13 @@ ts_library(
 )
 
 ts_library(
-    name = "prod_app",
+    name = "prod",
     srcs = ["app-prod.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
-        ":base_app",
-        ":base_store",
+        ":base",
+        "//services/client/src/app/store",
         "//services/client/src/shared/environment",
         "@npm//@angular/common",
         "@npm//@angular/core",
@@ -109,8 +71,8 @@ ts_library(
     tsconfig = "//services/client:tsconfig-server",
     use_angular_plugin = True,
     deps = [
-        ":base_app",
-        ":prod_app",
+        ":base",
+        ":prod",
         "@npm//@angular/core",
         "@npm//@angular/platform-server",
     ],

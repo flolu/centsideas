@@ -8,6 +8,7 @@ load("//services/client:ngsw_config.bzl", "ngsw_config")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+load("//services/client:defaults.bzl", "inserted_assets", "static_assets")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -40,7 +41,7 @@ ts_library(
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
-        "//services/client/src/app:dev_app",
+        "//services/client/src/app:dev",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/platform-browser",
     ],
@@ -50,21 +51,12 @@ html_insert_assets(
     name = "inject_scripts_for_dev",
     outs = ["index.html"],
     args = [
-        "--html=$(execpath //services/client/src:index.dev.html)",
+        "--html=$(execpath :_index.html)",
         "--out=$@",
         "--roots=. $(RULEDIR)",
         "--assets",
-    ] + [
-        "$(execpath %s)" % ":styles.css",
-        "$(execpath %s)" % "@npm//:node_modules/zone.js/dist/zone.min.js",
-        "./_/ts_scripts.js",
-    ],
-    data = [
-        ":index.dev.html",
-        ":manifest.webmanifest",
-        ":styles.css",
-        "@npm//:node_modules/zone.js/dist/zone.min.js",
-    ],
+    ] + ["$(execpath %s)" % s for s in inserted_assets] + ["./_/ts_scripts.js"],
+    data = static_assets,
 )
 
 ts_devserver(
@@ -90,14 +82,14 @@ ts_library(
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
-        "//services/client/src/app:prod_app",
+        "//services/client/src/app:prod",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
     ],
 )
 
 rollup_bundle(
-    name = "prod_bundle_es2015",
+    name = "bundle",
     config_file = "rollup.config.js",
     entry_points = {
         ":main.prod.ts": "index.es2015",
@@ -111,38 +103,28 @@ rollup_bundle(
 )
 
 terser_minified(
-    name = "prod_bundle_es2015.min",
-    src = ":prod_bundle_es2015",
+    name = "bundle.min",
+    src = ":bundle",
 )
 
 html_insert_assets(
-    name = "inject_scripts_for_prod",
+    name = "html",
     outs = ["_prod/index.html"],
     args = [
-        "--html=$(execpath :index.prod.html)",
+        "--html=$(execpath :_index.html)",
         "--out=$@",
         "--roots=. $(RULEDIR)",
         "--assets",
-    ] + [
-        "$(execpath %s)" % ":styles.css",
-        "$(execpath %s)" % "@npm//:node_modules/zone.js/dist/zone.min.js",
-        "$(execpath %s)/index.es2015.js" % ":prod_bundle_es2015.min",
-    ],
-    data = [
-        ":index.prod.html",
-        ":manifest.webmanifest",
-        ":prod_bundle_es2015.min",
-        ":styles.css",
-        "@npm//:node_modules/zone.js/dist/zone.min.js",
-    ],
+    ] + ["$(execpath %s)" % s for s in inserted_assets] + ["$(execpath %s)/index.es2015.js" % ":bundle.min"],
+    data = static_assets + [":bundle.min"],
 )
 
 pkg_web(
-    name = "prod_pwa_app",
+    name = "pwa_app",
     srcs = [
-        ":inject_scripts_for_prod",
+        ":bundle.min",
+        ":html",
         ":manifest.webmanifest",
-        ":prod_bundle_es2015.min",
         ":robots.txt",
         ":styles.css",
         "//services/client/src/assets",
@@ -153,23 +135,23 @@ pkg_web(
 )
 
 ngsw_config(
-    name = "prod_pwa",
-    src = ":prod_pwa_app",
+    name = "pwa",
+    src = ":pwa_app",
     config = "//services/client:ngsw-config.json",
-    index_html = ":inject_scripts_for_prod",
+    index_html = ":html",
 )
 
 history_server(
     name = "pwa_server",
-    data = [":prod_pwa"],
+    data = [":pwa"],
     templated_args = [
         "-a",
-        "$(rlocation cents_ideas/services/client/src/prod_pwa)",
+        "$(rlocation cents_ideas/services/client/src/pwa)",
     ],
 )
 
 ts_library(
-    name = "prod_server_lib",
+    name = "server_lib",
     srcs = ["server.ts"],
     deps = [
         "//services/client/src/app:server",
@@ -188,8 +170,8 @@ ts_library(
 nodejs_binary(
     name = "prod_server",
     data = [
-        ":prod_pwa",
-        ":prod_server_lib",
+        ":pwa",
+        ":server_lib",
     ],
     entry_point = ":server.ts",
 )
@@ -197,8 +179,8 @@ nodejs_binary(
 nodejs_image(
     name = "prod_server_image",
     data = [
-        ":prod_pwa",
-        ":prod_server_lib",
+        ":pwa",
+        ":server_lib",
     ],
     entry_point = ":server.prod.ts",
 )

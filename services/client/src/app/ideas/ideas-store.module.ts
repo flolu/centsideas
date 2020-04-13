@@ -7,7 +7,7 @@ import * as fromIdeas from './ideas.reducer';
 import * as fromEditIdeas from './edit-idea.reducer';
 import { IdeasEffects } from './ideas.effects';
 import { IdeasService } from './ideas.service';
-import { FeatureKeys } from '../app.selectors';
+import { FeatureKeys } from '../store/app.selectors';
 
 @NgModule({
   imports: [

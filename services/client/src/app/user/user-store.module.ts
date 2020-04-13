@@ -6,7 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import * as fromUser from './user.reducer';
 import { UserService } from './user.service';
 import { UserEffects } from './user.effects';
-import { FeatureKeys } from '../app.selectors';
+import { FeatureKeys } from '../store/app.selectors';
 
 @NgModule({
   imports: [

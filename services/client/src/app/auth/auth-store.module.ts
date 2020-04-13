@@ -5,7 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 
 import * as fromAuth from '../auth/auth.reducer';
 import { AuthEffects } from '../auth/auth.effects';
-import { FeatureKeys } from '../app.selectors';
+import { FeatureKeys } from '../store/app.selectors';
 
 @NgModule({
   imports: [
