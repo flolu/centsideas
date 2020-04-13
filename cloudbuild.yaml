@@ -1,24 +1,27 @@
 steps:
-  - id: "consumer-service"
-    name: gcr.io/cloud-builders/bazel
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/centsideas/bazelisk",
+        "-f",
+        "images/bazelisk.Dockerfile",
+        ".",
+      ]
+  - name: gcr.io/centsideas/bazelisk
     args: ["test", "//services/consumer/..."]
-  - id: "gateway-service"
-    name: gcr.io/cloud-builders/bazel
+  - name: gcr.io/centsideas/bazelisk
     args: ["test", "//services/gateway/..."]
-  - id: "ideas-service"
-    name: gcr.io/cloud-builders/bazel
+  - name: gcr.io/centsideas/bazelisk
     args: ["test", "//services/ideas/..."]
-  - id: "reviews-service"
-    name: gcr.io/cloud-builders/bazel
+  - name: gcr.io/centsideas/bazelisk
     args: ["test", "//services/reviews/..."]
-  - id: "users-service"
-    name: gcr.io/cloud-builders/bazel
+  - name: gcr.io/centsideas/bazelisk
     args: ["test", "//services/users/..."]
-  - id: "event-sourcing-package"
-    name: gcr.io/cloud-builders/bazel
+  - name: gcr.io/centsideas/bazelisk
     args: ["test", "//packages/event-sourcing/..."]
-  - id: "utils-package"
-    name: gcr.io/cloud-builders/bazel
+  - name: gcr.io/centsideas/bazelisk
     args: ["test", "//packages/utils/..."]
 timeout: 1800s
 options:
