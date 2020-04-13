@@ -54,7 +54,7 @@ ts_library(
     name = "test_lib",
     testonly = 1,
     srcs = glob(["*.spec.ts"]),
-    tsconfig = "//services/client:tsconfig-test",
+    tsconfig = "//services/client:tsconfig.json",
     deps = [
         ":store",
         ":user",

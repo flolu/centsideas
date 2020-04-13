@@ -12,6 +12,8 @@ load("//services/client:defaults.bzl", "inserted_assets", "static_assets")
 
 package(default_visibility = ["//:__subpackages__"])
 
+exports_files(["ngsw-config.json"])
+
 filegroup(
     name = "rxjs_umd_modules",
     srcs = [
@@ -137,7 +139,7 @@ pkg_web(
 ngsw_config(
     name = "pwa",
     src = ":pwa_app",
-    config = "//services/client:ngsw-config.json",
+    config = "//services/client/src:ngsw-config.json",
     index_html = ":html",
 )
 

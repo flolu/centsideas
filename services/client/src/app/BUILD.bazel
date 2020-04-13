@@ -68,7 +68,7 @@ ts_library(
 ts_library(
     name = "server",
     srcs = ["app.server.module.ts"],
-    tsconfig = "//services/client:tsconfig-server",
+    tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
         ":base",

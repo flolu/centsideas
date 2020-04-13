@@ -5,7 +5,7 @@ ts_library(
     name = "e2e",
     testonly = 1,
     srcs = glob(["src/**/*.ts"]),
-    tsconfig = "//services/client:tsconfig-test",
+    tsconfig = "//services/client:tsconfig.json",
     deps = [
         "@npm//@types/jasmine",
         "@npm//jasmine",
