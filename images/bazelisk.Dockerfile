@@ -1,10 +1,7 @@
 FROM ubuntu:18.04
 
 RUN apt-get update
-RUN apt-get -y install curl
-
-# bazel deps
-RUN apt-get -y install unzip python python3 git
+RUN apt-get -y install curl gnupg unzip python python3 git
 
 # nodejs
 RUN apt-get -y install nodejs
