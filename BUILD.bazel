@@ -30,6 +30,7 @@ k8s_objects(
     name = "kubernetes_deployment",
     objects = [
         "//kubernetes:config",
+        "//kubernetes:secret",
         "//kubernetes:certificate_issuer",
         "//kubernetes:ingress",
         "//kubernetes:database_storage",

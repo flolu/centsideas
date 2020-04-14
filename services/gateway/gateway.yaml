@@ -18,6 +18,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: JWT_SECRET
           readinessProbe:
             httpGet:
               path: /alive

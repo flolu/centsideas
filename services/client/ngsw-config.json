@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../node_modules/@angular/service-worker/config/schema.json",
+  "$schema": "../../node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
   "assetGroups": [
     {
@@ -23,7 +23,7 @@
   "dataGroups": [
     {
       "name": "api-freshness",
-      "urls": ["http://localhost:3000/**", "https://api.cents-ideas.flolu.com/**"],
+      "urls": ["https://api.cents-ideas.flolu.com/**"],
       "cacheConfig": {
         "maxAge": "1d",
         "maxSize": 100,

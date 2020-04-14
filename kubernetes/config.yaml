@@ -6,9 +6,9 @@ data:
   # general
   ENV: prod
   LEVEL: debug
-  API_URL: https://cents-ideas-api.flolu.com
-  GATEWAY_HOST: https://cents-ideas-api.flolu.com
-  FRONTEND_URL: https://cents-ideas.com
+  API_URL: https://api.cents-ideas.flolu.com
+  GATEWAY_HOST: https://api.cents-ideas.flolu.com
+  FRONTEND_URL: https://cents-ideas.flolu.com
 
   # gateway
   IDEAS_SERVICE_HOST: cents-ideas-ideas:3000
@@ -26,6 +26,3 @@ data:
   REVIEWS_DATABASE_URL: mongodb://cents-ideas-reviews-event-store:27017
   PROJECTION_DATABASE_URL: mongodb://cents-ideas-projection-database:27017
   USERS_DATABASE_URL: mongodb://cents-ideas-users-event-store:27017
-  # TODO as secret
-  JWT_SECRET: 2:Q6Y:2YL?`A<ZebSs~O"ybs?n<J}CQYg<SkUIcJ]jsZJs|=jmbb?QX/BKW1MB]Hr`b8j#7T/?D76`*6~&Ii
-  # TODO sendgrid api key as secret

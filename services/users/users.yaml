@@ -19,6 +19,17 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: JWT_SECRET
+            - name: SEND_GRID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: SEND_GRID_API_KEY
           readinessProbe:
             httpGet:
               path: /alive

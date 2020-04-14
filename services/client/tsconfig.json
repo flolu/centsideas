@@ -1,8 +1,14 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2015",
     "lib": ["es2018", "dom"],
     "paths": {
-      "@cents-ideas/*": ["../../../packages/*"]
+      "@cents-ideas/*": ["../../packages/*"]
     }
   }
 }

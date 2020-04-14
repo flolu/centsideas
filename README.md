@@ -87,6 +87,8 @@ sudo snap install helm --classic
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 sudo apt-get update && sudo apt-get install google-cloud-sdk
+gcloud init
+gcloud auth configure-docker
 
 # angular cli
 sudo yarn global add @angular/cli --prefix /usr/local
@@ -142,6 +144,8 @@ _TODO consider creating script to automate this_
 gcloud beta container --project "centsideas" clusters create "cents-ideas" --zone "europe-west3-b"
 gcloud container clusters get-credentials cents-ideas --zone europe-west3-b --project centsideas
 ```
+
+_TODO add instructions on how to add Application-layer Secrets Encryption_
 
 ### 2. Setup [Helm](https://helm.sh/)
 

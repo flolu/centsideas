@@ -9,6 +9,7 @@ export class EnvironmentService {
   private keyName = '@cents-ideas/environment';
   private key = makeStateKey(this.keyName);
 
+  // TODO there shouldn't be a default, but rather the gatewayHost should always be transferred from the server?!
   private readonly defaultEnvironment = { gatewayHost: 'http://localhost:3000', isDefault: true };
   private environment: IEnvironment = this.defaultEnvironment;
 
