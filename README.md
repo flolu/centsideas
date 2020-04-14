@@ -6,33 +6,35 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Goals
 
-| Requirement                                    | Keywords                               | Status |
-| ---------------------------------------------- | -------------------------------------- | ------ |
-| Microservices                                  | small services, docker                 | ✔️     |
-| Redux frontend                                 | reactive, actions, effects             | ✔️     |
-| Monorepo                                       | all packages and services in one repo  | ✔️     |
-| Typescript                                     | types everywhere!                      | ✔️     |
-| Local development                              | hot reload, docker-compose, vscode     | ✔️     |
-| Git flow                                       | branching, releases, rebasing          | ✔️     |
-| Gateway                                        | discovery, entry point, auth           | ✔️     |
-| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker | ✅     |
-| Deployment                                     | ci, cd, build automation, bazel        | ✅     |
-| Testing                                        | unit Tests, integration Tests          | ✅     |
-| Kubernetes                                     | container orchestration                | ✅     |
-| Database(s)                                    | data storage, event store              | ✅     |
-| SEO                                            | server side rendering, marketing       | ✅     |
-| Authentication                                 | passwordless, google login             | ✅     |
-| Progressive Web App                            | pwa, service worker, mobile-friendly   | ✅     |
-| File storage                                   | blob storage                           | ❌     |
-| Static pages                                   | homepage, static content               | ❌     |
-| Search                                         | indexing, realtime search              | ❌     |
-| Admin panel                                    | monitoring, event handling, logs       | ❌     |
-| Backups                                        | automatic, manual, restore             | ❌     |
-| Realtime                                       | some kind of realtime integration      | ❌     |
-| GDPR                                           | legal, privacy                         | ❌     |
-| User Interface                                 | modern, unique, reusable               | ❌     |
-| Compute server                                 | non-nodejs server for high cpu tasks   | ❌     |
-| Frontend                                       | code splitting, ...                    | ❌     |
+| Requirement                                    | Keywords                                  | Status |
+| ---------------------------------------------- | ----------------------------------------- | ------ |
+| Microservices                                  | small services, docker                    | ✔️     |
+| Redux frontend                                 | reactive, actions, effects                | ✔️     |
+| Monorepo                                       | all packages and services in one repo     | ✔️     |
+| Typescript                                     | types everywhere!                         | ✔️     |
+| Local development                              | hot reload, docker-compose, vscode        | ✔️     |
+| Git flow                                       | branching, releases, rebasing             | ✔️     |
+| Gateway                                        | discovery, entry point, auth              | ✔️     |
+| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker    | ✅     |
+| Deployment                                     | ci, cd, build automation, bazel           | ✅     |
+| Testing                                        | unit Tests, integration Tests             | ✅     |
+| Kubernetes                                     | container orchestration                   | ✅     |
+| Database(s)                                    | data storage, event store                 | ✅     |
+| SEO                                            | server side rendering, marketing          | ✅     |
+| Authentication                                 | passwordless, google login                | ✅     |
+| Progressive Web App                            | pwa, service worker, mobile-friendly      | ✅     |
+| File storage                                   | blob storage                              | ❌     |
+| Static pages                                   | homepage, static content                  | ❌     |
+| Search                                         | indexing, realtime search                 | ❌     |
+| Admin panel                                    | monitoring, event handling, logs          | ❌     |
+| Backups                                        | automatic, manual, restore                | ❌     |
+| Realtime                                       | some kind of realtime integration         | ❌     |
+| GDPR                                           | legal, privacy                            | ❌     |
+| User Interface                                 | modern, unique, reusable                  | ❌     |
+| Compute server                                 | non-nodejs server for high cpu tasks      | ❌     |
+| Frontend                                       | code splitting, ...                       | ❌     |
+| Frontend                                       | code splitting, drag&drop, touch gestures | ❌     |
+| Push notifications                             | browser (mobile and desktop)              | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented
