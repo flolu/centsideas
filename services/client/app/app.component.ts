@@ -47,11 +47,16 @@ export class AppComponent implements OnDestroy {
   }
 
   handleAuthentication = () => {
+    console.log('[AppComponent] handle authentication');
+    if (isPlatformBrowser(this.platform)) {
+      console.log('[AppComponent] cookie', document.cookie);
+    }
     this.store
       .select(AuthSelectors.selectAuthState)
       .pipe(
         take(1),
         tap(state => {
+          console.log('[AppComponent] got auth state', state);
           if (state.authenticationTryCount < 1) {
             this.store.dispatch(AuthActions.authenticate());
           }

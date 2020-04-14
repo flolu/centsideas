@@ -7,4 +7,6 @@ export enum UsersApiRoutes {
   GetById = 'get-by-id',
   GetAll = 'get-all',
   Alive = 'alive',
+  // TODO implement
+  RefreshToken = 'refresh-token',
 }

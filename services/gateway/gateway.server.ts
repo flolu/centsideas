@@ -26,15 +26,18 @@ export class GatewayServer {
   start = () => {
     Logger.debug('initialized with env: ', env);
 
-    this.app.use(bodyParser.json());
-    this.app.use(cors());
+    this.app.use(cors({ origin: 'http://localhost:5432', credentials: true }));
+    this.app.use(bodyParser());
 
     this.app.use((req, res, next) => {
       res.locals.userId = null;
 
       const token = req.headers[HeaderKeys.Auth];
+
+      // TODO read token from cookies
       if (!token) return next();
 
+      // FIXME performance could be improved by only doing this on routes that require auth
       try {
         const decoded = jwt.verify(token, env.jwtSecret);
         const data: ITokenDataFull = decoded as any;

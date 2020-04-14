@@ -36,12 +36,15 @@ export class AuthEffects {
     ),
   );
 
-  confirmLogin$ = createEffect(() =>
+  // TODO implemnt all those effects
+  /* confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),
       withLatestFrom(this.store.select(AuthSelectors.selectAuthState)),
       switchMap(([action, authState]) => {
+        console.log('confirm login.... authstate', authState);
         if (authState.token) {
+          console.log('confirm login ... save token from auth state');
           this.authService.saveToken(authState.token);
           return [];
         }
@@ -52,8 +55,8 @@ export class AuthEffects {
       }),
     ),
   );
-
-  confirmLoginDone$ = createEffect(
+ */
+  /* confirmLoginDone$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthActions.confirmLoginDone),
@@ -62,11 +65,12 @@ export class AuthEffects {
       ),
     { dispatch: false },
   );
-
+ */
   authenticate$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.authenticate),
       switchMap(() => {
+        console.log('authenticate..., found token: ', this.authService.token);
         if (this.authService.token) {
           return this.authService.authenticate().pipe(
             map(data => AuthActions.authenticateDone(data)),
@@ -79,14 +83,14 @@ export class AuthEffects {
     ),
   );
 
-  authenticateDone$ = createEffect(
+  /* authenticateDone$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthActions.authenticateDone),
         tap(action => this.authService.saveToken(action.token)),
       ),
     { dispatch: false },
-  );
+  ); */
 
   authenticateFail$ = createEffect(
     () =>

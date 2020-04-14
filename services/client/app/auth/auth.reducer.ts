@@ -50,22 +50,23 @@ const authReducer = createReducer(
     initialized: true,
     error: '',
   })),
-  on(AuthActions.authenticateDone, (state, action) => ({
+  // TODO implment reducer functions
+  /*  on(AuthActions.authenticateDone, (state, action) => ({
     ...state,
     ...LOADING_DONE,
     initialized: true,
     token: action.token,
-  })),
+  })), */
   on(AuthActions.confirmLogin, state => ({ ...state, ...LOADING })),
   on(AuthActions.confirmLoginFail, (state, { error }) => ({
     ...state,
     ...LOADING_FAIL(error),
   })),
-  on(AuthActions.confirmLoginDone, (state, action) => ({
+  /* on(AuthActions.confirmLoginDone, (state, action) => ({
     ...state,
     ...LOADING_DONE,
     token: action.token,
-  })),
+  })), */
 );
 
 export function reducer(state: IAuthReducerState | undefined, action: Action) {

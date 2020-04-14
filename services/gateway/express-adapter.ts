@@ -30,6 +30,11 @@ export class ExpressAdapter {
     if (httpResponse.headers) {
       res.set(httpResponse.headers);
     }
+    if (httpResponse.cookies) {
+      for (const cookie of httpResponse.cookies) {
+        res.cookie(cookie.name, cookie.val, cookie.options);
+      }
+    }
     res.status(httpResponse.status).send(httpResponse.body);
   };
 

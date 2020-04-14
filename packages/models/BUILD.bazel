@@ -9,4 +9,8 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     module_name = "@cents-ideas/models",
+    deps = [
+        "@npm//@types/express",
+        "@npm//express",
+    ],
 )

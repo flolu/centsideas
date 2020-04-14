@@ -17,4 +17,5 @@ export interface IUserCreatedEvent {
   userId: string;
   email: string;
   username: string;
+  tokenId: string;
 }

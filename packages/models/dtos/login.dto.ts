@@ -9,10 +9,14 @@ export interface IAuthenticateDto {
 }
 
 export interface IAuthenticatedDto {
-  token: string;
   user: IUserState;
 }
 
 export interface IConfirmLoginDto {
-  token: string;
+  loginToken: string;
+}
+
+export interface IConfirmedLoginDto {
+  user: IUserState;
+  accessToken: string;
 }

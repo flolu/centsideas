@@ -30,11 +30,12 @@ export class AuthService {
   login = (email: string): Observable<{}> => {
     const payload: ILoginDto = { email };
     const url = `${this.baseUrl}/${UsersApiRoutes.Login}`;
+    console.log('send login payload', payload);
     return this.http.post<{}>(url, payload);
   };
 
   confirmLogin = (token: string): Observable<IAuthenticatedDto> => {
-    const payload: IConfirmLoginDto = { token };
+    const payload: IConfirmLoginDto = { loginToken: token };
     const url = `${this.baseUrl}/${UsersApiRoutes.ConfirmLogin}`;
     return this.http.post<IAuthenticatedDto>(url, payload);
   };
@@ -49,21 +50,25 @@ export class AuthService {
   };
 
   saveToken = (token: string) => {
-    this.removeToken();
     if (isPlatformBrowser(this.platform)) {
-      document.cookie = `${TOKEN_KEY}=${token}; ; max-age=${TokenExpirationTimes.AuthToken};`;
+      console.log('save token on browser');
+      document.cookie = `${TOKEN_KEY}=${token}; max-age=${TokenExpirationTimes.AuthToken}; path=/;`;
     }
     if (isPlatformServer(this.platform)) {
+      console.log('save token on server');
       this.expressResponse.cookie(TOKEN_KEY, token, {
         maxAge: TokenExpirationTimes.AuthToken,
         httpOnly: true,
+        path: '/',
+        // domain: ''
       });
     }
   };
 
   removeToken = () => {
     if (isPlatformBrowser(this.platform)) {
-      document.cookie = '';
+      // TODO only remove jwt token
+      // document.cookie = '';
     }
     if (isPlatformServer(this.platform)) {
       this.expressResponse.clearCookie(TOKEN_KEY);

@@ -11,6 +11,8 @@ export class User extends EventEntity<IUserState> {
     pendingEmail: null,
     createdAt: null,
     updatedAt: null,
+    // TODO implement logout / token invalidation
+    tokenId: '',
     lastEventId: '',
   };
 
@@ -21,9 +23,9 @@ export class User extends EventEntity<IUserState> {
     }
   }
 
-  static create(userId: string, email: string, username: string): User {
+  static create(userId: string, email: string, username: string, tokenId: string): User {
     const user = new User();
-    user.pushEvents(new UserEvents.UserCreatedEvent(userId, email, username));
+    user.pushEvents(new UserEvents.UserCreatedEvent(userId, email, username, tokenId));
     return user;
   }
 

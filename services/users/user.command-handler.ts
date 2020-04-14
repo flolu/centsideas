@@ -10,6 +10,7 @@ import {
   ThreadLogger,
   NotAuthenticatedError,
   NoPermissionError,
+  Identifier,
 } from '@cents-ideas/utils';
 import {
   IAuthenticatedDto,
@@ -68,7 +69,40 @@ export class UserCommandHandler {
     return this.loginRepository.save(login);
   };
 
-  authenticate = async (token: string, t: ThreadLogger): Promise<IAuthenticatedDto> => {
+  confirmLogin = async (token: string, t: ThreadLogger) => {
+    const data = decodeToken(token, env.jwtSecret);
+    t.debug('confirming login of token', token ? token.slice(0, 30) : token);
+
+    // TODO use a different token (with different secret) for confirming logins (should have nothing todo with access or refresh tokerns)
+    if (data.type === 'login') {
+      const payload: ILoginTokenPayload = data.payload as any;
+      const login = await this.loginRepository.findById(payload.loginId);
+      if (!login) throw new UserErrors.LoginNotFoundError(payload.loginId);
+      t.debug('found login', login.persistedState.id);
+
+      if (login && login.persistedState.confirmedAt)
+        throw new TokenInvalidError(token, `This login was already confirmed`);
+
+      if (payload.firstLogin && payload.loginId) {
+        const createdUser = await this.handleUserCreation(payload.email, payload.loginId);
+        // TODO set some flag or do something when first login (so that client knows it)
+        return this.handleConfirmedLogin(createdUser, login, t);
+      }
+
+      const emailUserMapping = await this.repository.getUserIdEmailMapping(payload.email);
+      if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
+
+      const user = await this.repository.findById(emailUserMapping.userId);
+      if (!user) throw new TokenInvalidError(token, 'invalid userId');
+
+      return this.handleConfirmedLogin(user, login, t);
+    }
+
+    t.error('not a login token');
+    throw new TokenInvalidError(token, 'token is not a login token');
+  };
+
+  authenticate = async (token: string, t: ThreadLogger) => {
     const data = decodeToken(token, env.jwtSecret);
     t.debug('authenticate with token', token ? token.slice(0, 30) : token);
 
@@ -80,65 +114,10 @@ export class UserCommandHandler {
       if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
       t.debug('confirmed that user exists');
-      return {
-        user: user.persistedState,
-        token: this.renewAuthToken(token, data.iat, payload.userId),
-      };
+      return user.persistedState;
     }
     t.error('no auth token found');
     throw new TokenInvalidError(token, 'token is not an auth token');
-  };
-
-  confirmLogin = async (token: string, t: ThreadLogger): Promise<IAuthenticatedDto> => {
-    const data = decodeToken(token, env.jwtSecret);
-    t.debug('confirming login of token', token ? token.slice(0, 30) : token);
-
-    if (data.type === 'login') {
-      const payload: ILoginTokenPayload = data.payload as any;
-      const login = await this.loginRepository.findById(payload.loginId);
-      if (!login) throw new UserErrors.LoginNotFoundError(payload.loginId);
-      t.debug('found login', login.persistedState.id);
-
-      if (login && login.persistedState.confirmedAt)
-        throw new TokenInvalidError(token, `This login was already confirmed`);
-
-      if (payload.firstLogin && payload.loginId) {
-        t.log('first login of user with email', payload.email);
-
-        const createdUser = await this.handleUserCreation(payload.email, payload.loginId);
-        const updatedToken = this.generateAuthToken(createdUser.persistedState.id);
-
-        login.pushEvents(
-          new LoginEvents.LoginConfirmedEvent(payload.loginId, createdUser.persistedState.id),
-        );
-        await this.loginRepository.save(login);
-        t.debug('created user with id', createdUser.persistedState.id);
-        t.debug('confirmed login', login.persistedState.id);
-
-        return { user: createdUser.persistedState, token: updatedToken };
-      }
-
-      t.debug('normal login of user with email', payload.email);
-      const emailUserMapping = await this.repository.getUserIdEmailMapping(payload.email);
-      if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
-
-      const user = await this.repository.findById(emailUserMapping.userId);
-      if (!user) throw new TokenInvalidError(token, 'invalid userId');
-
-      login.pushEvents(
-        new LoginEvents.LoginConfirmedEvent(payload.loginId, user.persistedState.id),
-      );
-      await this.loginRepository.save(login);
-      t.debug('confirmed login', login.persistedState.id);
-
-      return {
-        user: user.persistedState,
-        token: this.renewAuthToken(token, data.iat, emailUserMapping.userId),
-      };
-    }
-
-    t.error('not a login token');
-    throw new TokenInvalidError(token, 'token is not a login token');
   };
 
   updateUser = async (
@@ -245,22 +224,51 @@ export class UserCommandHandler {
     if (emailUserMapping) throw new UserErrors.EmailAlreadySignedUpError(email);
 
     const userId = await this.repository.generateUniqueId();
+    const tokenId = Identifier.makeLongId();
     // FIXME username uniqueness?!
     const username: string = faker.internet.userName().toLowerCase().toString();
-    const user = User.create(userId, email, username);
+    const user = User.create(userId, email, username, tokenId);
 
     await this.repository.insertEmail(userId, email);
     return this.repository.save(user);
   };
 
+  // TODO remove
   private renewAuthToken = (oldToken: string, tokenCreatedTime: number, userId: string): string => {
     const generateNewToken = Date.now() - tokenCreatedTime > TokenExpirationTimes.UntilGenerateNew;
     return generateNewToken ? this.generateAuthToken(userId) : oldToken;
   };
 
+  // TODO remove
   private generateAuthToken = (userId: string): string => {
     const payload: IAuthTokenPayload = { userId };
     const data: ITokenData = { type: 'auth', payload };
     return jwt.sign(data, env.jwtSecret, { expiresIn: TokenExpirationTimes.AuthToken });
+  };
+
+  private handleConfirmedLogin = async (user: User, login: Login, t: ThreadLogger) => {
+    // TODO consider adding tokenId to accesstoken, too (by that instant, global token invalidation for this use would be possible)
+    const accessToken = jwt.sign({ userId: user.persistedState.id }, env.accessTokenSecret, {
+      expiresIn: TokenExpirationTimes.AccessToken,
+    });
+    const refreshToken = jwt.sign(
+      {
+        userId: user.persistedState.id,
+        tokenId: user.persistedState.tokenId,
+      },
+      env.refreshTokenSecret,
+      { expiresIn: TokenExpirationTimes.RefreshToken },
+    );
+    t.debug('generated access and refresh tokens');
+
+    const loginEvent = new LoginEvents.LoginConfirmedEvent(
+      login.persistedState.id,
+      user.persistedState.id,
+    );
+    login.pushEvents(loginEvent);
+    await this.loginRepository.save(login);
+    t.debug('confirmed login', login.persistedState.id);
+
+    return { user: user.persistedState, accessToken, refreshToken };
   };
 }
