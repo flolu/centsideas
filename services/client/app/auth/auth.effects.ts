@@ -37,25 +37,24 @@ export class AuthEffects {
   );
 
   // TODO implemnt all those effects
-  /* confirmLogin$ = createEffect(() =>
+  confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),
       withLatestFrom(this.store.select(AuthSelectors.selectAuthState)),
       switchMap(([action, authState]) => {
-        console.log('confirm login.... authstate', authState);
+        // TODO i think this is needed on the server????????
         if (authState.token) {
-          console.log('confirm login ... save token from auth state');
           this.authService.saveToken(authState.token);
           return [];
         }
         return this.authService.confirmLogin(action.token).pipe(
-          map(({ token, user }) => AuthActions.confirmLoginDone({ token, user })),
+          map(({ accessToken, user }) => AuthActions.confirmLoginDone({ accessToken, user })),
           catchError(error => of(AuthActions.confirmLoginFail({ error }))),
         );
       }),
     ),
   );
- */
+
   /* confirmLoginDone$ = createEffect(
     () =>
       this.actions$.pipe(

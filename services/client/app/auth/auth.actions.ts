@@ -2,7 +2,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
 
-import { IAuthenticatedDto } from '@cents-ideas/models';
+import { IAuthenticatedDto, IConfirmedLoginDto } from '@cents-ideas/models';
 
 import { appPrefix, failSuffix, doneSuffix } from '../../shared/helpers/actions.helper';
 
@@ -21,7 +21,7 @@ const authenticateFail = createAction(authenticatePrefix + failSuffix, props<{ e
 const authenticateNoToken = createAction(authenticatePrefix + '/no-token');
 
 const confirmLogin = createAction(confirmLoginPrefix, props<{ token: string }>());
-const confirmLoginDone = createAction(confirmLoginPrefix + doneSuffix, props<IAuthenticatedDto>());
+const confirmLoginDone = createAction(confirmLoginPrefix + doneSuffix, props<IConfirmedLoginDto>());
 const confirmLoginFail = createAction(confirmLoginPrefix + failSuffix, props<{ error: string }>());
 
 export const AuthActions = {

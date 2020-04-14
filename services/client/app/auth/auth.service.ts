@@ -5,7 +5,12 @@ import { isPlatformServer, isPlatformBrowser } from '@angular/common';
 import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
 
 import { ApiEndpoints, UsersApiRoutes, TokenExpirationTimes } from '@cents-ideas/enums';
-import { IAuthenticatedDto, ILoginDto, IConfirmLoginDto } from '@cents-ideas/models';
+import {
+  IAuthenticatedDto,
+  ILoginDto,
+  IConfirmLoginDto,
+  IConfirmedLoginDto,
+} from '@cents-ideas/models';
 import { EnvironmentService } from '../../shared/environment/environment.service';
 
 export const TOKEN_KEY = 'token';
@@ -30,14 +35,13 @@ export class AuthService {
   login = (email: string): Observable<{}> => {
     const payload: ILoginDto = { email };
     const url = `${this.baseUrl}/${UsersApiRoutes.Login}`;
-    console.log('send login payload', payload);
     return this.http.post<{}>(url, payload);
   };
 
-  confirmLogin = (token: string): Observable<IAuthenticatedDto> => {
+  confirmLogin = (token: string): Observable<IConfirmedLoginDto> => {
     const payload: IConfirmLoginDto = { loginToken: token };
     const url = `${this.baseUrl}/${UsersApiRoutes.ConfirmLogin}`;
-    return this.http.post<IAuthenticatedDto>(url, payload);
+    return this.http.post<IConfirmedLoginDto>(url, payload);
   };
 
   authenticate = (): Observable<IAuthenticatedDto> => {

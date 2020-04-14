@@ -8,9 +8,10 @@ import { QueryParamKeys } from '@cents-ideas/enums';
 import { AuthActions } from './auth.actions';
 import { tap, take } from 'rxjs/operators';
 
-const selectAuthToken = createSelector(createFeatureSelector<any>('router'), router => {
-  return router && router.state.queryParams[QueryParamKeys.Token];
-});
+const selectLoginTokenFromUrl = createSelector(
+  createFeatureSelector<any>('router'),
+  router => router && router.state.queryParams[QueryParamKeys.Token],
+);
 
 @Component({
   selector: 'ci-login',
@@ -40,7 +41,7 @@ export class LoginContainer {
 
   handleConfirmLogin = () => {
     this.store
-      .select(selectAuthToken)
+      .select(selectLoginTokenFromUrl)
       .pipe(
         tap(token => {
           if (token) {

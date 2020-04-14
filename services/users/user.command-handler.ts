@@ -18,6 +18,7 @@ import {
   IAuthTokenPayload,
   ILoginTokenPayload,
   IEmailChangeTokenPayload,
+  ITokenDataFull,
 } from '@cents-ideas/models';
 import {
   TopLevelFrontendRoutes,
@@ -100,6 +101,23 @@ export class UserCommandHandler {
 
     t.error('not a login token');
     throw new TokenInvalidError(token, 'token is not a login token');
+  };
+
+  refreshToken = async (token: string, t: ThreadLogger) => {
+    // TODO token data type
+    const data = decodeToken(token, env.jwtSecret);
+    t.debug('refresh token is valid', token ? token.slice(0, 30) : token);
+
+    const user = await this.repository.findById(data.userId);
+    if (!user) throw new TokenInvalidError(token, 'invalid userId');
+
+    if (!user.persistedState.tokenId === data.tokenId)
+      throw new TokenInvalidError(token, 'token was invalidated');
+
+    const accessToken = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
+
+    return { accessToken, refreshToken, user };
   };
 
   authenticate = async (token: string, t: ThreadLogger) => {
@@ -247,18 +265,8 @@ export class UserCommandHandler {
   };
 
   private handleConfirmedLogin = async (user: User, login: Login, t: ThreadLogger) => {
-    // TODO consider adding tokenId to accesstoken, too (by that instant, global token invalidation for this use would be possible)
-    const accessToken = jwt.sign({ userId: user.persistedState.id }, env.accessTokenSecret, {
-      expiresIn: TokenExpirationTimes.AccessToken,
-    });
-    const refreshToken = jwt.sign(
-      {
-        userId: user.persistedState.id,
-        tokenId: user.persistedState.tokenId,
-      },
-      env.refreshTokenSecret,
-      { expiresIn: TokenExpirationTimes.RefreshToken },
-    );
+    const accessToken = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
     t.debug('generated access and refresh tokens');
 
     const loginEvent = new LoginEvents.LoginConfirmedEvent(
@@ -270,5 +278,23 @@ export class UserCommandHandler {
     t.debug('confirmed login', login.persistedState.id);
 
     return { user: user.persistedState, accessToken, refreshToken };
+  };
+
+  private generateAccessToken = (user: User) => {
+    // TODO consider adding tokenId to accesstoken, too (by that instant, global token invalidation for this use would be possible)
+    return jwt.sign({ userId: user.persistedState.id }, env.accessTokenSecret, {
+      expiresIn: TokenExpirationTimes.AccessToken,
+    });
+  };
+
+  private generateRefreshToken = (user: User) => {
+    return jwt.sign(
+      {
+        userId: user.persistedState.id,
+        tokenId: user.persistedState.tokenId,
+      },
+      env.refreshTokenSecret,
+      { expiresIn: TokenExpirationTimes.RefreshToken },
+    );
   };
 }

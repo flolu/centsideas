@@ -18,9 +18,14 @@ export class UsersServer {
     this.app.use(bodyParser.json());
 
     this.app.post(`/${UsersApiRoutes.Login}`, this.expressAdapter.json(this.usersService.login));
+    // TODO seperate auth stuff into authService?
     this.app.post(
       `/${UsersApiRoutes.ConfirmLogin}`,
       this.expressAdapter.json(this.usersService.confirmLogin),
+    );
+    this.app.post(
+      `/${UsersApiRoutes.RefreshToken}`,
+      this.expressAdapter.json(this.usersService.refreshToken),
     );
     this.app.post(
       `/${UsersApiRoutes.Authenticate}`,

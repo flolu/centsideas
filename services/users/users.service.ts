@@ -20,6 +20,7 @@ import {
   IConfirmLoginDto,
   Cookie,
   IConfirmedLoginDto,
+  IRefreshedTokenDto,
 } from '@cents-ideas/models';
 import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
@@ -37,23 +38,9 @@ export class UsersService {
           const createdLogin = await this.commandHandler.login(req.body.email, t);
           t.log('created login with id', createdLogin.persistedState.id);
 
-          const cookie: Cookie = {
-            name: 'jwt',
-            val: `awesome_token_value_${req.body.email}`,
-            options: {},
-            /*   options: {
-              maxAge: 7 * 24 * 60 * 60 * 1000,
-              httpOnly: true,
-              // domain: 'localhost',
-              path: '/',
-            }, */
-          };
-
           resolve({
             status: HttpStatusCodes.Accepted,
             body: {},
-            // TODO remove this is only for testing
-            cookies: [cookie],
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);
@@ -69,6 +56,7 @@ export class UsersService {
           const data = await this.commandHandler.confirmLogin(req.body.loginToken, t);
           const { user, accessToken, refreshToken } = data;
 
+          // TODO util fucnction
           const refreshTokenCookie: Cookie = {
             name: CookieNames.RefreshToken,
             val: refreshToken,
@@ -91,6 +79,41 @@ export class UsersService {
       });
     });
 
+  // TODO type
+  refreshToken = (req: HttpRequest): Promise<HttpResponse<IRefreshedTokenDto>> =>
+    new Promise(resolve => {
+      Logger.thread('refresh token', async t => {
+        try {
+          const currentRefreshToken = req.cookies[CookieNames.RefreshToken];
+          const data = await this.commandHandler.refreshToken(currentRefreshToken, t);
+          const { user, accessToken, refreshToken } = data;
+
+          // TODO util fucnction
+          const refreshTokenCookie: Cookie = {
+            name: CookieNames.RefreshToken,
+            val: refreshToken,
+            options: {
+              httpOnly: true,
+              path: `/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`,
+            },
+          };
+
+          t.log(
+            'generated new access token and refreshed refresh token of user',
+            user.persistedState.id,
+          );
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { user: user.persistedState, accessToken },
+            cookies: [refreshTokenCookie],
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
   // TODO this route and dto should probably renamed to something like getMyUserData or so
   authenticate = (
     req: HttpRequest<null, null, null, IAuthenticateDto>,
@@ -103,7 +126,6 @@ export class UsersService {
           resolve({
             status: HttpStatusCodes.Accepted,
             body: { user },
-            headers: {},
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);

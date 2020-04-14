@@ -4,7 +4,6 @@
     "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "target": "ES2015",
     "paths": {
       "@cents-ideas/*": ["./packages/*"]
     },

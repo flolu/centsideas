@@ -20,3 +20,8 @@ export interface IConfirmedLoginDto {
   user: IUserState;
   accessToken: string;
 }
+
+export interface IRefreshedTokenDto {
+  user: IUserState;
+  accessToken: string;
+}

@@ -4,7 +4,8 @@ import { ITokenDataFull } from '@cents-ideas/models';
 
 import { TokenInvalidError } from './errors/token-invalid.error';
 
-export const decodeToken = (token: string, jwtSecret: string): ITokenDataFull => {
+// TODO generic return
+export const decodeToken = (token: string, jwtSecret: string): any => {
   let decoded: any;
   try {
     decoded = jwt.verify(token, jwtSecret);

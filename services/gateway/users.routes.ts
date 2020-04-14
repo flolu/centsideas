@@ -10,6 +10,7 @@ export class UsersRoutes {
 
   constructor(private expressAdapter: ExpressAdapter) {}
 
+  // TODO consider creating abstraction layer (maybe with decorators)
   setup = (host: string, consumerHost: string): express.Router => {
     this.router.get(
       `/`,
@@ -22,6 +23,10 @@ export class UsersRoutes {
       this.expressAdapter.makeJsonAdapter(
         `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
       ),
+    );
+    this.router.post(
+      `/${UsersApiRoutes.RefreshToken}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.RefreshToken}`),
     );
     this.router.post(
       `/${UsersApiRoutes.Login}`,

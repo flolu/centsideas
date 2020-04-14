@@ -14,6 +14,7 @@ export interface IEmailChangeTokenPayload {
   userId: string;
 }
 
+// TODO improve... this is nasty
 export interface ITokenData {
   type: 'auth' | 'login' | 'email-change';
   payload: IAuthTokenPayload | ILoginTokenPayload | IEmailChangeTokenPayload;
