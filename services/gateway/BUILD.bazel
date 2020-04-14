@@ -20,6 +20,8 @@ lib_deps = [
     "@npm//express",
     "@npm//inversify",
     "@npm//jsonwebtoken",
+    "@npm//cookie-parser",
+    "@npm//@types/cookie-parser",
     "@npm//module-alias",
     "@npm//reflect-metadata",
 ]

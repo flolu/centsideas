@@ -16,17 +16,16 @@ export class AuthGuard implements CanActivate {
   canActivate(): Observable<boolean> {
     return this.store.select(AuthSelectors.selectAuthState).pipe(
       skipWhile(state => {
-        if (state.authenticationTryCount === 0) {
-          this.store.dispatch(AuthActions.authenticate());
+        if (!state.initialized && !state.initializing) {
+          this.store.dispatch(AuthActions.fetchAccessToken());
           return true;
         }
         return !state.initialized;
       }),
       map(state => {
-        if (!state.token) {
+        if (!state.accessToken)
           this.router.navigate([TopLevelFrontendRoutes.Auth, AuthFrontendRoutes.Login]);
-        }
-        return !!state.token;
+        return !!state.accessToken;
       }),
     );
   }

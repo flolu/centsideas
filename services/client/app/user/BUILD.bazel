@@ -42,6 +42,7 @@ ts_library(
         "//packages/models",
         "//services/client/app/auth:store",
         "@npm//@angular/common",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@angular/router",

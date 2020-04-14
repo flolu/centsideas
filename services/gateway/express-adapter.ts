@@ -41,18 +41,16 @@ export class ExpressAdapter {
   private makeHttpRequestFromExpressRequest = (
     req: express.Request,
     res: express.Response,
-  ): HttpRequest => {
-    return {
-      body: req.body,
-      ip: req.ip,
-      method: req.method,
-      path: req.path,
-      url: req.url,
-      cookies: req.cookies,
-      query: req.query,
-      params: req.params,
-      headers: req.headers,
-      locals: res.locals,
-    };
-  };
+  ): HttpRequest => ({
+    body: req.body,
+    ip: req.ip,
+    method: req.method,
+    path: req.path,
+    url: req.url,
+    cookies: req.cookies,
+    query: req.query,
+    params: req.params,
+    headers: req.headers,
+    locals: res.locals,
+  });
 }

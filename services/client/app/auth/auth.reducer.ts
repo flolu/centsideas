@@ -4,26 +4,23 @@ import { AuthActions } from './auth.actions';
 import { LOADING, LOADING_FAIL, LOADING_DONE } from '../../shared/helpers/state.helper';
 
 export interface IAuthReducerState {
-  loading: boolean;
-  loaded: boolean;
   error: string;
+  initializing: boolean;
   initialized: boolean;
-  authenticationTryCount: number;
-  token: string;
+  accessToken: string;
 }
 
 const initialState: IAuthReducerState = {
-  loaded: false,
-  loading: false,
   error: '',
   initialized: false,
-  authenticationTryCount: 0,
-  token: '',
+  initializing: true,
+  accessToken: '',
 };
 
 const authReducer = createReducer(
   initialState,
-  on(AuthActions.login, state => ({
+  // TODO move login into a login reducer with own loading, loaded ,etc
+  /* on(AuthActions.login, state => ({
     ...state,
     ...LOADING,
   })),
@@ -34,39 +31,34 @@ const authReducer = createReducer(
   on(AuthActions.loginDone, state => ({
     ...state,
     ...LOADING_DONE,
-  })),
-  on(AuthActions.authenticate, state => ({
-    ...state,
-    initialized: false,
-    authenticationTryCount: state.authenticationTryCount + 1,
-  })),
-  on(AuthActions.authenticateFail, (state, { error }) => ({
-    ...state,
-    initialized: true,
-    error,
-  })),
-  on(AuthActions.authenticateNoToken, state => ({
-    ...state,
-    initialized: true,
-    error: '',
-  })),
-  // TODO implment reducer functions
-  /*  on(AuthActions.authenticateDone, (state, action) => ({
-    ...state,
-    ...LOADING_DONE,
-    initialized: true,
-    token: action.token,
   })), */
-  on(AuthActions.confirmLogin, state => ({ ...state, ...LOADING })),
+  /* on(AuthActions.confirmLogin, state => ({ ...state, ...LOADING })),
   on(AuthActions.confirmLoginFail, (state, { error }) => ({
     ...state,
     ...LOADING_FAIL(error),
-  })),
-  /* on(AuthActions.confirmLoginDone, (state, action) => ({
+  })), */
+
+  on(AuthActions.fetchAccessToken, state => ({ ...state, ...LOADING })),
+  on(AuthActions.fetchAccessTokenDone, (state, { accessToken }) => ({
     ...state,
     ...LOADING_DONE,
-    token: action.token,
-  })), */
+    accessToken,
+    initializing: false,
+    initialized: true,
+  })),
+  // TODO handle refresh token invalid
+  on(AuthActions.fetchAccessTokenFail, (state, { error }) => ({
+    ...state,
+    ...LOADING_FAIL(error),
+    initialized: true,
+    initializing: false,
+  })),
+  on(AuthActions.confirmLoginDone, (state, { accessToken }) => ({
+    ...state,
+    accessToken,
+    initializing: false,
+    initialized: true,
+  })),
 );
 
 export function reducer(state: IAuthReducerState | undefined, action: Action) {

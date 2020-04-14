@@ -43,10 +43,10 @@ export class AuthEffects {
       withLatestFrom(this.store.select(AuthSelectors.selectAuthState)),
       switchMap(([action, authState]) => {
         // TODO i think this is needed on the server????????
-        if (authState.token) {
+        /*    if (authState.token) {
           this.authService.saveToken(authState.token);
           return [];
-        }
+        } */
         return this.authService.confirmLogin(action.token).pipe(
           map(({ accessToken, user }) => AuthActions.confirmLoginDone({ accessToken, user })),
           catchError(error => of(AuthActions.confirmLoginFail({ error }))),
@@ -55,48 +55,25 @@ export class AuthEffects {
     ),
   );
 
-  /* confirmLoginDone$ = createEffect(
+  confirmLoginDone$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthActions.confirmLoginDone),
-        tap(action => this.authService.saveToken(action.token)),
+        tap(action => this.authService.saveToken(action.accessToken)),
         tap(() => this.router.navigate([TopLevelFrontendRoutes.User, UserFrontendRoutes.Me])),
       ),
     { dispatch: false },
   );
- */
-  authenticate$ = createEffect(() =>
+
+  fetchAccessToken$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.authenticate),
+      ofType(AuthActions.fetchAccessToken),
       switchMap(() => {
-        console.log('authenticate..., found token: ', this.authService.token);
-        if (this.authService.token) {
-          return this.authService.authenticate().pipe(
-            map(data => AuthActions.authenticateDone(data)),
-            catchError(error => of(AuthActions.authenticateFail({ error }))),
-          );
-        } else {
-          return [AuthActions.authenticateNoToken()];
-        }
+        return this.authService.fetchAccesstoken().pipe(
+          map(data => AuthActions.fetchAccessTokenDone(data)),
+          catchError(error => of(AuthActions.fetchAccessTokenFail({ error }))),
+        );
       }),
     ),
-  );
-
-  /* authenticateDone$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.authenticateDone),
-        tap(action => this.authService.saveToken(action.token)),
-      ),
-    { dispatch: false },
-  ); */
-
-  authenticateFail$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.authenticateFail),
-        tap(() => this.authService.removeToken()),
-      ),
-    { dispatch: false },
   );
 }

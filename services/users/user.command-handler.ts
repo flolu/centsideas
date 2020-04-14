@@ -105,7 +105,7 @@ export class UserCommandHandler {
 
   refreshToken = async (token: string, t: ThreadLogger) => {
     // TODO token data type
-    const data = decodeToken(token, env.jwtSecret);
+    const data = decodeToken(token, env.refreshTokenSecret);
     t.debug('refresh token is valid', token ? token.slice(0, 30) : token);
 
     const user = await this.repository.findById(data.userId);
@@ -120,6 +120,7 @@ export class UserCommandHandler {
     return { accessToken, refreshToken, user };
   };
 
+  // TODO maybe this isngt needed anymore because i can just return the user on refresh-token
   authenticate = async (token: string, t: ThreadLogger) => {
     const data = decodeToken(token, env.jwtSecret);
     t.debug('authenticate with token', token ? token.slice(0, 30) : token);
@@ -281,7 +282,6 @@ export class UserCommandHandler {
   };
 
   private generateAccessToken = (user: User) => {
-    // TODO consider adding tokenId to accesstoken, too (by that instant, global token invalidation for this use would be possible)
     return jwt.sign({ userId: user.persistedState.id }, env.accessTokenSecret, {
       expiresIn: TokenExpirationTimes.AccessToken,
     });

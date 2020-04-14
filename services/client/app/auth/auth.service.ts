@@ -10,6 +10,7 @@ import {
   ILoginDto,
   IConfirmLoginDto,
   IConfirmedLoginDto,
+  IRefreshedTokenDto,
 } from '@cents-ideas/models';
 import { EnvironmentService } from '../../shared/environment/environment.service';
 
@@ -47,6 +48,11 @@ export class AuthService {
   authenticate = (): Observable<IAuthenticatedDto> => {
     const url = `${this.baseUrl}/${UsersApiRoutes.Authenticate}`;
     return this.http.post<IAuthenticatedDto>(url, {});
+  };
+
+  fetchAccesstoken = (): Observable<IRefreshedTokenDto> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.RefreshToken}`;
+    return this.http.post<IRefreshedTokenDto>(url, {});
   };
 
   logout = () => {

@@ -39,14 +39,15 @@ export class AppComponent implements OnDestroy {
     private swUpdate: SwUpdate,
     @Inject(PLATFORM_ID) private platform: string,
   ) {
-    this.handleAuthentication();
+    //  this.handleAuthentication();
     this.handleServiceWorkerUpdates();
     if (isPlatformBrowser(this.platform)) {
       this.handleOnlineOffline();
     }
   }
 
-  handleAuthentication = () => {
+  // TODO move to app base module
+  /*  handleAuthentication = () => {
     console.log('[AppComponent] handle authentication');
     if (isPlatformBrowser(this.platform)) {
       console.log('[AppComponent] cookie', document.cookie);
@@ -63,7 +64,7 @@ export class AppComponent implements OnDestroy {
         }),
       )
       .subscribe();
-  };
+  }; */
 
   handleServiceWorkerUpdates = () => {
     this.swUpdate.available.subscribe(evt => {

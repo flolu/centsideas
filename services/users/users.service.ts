@@ -62,6 +62,7 @@ export class UsersService {
             val: refreshToken,
             options: {
               httpOnly: true,
+              // TODO reenable
               path: `/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`,
             },
           };

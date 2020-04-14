@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';
@@ -26,8 +27,10 @@ export class GatewayServer {
   start = () => {
     Logger.debug('initialized with env: ', env);
 
+    // TODO laod url from env
     this.app.use(cors({ origin: 'http://localhost:5432', credentials: true }));
     this.app.use(bodyParser());
+    this.app.use(cookieParser());
 
     this.app.use((req, res, next) => {
       res.locals.userId = null;
