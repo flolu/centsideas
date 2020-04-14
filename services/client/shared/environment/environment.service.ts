@@ -7,7 +7,7 @@ import { IEnvironment } from './environment.model';
 @Injectable()
 export class EnvironmentService {
   // FIXME dont hardcode
-  private readonly defaultGatewayHost = 'https://api.cents-ideas.flolu.com';
+  private readonly defaultGatewayHost = 'https://api.centsideas.com';
   private readonly localstorageEnvironmentKey = 'environment';
   private readonly keyName = '@cents-ideas/environment';
   private readonly defaultEnvironment: IEnvironment = { gatewayHost: this.defaultGatewayHost };

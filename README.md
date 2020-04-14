@@ -6,35 +6,34 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Goals
 
-| Requirement                                    | Keywords                                  | Status |
-| ---------------------------------------------- | ----------------------------------------- | ------ |
-| Microservices                                  | small services, docker                    | ✔️     |
-| Redux frontend                                 | reactive, actions, effects                | ✔️     |
-| Monorepo                                       | all packages and services in one repo     | ✔️     |
-| Typescript                                     | types everywhere!                         | ✔️     |
-| Local development                              | hot reload, docker-compose, vscode        | ✔️     |
-| Git flow                                       | branching, releases, rebasing             | ✔️     |
-| Gateway                                        | discovery, entry point, auth              | ✔️     |
-| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker    | ✅     |
-| Deployment                                     | ci, cd, build automation, bazel           | ✅     |
-| Testing                                        | unit Tests, integration Tests             | ✅     |
-| Kubernetes                                     | container orchestration                   | ✅     |
-| Database(s)                                    | data storage, event store                 | ✅     |
-| SEO                                            | server side rendering, marketing          | ✅     |
-| Authentication                                 | passwordless, google login                | ✅     |
-| Progressive Web App                            | pwa, service worker, mobile-friendly      | ✅     |
-| File storage                                   | blob storage                              | ❌     |
-| Static pages                                   | homepage, static content                  | ❌     |
-| Search                                         | indexing, realtime search                 | ❌     |
-| Admin panel                                    | monitoring, event handling, logs          | ❌     |
-| Backups                                        | automatic, manual, restore                | ❌     |
-| Realtime                                       | some kind of realtime integration         | ❌     |
-| GDPR                                           | legal, privacy                            | ❌     |
-| User Interface                                 | modern, unique, reusable                  | ❌     |
-| Compute server                                 | non-nodejs server for high cpu tasks      | ❌     |
-| Frontend                                       | code splitting, ...                       | ❌     |
-| Frontend                                       | code splitting, drag&drop, touch gestures | ❌     |
-| Push notifications                             | browser (mobile and desktop)              | ❌     |
+| Requirement                                    | Keywords                               | Status |
+| ---------------------------------------------- | -------------------------------------- | ------ |
+| Microservices                                  | small services, docker                 | ✔️     |
+| Redux frontend                                 | reactive, actions, effects             | ✔️     |
+| Monorepo                                       | all packages and services in one repo  | ✔️     |
+| Typescript                                     | types everywhere!                      | ✔️     |
+| Local development                              | hot reload, docker-compose, vscode     | ✔️     |
+| Git flow                                       | branching, releases, rebasing          | ✔️     |
+| Gateway                                        | discovery, entry point, auth           | ✔️     |
+| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker | ✅     |
+| Deployment                                     | ci, cd, build automation, bazel        | ✅     |
+| Testing                                        | unit Tests, integration Tests          | ✅     |
+| Kubernetes                                     | container orchestration                | ✅     |
+| Database(s)                                    | data storage, event store              | ✅     |
+| SEO                                            | server side rendering, marketing       | ✅     |
+| Authentication                                 | passwordless, google login             | ✅     |
+| Progressive Web App                            | pwa, service worker, mobile-friendly   | ✅     |
+| File storage                                   | blob storage                           | ❌     |
+| Static pages                                   | homepage, static content               | ❌     |
+| Search                                         | indexing, realtime search              | ❌     |
+| Admin panel                                    | monitoring, event handling, logs       | ❌     |
+| Backups                                        | automatic, manual, restore             | ❌     |
+| Realtime                                       | some kind of realtime integration      | ❌     |
+| GDPR                                           | legal, privacy                         | ❌     |
+| User Interface                                 | modern, drag&drop, touch gestures      | ❌     |
+| Compute server                                 | non-nodejs server for high cpu tasks   | ❌     |
+| Frontend                                       | code splitting, 100% lighthouse score  | ❌     |
+| Push notifications                             | mobile and desktop                     | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented
@@ -48,7 +47,7 @@ This is a project with the purpose of learning the architecture of complex web a
 - `yarn dev` to start all backend services locally (gateway is available under http://localhost:3000)
 - `yarn client:dev` to start the frontend application (live at http://localhost:5432)
 - `yarn test` to run all unit tests
-- `yarn client:prod` to start the frontend application with server side rendering (live at http://localhost:4000)
+- `yarn client:prod` to start the frontend application with server side rendering (http://localhost:4000)
 - `yarn clean` to clear node_modules, Bazel and Docker
 - `yarn lint` to detect linting problems
 - `yarn up` to find node module updates
@@ -167,10 +166,10 @@ helm install nginx-ingress stable/nginx-ingress
 
 Go to the created [Load Balancer](https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list) and point your domain to this IP address via an "A" record.
 
-| Record Type | Domain                    | Value           |
-| ----------- | ------------------------- | --------------- |
-| A           | cents-ideas.flolu.com     | your IP address |
-| A           | api.cents-ideas.flolu.com | your IP address |
+| Record Type | Domain             | Value           |
+| ----------- | ------------------ | --------------- |
+| A           | centsideas.com     | your IP address |
+| A           | api.centsideas.com | your IP address |
 
 ### 5. Setup [Cert Manager](https://github.com/helm/charts/tree/master/stable/cert-manager)
 
@@ -186,7 +185,7 @@ helm install cert-manager jetstack/cert-manager --namespace cert-manager
 yarn deploy
 ```
 
-Wait until all Workloads are up and running. Now you should be able to visit https://cents-ideas.flolu.com
+Wait until all Workloads are up and running. Now you should be able to visit https://centsideas.com
 
 ## Thanks to:
 

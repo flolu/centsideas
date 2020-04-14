@@ -9,9 +9,15 @@
       name="description"
       content="CENTS Ideas is going to be a website to share, review and discover business ideas. The concept of CENTS (Control, Entry, Need, Time, Scale) was initially introduced by MJ DeMarco."
     />
-    <link rel="dns-prefetch" href="http://cents-ideas.flolu.com" />
+    <link rel="dns-prefetch" href="http://centsideas.com" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+    <link
+      async
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <!-- FIXME also preload other bundles (problem: name of bundles change on rebuild) -->
+    <link rel="preload" href="bundle.min/index.es2015.js" as="script" />
   </head>
   <body>
     <noscript>Please enable Javascript to use all features of CENTS Ideas</noscript>

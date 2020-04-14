@@ -6,9 +6,9 @@ data:
   # general
   ENV: prod
   LEVEL: debug
-  API_URL: https://api.cents-ideas.flolu.com
-  GATEWAY_HOST: https://api.cents-ideas.flolu.com
-  FRONTEND_URL: https://cents-ideas.flolu.com
+  API_URL: https://api.centsideas.com
+  GATEWAY_HOST: https://api.centsideas.com
+  FRONTEND_URL: https://centsideas.com
 
   # gateway
   IDEAS_SERVICE_HOST: cents-ideas-ideas:3000

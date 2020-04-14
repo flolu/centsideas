@@ -12,7 +12,7 @@ import { AppServerModule } from './app/app.server.module';
 enableProdMode();
 
 process.env.angularEnvironment = JSON.stringify({
-  gatewayHost: process.env.GATEWAY_HOST || 'https://api.cents-ideas.flolu.com',
+  gatewayHost: process.env.GATEWAY_HOST || 'https://api.centsideas.com',
 });
 
 const app = express();

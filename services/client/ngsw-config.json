@@ -23,7 +23,7 @@
   "dataGroups": [
     {
       "name": "api-freshness",
-      "urls": ["https://api.cents-ideas.flolu.com/**"],
+      "urls": ["https://api.centsideas.com/**"],
       "cacheConfig": {
         "maxAge": "1d",
         "maxSize": 100,
