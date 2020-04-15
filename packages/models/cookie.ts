@@ -1,12 +1,7 @@
 import { CookieOptions } from 'express';
 
-// TODO make cookie a class with constructor
-export interface Cookie {
-  name: string;
-  val: string;
-  options: CookieOptions;
+export class Cookie {
+  constructor(public name: string, public val: string, public options: CookieOptions = {}) {
+    return { name, val, options };
+  }
 }
-
-/* export class Cookie {
-  constructor(name: string, val: string, options: CookieOptions = {}) {}
-} */

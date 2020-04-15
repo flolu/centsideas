@@ -47,19 +47,9 @@ export class UsersService {
         try {
           const data = await this.commandHandler.confirmLogin(req.body.loginToken, t);
           const { user, accessToken, refreshToken } = data;
-
-          // TODO util fucnction
-          const refreshTokenCookie: Cookie = {
-            name: CookieNames.RefreshToken,
-            val: refreshToken,
-            options: {
-              httpOnly: true,
-              path: `/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`,
-              sameSite: 'strict',
-            },
-          };
-
+          const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
           t.log('confirmed login of user', user.id);
+
           resolve({
             status: HttpStatusCodes.Accepted,
             body: { user, accessToken },
@@ -72,7 +62,6 @@ export class UsersService {
       });
     });
 
-  // TODO type
   refreshToken = (req: HttpRequest): Promise<HttpResponse<IRefreshedTokenDto>> =>
     new Promise(resolve => {
       Logger.thread('refresh token', async t => {
@@ -80,21 +69,12 @@ export class UsersService {
           const currentRefreshToken = req.cookies[CookieNames.RefreshToken];
           const data = await this.commandHandler.refreshToken(currentRefreshToken, t);
           const { user, accessToken, refreshToken } = data;
-
-          // TODO util fucnction or class
-          const refreshTokenCookie: Cookie = {
-            name: CookieNames.RefreshToken,
-            val: refreshToken,
-            options: {
-              httpOnly: true,
-              path: `/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`,
-            },
-          };
-
+          const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
           t.log(
             'generated new access token and refreshed refresh token of user',
             user.persistedState.id,
           );
+
           resolve({
             status: HttpStatusCodes.Accepted,
             body: { user: user.persistedState, accessToken },
@@ -151,5 +131,12 @@ export class UsersService {
           resolve(handleHttpResponseError(error));
         }
       });
+    });
+
+  private createRefreshTokenCookie = (refreshToken: string) =>
+    new Cookie(CookieNames.RefreshToken, refreshToken, {
+      httpOnly: true,
+      path: `/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`,
+      sameSite: 'strict',
     });
 }

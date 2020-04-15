@@ -2,8 +2,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { TokenInvalidError } from './errors/token-invalid.error';
 
-// TODO generic return
-export const decodeToken = (token: string, jwtSecret: string): any => {
+export const decodeToken = <T = any>(token: string, jwtSecret: string): T => {
   let decoded: any;
   try {
     decoded = jwt.verify(token, jwtSecret);

@@ -9,4 +9,5 @@ export default {
   },
   jwtSecret: process.env.JWT_SECRET || 'default-jwt-secret',
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
+  frontendUrl: process.env.FRONTEND_URL!,
 };

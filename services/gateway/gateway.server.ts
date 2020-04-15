@@ -26,8 +26,17 @@ export class GatewayServer {
   start = () => {
     Logger.debug('initialized with env: ', env);
 
-    // TODO laod url from env
-    this.app.use(cors({ origin: 'http://localhost:5432', credentials: true }));
+    let whitelist = [env.frontendUrl];
+    if (env.environment === 'dev')
+      whitelist = [...whitelist, 'http://localhost:4000', 'http://localhost:5432'];
+    const checkOrigin = (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      if (origin && whitelist.includes(origin)) return callback(null, true);
+      callback(new Error('Not allowed by CORS'));
+    };
+    this.app.use(cors({ origin: checkOrigin, credentials: true }));
     this.app.use(bodyParser());
     this.app.use(cookieParser());
 
