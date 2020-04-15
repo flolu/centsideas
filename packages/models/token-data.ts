@@ -1,10 +1,20 @@
+export interface INativeTokenData {
+  iat: number;
+  exp: number;
+}
+
+export interface IRefreshTokenPayload {
+  userId: string;
+  tokenId: string;
+}
+
 export interface ILoginTokenPayload {
   loginId: string;
   email: string;
   firstLogin: boolean;
 }
 
-export interface IAuthTokenPayload {
+export interface IAccessTokenPayload {
   userId: string;
 }
 
@@ -14,13 +24,7 @@ export interface IEmailChangeTokenPayload {
   userId: string;
 }
 
-// TODO improve... this is nasty
-export interface ITokenData {
-  type: 'auth' | 'login' | 'email-change';
-  payload: IAuthTokenPayload | ILoginTokenPayload | IEmailChangeTokenPayload;
-}
-
-export interface ITokenDataFull extends ITokenData {
-  iat: number;
-  exp: number;
+export interface ILoginTokenPayload {
+  loginId: string;
+  firstLogin: boolean;
 }

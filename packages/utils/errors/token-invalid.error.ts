@@ -7,7 +7,7 @@ export class TokenInvalidError extends EntityError {
       extraInfo
         ? `You provided an invalid token (${
             invalidToken ? invalidToken.slice(0, 10) : 'null'
-          }...). ${extraInfo}`
+          }...) ${extraInfo}`
         : `You provided an invalid token (${invalidToken ? invalidToken.slice(0, 10) : 'null'}...)`,
       HttpStatusCodes.BadRequest,
     );

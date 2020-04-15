@@ -12,6 +12,7 @@ import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';
 import { IdeasRoutes } from './ideas.routes';
 import { UsersRoutes } from './users.routes';
+import { IAccessTokenPayload } from '@cents-ideas/models';
 
 @injectable()
 export class GatewayServer {
@@ -49,15 +50,14 @@ export class GatewayServer {
       try {
         const accessToken = (authHeader as string).split(' ')[1];
         const decoded = jwt.verify(accessToken, env.accessTokenSecret);
-        // TODO type
-        const data = decoded as any;
+        const data: IAccessTokenPayload = decoded as any;
         res.locals.userId = data.userId;
         // tslint:disable-next-line:no-empty
       } catch (error) {}
 
-      Logger.debug(
+      /* Logger.debug(
         `request was made by ${res.locals.userId ? res.locals.userId : 'a not authenticated user'}`,
-      );
+      ); */
       next();
     });
 

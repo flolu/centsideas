@@ -12,7 +12,11 @@ import {
   NoPermissionError,
   Identifier,
 } from '@cents-ideas/utils';
-import { ITokenData, ILoginTokenPayload, IEmailChangeTokenPayload } from '@cents-ideas/models';
+import {
+  ILoginTokenPayload,
+  IEmailChangeTokenPayload,
+  IRefreshTokenPayload,
+} from '@cents-ideas/models';
 import {
   TopLevelFrontendRoutes,
   AuthFrontendRoutes,
@@ -43,9 +47,8 @@ export class UserCommandHandler {
     const loginId = await this.repository.generateUniqueId();
     t.debug(firstLogin ? 'first' : 'normal', 'login with loginId:', loginId);
 
-    const tokenData: ITokenData = { type: 'login', payload: { loginId, email, firstLogin } };
-
-    const token = jwt.sign(tokenData, env.jwtSecret, {
+    const tokenData: ILoginTokenPayload = { loginId, email, firstLogin };
+    const token = jwt.sign(tokenData, env.loginTokenSecret, {
       expiresIn: TokenExpirationTimes.LoginToken,
     });
 
@@ -54,7 +57,7 @@ export class UserCommandHandler {
     const expirationTimeHours = Math.floor(TokenExpirationTimes.LoginToken / 3600);
     const text = `URL to login into your account: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Login';
-    // FIXME consider outsourcing sending mails into its own mailing service, which listens for event liks LoginRequested
+    // FIXME consider outsourcing sending mails into its own mailing service, which listens for event like LoginRequested
     await sendMail(env.mailing.fromAddress, email, subject, text, text, env.mailing.apiKey);
     t.debug('sent login confirmation email to', email);
 
@@ -64,47 +67,40 @@ export class UserCommandHandler {
   };
 
   confirmLogin = async (token: string, t: ThreadLogger) => {
-    const data = decodeToken(token, env.jwtSecret);
+    const data = decodeToken(token, env.loginTokenSecret);
     t.debug('confirming login of token', token ? token.slice(0, 30) : token);
 
-    // TODO use a different token (with different secret) for confirming logins (should have nothing todo with access or refresh tokerns)
-    if (data.type === 'login') {
-      const payload: ILoginTokenPayload = data.payload as any;
-      const login = await this.loginRepository.findById(payload.loginId);
-      if (!login) throw new UserErrors.LoginNotFoundError(payload.loginId);
-      t.debug('found login', login.persistedState.id);
+    const payload: ILoginTokenPayload = data;
+    const login = await this.loginRepository.findById(payload.loginId);
+    if (!login) throw new UserErrors.LoginNotFoundError(payload.loginId);
+    t.debug('found login', login.persistedState.id);
 
-      if (login && login.persistedState.confirmedAt)
-        throw new TokenInvalidError(token, `This login was already confirmed`);
+    if (login && login.persistedState.confirmedAt)
+      throw new TokenInvalidError(token, `This login was already confirmed`);
 
-      if (payload.firstLogin && payload.loginId) {
-        const createdUser = await this.handleUserCreation(payload.email, payload.loginId);
-        // TODO set some flag or do something when first login (so that client knows it)
-        return this.handleConfirmedLogin(createdUser, login, t);
-      }
-
-      const emailUserMapping = await this.repository.getUserIdEmailMapping(payload.email);
-      if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
-
-      const user = await this.repository.findById(emailUserMapping.userId);
-      if (!user) throw new TokenInvalidError(token, 'invalid userId');
-
-      return this.handleConfirmedLogin(user, login, t);
+    if (payload.firstLogin && payload.loginId) {
+      const createdUser = await this.handleUserCreation(payload.email);
+      // TODO set some flag or do something when first login (so that client knows it) NOOO!!! we can handle this in frontend only
+      return this.handleConfirmedLogin(createdUser, login, t);
     }
 
-    t.error('not a login token');
-    throw new TokenInvalidError(token, 'token is not a login token');
+    const emailUserMapping = await this.repository.getUserIdEmailMapping(payload.email);
+    if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
+
+    const user = await this.repository.findById(emailUserMapping.userId);
+    if (!user) throw new TokenInvalidError(token, 'invalid userId');
+
+    return this.handleConfirmedLogin(user, login, t);
   };
 
   refreshToken = async (token: string, t: ThreadLogger) => {
-    // TODO token data type
-    const data = decodeToken(token, env.refreshTokenSecret);
+    const data: IRefreshTokenPayload = decodeToken(token, env.refreshTokenSecret);
     t.debug('refresh token is valid', token ? token.slice(0, 30) : token);
 
     const user = await this.repository.findById(data.userId);
     if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
-    if (!user.persistedState.tokenId === data.tokenId)
+    if (user.persistedState.tokenId !== data.tokenId)
       throw new TokenInvalidError(token, 'token was invalidated');
 
     const accessToken = this.generateAccessToken(user);
@@ -153,9 +149,8 @@ export class UserCommandHandler {
   };
 
   confirmEmailChange = async (token: string, t: ThreadLogger): Promise<User> => {
-    const data = decodeToken(token, env.jwtSecret);
-    if (data.type !== 'email-change') throw new TokenInvalidError(token);
-    const payload: IEmailChangeTokenPayload = data.payload as any;
+    const data = decodeToken(token, env.changeEmailTokenSecret);
+    const payload: IEmailChangeTokenPayload = data;
     t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
 
     const user = await this.repository.findById(payload.userId);
@@ -197,8 +192,7 @@ export class UserCommandHandler {
       newEmail,
       userId,
     };
-    const tokenData: ITokenData = { type: 'email-change', payload: tokenPayload };
-    const token = jwt.sign(tokenData, env.jwtSecret, {
+    const token = jwt.sign(tokenPayload, env.changeEmailTokenSecret, {
       expiresIn: TokenExpirationTimes.EmailChangeToken,
     });
 
@@ -209,7 +203,7 @@ export class UserCommandHandler {
     return sendMail(env.mailing.fromAddress, newEmail, subject, text, text, env.mailing.apiKey);
   };
 
-  private handleUserCreation = async (email: string, loginId: string): Promise<User> => {
+  private handleUserCreation = async (email: string): Promise<User> => {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
 

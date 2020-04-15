@@ -7,7 +7,7 @@ export const decodeToken = <T = any>(token: string, jwtSecret: string): T => {
   try {
     decoded = jwt.verify(token, jwtSecret);
   } catch (err) {
-    throw new TokenInvalidError(token);
+    throw new TokenInvalidError(token, err.message);
   }
   return decoded;
 };
