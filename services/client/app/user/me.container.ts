@@ -9,6 +9,7 @@ import { IUserState } from '@cents-ideas/models';
 
 import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';
+import { AuthActions } from '../auth/auth.actions';
 
 const selectChangeEmailToken = createSelector(
   createFeatureSelector<any>('router'),
@@ -37,6 +38,7 @@ const selectChangeEmailToken = createSelector(
       <br />
       <br />
       <button (click)="onUpdate()">Update</button>
+      <button (click)="onLogout()">Logout</button>
     </form>
   `,
 })
@@ -54,6 +56,8 @@ export class MeContainer implements OnDestroy {
     this.updateUserForm();
   }
 
+  onLogout = () => this.store.dispatch(AuthActions.logout());
+
   onUpdate = () => {
     this.store.dispatch(
       UserActions.updateUser({
@@ -68,6 +72,7 @@ export class MeContainer implements OnDestroy {
       .select(UserSelectors.selectUserState)
       .pipe(
         tap(state => {
+          if (!state.user) return;
           this.form.patchValue(state.user);
           this.user = state.user;
         }),

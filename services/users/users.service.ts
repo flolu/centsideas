@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes, CookieNames } from '@cents-ideas/enums';
+import { HttpStatusCodes, CookieNames, TokenExpirationTimes } from '@cents-ideas/enums';
 import {
   HttpRequest,
   HttpResponse,
@@ -134,9 +134,27 @@ export class UsersService {
       });
     });
 
+  logout = (_req: HttpRequest): Promise<HttpResponse> =>
+    new Promise(resolve => {
+      Logger.thread('logout', async t => {
+        try {
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: {},
+            cookies: [new Cookie(CookieNames.RefreshToken, '', { maxAge: 0 })],
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
   private createRefreshTokenCookie = (refreshToken: string) =>
     new Cookie(CookieNames.RefreshToken, refreshToken, {
       httpOnly: true,
       sameSite: 'strict',
+      // accepts milliseconds
+      maxAge: TokenExpirationTimes.RefreshToken * 1000,
     });
 }

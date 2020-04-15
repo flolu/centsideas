@@ -10,6 +10,7 @@ const prefix = `${appPrefix}/auth`;
 const loginPrefix = prefix + '/login';
 const confirmLoginPrefix = prefix + '/confirm-login';
 const refreshTokenPrefix = prefix + '/refresh-token';
+const logoutPrefix = prefix + '/logout';
 
 const login = createAction(loginPrefix, props<{ email: string }>());
 const loginDone = createAction(loginPrefix + doneSuffix);
@@ -29,6 +30,10 @@ const confirmLogin = createAction(confirmLoginPrefix, props<{ token: string }>()
 const confirmLoginDone = createAction(confirmLoginPrefix + doneSuffix, props<IConfirmedLoginDto>());
 const confirmLoginFail = createAction(confirmLoginPrefix + failSuffix, props<{ error: string }>());
 
+const logout = createAction(logoutPrefix);
+const logoutDone = createAction(logoutPrefix + doneSuffix);
+const logoutFail = createAction(logoutPrefix + failSuffix, props<{ error: string }>());
+
 export const AuthActions = {
   login,
   loginDone,
@@ -39,4 +44,7 @@ export const AuthActions = {
   confirmLogin,
   confirmLoginDone,
   confirmLoginFail,
+  logout,
+  logoutDone,
+  logoutFail,
 };

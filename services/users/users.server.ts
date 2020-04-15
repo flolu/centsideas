@@ -38,6 +38,8 @@ export class UsersServer {
       this.expressAdapter.json(this.usersService.confirmEmailChange),
     );
 
+    this.app.post(`/${UsersApiRoutes.Logout}`, this.expressAdapter.json(this.usersService.logout));
+
     this.app.get(`/${UsersApiRoutes.Alive}`, (_req, res) => {
       return res.status(200).send();
     });

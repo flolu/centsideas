@@ -18,31 +18,42 @@ export class UsersRoutes {
         `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
       ),
     );
+
     this.router.get(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(
         `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
       ),
     );
+
     this.router.post(
       `/${UsersApiRoutes.RefreshToken}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.RefreshToken}`),
     );
+
     this.router.post(
       `/${UsersApiRoutes.Login}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Login}`),
     );
+
     this.router.post(
       `/${UsersApiRoutes.ConfirmLogin}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmLogin}`),
     );
+
     this.router.put(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`),
     );
+
     this.router.post(
       `/${UsersApiRoutes.ConfirmEmailChange}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmEmailChange}`),
+    );
+
+    this.router.post(
+      `/${UsersApiRoutes.Logout}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Logout}`),
     );
 
     return this.router;

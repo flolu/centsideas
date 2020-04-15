@@ -6,5 +6,6 @@ export enum UsersApiRoutes {
   GetById = 'get-by-id',
   GetAll = 'get-all',
   Alive = 'alive',
+  Logout = 'logout',
   RefreshToken = 'refresh-token',
 }

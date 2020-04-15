@@ -3,20 +3,12 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import * as __rxjsTypes from 'rxjs';
 
 import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
-import { Actions, createEffect, ofType, OnRunEffects, EffectNotification } from '@ngrx/effects';
-import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  switchMap,
-  map,
-  catchError,
-  tap,
-  withLatestFrom,
-  takeUntil,
-  exhaustMap,
-} from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { switchMap, map, catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { isPlatformServer } from '@angular/common';
 
 import { TopLevelFrontendRoutes, UserFrontendRoutes, CookieNames } from '@cents-ideas/enums';
@@ -86,5 +78,26 @@ export class AuthEffects {
         );
       }),
     ),
+  );
+
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.logout),
+      switchMap(() =>
+        this.authService.logout().pipe(
+          map(() => AuthActions.logoutDone()),
+          catchError(error => of(AuthActions.logoutFail({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  logoutDone$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.logoutDone),
+        tap(() => this.router.navigate([TopLevelFrontendRoutes.Ideas])),
+      ),
+    { dispatch: false },
   );
 }

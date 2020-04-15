@@ -33,9 +33,15 @@ export class AuthService {
     return this.http.post<IRefreshedTokenDto>(url, { refreshToken });
   };
 
+  // TODO this request is expected to fail at some point (...so don't throw error)... only throw error is unexpected error
   fetchAccessToken = (): Observable<IRefreshedTokenDto> => {
     const url = `${this.baseUrl}/${UsersApiRoutes.RefreshToken}`;
     return this.http.post<IRefreshedTokenDto>(url, {});
+  };
+
+  logout = (): Observable<{}> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.Logout}`;
+    return this.http.post<{}>(url, {});
   };
 
   private get baseUrl() {
