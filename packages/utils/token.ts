@@ -1,7 +1,5 @@
 import * as jwt from 'jsonwebtoken';
 
-import { ITokenDataFull } from '@cents-ideas/models';
-
 import { TokenInvalidError } from './errors/token-invalid.error';
 
 // TODO generic return

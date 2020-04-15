@@ -46,12 +46,11 @@ const authReducer = createReducer(
     initializing: false,
     initialized: true,
   })),
-  // TODO handle refresh token invalid
   on(AuthActions.fetchAccessTokenFail, (state, { error }) => ({
     ...state,
     ...LOADING_FAIL(error),
-    initialized: true,
     initializing: false,
+    initialized: true,
   })),
   on(AuthActions.confirmLoginDone, (state, { accessToken }) => ({
     ...state,

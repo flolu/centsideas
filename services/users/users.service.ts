@@ -1,18 +1,10 @@
 import { injectable } from 'inversify';
 
-import {
-  HttpStatusCodes,
-  HeaderKeys,
-  CookieNames,
-  UsersApiRoutes,
-  ApiEndpoints,
-} from '@cents-ideas/enums';
+import { HttpStatusCodes, CookieNames, UsersApiRoutes, ApiEndpoints } from '@cents-ideas/enums';
 import {
   HttpRequest,
   HttpResponse,
   ILoginDto,
-  IAuthenticateDto,
-  IAuthenticatedDto,
   IUpdateUserDto,
   IUserQueryDto,
   IUserState,
@@ -62,8 +54,8 @@ export class UsersService {
             val: refreshToken,
             options: {
               httpOnly: true,
-              // TODO reenable
               path: `/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`,
+              sameSite: 'strict',
             },
           };
 
@@ -89,7 +81,7 @@ export class UsersService {
           const data = await this.commandHandler.refreshToken(currentRefreshToken, t);
           const { user, accessToken, refreshToken } = data;
 
-          // TODO util fucnction
+          // TODO util fucnction or class
           const refreshTokenCookie: Cookie = {
             name: CookieNames.RefreshToken,
             val: refreshToken,
@@ -115,25 +107,6 @@ export class UsersService {
       });
     });
 
-  // TODO this route and dto should probably renamed to something like getMyUserData or so
-  authenticate = (
-    req: HttpRequest<null, null, null, IAuthenticateDto>,
-  ): Promise<HttpResponse<IAuthenticatedDto>> =>
-    new Promise(resolve => {
-      Logger.thread('authenticate', async t => {
-        try {
-          const user = await this.commandHandler.authenticate(req.headers[HeaderKeys.Auth], t);
-          t.log('user with id', user.id, 'authenticated');
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: { user },
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
-    });
   updateUser = (
     req: HttpRequest<IUpdateUserDto, IUserQueryDto>,
   ): Promise<HttpResponse<IUserState>> =>

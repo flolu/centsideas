@@ -7,7 +7,6 @@ import { injectable } from 'inversify';
 
 import { Logger } from '@cents-ideas/utils';
 import { ApiEndpoints, HeaderKeys, CentsCommandments } from '@cents-ideas/enums';
-import { ITokenDataFull, IAuthTokenPayload } from '@cents-ideas/models';
 
 import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';
@@ -32,25 +31,20 @@ export class GatewayServer {
     this.app.use(bodyParser());
     this.app.use(cookieParser());
 
+    // TODO move this middleware to utils and only use when necessary?
     this.app.use((req, res, next) => {
       res.locals.userId = null;
+      const authHeader = req.headers[HeaderKeys.Auth];
+      if (!authHeader) return next();
 
-      const token = req.headers[HeaderKeys.Auth];
-
-      // TODO read token from cookies
-      if (!token) return next();
-
-      // FIXME performance could be improved by only doing this on routes that require auth
       try {
-        const decoded = jwt.verify(token, env.jwtSecret);
-        const data: ITokenDataFull = decoded as any;
-
-        if (data.type === 'auth') {
-          const payload: IAuthTokenPayload = data.payload as any;
-          res.locals.userId = payload.userId;
-        }
+        const accessToken = (authHeader as string).split(' ')[1];
+        const decoded = jwt.verify(accessToken, env.accessTokenSecret);
+        // TODO type
+        const data = decoded as any;
+        res.locals.userId = data.userId;
         // tslint:disable-next-line:no-empty
-      } catch (err) {}
+      } catch (error) {}
 
       Logger.debug(
         `request was made by ${res.locals.userId ? res.locals.userId : 'a not authenticated user'}`,

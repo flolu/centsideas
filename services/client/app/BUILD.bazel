@@ -31,6 +31,7 @@ ts_library(
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
         "@npm//@angular/service-worker",
+        "@npm//@ngrx/effects",
         "@npm//@ngrx/store",
         "@npm//rxjs",
     ],

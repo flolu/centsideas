@@ -12,6 +12,6 @@ export default {
     fromAddress: 'CENTS Ideas <noreply@centsideas.com>',
   },
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5432',
-  accessTokenSecret: process.env.REFRESH_TOKEN_SECRET!,
-  refreshTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
+  refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET!,
 };

@@ -36,10 +36,6 @@ export class UsersRoutes {
       `/${UsersApiRoutes.ConfirmLogin}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmLogin}`),
     );
-    this.router.post(
-      `/${UsersApiRoutes.Authenticate}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Authenticate}`),
-    );
     this.router.put(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`),

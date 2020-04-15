@@ -28,7 +28,6 @@ import { AuthActions } from './auth/auth.actions';
 export class AppBaseModule {
   constructor(private store: Store) {
     // TODO take state transferred from server or request new access token
-    // TODO do only if logged in
     this.store.dispatch(AuthActions.fetchAccessToken());
   }
 }

@@ -27,10 +27,6 @@ export class UsersServer {
       `/${UsersApiRoutes.RefreshToken}`,
       this.expressAdapter.json(this.usersService.refreshToken),
     );
-    this.app.post(
-      `/${UsersApiRoutes.Authenticate}`,
-      this.expressAdapter.json(this.usersService.authenticate),
-    );
 
     this.app.post(
       `/${UsersApiRoutes.Update}`,

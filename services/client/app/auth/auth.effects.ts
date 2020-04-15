@@ -36,7 +36,6 @@ export class AuthEffects {
     ),
   );
 
-  // TODO implemnt all those effects
   confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),
@@ -59,7 +58,6 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.confirmLoginDone),
-        tap(action => this.authService.saveToken(action.accessToken)),
         tap(() => this.router.navigate([TopLevelFrontendRoutes.User, UserFrontendRoutes.Me])),
       ),
     { dispatch: false },

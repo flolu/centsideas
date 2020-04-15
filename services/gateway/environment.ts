@@ -8,4 +8,5 @@ export default {
     users: `http://${process.env.USERS_SERVICE_HOST || 'users:3000'}`,
   },
   jwtSecret: process.env.JWT_SECRET || 'default-jwt-secret',
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
 };

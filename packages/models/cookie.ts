@@ -6,3 +6,7 @@ export interface Cookie {
   val: string;
   options: CookieOptions;
 }
+
+/* export class Cookie {
+  constructor(name: string, val: string, options: CookieOptions = {}) {}
+} */

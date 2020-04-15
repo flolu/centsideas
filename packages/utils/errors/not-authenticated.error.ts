@@ -10,6 +10,6 @@ export class NotAuthenticatedError extends EntityError {
   };
 
   constructor() {
-    super(`Not authenticated. Please login.`, HttpStatusCodes.BadRequest);
+    super(`Not authenticated. Please login.`, HttpStatusCodes.Unauthorized);
   }
 }

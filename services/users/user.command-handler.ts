@@ -12,14 +12,7 @@ import {
   NoPermissionError,
   Identifier,
 } from '@cents-ideas/utils';
-import {
-  IAuthenticatedDto,
-  ITokenData,
-  IAuthTokenPayload,
-  ILoginTokenPayload,
-  IEmailChangeTokenPayload,
-  ITokenDataFull,
-} from '@cents-ideas/models';
+import { ITokenData, ILoginTokenPayload, IEmailChangeTokenPayload } from '@cents-ideas/models';
 import {
   TopLevelFrontendRoutes,
   AuthFrontendRoutes,
@@ -118,25 +111,6 @@ export class UserCommandHandler {
     const refreshToken = this.generateRefreshToken(user);
 
     return { accessToken, refreshToken, user };
-  };
-
-  // TODO maybe this isngt needed anymore because i can just return the user on refresh-token
-  authenticate = async (token: string, t: ThreadLogger) => {
-    const data = decodeToken(token, env.jwtSecret);
-    t.debug('authenticate with token', token ? token.slice(0, 30) : token);
-
-    if (data.type === 'auth') {
-      const payload: IAuthTokenPayload = data.payload as any;
-      t.debug('authentication of user with id', payload.userId);
-
-      const user = await this.repository.findById(payload.userId);
-      if (!user) throw new TokenInvalidError(token, 'invalid userId');
-
-      t.debug('confirmed that user exists');
-      return user.persistedState;
-    }
-    t.error('no auth token found');
-    throw new TokenInvalidError(token, 'token is not an auth token');
   };
 
   updateUser = async (
@@ -250,19 +224,6 @@ export class UserCommandHandler {
 
     await this.repository.insertEmail(userId, email);
     return this.repository.save(user);
-  };
-
-  // TODO remove
-  private renewAuthToken = (oldToken: string, tokenCreatedTime: number, userId: string): string => {
-    const generateNewToken = Date.now() - tokenCreatedTime > TokenExpirationTimes.UntilGenerateNew;
-    return generateNewToken ? this.generateAuthToken(userId) : oldToken;
-  };
-
-  // TODO remove
-  private generateAuthToken = (userId: string): string => {
-    const payload: IAuthTokenPayload = { userId };
-    const data: ITokenData = { type: 'auth', payload };
-    return jwt.sign(data, env.jwtSecret, { expiresIn: TokenExpirationTimes.AuthToken });
   };
 
   private handleConfirmedLogin = async (user: User, login: Login, t: ThreadLogger) => {
