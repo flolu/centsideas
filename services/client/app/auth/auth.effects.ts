@@ -2,18 +2,27 @@ import * as __ngrxEffectsTypes from '@ngrx/effects/src/models';
 import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import * as __rxjsTypes from 'rxjs';
 
-import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
+import { Actions, createEffect, ofType, OnRunEffects, EffectNotification } from '@ngrx/effects';
+import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
-import { of } from 'rxjs';
+import {
+  switchMap,
+  map,
+  catchError,
+  tap,
+  withLatestFrom,
+  takeUntil,
+  exhaustMap,
+} from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+import { isPlatformServer } from '@angular/common';
 
-import { TopLevelFrontendRoutes, UserFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes, UserFrontendRoutes, CookieNames } from '@cents-ideas/enums';
 
 import { AuthActions } from './auth.actions';
 import { AuthService } from './auth.service';
-import { AuthSelectors } from './auth.selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -22,6 +31,8 @@ export class AuthEffects {
     private authService: AuthService,
     private router: Router,
     private store: Store,
+    private injector: Injector,
+    @Inject(PLATFORM_ID) private platform,
   ) {}
 
   login$ = createEffect(() =>
@@ -39,18 +50,12 @@ export class AuthEffects {
   confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),
-      withLatestFrom(this.store.select(AuthSelectors.selectAuthState)),
-      switchMap(([action, authState]) => {
-        // TODO i think this is needed on the server????????
-        /*    if (authState.token) {
-          this.authService.saveToken(authState.token);
-          return [];
-        } */
-        return this.authService.confirmLogin(action.token).pipe(
+      switchMap(action =>
+        this.authService.confirmLogin(action.token).pipe(
           map(({ accessToken, user }) => AuthActions.confirmLoginDone({ accessToken, user })),
           catchError(error => of(AuthActions.confirmLoginFail({ error }))),
-        );
-      }),
+        ),
+      ),
     ),
   );
 
@@ -67,7 +72,15 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.fetchAccessToken),
       switchMap(() => {
-        return this.authService.fetchAccesstoken().pipe(
+        if (isPlatformServer(this.platform)) {
+          const expressRequest = this.injector.get(REQUEST);
+          const refreshToken = expressRequest.cookies[CookieNames.RefreshToken];
+          return this.authService.fetchAccessTokenOnServer(refreshToken).pipe(
+            map(data => AuthActions.fetchAccessTokenDone(data)),
+            catchError(error => of(AuthActions.fetchAccessTokenFail({ error }))),
+          );
+        }
+        return this.authService.fetchAccessToken().pipe(
           map(data => AuthActions.fetchAccessTokenDone(data)),
           catchError(error => of(AuthActions.fetchAccessTokenFail({ error }))),
         );

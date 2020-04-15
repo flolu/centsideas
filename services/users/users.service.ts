@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes, CookieNames, UsersApiRoutes, ApiEndpoints } from '@cents-ideas/enums';
+import { HttpStatusCodes, CookieNames } from '@cents-ideas/enums';
 import {
   HttpRequest,
   HttpResponse,
@@ -66,7 +66,8 @@ export class UsersService {
     new Promise(resolve => {
       Logger.thread('refresh token', async t => {
         try {
-          const currentRefreshToken = req.cookies[CookieNames.RefreshToken];
+          const currentRefreshToken =
+            req.cookies[CookieNames.RefreshToken] || req.body.refreshToken;
           const data = await this.commandHandler.refreshToken(currentRefreshToken, t);
           const { user, accessToken, refreshToken } = data;
           const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
@@ -136,7 +137,6 @@ export class UsersService {
   private createRefreshTokenCookie = (refreshToken: string) =>
     new Cookie(CookieNames.RefreshToken, refreshToken, {
       httpOnly: true,
-      path: `/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`,
       sameSite: 'strict',
     });
 }

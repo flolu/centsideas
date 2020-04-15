@@ -1,8 +1,6 @@
-import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { isPlatformServer } from '@angular/common';
-import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
 
 import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
 import {
@@ -16,20 +14,7 @@ import { EnvironmentService } from '../../shared/environment/environment.service
 
 @Injectable()
 export class AuthService {
-  private expressRequest: any;
-  private expressResponse: any;
-
-  constructor(
-    private http: HttpClient,
-    private injector: Injector,
-    private environmentService: EnvironmentService,
-    @Inject(PLATFORM_ID) private platform: string,
-  ) {
-    if (isPlatformServer(this.platform)) {
-      this.expressRequest = this.injector.get(REQUEST);
-      this.expressResponse = this.injector.get(RESPONSE);
-    }
-  }
+  constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
 
   login = (email: string): Observable<{}> => {
     const payload: ILoginDto = { email };
@@ -43,7 +28,12 @@ export class AuthService {
     return this.http.post<IConfirmedLoginDto>(url, payload);
   };
 
-  fetchAccesstoken = (): Observable<IRefreshedTokenDto> => {
+  fetchAccessTokenOnServer = (refreshToken: string): Observable<IRefreshedTokenDto> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.RefreshToken}`;
+    return this.http.post<IRefreshedTokenDto>(url, { refreshToken });
+  };
+
+  fetchAccessToken = (): Observable<IRefreshedTokenDto> => {
     const url = `${this.baseUrl}/${UsersApiRoutes.RefreshToken}`;
     return this.http.post<IRefreshedTokenDto>(url, {});
   };

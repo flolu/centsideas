@@ -6,10 +6,16 @@ import { mapTo } from 'rxjs/operators';
 import { SwUpdate } from '@angular/service-worker';
 
 import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
+import { AuthSelectors } from './auth/auth.selectors';
 
 @Component({
   selector: 'ci-component',
   template: `
+    <h1 *ngIf="(authState$ | async)?.initializing">Initializing...</h1>
+    <h1 *ngIf="(authState$ | async)?.initialized">Initialized</h1>
+    <h1 *ngIf="(authState$ | async)?.accessToken">
+      access token: {{ (authState$ | async)?.accessToken }}
+    </h1>
     <h1 *ngIf="offline$ | async">You're offline</h1>
     <div>
       <a [routerLink]="[topLevelRoutes.Ideas]">Ideas</a>
@@ -24,6 +30,7 @@ import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@
   styleUrls: ['app.component.sass'],
 })
 export class AppComponent implements OnDestroy {
+  authState$ = this.store.select(AuthSelectors.selectAuthState);
   offline$: Observable<boolean>;
 
   alive = true;

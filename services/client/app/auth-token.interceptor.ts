@@ -44,11 +44,10 @@ export class AuthTokenInterceptor implements HttpInterceptor {
     return this.actions.pipe(
       ofType(AuthActions.fetchAccessTokenDone, AuthActions.fetchAccessTokenFail),
       first(),
-      flatMap(data => {
+      flatMap(() => {
         return this.store.select(AuthSelectors.selectAuthState).pipe(
           first(),
           flatMap(authState => {
-            console.log({ authState });
             const request = this.setRequestAuthHeader(req, authState.accessToken);
             return next.handle(request);
           }),

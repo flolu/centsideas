@@ -33,14 +33,14 @@ export class GatewayServer {
       origin: string | undefined,
       callback: (err: Error | null, allow?: boolean) => void,
     ) => {
-      if (origin && whitelist.includes(origin)) return callback(null, true);
+      if (!origin || whitelist.includes(origin)) return callback(null, true);
       callback(new Error('Not allowed by CORS'));
     };
     this.app.use(cors({ origin: checkOrigin, credentials: true }));
     this.app.use(bodyParser());
     this.app.use(cookieParser());
 
-    // TODO move this middleware to utils and only use when necessary?
+    // TODO move this middleware to utils and only use it on necessary routes?
     this.app.use((req, res, next) => {
       res.locals.userId = null;
       const authHeader = req.headers[HeaderKeys.Auth];
