@@ -121,9 +121,20 @@ export class UserCommandHandler {
     if (existing) {
       t.debug('found existing user with this google user id', existing.userId);
 
-      // this isn't a first login
-      // TODO handle exisiting user
-      throw new Error('not implemented');
+      const loginId = Identifier.makeLongId();
+      const login = Login.createGoogleLogin(loginId, userInfo.email, false, userInfo.id);
+
+      const user = await this.userRepository.findById(existing.userId);
+      if (!user) throw new UserErrors.UserNotFoundError(existing.userId);
+
+      if (user.persistedState.email !== userInfo.email) {
+        t.debug(
+          `user has a different email (${user.persistedState.email}) than it's google account (${userInfo.email})`,
+        );
+        // FIXME consider asking the user to change email
+      }
+
+      return this.handleConfirmedLogin(user, login, t);
     } else {
       UserErrors.EmailRequiredError.validate(userInfo.email);
       UserErrors.EmailInvalidError.validate(userInfo.email);
@@ -133,10 +144,24 @@ export class UserCommandHandler {
         t.debug(
           'found a user that has the email of the google user but has not registered its account with the google account',
         );
-        // TODO handle user with email already exists: associate google id with this user!
-        // TODO what if he alrady has another google account associated with it? (can one user have multiple google logins?)
-        throw new Error('not implemented');
-        // this isn't a first login
+
+        const specialLogin = Login.createGoogleLogin(
+          Identifier.makeLongId(),
+          userInfo.email,
+          false,
+          userInfo.id,
+        );
+
+        const user = await this.userRepository.findById(emailUserMapping.userId);
+        if (!user)
+          throw new Error(
+            `user associated with email ${emailUserMapping.email} not found although it should exist`,
+          );
+
+        await this.userRepository.insertGoogleUserId(userInfo.id, user.persistedState.id);
+        t.debug(`inserted new google user id mapping`);
+
+        return this.handleConfirmedLogin(user, specialLogin, t);
       }
       t.debug('no exising google user id mapping found');
 
@@ -221,6 +246,8 @@ export class UserCommandHandler {
     const data = decodeToken(token, env.changeEmailTokenSecret);
     const payload: IEmailChangeTokenPayload = data;
     t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
+
+    // TODO check that no other user has signed up with this email in the mean-time
 
     const user = await this.userRepository.findById(payload.userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, payload.newEmail);
