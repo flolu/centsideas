@@ -33,3 +33,8 @@ export interface IGoogleLoginDto {
 export interface IGoogleLoginRedirectDto {
   url: string;
 }
+
+export interface IGoogleLoggedInDto {
+  user: IUserState;
+  accessToken: string;
+}

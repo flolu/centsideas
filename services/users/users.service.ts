@@ -18,6 +18,7 @@ import {
 import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
+import env from './environment';
 
 @injectable()
 export class UsersService {
@@ -63,29 +64,6 @@ export class UsersService {
       });
     });
 
-  googleLogin = (req: HttpRequest): Promise<HttpResponse> =>
-    new Promise(resolve => {
-      Logger.thread('google login', async t => {
-        try {
-          const code: string = req.body.code;
-          t.debug('code starts with', code.substr(0, 20));
-
-          // TODO finish implementation
-          const data = await this.commandHandler.googleLogin(code, t);
-          // const { user, accessToken, refreshToken } = data;
-          t.log('successfully completed google login');
-
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: { data },
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
-    });
-
   googleLoginRedirect = (_req: HttpRequest): Promise<HttpResponse<IGoogleLoginRedirectDto>> =>
     new Promise(resolve => {
       Logger.thread('google login redirect', async t => {
@@ -95,6 +73,30 @@ export class UsersService {
           resolve({
             status: HttpStatusCodes.Accepted,
             body: { url },
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  googleLogin = (req: HttpRequest): Promise<HttpResponse> =>
+    new Promise(resolve => {
+      Logger.thread('google login', async t => {
+        try {
+          const code: string = req.body.code;
+          t.debug('code starts with', code.substr(0, 20));
+
+          const data = await this.commandHandler.googleLogin(code, t);
+          const { user, accessToken, refreshToken } = data;
+          const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
+          t.log('successfully completed google login');
+
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { user, accessToken },
+            cookies: [refreshTokenCookie],
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);
@@ -194,8 +196,9 @@ export class UsersService {
   private createRefreshTokenCookie = (refreshToken: string) =>
     new Cookie(CookieNames.RefreshToken, refreshToken, {
       httpOnly: true,
-      sameSite: 'strict',
-      // accepts milliseconds
+      // TODO test if this works with subdomains (api.centsideas.com)? https://security.stackexchange.com/a/223477/232388
+      sameSite: env.environment === 'dev' ? 'none' : 'strict',
+      secure: env.environment === 'dev' ? false : true,
       maxAge: TokenExpirationTimes.RefreshToken * 1000,
     });
 }

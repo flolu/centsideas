@@ -36,4 +36,9 @@ export class User extends EventEntity<IUserState> {
     );
     return this;
   }
+
+  confirmEmailChange(userId: string, newEmail: string) {
+    this.pushEvents(new UserEvents.EmailChangeConfirmedEvent(userId, newEmail));
+    return this;
+  }
 }

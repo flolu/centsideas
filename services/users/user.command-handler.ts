@@ -33,19 +33,18 @@ import { UserErrors } from './errors';
 import env from './environment';
 import { Login } from './login.entity';
 import { LoginRepository } from './login.repository';
-import { LoginEvents, UserEvents } from './events';
 import { IGoogleUserinfo } from './models';
 
 @injectable()
 export class UserCommandHandler {
-  constructor(private repository: UserRepository, private loginRepository: LoginRepository) {}
+  constructor(private userRepository: UserRepository, private loginRepository: LoginRepository) {}
 
   login = async (email: string, t: ThreadLogger): Promise<Login> => {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
     t.debug('login with email', email);
 
-    const emailUserMapping = await this.repository.getUserIdEmailMapping(email);
+    const emailUserMapping = await this.userRepository.getUserIdEmailMapping(email);
     const firstLogin = !emailUserMapping;
     const loginId = await this.loginRepository.generateUniqueId();
     t.debug(firstLogin ? 'first' : 'normal', 'login with loginId:', loginId);
@@ -87,10 +86,10 @@ export class UserCommandHandler {
       return this.handleConfirmedLogin(createdUser, login, t);
     }
 
-    const emailUserMapping = await this.repository.getUserIdEmailMapping(payload.email);
+    const emailUserMapping = await this.userRepository.getUserIdEmailMapping(payload.email);
     if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
 
-    const user = await this.repository.findById(emailUserMapping.userId);
+    const user = await this.userRepository.findById(emailUserMapping.userId);
     if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
     return this.handleConfirmedLogin(user, login, t);
@@ -112,47 +111,60 @@ export class UserCommandHandler {
   };
 
   googleLogin = async (code: string, t: ThreadLogger) => {
-    UserErrors.GoogleLoginCodeRequiredError.validate(code);
-    const tokensResponse = await axios({
-      url: `https://oauth2.googleapis.com/token`,
-      method: 'post',
-      data: {
-        client_id: env.google.clientId,
-        client_secret: env.google.clientSecret,
-        redirect_uri: `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`,
-        grant_type: 'authorization_code',
-        code,
-      },
-    });
-    const { access_token } = tokensResponse.data;
-    if (!access_token) throw new Error('Google access token could not be acquired');
-    t.debug('got google access token, starts with', access_token?.substr(0, 10));
-
-    const userInfoResponse = await axios({
-      url: 'https://www.googleapis.com/oauth2/v2/userinfo',
-      method: 'get',
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-    const userinfo: IGoogleUserinfo = userInfoResponse.data;
-    if (!userinfo) throw new Error('Google user info could not be acquire');
+    const userInfo = await this.fetchGoogleUserInfo(code, t);
 
     // FIXME send verification email manually
-    if (!userinfo.verified_email)
+    if (!userInfo.verified_email)
       throw new Error('Please verify your Google email before signing in with Google');
 
-    // const loginId = await this.loginRepository.generateUniqueId();
-    //  const login = Login.create(loginId, email, firstLogin);
-    // TODO handle new user
-    // TODO handle existing user
+    const existing = await this.userRepository.getGoogleUserIdMapping(userInfo.id);
+    if (existing) {
+      t.debug('found existing user with this google user id', existing.userId);
+
+      // this isn't a first login
+      // TODO handle exisiting user
+      throw new Error('not implemented');
+    } else {
+      UserErrors.EmailRequiredError.validate(userInfo.email);
+      UserErrors.EmailInvalidError.validate(userInfo.email);
+
+      const emailUserMapping = await this.userRepository.getUserIdEmailMapping(userInfo.email);
+      if (emailUserMapping) {
+        t.debug(
+          'found a user that has the email of the google user but has not registered its account with the google account',
+        );
+        // TODO handle user with email already exists: associate google id with this user!
+        // TODO what if he alrady has another google account associated with it? (can one user have multiple google logins?)
+        throw new Error('not implemented');
+        // this isn't a first login
+      }
+      t.debug('no exising google user id mapping found');
+
+      const loginId = Identifier.makeLongId();
+      const login = Login.createGoogleLogin(loginId, userInfo.email, true, userInfo.id);
+
+      const userId = await this.userRepository.generateUniqueId();
+      const refreshTokenId = Identifier.makeLongId();
+      // TODO username uniqueness?!
+      // FIXME set username based on google username
+      const username: string = faker.internet.userName().toLowerCase().toString();
+      let createdUser = User.create(userId, userInfo.email, username, refreshTokenId);
+
+      // FIXME consider creating transaction and only apply if both succeeded? because its problematic if saving the user will fail after the userId has already bin inserted into the mapping collection
+      await this.userRepository.insertGoogleUserId(userInfo.id, userId);
+      await this.userRepository.insertEmail(userId, userInfo.email);
+      createdUser = await this.userRepository.save(createdUser);
+      t.debug('created user with id', createdUser.persistedState.id);
+
+      return this.handleConfirmedLogin(createdUser, login, t);
+    }
   };
 
   refreshToken = async (token: string, t: ThreadLogger) => {
     const data: IRefreshTokenPayload = decodeToken(token, env.refreshTokenSecret);
     t.debug('refresh token is valid', token ? token.slice(0, 30) : token);
 
-    const user = await this.repository.findById(data.userId);
+    const user = await this.userRepository.findById(data.userId);
     if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
     if (user.persistedState.tokenId !== data.tokenId)
@@ -193,14 +205,16 @@ export class UserCommandHandler {
       t.debug('email', email, 'is valid');
     }
 
-    const user = await this.repository.findById(userId);
+    const user = await this.userRepository.findById(userId);
     t.debug('found corresponding user');
 
     const isNewEmail = email && user.persistedState.email !== email;
     if (email && isNewEmail) await this.requestEmailChange(userId, email);
 
+    // TODO important also update the userId - email mapping!
+
     user.update(username, isNewEmail ? email : null);
-    return this.repository.save(user);
+    return this.userRepository.save(user);
   };
 
   confirmEmailChange = async (token: string, t: ThreadLogger): Promise<User> => {
@@ -208,9 +222,9 @@ export class UserCommandHandler {
     const payload: IEmailChangeTokenPayload = data;
     t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
 
-    const user = await this.repository.findById(payload.userId);
+    const user = await this.userRepository.findById(payload.userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, payload.newEmail);
-    user.pushEvents(new UserEvents.EmailChangeConfirmedEvent(payload.userId, payload.newEmail));
+    user.confirmEmailChange(payload.userId, payload.newEmail);
 
     const subject = 'CENTS Ideas Email Was Changed';
     const text = `You have changed your email adress from ${payload.currentEmail} to ${payload.newEmail}`;
@@ -223,23 +237,21 @@ export class UserCommandHandler {
       env.mailing.apiKey,
     );
     t.debug(
-      'sent email to notify user, that his email has changed from',
-      payload.currentEmail,
-      'to',
-      payload.newEmail,
+      'sent email to notify user, that his email has changed',
+      `from ${payload.currentEmail} to ${payload.newEmail}`,
     );
 
-    return this.repository.save(user);
+    return this.userRepository.save(user);
   };
 
   private requestEmailChange = async (userId: string, newEmail: string): Promise<any> => {
     UserErrors.EmailRequiredError.validate(newEmail);
     UserErrors.EmailInvalidError.validate(newEmail);
 
-    const user = await this.repository.findById(userId);
+    const user = await this.userRepository.findById(userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, newEmail);
 
-    const emailUserMapping = await this.repository.getUserIdEmailMapping(newEmail);
+    const emailUserMapping = await this.userRepository.getUserIdEmailMapping(newEmail);
     if (emailUserMapping) throw new UserErrors.EmailNotAvailableError(newEmail);
 
     const tokenPayload: IEmailChangeTokenPayload = {
@@ -262,17 +274,17 @@ export class UserCommandHandler {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
 
-    const emailUserMapping = await this.repository.getUserIdEmailMapping(email);
+    const emailUserMapping = await this.userRepository.getUserIdEmailMapping(email);
     if (emailUserMapping) throw new UserErrors.EmailAlreadySignedUpError(email);
 
-    const userId = await this.repository.generateUniqueId();
+    const userId = await this.userRepository.generateUniqueId();
     const tokenId = Identifier.makeLongId();
-    // FIXME username uniqueness?!
+    // TODO username uniqueness?!
     const username: string = faker.internet.userName().toLowerCase().toString();
     const user = User.create(userId, email, username, tokenId);
 
-    await this.repository.insertEmail(userId, email);
-    return this.repository.save(user);
+    await this.userRepository.insertEmail(userId, email);
+    return this.userRepository.save(user);
   };
 
   private handleConfirmedLogin = async (user: User, login: Login, t: ThreadLogger) => {
@@ -280,11 +292,7 @@ export class UserCommandHandler {
     const refreshToken = this.generateRefreshToken(user);
     t.debug('generated access and refresh tokens');
 
-    const loginEvent = new LoginEvents.LoginConfirmedEvent(
-      login.persistedState.id,
-      user.persistedState.id,
-    );
-    login.pushEvents(loginEvent);
+    login.confirmLogin(login.currentState.id, user.persistedState.id);
     await this.loginRepository.save(login);
     t.debug('confirmed login', login.persistedState.id);
 
@@ -306,5 +314,38 @@ export class UserCommandHandler {
       env.refreshTokenSecret,
       { expiresIn: TokenExpirationTimes.RefreshToken },
     );
+  };
+
+  private fetchGoogleUserInfo = async (code: string, t: ThreadLogger): Promise<IGoogleUserinfo> => {
+    UserErrors.GoogleLoginCodeRequiredError.validate(code);
+
+    const tokensResponse = await axios({
+      url: `https://oauth2.googleapis.com/token`,
+      method: 'post',
+      data: {
+        client_id: env.google.clientId,
+        client_secret: env.google.clientSecret,
+        redirect_uri: `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`,
+        grant_type: 'authorization_code',
+        code,
+      },
+    });
+    const { access_token } = tokensResponse.data;
+    if (!access_token) throw new Error('Google access token could not be acquired');
+    t.debug('got google access token, starts with', access_token?.substr(0, 10));
+
+    const userInfoResponse = await axios({
+      url: 'https://www.googleapis.com/oauth2/v2/userinfo',
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    const userInfo: IGoogleUserinfo = userInfoResponse.data;
+    if (!userInfo || !userInfo.id || !userInfo.email)
+      throw new Error('Google user info could not be acquire');
+    t.debug('fetched google user info of', userInfo.email);
+
+    return userInfo;
   };
 }

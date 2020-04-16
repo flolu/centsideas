@@ -46,6 +46,7 @@ const userReducer = createReducer(
   on(AuthActions.confirmLoginDone, (state, { user }) => ({ ...state, user })),
   on(AuthActions.fetchAccessTokenDone, (state, { user }) => ({ ...state, user })),
   on(AuthActions.logoutDone, state => ({ ...state, user: null })),
+  on(AuthActions.googleLoginDone, (state, { user }) => ({ ...state, user })),
 );
 
 export function reducer(state: IUserReducerState | undefined, action: Action) {

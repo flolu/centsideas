@@ -7,6 +7,7 @@ import {
   IRefreshedTokenDto,
   IGoogleLoginDto,
   IGoogleLoginRedirectDto,
+  IGoogleLoggedInDto,
 } from '@cents-ideas/models';
 
 import { appPrefix, failSuffix, doneSuffix } from '../../shared/helpers/actions.helper';
@@ -34,7 +35,7 @@ const googleLoginRedirectFail = createAction(
 );
 
 const googleLogin = createAction(googleLoginPrefix, props<IGoogleLoginDto>());
-const googleLoginDone = createAction(googleLoginPrefix + doneSuffix);
+const googleLoginDone = createAction(googleLoginPrefix + doneSuffix, props<IGoogleLoggedInDto>());
 const googleLoginFail = createAction(googleLoginPrefix + failSuffix, props<{ error: string }>());
 
 const fetchAccessToken = createAction(refreshTokenPrefix);

@@ -82,7 +82,7 @@ export class AuthEffects {
       ofType(AuthActions.googleLogin),
       switchMap(({ code }) =>
         this.authService.googleLogin(code).pipe(
-          map(data => AuthActions.googleLoginDone()),
+          map(({ user, accessToken }) => AuthActions.googleLoginDone({ user, accessToken })),
           catchError(error => of(AuthActions.googleLoginFail({ error }))),
         ),
       ),

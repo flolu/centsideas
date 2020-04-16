@@ -3,7 +3,7 @@ import { Store, createSelector, createFeatureSelector } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { QueryParamKeys } from '@cents-ideas/enums';
+import { QueryParamKeys, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
 
 import { AuthActions } from './auth.actions';
 import { tap, take } from 'rxjs/operators';
@@ -50,13 +50,8 @@ export class LoginContainer {
       .select(selectLoginTokenFromUrl)
       .pipe(
         tap(token => {
-          if (token) {
-            this.store.dispatch(AuthActions.confirmLogin({ token }));
-            this.router.navigate([], {
-              queryParams: { [QueryParamKeys.Token]: null },
-              queryParamsHandling: 'merge',
-            });
-          }
+          if (token) this.store.dispatch(AuthActions.confirmLogin({ token }));
+          this.router.navigate([TopLevelFrontendRoutes.Auth, AuthFrontendRoutes.Login]);
         }),
         take(1),
       )
@@ -68,9 +63,8 @@ export class LoginContainer {
       .select(selectGoogleCodeFromUrl)
       .pipe(
         tap(code => {
-          if (code) {
-            this.store.dispatch(AuthActions.googleLogin({ code }));
-          }
+          if (code) this.store.dispatch(AuthActions.googleLogin({ code }));
+          this.router.navigate([TopLevelFrontendRoutes.Auth, AuthFrontendRoutes.Login]);
         }),
         take(1),
       )

@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import * as mongodb from 'mongodb';
 
 import { EventRepository, MessageBroker } from '@cents-ideas/event-sourcing';
 import { EventTopics } from '@cents-ideas/enums';
@@ -8,41 +7,48 @@ import { Logger } from '@cents-ideas/utils';
 import env from './environment';
 import { User } from './user.entity';
 import { IUserIdEmailMapping } from './models';
+import { IGoogleUserIdMapping } from './models/google-user-id-collection';
 
 @injectable()
 export class UserRepository extends EventRepository<User> {
   private readonly emailCollectionName = 'emails';
+  private readonly emailMappingKey = 'email';
+  private readonly googleUserIdCollectionName = 'googleUserIds';
+  private readonly googleUserIdMappingKey = 'googleId';
 
   constructor(private _messageBroker: MessageBroker) {
     super(_messageBroker);
     this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, [
       this.initializeEmailCollection,
+      this.initializeGoogleUserIdCollection,
     ]);
   }
 
-  private initializeEmailCollection = async (): Promise<boolean> => {
-    try {
-      const collection = await this.getEmailCollection();
-      await collection.createIndex({ email: 1 }, { unique: true });
-      return true;
-    } catch (error) {
-      Logger.error('Error while initializing email collection', error);
-      return false;
-    }
+  insertGoogleUserId = async (googleId: string, userId: string): Promise<IGoogleUserIdMapping> => {
+    const db = await this.getDatabase();
+    const inserted = await db
+      .collection(this.googleUserIdCollectionName)
+      .insertOne({ [this.googleUserIdMappingKey]: googleId, userId });
+    Logger.debug(
+      'inserted google user id into google user ids mapping collection',
+      `${googleId} -> ${userId}`,
+    );
+    return inserted.ops[0];
   };
 
-  private getEmailCollection = async (): Promise<mongodb.Collection> => {
+  getGoogleUserIdMapping = async (googleId: string): Promise<IGoogleUserIdMapping | null> => {
     const db = await this.getDatabase();
-    return db.collection(this.emailCollectionName);
+    return db
+      .collection(this.googleUserIdCollectionName)
+      .findOne({ [this.googleUserIdMappingKey]: googleId });
   };
 
   insertEmail = async (userId: string, email: string): Promise<IUserIdEmailMapping> => {
     const db = await this.getDatabase();
-    const inserted = await db.collection(this.emailCollectionName).insertOne({ userId, email });
-    Logger.debug('inserted email into emails collection', {
-      userId,
-      email,
-    });
+    const inserted = await db
+      .collection(this.emailCollectionName)
+      .insertOne({ userId, [this.emailMappingKey]: email });
+    Logger.debug('inserted email into emails mapping collection', `${email} -> ${userId}`);
     return inserted.ops[0];
   };
 
@@ -60,9 +66,30 @@ export class UserRepository extends EventRepository<User> {
 
   getUserIdEmailMapping = async (email: string): Promise<IUserIdEmailMapping | null> => {
     const db = await this.getDatabase();
-    const result: IUserIdEmailMapping | null = await db
-      .collection(this.emailCollectionName)
-      .findOne({ email });
-    return result;
+    return db.collection(this.emailCollectionName).findOne({ email });
+  };
+
+  private initializeGoogleUserIdCollection = async (): Promise<boolean> => {
+    try {
+      const db = await this.getDatabase();
+      const collection = db.collection(this.googleUserIdCollectionName);
+      await collection.createIndex({ [this.googleUserIdMappingKey]: 1 }, { unique: true });
+      return true;
+    } catch (error) {
+      Logger.error('Error while initializing email collection', error);
+      return false;
+    }
+  };
+
+  private initializeEmailCollection = async (): Promise<boolean> => {
+    try {
+      const db = await this.getDatabase();
+      const collection = db.collection(this.emailCollectionName);
+      await collection.createIndex({ [this.emailMappingKey]: 1 }, { unique: true });
+      return true;
+    } catch (error) {
+      Logger.error('Error while initializing email collection', error);
+      return false;
+    }
   };
 }

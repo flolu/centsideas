@@ -1,7 +1,7 @@
 export default {
   // TODO require the envs to be set like line below to remove cluttery defaults
   // environment: process.env.NODE_ENV!,
-  environment: process.env.NODE_ENV || 'dev',
+  environment: process.env.ENV!,
   port: 3000,
   databaseUrl: process.env.USERS_DATABASE_URL || 'mongodb://users-event-store:27017',
   userDatabaseName: 'users',

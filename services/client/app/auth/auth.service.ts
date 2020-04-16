@@ -10,6 +10,7 @@ import {
   IRefreshedTokenDto,
   IGoogleLoginDto,
   IGoogleLoginRedirectDto,
+  IGoogleLoggedInDto,
 } from '@cents-ideas/models';
 
 import { EnvironmentService } from '../../shared/environment/environment.service';
@@ -35,10 +36,10 @@ export class AuthService {
     return this.http.get<IGoogleLoginRedirectDto>(url);
   };
 
-  googleLogin = (code: string): Observable<IGoogleLoginDto> => {
+  googleLogin = (code: string): Observable<IGoogleLoggedInDto> => {
     const payload: IGoogleLoginDto = { code };
     const url = `${this.baseUrl}/${UsersApiRoutes.GoogleLogin}`;
-    return this.http.post<IGoogleLoginDto>(url, payload);
+    return this.http.post<IGoogleLoggedInDto>(url, payload);
   };
 
   fetchAccessTokenOnServer = (refreshToken: string): Observable<IRefreshedTokenDto> => {
@@ -46,7 +47,7 @@ export class AuthService {
     return this.http.post<IRefreshedTokenDto>(url, { refreshToken });
   };
 
-  // TODO this request is expected to fail at some point (...so don't throw error)... only throw error is unexpected error
+  // TODO this request is expected to fail at some point (...so don't throw error)... only throw error if it is unexpected error
   fetchAccessToken = (): Observable<IRefreshedTokenDto> => {
     const url = `${this.baseUrl}/${UsersApiRoutes.RefreshToken}`;
     return this.http.post<IRefreshedTokenDto>(url, {});

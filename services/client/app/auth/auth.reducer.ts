@@ -61,6 +61,7 @@ const authReducer = createReducer(
   on(AuthActions.logout, state => ({ ...state })),
   on(AuthActions.logoutDone, state => ({ ...state, accessToken: '' })),
   on(AuthActions.logoutFail, (state, { error }) => ({ ...state })),
+  on(AuthActions.googleLoginDone, (state, { accessToken }) => ({ ...state, accessToken })),
 );
 
 export function reducer(state: IAuthReducerState | undefined, action: Action) {
