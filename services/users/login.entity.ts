@@ -10,6 +10,7 @@ export class Login extends EventEntity<ILoginState> {
     createdAt: null,
     confirmedAt: null,
     lastEventId: '',
+    //  oauth: null,
   };
 
   constructor(snapshot?: ISnapshot<ILoginState>) {

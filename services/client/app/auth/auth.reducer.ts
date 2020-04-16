@@ -58,9 +58,9 @@ const authReducer = createReducer(
     initializing: false,
     initialized: true,
   })),
-  on(AuthActions.logout, state => ({ ...state, ...LOADING })),
-  on(AuthActions.logoutDone, state => ({ ...state, ...LOADING_DONE, accessToken: '' })),
-  on(AuthActions.logoutFail, (state, { error }) => ({ ...state, ...LOADING_FAIL(error) })),
+  on(AuthActions.logout, state => ({ ...state })),
+  on(AuthActions.logoutDone, state => ({ ...state, accessToken: '' })),
+  on(AuthActions.logoutFail, (state, { error }) => ({ ...state })),
 );
 
 export function reducer(state: IAuthReducerState | undefined, action: Action) {

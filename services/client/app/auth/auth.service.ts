@@ -8,6 +8,8 @@ import {
   IConfirmLoginDto,
   IConfirmedLoginDto,
   IRefreshedTokenDto,
+  IGoogleLoginDto,
+  IGoogleLoginRedirectDto,
 } from '@cents-ideas/models';
 
 import { EnvironmentService } from '../../shared/environment/environment.service';
@@ -26,6 +28,17 @@ export class AuthService {
     const payload: IConfirmLoginDto = { loginToken: token };
     const url = `${this.baseUrl}/${UsersApiRoutes.ConfirmLogin}`;
     return this.http.post<IConfirmedLoginDto>(url, payload);
+  };
+
+  googleLoginRedirect = (): Observable<IGoogleLoginRedirectDto> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.GoogleLoginRedirect}`;
+    return this.http.get<IGoogleLoginRedirectDto>(url);
+  };
+
+  googleLogin = (code: string): Observable<IGoogleLoginDto> => {
+    const payload: IGoogleLoginDto = { code };
+    const url = `${this.baseUrl}/${UsersApiRoutes.GoogleLogin}`;
+    return this.http.post<IGoogleLoginDto>(url, payload);
   };
 
   fetchAccessTokenOnServer = (refreshToken: string): Observable<IRefreshedTokenDto> => {

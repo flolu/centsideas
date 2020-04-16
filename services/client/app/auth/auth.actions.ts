@@ -2,12 +2,19 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
 
-import { IConfirmedLoginDto, IRefreshedTokenDto } from '@cents-ideas/models';
+import {
+  IConfirmedLoginDto,
+  IRefreshedTokenDto,
+  IGoogleLoginDto,
+  IGoogleLoginRedirectDto,
+} from '@cents-ideas/models';
 
 import { appPrefix, failSuffix, doneSuffix } from '../../shared/helpers/actions.helper';
 
 const prefix = `${appPrefix}/auth`;
 const loginPrefix = prefix + '/login';
+const googleLoginPrefix = prefix + '/google-login';
+const googleLoginRedirectPrefix = prefix + '/google-login-redirect';
 const confirmLoginPrefix = prefix + '/confirm-login';
 const refreshTokenPrefix = prefix + '/refresh-token';
 const logoutPrefix = prefix + '/logout';
@@ -15,6 +22,20 @@ const logoutPrefix = prefix + '/logout';
 const login = createAction(loginPrefix, props<{ email: string }>());
 const loginDone = createAction(loginPrefix + doneSuffix);
 const loginFail = createAction(loginPrefix + failSuffix, props<{ error: string }>());
+
+const googleLoginRedirect = createAction(googleLoginRedirectPrefix);
+const googleLoginRedirectDone = createAction(
+  googleLoginRedirectPrefix + doneSuffix,
+  props<IGoogleLoginRedirectDto>(),
+);
+const googleLoginRedirectFail = createAction(
+  googleLoginRedirectPrefix + failSuffix,
+  props<{ error: string }>(),
+);
+
+const googleLogin = createAction(googleLoginPrefix, props<IGoogleLoginDto>());
+const googleLoginDone = createAction(googleLoginPrefix + doneSuffix);
+const googleLoginFail = createAction(googleLoginPrefix + failSuffix, props<{ error: string }>());
 
 const fetchAccessToken = createAction(refreshTokenPrefix);
 const fetchAccessTokenDone = createAction(
@@ -38,6 +59,12 @@ export const AuthActions = {
   login,
   loginDone,
   loginFail,
+  googleLoginRedirectDone,
+  googleLoginRedirectFail,
+  googleLoginRedirect,
+  googleLogin,
+  googleLoginDone,
+  googleLoginFail,
   fetchAccessToken,
   fetchAccessTokenDone,
   fetchAccessTokenFail,

@@ -15,4 +15,8 @@ export default {
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET!,
   loginTokenSecret: process.env.LOGIN_TOKEN_SECRET!,
   changeEmailTokenSecret: process.env.CHANGE_EMAIL_TOKEN_SECRET!,
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID!,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  },
 };

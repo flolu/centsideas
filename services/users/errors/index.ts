@@ -9,6 +9,7 @@ import { EmailAlreadySignedUpError } from './email-already-signed-up.error';
 import { NoUserWithEmailError } from './no-user-with-email.error';
 import { EmailNotAvailableError } from './email-not-available.error';
 import { EmailMatchesCurrentEmailError } from './email-matches-current-email.error';
+import { GoogleLoginCodeRequiredError } from './google-login-code-required.error';
 
 export const UserErrors = {
   UserNotFoundError,
@@ -22,4 +23,5 @@ export const UserErrors = {
   NoUserWithEmailError,
   EmailNotAvailableError,
   EmailMatchesCurrentEmailError,
+  GoogleLoginCodeRequiredError,
 };

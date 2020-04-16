@@ -12,7 +12,7 @@ export class ExpressAdapter {
     return async (req: express.Request, res: express.Response) => {
       try {
         const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req, res);
-        Logger.log(`${httpRequest.method} request to ${url}`);
+        Logger.log(`request to ${url}`);
         const response = await axios.post(url, httpRequest);
         const httpResponse: HttpResponse = response.data;
         this.handleExpressHttpResponse(res, httpResponse);
@@ -35,7 +35,7 @@ export class ExpressAdapter {
         res.cookie(cookie.name, cookie.val, cookie.options);
       }
     }
-    res.status(httpResponse.status).send(httpResponse.body);
+    res.status(httpResponse.status || HttpStatusCodes.InternalServerError).send(httpResponse.body);
   };
 
   private makeHttpRequestFromExpressRequest = (

@@ -34,6 +34,7 @@ This is a project with the purpose of learning the architecture of complex web a
 | Compute server                                 | non-nodejs server for high cpu tasks   | ❌     |
 | Frontend                                       | code splitting, 100% lighthouse score  | ❌     |
 | Push notifications                             | mobile and desktop                     | ❌     |
+| Security                                       | encryption, https                      | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented

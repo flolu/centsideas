@@ -23,6 +23,16 @@ export class UsersServer {
       `/${UsersApiRoutes.ConfirmLogin}`,
       this.expressAdapter.json(this.usersService.confirmLogin),
     );
+
+    this.app.post(
+      `/${UsersApiRoutes.GoogleLogin}`,
+      this.expressAdapter.json(this.usersService.googleLogin),
+    );
+    this.app.post(
+      `/${UsersApiRoutes.GoogleLoginRedirect}`,
+      this.expressAdapter.json(this.usersService.googleLoginRedirect),
+    );
+
     this.app.post(
       `/${UsersApiRoutes.RefreshToken}`,
       this.expressAdapter.json(this.usersService.refreshToken),

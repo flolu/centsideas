@@ -11,7 +11,7 @@ export class User extends EventEntity<IUserState> {
     pendingEmail: null,
     createdAt: null,
     updatedAt: null,
-    // TODO implement logout / token invalidation
+    // TODO implement token invalidation
     tokenId: '',
     lastEventId: '',
   };

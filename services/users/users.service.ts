@@ -13,6 +13,7 @@ import {
   Cookie,
   IConfirmedLoginDto,
   IRefreshedTokenDto,
+  IGoogleLoginRedirectDto,
 } from '@cents-ideas/models';
 import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
@@ -54,6 +55,46 @@ export class UsersService {
             status: HttpStatusCodes.Accepted,
             body: { user, accessToken },
             cookies: [refreshTokenCookie],
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  googleLogin = (req: HttpRequest): Promise<HttpResponse> =>
+    new Promise(resolve => {
+      Logger.thread('google login', async t => {
+        try {
+          const code: string = req.body.code;
+          t.debug('code starts with', code.substr(0, 20));
+
+          // TODO finish implementation
+          const data = await this.commandHandler.googleLogin(code, t);
+          // const { user, accessToken, refreshToken } = data;
+          t.log('successfully completed google login');
+
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { data },
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  googleLoginRedirect = (_req: HttpRequest): Promise<HttpResponse<IGoogleLoginRedirectDto>> =>
+    new Promise(resolve => {
+      Logger.thread('google login redirect', async t => {
+        try {
+          const url = this.commandHandler.googleLoginRedirect();
+          t.debug('generated google login url starting with', url.substr(0, 30));
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { url },
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);

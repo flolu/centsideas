@@ -19,6 +19,15 @@ export class UsersRoutes {
       ),
     );
 
+    this.router.post(
+      `/${UsersApiRoutes.GoogleLogin}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.GoogleLogin}`),
+    );
+    this.router.get(
+      `/${UsersApiRoutes.GoogleLoginRedirect}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.GoogleLoginRedirect}`),
+    );
+
     this.router.get(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(

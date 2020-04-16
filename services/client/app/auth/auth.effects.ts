@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { isPlatformServer } from '@angular/common';
+import { isPlatformServer, DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 import { TopLevelFrontendRoutes, UserFrontendRoutes, CookieNames } from '@cents-ideas/enums';
 
@@ -25,6 +25,7 @@ export class AuthEffects {
     private store: Store,
     private injector: Injector,
     @Inject(PLATFORM_ID) private platform,
+    @Inject(DOCUMENT) private document: Document,
   ) {}
 
   login$ = createEffect(() =>
@@ -46,6 +47,43 @@ export class AuthEffects {
         this.authService.confirmLogin(action.token).pipe(
           map(({ accessToken, user }) => AuthActions.confirmLoginDone({ accessToken, user })),
           catchError(error => of(AuthActions.confirmLoginFail({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  googleLoginRedirect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.googleLoginRedirect),
+      switchMap(() =>
+        this.authService.googleLoginRedirect().pipe(
+          map(({ url }) => AuthActions.googleLoginRedirectDone({ url })),
+          catchError(error => of(AuthActions.googleLoginRedirectFail({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  googleLoginRedirectDone$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.googleLoginRedirectDone),
+        tap(({ url }) => {
+          if (isPlatformBrowser(this.platform)) {
+            this.document.location.href = url;
+          }
+        }),
+      ),
+    { dispatch: false },
+  );
+
+  googleLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.googleLogin),
+      switchMap(({ code }) =>
+        this.authService.googleLogin(code).pipe(
+          map(data => AuthActions.googleLoginDone()),
+          catchError(error => of(AuthActions.googleLoginFail({ error }))),
         ),
       ),
     ),

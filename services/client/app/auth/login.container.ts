@@ -13,6 +13,11 @@ const selectLoginTokenFromUrl = createSelector(
   router => router && router.state.queryParams[QueryParamKeys.Token],
 );
 
+const selectGoogleCodeFromUrl = createSelector(
+  createFeatureSelector<any>('router'),
+  router => router && router.state.queryParams[QueryParamKeys.GoogleSignInCode],
+);
+
 @Component({
   selector: 'ci-login',
   template: `
@@ -24,6 +29,7 @@ const selectLoginTokenFromUrl = createSelector(
       <br />
       <button (click)="onLogin()">Login</button>
     </form>
+    <button (click)="onLoginWithGoogle()">Login with Google</button>
   `,
 })
 export class LoginContainer {
@@ -33,11 +39,11 @@ export class LoginContainer {
 
   constructor(private store: Store, private router: Router) {
     this.handleConfirmLogin();
+    this.handleGoogleSignIn();
   }
 
-  onLogin = () => {
-    this.store.dispatch(AuthActions.login({ email: this.form.value.email }));
-  };
+  onLogin = () => this.store.dispatch(AuthActions.login({ email: this.form.value.email }));
+  onLoginWithGoogle = () => this.store.dispatch(AuthActions.googleLoginRedirect());
 
   handleConfirmLogin = () => {
     this.store
@@ -50,6 +56,20 @@ export class LoginContainer {
               queryParams: { [QueryParamKeys.Token]: null },
               queryParamsHandling: 'merge',
             });
+          }
+        }),
+        take(1),
+      )
+      .subscribe();
+  };
+
+  handleGoogleSignIn = () => {
+    this.store
+      .select(selectGoogleCodeFromUrl)
+      .pipe(
+        tap(code => {
+          if (code) {
+            this.store.dispatch(AuthActions.googleLogin({ code }));
           }
         }),
         take(1),

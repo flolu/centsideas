@@ -8,4 +8,6 @@ export enum UsersApiRoutes {
   Alive = 'alive',
   Logout = 'logout',
   RefreshToken = 'refresh-token',
+  GoogleLogin = 'google-login',
+  GoogleLoginRedirect = 'google-login-redirect',
 }

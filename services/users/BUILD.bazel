@@ -24,6 +24,8 @@ lib_deps = [
     "@npm//mongodb",
     "@npm//reflect-metadata",
     "@npm//shortid",
+    "@npm//query-string",
+    "@npm//axios",
 ]
 
 ts_library(

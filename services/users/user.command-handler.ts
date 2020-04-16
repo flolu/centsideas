@@ -1,6 +1,8 @@
 import { injectable } from 'inversify';
 import * as faker from 'faker';
 import * as jwt from 'jsonwebtoken';
+import axios from 'axios';
+import * as queryString from 'query-string';
 
 import {
   sanitizeHtml,
@@ -32,6 +34,7 @@ import env from './environment';
 import { Login } from './login.entity';
 import { LoginRepository } from './login.repository';
 import { LoginEvents, UserEvents } from './events';
+import { IGoogleUserinfo } from './models';
 
 @injectable()
 export class UserCommandHandler {
@@ -44,7 +47,7 @@ export class UserCommandHandler {
 
     const emailUserMapping = await this.repository.getUserIdEmailMapping(email);
     const firstLogin = !emailUserMapping;
-    const loginId = await this.repository.generateUniqueId();
+    const loginId = await this.loginRepository.generateUniqueId();
     t.debug(firstLogin ? 'first' : 'normal', 'login with loginId:', loginId);
 
     const tokenData: ILoginTokenPayload = { loginId, email, firstLogin };
@@ -91,6 +94,58 @@ export class UserCommandHandler {
     if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
     return this.handleConfirmedLogin(user, login, t);
+  };
+
+  googleLoginRedirect = () => {
+    const params = queryString.stringify({
+      client_id: env.google.clientId,
+      redirect_uri: `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`,
+      scope: [
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+      ].join(' '),
+      response_type: 'code',
+      access_type: 'offline',
+      prompt: 'consent',
+    });
+    return `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+  };
+
+  googleLogin = async (code: string, t: ThreadLogger) => {
+    UserErrors.GoogleLoginCodeRequiredError.validate(code);
+    const tokensResponse = await axios({
+      url: `https://oauth2.googleapis.com/token`,
+      method: 'post',
+      data: {
+        client_id: env.google.clientId,
+        client_secret: env.google.clientSecret,
+        redirect_uri: `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`,
+        grant_type: 'authorization_code',
+        code,
+      },
+    });
+    const { access_token } = tokensResponse.data;
+    if (!access_token) throw new Error('Google access token could not be acquired');
+    t.debug('got google access token, starts with', access_token?.substr(0, 10));
+
+    const userInfoResponse = await axios({
+      url: 'https://www.googleapis.com/oauth2/v2/userinfo',
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    const userinfo: IGoogleUserinfo = userInfoResponse.data;
+    if (!userinfo) throw new Error('Google user info could not be acquire');
+
+    // FIXME send verification email manually
+    if (!userinfo.verified_email)
+      throw new Error('Please verify your Google email before signing in with Google');
+
+    // const loginId = await this.loginRepository.generateUniqueId();
+    //  const login = Login.create(loginId, email, firstLogin);
+    // TODO handle new user
+    // TODO handle existing user
   };
 
   refreshToken = async (token: string, t: ThreadLogger) => {

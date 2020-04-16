@@ -25,3 +25,11 @@ export interface IRefreshedTokenDto {
   user: IUserState;
   accessToken: string;
 }
+
+export interface IGoogleLoginDto {
+  code: string;
+}
+
+export interface IGoogleLoginRedirectDto {
+  url: string;
+}

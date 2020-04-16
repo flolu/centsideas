@@ -29,7 +29,13 @@ export class GatewayServer {
 
     let whitelist = [env.frontendUrl];
     if (env.environment === 'dev')
-      whitelist = [...whitelist, 'http://localhost:4000', 'http://localhost:5432'];
+      whitelist = [
+        ...whitelist,
+        'http://localhost:4000',
+        'http://localhost:5432',
+        'http://127.0.0.1:4000',
+        'http://127.0.0.1:5432',
+      ];
     const checkOrigin = (
       origin: string | undefined,
       callback: (err: Error | null, allow?: boolean) => void,
