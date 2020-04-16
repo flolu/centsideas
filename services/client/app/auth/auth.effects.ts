@@ -92,7 +92,7 @@ export class AuthEffects {
   confirmLoginDone$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(AuthActions.confirmLoginDone),
+        ofType(AuthActions.confirmLoginDone, AuthActions.googleLoginDone),
         tap(() => this.router.navigate([TopLevelFrontendRoutes.User, UserFrontendRoutes.Me])),
       ),
     { dispatch: false },

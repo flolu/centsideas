@@ -64,11 +64,11 @@ export class UsersService {
       });
     });
 
-  googleLoginRedirect = (_req: HttpRequest): Promise<HttpResponse<IGoogleLoginRedirectDto>> =>
+  googleLoginRedirect = (req: HttpRequest): Promise<HttpResponse<IGoogleLoginRedirectDto>> =>
     new Promise(resolve => {
       Logger.thread('google login redirect', async t => {
         try {
-          const url = this.commandHandler.googleLoginRedirect();
+          const url = this.commandHandler.googleLoginRedirect(req.headers.origin);
           t.debug('generated google login url starting with', url.substr(0, 30));
           resolve({
             status: HttpStatusCodes.Accepted,
@@ -88,7 +88,7 @@ export class UsersService {
           const code: string = req.body.code;
           t.debug('code starts with', code.substr(0, 20));
 
-          const data = await this.commandHandler.googleLogin(code, t);
+          const data = await this.commandHandler.googleLogin(code, t, req.headers.origin);
           const { user, accessToken, refreshToken } = data;
           const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
           t.log('successfully completed google login');

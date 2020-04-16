@@ -11,11 +11,11 @@ import { AuthSelectors } from './auth/auth.selectors';
 @Component({
   selector: 'ci-component',
   template: `
-    <h1 *ngIf="(authState$ | async)?.initializing">Initializing...</h1>
-    <h1 *ngIf="(authState$ | async)?.initialized">Initialized</h1>
-    <h1 *ngIf="(authState$ | async)?.accessToken">
+    <span *ngIf="(authState$ | async)?.initializing">Initializing...</span>
+    <span *ngIf="(authState$ | async)?.initialized">Initialized</span>
+    <span *ngIf="(authState$ | async)?.accessToken">
       access token: {{ (authState$ | async)?.accessToken }}
-    </h1>
+    </span>
     <h1 *ngIf="offline$ | async">You're offline</h1>
     <div>
       <a [routerLink]="[topLevelRoutes.Ideas]">Ideas</a>

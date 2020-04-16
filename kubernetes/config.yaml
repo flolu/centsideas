@@ -7,7 +7,6 @@ data:
   ENV: prod
   LEVEL: debug
   GATEWAY_HOST: https://api.centsideas.com
-  GATEWAY_HOST: https://api.centsideas.com
   FRONTEND_URL: https://centsideas.com
 
   # gateway

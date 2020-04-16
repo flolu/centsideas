@@ -95,10 +95,10 @@ export class UserCommandHandler {
     return this.handleConfirmedLogin(user, login, t);
   };
 
-  googleLoginRedirect = () => {
+  googleLoginRedirect = (origin?: string) => {
     const params = queryString.stringify({
       client_id: env.google.clientId,
-      redirect_uri: `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`,
+      redirect_uri: this.getGoogleRedirectUri(origin),
       scope: [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
@@ -110,8 +110,8 @@ export class UserCommandHandler {
     return `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
   };
 
-  googleLogin = async (code: string, t: ThreadLogger) => {
-    const userInfo = await this.fetchGoogleUserInfo(code, t);
+  googleLogin = async (code: string, t: ThreadLogger, origin?: string) => {
+    const userInfo = await this.fetchGoogleUserInfo(code, t, origin);
 
     // FIXME send verification email manually
     if (!userInfo.verified_email)
@@ -343,7 +343,11 @@ export class UserCommandHandler {
     );
   };
 
-  private fetchGoogleUserInfo = async (code: string, t: ThreadLogger): Promise<IGoogleUserinfo> => {
+  private fetchGoogleUserInfo = async (
+    code: string,
+    t: ThreadLogger,
+    origin?: string,
+  ): Promise<IGoogleUserinfo> => {
     UserErrors.GoogleLoginCodeRequiredError.validate(code);
 
     const tokensResponse = await axios({
@@ -352,7 +356,7 @@ export class UserCommandHandler {
       data: {
         client_id: env.google.clientId,
         client_secret: env.google.clientSecret,
-        redirect_uri: `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`,
+        redirect_uri: this.getGoogleRedirectUri(origin),
         grant_type: 'authorization_code',
         code,
       },
@@ -374,5 +378,10 @@ export class UserCommandHandler {
     t.debug('fetched google user info of', userInfo.email);
 
     return userInfo;
+  };
+
+  private getGoogleRedirectUri = (origin?: string) => {
+    const frontendUrl = env.environment === 'dev' ? origin || env.frontendUrl : env.frontendUrl;
+    return `${frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`;
   };
 }
