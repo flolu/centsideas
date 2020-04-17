@@ -18,6 +18,10 @@ export class Event<IData> implements IEvent<IData> {
   readonly eventNumber: number;
 
   constructor(name: string, data: IData, aggregateId: string) {
+    // should never happen, but just to be save :P
+    if (!aggregateId) throw new Error(`aggregateId is required for creating an  event`);
+    if (!name) throw new Error(`name is required for creating an  event`);
+
     this.id = Identifier.makeLongId();
     this.aggregateId = aggregateId;
     this.name = name;

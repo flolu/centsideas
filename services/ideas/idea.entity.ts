@@ -31,13 +31,12 @@ export class Idea extends EventEntity<IIdeaState> {
   }
 
   update(title?: string, description?: string): Idea {
-    // TODO I think i can just return the push event mehotd instead of having two lines?!
-    this.pushEvents(new IdeasEvents.IdeaUpdatedEvent(this.persistedState.id, title, description));
+    this.pushEvents(new IdeasEvents.IdeaUpdatedEvent(this.currentState.id, title, description));
     return this;
   }
 
   delete(): Idea {
-    this.pushEvents(new IdeasEvents.IdeaDeletedEvent(this.persistedState.id));
+    this.pushEvents(new IdeasEvents.IdeaDeletedEvent(this.currentState.id));
     return this;
   }
 }

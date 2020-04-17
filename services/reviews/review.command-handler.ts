@@ -72,8 +72,7 @@ export class ReviewCommandHandler {
     NoPermissionError.validate(userId, review.persistedState.userId);
     t.debug('user has permision');
 
-    // TODO don't push here instead create method on review entity
-    review.pushEvents(new ReviewDeletedEvent(reviewId));
+    review.delete();
     t.debug('start deleting review');
     return this.repository.save(review);
   };

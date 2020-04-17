@@ -34,29 +34,22 @@ const ideasReducer = createReducer(
   on(IdeasActions.createIdea, state => ({ ...state, ...LOADING })),
   on(IdeasActions.createIdeaDone, (state, action) =>
     adapter.upsertOne(
-      // TODO merge with existing or reload from backend
       { ...action.created, reviews: [], scores: null, reviewCount: -1 },
       { ...state, loading: false, loaded: true, error: null },
     ),
   ),
   on(IdeasActions.createIdeaFail, (state, { error }) => ({ ...state, ...LOADING_FAIL(error) })),
   on(IdeasActions.updateIdeaDone, (state, { updated }) =>
-    adapter.upsertOne(
-      // TODO merge with existing or reload from backend
-      { ...updated, reviews: [], scores: null, reviewCount: -1 },
-      { ...state },
-    ),
+    adapter.upsertOne({ ...updated, reviews: [], scores: null, reviewCount: -1 }, { ...state }),
   ),
   on(IdeasActions.deleteIdea, state => ({ ...state, ...LOADING })),
   on(IdeasActions.deleteIdeaDone, (state, { deleted }) =>
     adapter.upsertOne(
-      // TODO merge with existing or reload from backend
       { ...deleted, reviews: [], scores: null, reviewCount: -1 },
       { ...state, ...LOADING_DONE },
     ),
   ),
   on(IdeasActions.deleteIdeaFail, (state, { error }) => ({ ...state, ...LOADING_FAIL(error) })),
-  // TODO publish review done
 );
 
 export function reducer(state: IIdeasState | undefined, action: Action) {

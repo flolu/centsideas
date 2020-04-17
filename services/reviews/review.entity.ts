@@ -40,12 +40,12 @@ export class Review extends EventEntity<IReviewState> {
   }
 
   update = (content?: string, scores?: IReviewScores) => {
-    this.pushEvents(new ReviewEvents.ReviewUpdatedEvent(this.persistedState.id, content, scores));
+    this.pushEvents(new ReviewEvents.ReviewUpdatedEvent(this.currentState.id, content, scores));
     return this;
   };
 
   delete = () => {
-    this.pushEvents(new ReviewDeletedEvent(this.persistedState.id));
+    this.pushEvents(new ReviewDeletedEvent(this.currentState.id));
     return this;
   };
 }
