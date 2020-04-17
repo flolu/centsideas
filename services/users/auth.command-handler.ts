@@ -160,25 +160,13 @@ export class AuthCommandHandler {
       const loginId = Identifier.makeLongId();
       const login = Login.createGoogleLogin(loginId, userInfo.email, true, userInfo.id);
 
-      // TODO use method "handleUserCreation" for the user creation DRY!
-
-      const userId = await this.userRepository.generateUniqueId();
-      const refreshTokenId = Identifier.makeLongId();
-
       // FIXME set username based on google username
-      const username: string = faker.internet.userName().toLowerCase().toString();
-      await this.userRepository.checkUsernameAvailibility(username);
-      t.debug(`username ${username} available`);
-
-      let createdUser = User.create(userId, userInfo.email, username, refreshTokenId);
-
-      // FIXME consider creating transaction and only apply if both succeeded? because its problematic if saving the user will fail after the userId has already bin inserted into the mapping collection
-      await this.userRepository.insertGoogleUserId(userInfo.id, userId);
-      await this.userRepository.insertEmail(userId, userInfo.email);
-      await this.userRepository.insertUsername(userId, username);
-      createdUser = await this.userRepository.save(createdUser);
+      const createdUser = await this.handleUserCreation(userInfo.email, t);
       t.debug('created user with id', createdUser.persistedState.id);
-
+      await this.userRepository.insertGoogleUserId(
+        userInfo.id,
+        (await createdUser).persistedState.id,
+      );
       return this.handleConfirmedLogin(createdUser, login, t);
     }
   };
@@ -224,8 +212,8 @@ export class AuthCommandHandler {
     t.debug(`username ${username} available`);
 
     const userId = await this.userRepository.generateUniqueId();
-    const tokenId = Identifier.makeLongId();
-    const user = User.create(userId, email, username, tokenId);
+    const refreshTokenId = Identifier.makeLongId();
+    const user = User.create(userId, email, username, refreshTokenId);
 
     // FIXME somehow make sure all three succeed to complte the user creation
     await this.userRepository.insertUsername(userId, username);
