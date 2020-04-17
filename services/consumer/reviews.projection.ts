@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { Collection } from 'mongodb';
 
-import { Logger, renameObjectProperty } from '@cents-ideas/utils';
+import { renameObjectProperty } from '@cents-ideas/utils';
 import { IEvent } from '@cents-ideas/event-sourcing';
 import { ReviewEvents } from '@cents-ideas/enums';
 import {

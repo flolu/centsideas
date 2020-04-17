@@ -11,3 +11,11 @@ export const LOADING = {
 };
 
 export const LOADING_FAIL = (error: string) => ({ loading: false, loaded: false, error });
+
+export interface ILoadingState {
+  loading: boolean;
+  loaded: boolean;
+  error: string;
+}
+
+export const initialLoadingState: ILoadingState = { loading: false, loaded: false, error: '' };

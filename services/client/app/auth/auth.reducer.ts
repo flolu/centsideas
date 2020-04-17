@@ -19,25 +19,6 @@ const initialState: IAuthReducerState = {
 
 const authReducer = createReducer(
   initialState,
-  // TODO move login into a login reducer with own loading, loaded ,etc
-  /* on(AuthActions.login, state => ({
-    ...state,
-    ...LOADING,
-  })),
-  on(AuthActions.loginFail, (state, { error }) => ({
-    ...state,
-    ...LOADING_FAIL(error),
-  })),
-  on(AuthActions.loginDone, state => ({
-    ...state,
-    ...LOADING_DONE,
-  })), */
-  /* on(AuthActions.confirmLogin, state => ({ ...state, ...LOADING })),
-  on(AuthActions.confirmLoginFail, (state, { error }) => ({
-    ...state,
-    ...LOADING_FAIL(error),
-  })), */
-
   on(AuthActions.fetchAccessToken, state => ({ ...state, ...LOADING })),
   on(AuthActions.fetchAccessTokenDone, (state, { accessToken }) => ({
     ...state,
@@ -52,15 +33,17 @@ const authReducer = createReducer(
     initializing: false,
     initialized: true,
   })),
+
+  on(AuthActions.logout, state => ({ ...state })),
+  on(AuthActions.logoutDone, state => ({ ...state, accessToken: '' })),
+  on(AuthActions.logoutFail, (state, { error }) => ({ ...state })),
+
   on(AuthActions.confirmLoginDone, (state, { accessToken }) => ({
     ...state,
     accessToken,
     initializing: false,
     initialized: true,
   })),
-  on(AuthActions.logout, state => ({ ...state })),
-  on(AuthActions.logoutDone, state => ({ ...state, accessToken: '' })),
-  on(AuthActions.logoutFail, (state, { error }) => ({ ...state })),
   on(AuthActions.googleLoginDone, (state, { accessToken }) => ({ ...state, accessToken })),
 );
 
