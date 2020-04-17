@@ -6,11 +6,8 @@ import { IEnvironment } from './environment.model';
 
 @Injectable()
 export class EnvironmentService {
-  // TODO dont hardcode
-  private readonly defaultGatewayHost = 'https://api.centsideas.com';
   private readonly localstorageEnvironmentKey = 'environment';
   private readonly keyName = '@cents-ideas/environment';
-  private readonly defaultEnvironment: IEnvironment = { gatewayHost: this.defaultGatewayHost };
   private readonly key = makeStateKey(this.keyName);
   private environment: IEnvironment;
 
@@ -23,16 +20,7 @@ export class EnvironmentService {
       const environment: IEnvironment | null = JSON.parse(
         localStorage.getItem(this.localstorageEnvironmentKey),
       );
-      if (environment) this.environment = environment;
-      else {
-        this.environment = { gatewayHost: 'http://localhost:3000' };
-        // if (this.document.location.hostname === 'localhost' || this.document.location.hostname.includes('local.'))
-        //  // TODO dont hardcode
-        //  this.environment = { gatewayHost: 'http://localhost:3000' };
-        // else this.environment = this.defaultEnvironment;
-      }
-    } else {
-      this.environment = this.defaultEnvironment;
+      this.environment = environment;
     }
   }
 
@@ -50,7 +38,12 @@ export class EnvironmentService {
     }
   };
 
-  get env() {
+  get env(): IEnvironment {
+    if (!this.environment || !this.environment.gatewayHost) {
+      if (this.document.location.hostname === 'localhost')
+        return { gatewayHost: 'http://localhost:3000' };
+      return { gatewayHost: `https://api.${this.document.location.hostname}` };
+    }
     return this.environment;
   }
 }

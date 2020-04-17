@@ -249,8 +249,6 @@ export class UserCommandHandler {
       t.debug('email is available');
       await this.requestEmailChange(userId, email);
     }
-    // TODO important also update the userId - email mapping!
-    // TODO update username userid mapping
 
     user.update(username, isNewEmail ? email : null);
 

@@ -51,7 +51,6 @@ export class UserRepository extends EventRepository<User> {
     return db.collection(this.emailCollectionName).findOne({ email });
   };
 
-  // TODO implement into command handlers
   insertUsername = async (userId: string, username: string): Promise<IUserIdUsernameMapping> => {
     const db = await this.getDatabase();
     const inserted = await db
@@ -63,7 +62,6 @@ export class UserRepository extends EventRepository<User> {
     return inserted.ops[0];
   };
 
-  // TODO implement into command handlers
   updateUsername = async (userId: string, newUsername: string): Promise<IUserIdEmailMapping> => {
     const db = await this.getDatabase();
     const updated = await db
