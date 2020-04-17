@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-import { UserFrontendRoutes } from '@cents-ideas/enums';
+import { UserFrontendRoutes } from '@centsideas/enums';
 
 import { MeContainer } from './me.container';
 import { AuthGuard } from '../auth/auth.guard';

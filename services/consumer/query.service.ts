@@ -1,14 +1,14 @@
 import { injectable } from 'inversify';
 
-import { Logger, handleHttpResponseError, renameObjectProperty } from '@cents-ideas/utils';
+import { Logger, handleHttpResponseError, renameObjectProperty } from '@centsideas/utils';
 import {
   HttpRequest,
   HttpResponse,
   IUserViewModel,
   IReviewViewModel,
   IIdeaViewModel,
-} from '@cents-ideas/models';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+} from '@centsideas/models';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 import { ProjectionDatabase } from './projection-database';
 

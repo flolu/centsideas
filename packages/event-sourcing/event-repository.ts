@@ -2,8 +2,8 @@ import * as retry from 'async-retry';
 import { injectable } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 
-import { Identifier, renameObjectProperty, Logger, EntityError } from '@cents-ideas/utils';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { Identifier, renameObjectProperty, Logger, EntityError } from '@centsideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';

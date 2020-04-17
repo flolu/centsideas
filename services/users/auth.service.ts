@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes, CookieNames, TokenExpirationTimes } from '@cents-ideas/enums';
-import { HttpRequest, HttpResponse, Cookie, Dtos } from '@cents-ideas/models';
-import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
+import { HttpStatusCodes, CookieNames, TokenExpirationTimes } from '@centsideas/enums';
+import { HttpRequest, HttpResponse, Cookie, Dtos } from '@centsideas/models';
+import { handleHttpResponseError, Logger } from '@centsideas/utils';
 
 import env from './environment';
 import { AuthCommandHandler } from './auth.command-handler';

@@ -1,6 +1,6 @@
-import { Event } from '@cents-ideas/event-sourcing';
-import { UserEvents } from '@cents-ideas/enums';
-import { IUserState, IRefreshTokenRevokedEvent } from '@cents-ideas/models';
+import { Event } from '@centsideas/event-sourcing';
+import { UserEvents } from '@centsideas/enums';
+import { IUserState, IRefreshTokenRevokedEvent } from '@centsideas/models';
 
 export class RefreshTokenRevokedEvent extends Event<IRefreshTokenRevokedEvent> {
   static readonly eventName: string = UserEvents.RefreshTokenRevoked;

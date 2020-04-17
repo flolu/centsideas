@@ -20,7 +20,7 @@ export function setTransferedState(reducer: ActionReducer<any>): ActionReducer<a
 
 @Injectable()
 export class NgRxStateTransferService {
-  private keyName = '@cents-ideas/ngrx-state';
+  private keyName = '@centsideas/ngrx-state';
   private key = makeStateKey(this.keyName);
 
   constructor(

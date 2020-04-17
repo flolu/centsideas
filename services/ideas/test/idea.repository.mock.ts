@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { EventRepositoryMock } from '@cents-ideas/event-sourcing';
+import { EventRepositoryMock } from '@centsideas/event-sourcing';
 
 import { Idea } from '../idea.entity';
 

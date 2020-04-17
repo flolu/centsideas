@@ -1,5 +1,5 @@
-import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
-import { ILoginState } from '@cents-ideas/models';
+import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { ILoginState } from '@centsideas/models';
 
 import { loginCommitFunctions, LoginEvents } from './events';
 

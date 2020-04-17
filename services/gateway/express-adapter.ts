@@ -2,8 +2,8 @@ import * as express from 'express';
 import axios from 'axios';
 import { injectable } from 'inversify';
 
-import { HttpRequest, HttpResponse } from '@cents-ideas/models';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { HttpRequest, HttpResponse } from '@centsideas/models';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 @injectable()
 export class ExpressAdapter {

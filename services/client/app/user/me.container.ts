@@ -4,8 +4,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { tap, take, takeWhile } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { QueryParamKeys } from '@cents-ideas/enums';
-import { IUserState } from '@cents-ideas/models';
+import { QueryParamKeys } from '@centsideas/enums';
+import { IUserState } from '@centsideas/models';
 
 import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';

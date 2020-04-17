@@ -1,15 +1,15 @@
 import { injectable } from 'inversify';
 import { Collection } from 'mongodb';
 
-import { renameObjectProperty } from '@cents-ideas/utils';
-import { IEvent } from '@cents-ideas/event-sourcing';
-import { ReviewEvents } from '@cents-ideas/enums';
+import { renameObjectProperty } from '@centsideas/utils';
+import { IEvent } from '@centsideas/event-sourcing';
+import { ReviewEvents } from '@centsideas/enums';
 import {
   IReviewViewModel,
   IReviewCreatedEvent,
   IIdeaViewModel,
   IReviewScores,
-} from '@cents-ideas/models';
+} from '@centsideas/models';
 
 import { ProjectionDatabase } from './projection-database';
 

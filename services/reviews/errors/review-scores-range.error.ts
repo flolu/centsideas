@@ -1,6 +1,6 @@
-import { IReviewScores } from '@cents-ideas/models';
-import { EntityError } from '@cents-ideas/utils';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { IReviewScores } from '@centsideas/models';
+import { EntityError } from '@centsideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 export class ReviewScoresRangeError extends EntityError {
   static min: number = 0;

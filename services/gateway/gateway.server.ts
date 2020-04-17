@@ -3,8 +3,8 @@ import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import { injectable } from 'inversify';
 
-import { Logger } from '@cents-ideas/utils';
-import { ApiEndpoints } from '@cents-ideas/enums';
+import { Logger } from '@centsideas/utils';
+import { ApiEndpoints } from '@centsideas/enums';
 
 import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';

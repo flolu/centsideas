@@ -1,4 +1,4 @@
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 import { EntityError } from '..';
 

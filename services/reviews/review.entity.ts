@@ -1,5 +1,5 @@
-import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
-import { IReviewScores, IReviewState } from '@cents-ideas/models';
+import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { IReviewScores, IReviewState } from '@centsideas/models';
 
 import { commitFunctions, ReviewEvents } from './events';
 import { ReviewDeletedEvent } from './events/review-deleted.event';

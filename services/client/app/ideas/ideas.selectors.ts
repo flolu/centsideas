@@ -3,7 +3,7 @@ import * as __entityTypes from '@ngrx/entity';
 
 import { createSelector } from '@ngrx/store';
 
-import { IIdeaViewModel } from '@cents-ideas/models';
+import { IIdeaViewModel } from '@centsideas/models';
 
 import { IIdeasFeatureReducerState } from './ideas.state';
 import * as fromIdeas from './ideas.reducer';

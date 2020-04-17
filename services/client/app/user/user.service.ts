@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
-import { IUserState, Dtos } from '@cents-ideas/models';
+import { ApiEndpoints, UsersApiRoutes } from '@centsideas/enums';
+import { IUserState, Dtos } from '@centsideas/models';
 
 import { EnvironmentService } from '../../shared/environment/environment.service';
 

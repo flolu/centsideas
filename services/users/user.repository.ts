@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 
-import { EventRepository, MessageBroker } from '@cents-ideas/event-sourcing';
-import { EventTopics } from '@cents-ideas/enums';
-import { Logger } from '@cents-ideas/utils';
+import { EventRepository, MessageBroker } from '@centsideas/event-sourcing';
+import { EventTopics } from '@centsideas/enums';
+import { Logger } from '@centsideas/utils';
 
 import env from './environment';
 import { User } from './user.entity';

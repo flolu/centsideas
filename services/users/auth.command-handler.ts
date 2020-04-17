@@ -10,14 +10,14 @@ import {
   TokenInvalidError,
   ThreadLogger,
   Identifier,
-} from '@cents-ideas/utils';
-import { ILoginTokenPayload, IRefreshTokenPayload } from '@cents-ideas/models';
+} from '@centsideas/utils';
+import { ILoginTokenPayload, IRefreshTokenPayload } from '@centsideas/models';
 import {
   TopLevelFrontendRoutes,
   AuthFrontendRoutes,
   QueryParamKeys,
   TokenExpirationTimes,
-} from '@cents-ideas/enums';
+} from '@centsideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';

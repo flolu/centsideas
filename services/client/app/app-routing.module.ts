@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes } from '@centsideas/enums';
 
 const routes: Routes = [
   {

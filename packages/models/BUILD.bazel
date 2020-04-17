@@ -8,7 +8,7 @@ ts_library(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@cents-ideas/models",
+    module_name = "@centsideas/models",
     deps = [
         "@npm//@types/express",
         "@npm//express",

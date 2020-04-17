@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes } from '@cents-ideas/enums';
-import { HttpRequest, HttpResponse, IIdeaState, Dtos } from '@cents-ideas/models';
-import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
+import { HttpRequest, HttpResponse, IIdeaState, Dtos } from '@centsideas/models';
+import { handleHttpResponseError, Logger } from '@centsideas/utils';
 
 import { IdeaCommandHandler } from './idea.command-handler';
 

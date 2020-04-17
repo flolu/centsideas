@@ -1,6 +1,6 @@
-import { Event } from '@cents-ideas/event-sourcing';
-import { LoginEvents } from '@cents-ideas/enums';
-import { ILoginConfirmedEvent, ILoginState } from '@cents-ideas/models';
+import { Event } from '@centsideas/event-sourcing';
+import { LoginEvents } from '@centsideas/enums';
+import { ILoginConfirmedEvent, ILoginState } from '@centsideas/models';
 
 export class LoginConfirmedEvent extends Event<ILoginConfirmedEvent> {
   static readonly eventName: string = LoginEvents.LoginConfirmed;

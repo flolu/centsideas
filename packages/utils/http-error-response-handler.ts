@@ -1,5 +1,5 @@
-import { HttpResponse } from '@cents-ideas/models';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { HttpResponse } from '@centsideas/models';
+import { HttpStatusCodes } from '@centsideas/enums';
 import { ThreadLogger } from './logger';
 
 export const handleHttpResponseError = (

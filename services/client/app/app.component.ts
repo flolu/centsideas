@@ -5,7 +5,7 @@ import { Observable, fromEvent, merge, of } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 import { SwUpdate } from '@angular/service-worker';
 
-import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
+import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
 import { AuthSelectors } from './auth/auth.selectors';
 
 @Component({

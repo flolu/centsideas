@@ -8,7 +8,7 @@
     "target": "es2015",
     "lib": ["es2018", "dom"],
     "paths": {
-      "@cents-ideas/*": ["../../packages/*"]
+      "@centsideas/*": ["../../packages/*"]
     }
   }
 }

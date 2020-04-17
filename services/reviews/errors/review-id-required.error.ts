@@ -1,5 +1,5 @@
-import { HttpStatusCodes } from '@cents-ideas/enums';
-import { EntityError } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
+import { EntityError } from '@centsideas/utils';
 
 export class ReviewIdRequiredError extends EntityError {
   static validate = (reviewId: string): void => {

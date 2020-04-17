@@ -1,5 +1,5 @@
 import { EntityState } from '@ngrx/entity';
-import { IIdeaViewModel } from '@cents-ideas/models';
+import { IIdeaViewModel } from '@centsideas/models';
 
 export interface IIdeasState extends EntityState<IIdeaViewModel> {
   loading: boolean;

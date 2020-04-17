@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
-import { IIdeaViewModel } from '@cents-ideas/models';
+import { IIdeaViewModel } from '@centsideas/models';
 
 @Component({
   selector: 'ci-ideas-card',

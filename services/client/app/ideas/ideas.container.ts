@@ -6,9 +6,9 @@ import { Store } from '@ngrx/store';
 
 import { IdeasActions } from './ideas.actions';
 import { IdeasSelectors } from './ideas.selectors';
-import { IIdeaViewModel } from '@cents-ideas/models';
+import { IIdeaViewModel } from '@centsideas/models';
 import { Router } from '@angular/router';
-import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes } from '@centsideas/enums';
 
 @Component({
   selector: 'ci-ideas',

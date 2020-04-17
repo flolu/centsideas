@@ -5,8 +5,8 @@ import {
   NotAuthenticatedError,
   ThreadLogger,
   NoPermissionError,
-} from '@cents-ideas/utils';
-import { IReviewScores } from '@cents-ideas/models';
+} from '@centsideas/utils';
+import { IReviewScores } from '@centsideas/models';
 
 import { ReviewErrors } from './errors';
 import { Review } from './review.entity';

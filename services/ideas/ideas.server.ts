@@ -2,8 +2,8 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { IdeasApiRoutes } from '@cents-ideas/enums';
+import { Logger, ExpressAdapter } from '@centsideas/utils';
+import { IdeasApiRoutes } from '@centsideas/enums';
 
 import { IdeasService } from './ideas.service';
 import env from './environment';

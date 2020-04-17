@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 
-import { HeaderKeys } from '@cents-ideas/enums';
-import { IAccessTokenPayload } from '@cents-ideas/models';
+import { HeaderKeys } from '@centsideas/enums';
+import { IAccessTokenPayload } from '@centsideas/models';
 
 import env from './environment';
 

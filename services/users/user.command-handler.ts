@@ -8,14 +8,14 @@ import {
   ThreadLogger,
   NotAuthenticatedError,
   NoPermissionError,
-} from '@cents-ideas/utils';
-import { IEmailChangeTokenPayload } from '@cents-ideas/models';
+} from '@centsideas/utils';
+import { IEmailChangeTokenPayload } from '@centsideas/models';
 import {
   TopLevelFrontendRoutes,
   QueryParamKeys,
   UserFrontendRoutes,
   TokenExpirationTimes,
-} from '@cents-ideas/enums';
+} from '@centsideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';

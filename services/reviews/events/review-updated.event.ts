@@ -1,6 +1,6 @@
-import { Event } from '@cents-ideas/event-sourcing';
-import { ReviewEvents } from '@cents-ideas/enums';
-import { IReviewScores, IReviewState, IReviewUpdatedEvent } from '@cents-ideas/models';
+import { Event } from '@centsideas/event-sourcing';
+import { ReviewEvents } from '@centsideas/enums';
+import { IReviewScores, IReviewState, IReviewUpdatedEvent } from '@centsideas/models';
 
 export class ReviewUpdatedEvent extends Event<IReviewUpdatedEvent> {
   static readonly eventName: string = ReviewEvents.ReviewUpdated;

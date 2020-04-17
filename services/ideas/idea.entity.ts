@@ -1,5 +1,5 @@
-import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
-import { IIdeaState } from '@cents-ideas/models';
+import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { IIdeaState } from '@centsideas/models';
 
 import { commitFunctions, IdeasEvents } from './events';
 

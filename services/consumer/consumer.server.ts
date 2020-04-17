@@ -2,9 +2,9 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { MessageBroker } from '@cents-ideas/event-sourcing';
-import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { ApiEndpoints, EventTopics, IdeasApiRoutes, UsersApiRoutes } from '@cents-ideas/enums';
+import { MessageBroker } from '@centsideas/event-sourcing';
+import { Logger, ExpressAdapter } from '@centsideas/utils';
+import { ApiEndpoints, EventTopics, IdeasApiRoutes, UsersApiRoutes } from '@centsideas/enums';
 
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';

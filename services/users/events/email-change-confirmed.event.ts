@@ -1,6 +1,6 @@
-import { Event } from '@cents-ideas/event-sourcing';
-import { UserEvents } from '@cents-ideas/enums';
-import { IEmailChangeConfirmedEvent, IUserState } from '@cents-ideas/models';
+import { Event } from '@centsideas/event-sourcing';
+import { UserEvents } from '@centsideas/enums';
+import { IEmailChangeConfirmedEvent, IUserState } from '@centsideas/models';
 
 export class EmailChangeConfirmedEvent extends Event<IEmailChangeConfirmedEvent> {
   static readonly eventName: string = UserEvents.EmailChangeConfirmed;

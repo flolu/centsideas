@@ -1,16 +1,16 @@
 import { injectable } from 'inversify';
 import { Collection } from 'mongodb';
 
-import { Logger, renameObjectProperty } from '@cents-ideas/utils';
-import { IEvent } from '@cents-ideas/event-sourcing';
-import { UserEvents } from '@cents-ideas/enums';
+import { Logger, renameObjectProperty } from '@centsideas/utils';
+import { IEvent } from '@centsideas/event-sourcing';
+import { UserEvents } from '@centsideas/enums';
 import {
   IEmailChangeConfirmedEvent,
   IEmailChangeRequestedEvent,
   IUserUpdatedEvent,
   IUserCreatedEvent,
   IUserViewModel,
-} from '@cents-ideas/models';
+} from '@centsideas/models';
 
 import { ProjectionDatabase } from './projection-database';
 

@@ -1,5 +1,5 @@
-import { HttpStatusCodes } from '@cents-ideas/enums';
-import { EntityError } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
+import { EntityError } from '@centsideas/utils';
 
 export class ReviewContentLengthError extends EntityError {
   static readonly max: number = 3000;

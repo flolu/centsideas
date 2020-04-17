@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "target": "ES5",
     "paths": {
-      "@cents-ideas/*": ["./packages/*"]
+      "@centsideas/*": ["./packages/*"]
     },
     "types": ["reflect-metadata", "node", "jest"]
   },

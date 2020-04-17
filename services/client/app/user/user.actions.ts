@@ -2,7 +2,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
 
-import { IUserState, Dtos } from '@cents-ideas/models';
+import { IUserState, Dtos } from '@centsideas/models';
 
 import { appPrefix, doneSuffix, failSuffix } from '../../shared/helpers/actions.helper';
 

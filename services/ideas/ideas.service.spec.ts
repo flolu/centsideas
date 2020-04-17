@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
-import { registerProviders, getProvider, overrideProvider } from '@cents-ideas/utils';
-import { HttpStatusCodes } from '@cents-ideas/enums';
-import { makeFakeHttpRequest } from '@cents-ideas/models';
+import { registerProviders, getProvider, overrideProvider } from '@centsideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
+import { makeFakeHttpRequest } from '@centsideas/models';
 
 import { IdeasService } from './ideas.service';
 import {

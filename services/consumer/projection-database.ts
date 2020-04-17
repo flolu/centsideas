@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import * as retry from 'async-retry';
 import { MongoClient, Db, Collection } from 'mongodb';
 
-import { Logger } from '@cents-ideas/utils';
+import { Logger } from '@centsideas/utils';
 
 import env from './environment';
 

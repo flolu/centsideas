@@ -2,8 +2,8 @@ import 'reflect-metadata';
 // tslint:disable-next-line:no-var-requires
 if (process.env.ENV === 'dev') require('../../register-aliases').registerAliases();
 
-import { registerProviders, getProvider } from '@cents-ideas/utils';
-import { LoggerPrefixes } from '@cents-ideas/enums';
+import { registerProviders, getProvider } from '@centsideas/utils';
+import { LoggerPrefixes } from '@centsideas/enums';
 
 import { GatewayServer } from './gateway.server';
 import { ExpressAdapter } from './express-adapter';

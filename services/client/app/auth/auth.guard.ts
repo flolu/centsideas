@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { map, skipWhile } from 'rxjs/operators';
 
-import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
 
 import { AuthActions } from './auth.actions';
 import { AuthSelectors } from './auth.selectors';

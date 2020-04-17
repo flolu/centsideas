@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes } from '@cents-ideas/enums';
-import { HttpRequest, HttpResponse, IReviewState, Dtos } from '@cents-ideas/models';
-import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
+import { HttpRequest, HttpResponse, IReviewState, Dtos } from '@centsideas/models';
+import { Logger, handleHttpResponseError } from '@centsideas/utils';
 
 import { ReviewCommandHandler } from './review.command-handler';
 

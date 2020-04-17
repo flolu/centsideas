@@ -3,7 +3,7 @@ import { Store, createSelector, createFeatureSelector } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { QueryParamKeys, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
+import { QueryParamKeys, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
 
 import { AuthActions } from './auth.actions';
 import { tap, take } from 'rxjs/operators';

@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 import { first, flatMap, catchError } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 
-import { HeaderKeys, HttpStatusCodes } from '@cents-ideas/enums';
+import { HeaderKeys, HttpStatusCodes } from '@centsideas/enums';
 
 import { AuthSelectors } from './auth/auth.selectors';
 import { AuthActions } from './auth/auth.actions';

@@ -1,5 +1,5 @@
-import { composeCommitFunctions } from '@cents-ideas/event-sourcing';
-import { IUserState, ILoginState } from '@cents-ideas/models';
+import { composeCommitFunctions } from '@centsideas/event-sourcing';
+import { IUserState, ILoginState } from '@centsideas/models';
 
 import { LoginRequestedEvent } from './login-requested.event';
 import { LoginConfirmedEvent } from './login-confirmed.event';

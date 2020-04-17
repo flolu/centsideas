@@ -1,6 +1,6 @@
-import { Event } from '@cents-ideas/event-sourcing';
-import { LoginEvents } from '@cents-ideas/enums';
-import { IGoogleLoginRequestedEvnet, ILoginState } from '@cents-ideas/models';
+import { Event } from '@centsideas/event-sourcing';
+import { LoginEvents } from '@centsideas/enums';
+import { IGoogleLoginRequestedEvnet, ILoginState } from '@centsideas/models';
 
 export class GoogleLoginRequestedEvent extends Event<IGoogleLoginRequestedEvnet> {
   static readonly eventName: string = LoginEvents.LoginRequested;

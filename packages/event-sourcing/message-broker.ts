@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { Kafka, Producer, Consumer, KafkaConfig, Message, RecordMetadata, logLevel } from 'kafkajs';
 
-import { Logger } from '@cents-ideas/utils';
+import { Logger } from '@centsideas/utils';
 import { IEvent } from '.';
 
 @injectable()

@@ -1,5 +1,5 @@
 {
-  "name": "cents-ideas",
+  "name": "centsideas",
   "description": "Modern Web Application with a Microservices Architecture (in development)",
   "keywords": [
     "monorepo",
@@ -18,9 +18,9 @@
     "google-kubernetes-engine",
     "server-side-rendering"
   ],
-  "homepage": "https://github.com/flolu/cents-ideas",
+  "homepage": "https://github.com/flolu/centsideas",
   "bugs": {
-    "url": "https://github.com/flolu/cents-ideas/issues",
+    "url": "https://github.com/flolu/centsideas/issues",
     "email": "fllu@pm.me"
   },
   "license": "MIT",
@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/flolu/cents-ideas.git"
+    "url": "https://github.com/flolu/centsideas.git"
   },
   "scripts": {
     "dev": "yarn setup && yarn docker:dev",

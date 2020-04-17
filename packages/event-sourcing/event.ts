@@ -1,4 +1,4 @@
-import { Identifier } from '@cents-ideas/utils';
+import { Identifier } from '@centsideas/utils';
 
 export interface IEvent<IData = any> {
   id: string;

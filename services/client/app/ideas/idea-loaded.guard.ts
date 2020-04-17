@@ -6,7 +6,7 @@ import { map, skipWhile, withLatestFrom } from 'rxjs/operators';
 
 import { IdeasSelectors } from './ideas.selectors';
 import { IdeasActions } from './ideas.actions';
-import { TopLevelFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes } from '@centsideas/enums';
 
 @Injectable()
 export class IdeaLoadedGuard implements CanActivate {

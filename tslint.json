@@ -2,7 +2,7 @@
   "extends": ["tslint:latest", "tslint-config-prettier"],
   "rules": {
     "object-literal-sort-keys": false,
-    "no-implicit-dependencies": [true, ["@cents-ideas"]],
+    "no-implicit-dependencies": [true, ["@centsideas"]],
     "no-submodule-imports": false,
     "no-console": [true, "log"],
     "no-empty-interface": false,

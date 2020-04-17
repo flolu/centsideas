@@ -10,7 +10,7 @@ import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { isPlatformServer, DOCUMENT, isPlatformBrowser } from '@angular/common';
 
-import { TopLevelFrontendRoutes, UserFrontendRoutes, CookieNames } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes, UserFrontendRoutes, CookieNames } from '@centsideas/enums';
 
 import { AuthActions } from './auth.actions';
 import { AuthService } from './auth.service';

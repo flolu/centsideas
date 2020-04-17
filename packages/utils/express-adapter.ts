@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { injectable } from 'inversify';
 
-import { HttpRequest, HttpResponse } from '@cents-ideas/models';
+import { HttpRequest, HttpResponse } from '@centsideas/models';
 
 @injectable()
 export class ExpressAdapter {
