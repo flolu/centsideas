@@ -29,7 +29,6 @@ export class QueryService {
           res({
             status: HttpStatusCodes.Ok,
             body: renamed,
-            headers: {},
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);
@@ -59,7 +58,6 @@ export class QueryService {
           res({
             status: HttpStatusCodes.Ok,
             body: renamedIdea,
-            headers: {},
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);
@@ -84,7 +82,6 @@ export class QueryService {
           res({
             status: HttpStatusCodes.Ok,
             body: renamed,
-            headers: {},
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);
@@ -107,7 +104,6 @@ export class QueryService {
           res({
             status: HttpStatusCodes.Ok,
             body: renamedUsers,
-            headers: {},
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);

@@ -19,7 +19,6 @@ export class ExpressAdapter {
         this.handleExpressHttpResponse(res, {
           status: HttpStatusCodes.InternalServerError,
           body: `Unexpected error occurred: ${err.message}`,
-          headers: {},
         });
       }
     };

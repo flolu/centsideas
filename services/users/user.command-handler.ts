@@ -208,14 +208,14 @@ export class UserCommandHandler {
   };
 
   updateUser = async (
-    authenticatedUserId: string | null,
+    auid: string | null,
     userId: string,
     username: string | null,
     email: string | null,
     t: ThreadLogger,
   ): Promise<User> => {
-    if (!authenticatedUserId) throw new NotAuthenticatedError();
-    NoPermissionError.validate(authenticatedUserId, userId);
+    if (!auid) throw new NotAuthenticatedError();
+    NoPermissionError.validate(auid, userId);
     UserErrors.UserIdRequiredError.validate(userId);
     t.debug('update user with id', userId);
     t.debug('username: ', username, ', email:', email);

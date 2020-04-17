@@ -7,6 +7,6 @@ export const handleHttpResponseError = (
 ): HttpResponse => ({
   status: (error && error.status) || HttpStatusCodes.InternalServerError,
   body: { error: error.message },
-  headers: {},
+
   ...overrides,
 });

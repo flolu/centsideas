@@ -18,67 +18,59 @@ export class IdeasService {
   constructor(private commandHandler: IdeaCommandHandler) {}
 
   create = (req: HttpRequest<ICreateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
-    new Promise(resolve => {
-      Logger.thread('create', async t => {
-        try {
-          const idea = await this.commandHandler.create(
-            req.locals.userId,
-            req.body.title,
-            req.body.description,
-            t,
-          );
-          t.log('idea with title', idea.persistedState.title, 'was created');
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: idea.persistedState,
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
+    Logger.thread('create', async t => {
+      try {
+        const { title, description } = req.body;
+        const auid = req.locals.userId;
+
+        const idea = await this.commandHandler.create(auid, title, description, t);
+        t.log('idea with title', idea.persistedState.title, 'was created');
+        return {
+          status: HttpStatusCodes.Accepted,
+          body: idea.persistedState,
+        };
+      } catch (error) {
+        t.error(error.status && error.status < 500 ? error.message : error.stack);
+        return handleHttpResponseError(error);
+      }
     });
 
   update = (req: HttpRequest<IUpdateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
-    new Promise(resolve => {
-      Logger.thread('update', async t => {
-        try {
-          const idea = await this.commandHandler.update(
-            req.locals.userId,
-            req.params.id,
-            req.body.title,
-            req.body.description,
-            t,
-          );
-          t.log('idea', idea.persistedState.id, 'successfully updated');
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: idea.persistedState,
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
+    Logger.thread('update', async t => {
+      try {
+        const auid = req.locals.userId;
+        const ideaId = req.params.id;
+        const { title, description } = req.body;
+
+        const idea = await this.commandHandler.update(auid, ideaId, title, description, t);
+        t.log('idea', idea.persistedState.id, 'successfully updated');
+
+        return {
+          status: HttpStatusCodes.Accepted,
+          body: idea.persistedState,
+        };
+      } catch (error) {
+        t.error(error.status && error.status < 500 ? error.message : error.stack);
+        return handleHttpResponseError(error);
+      }
     });
 
   delete = (req: HttpRequest<{}, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
-    new Promise(resolve => {
-      Logger.thread('delete', async t => {
-        try {
-          const idea = await this.commandHandler.delete(req.locals.userId, req.params.id, t);
-          t.log('deleted idea', idea.persistedState.id);
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: idea.persistedState,
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
+    Logger.thread('delete', async t => {
+      try {
+        const auid = req.locals.userId;
+        const ideaId = req.params.id;
+
+        const idea = await this.commandHandler.delete(auid, ideaId, t);
+        t.log('deleted idea', idea.persistedState.id);
+
+        return {
+          status: HttpStatusCodes.Accepted,
+          body: idea.persistedState,
+        };
+      } catch (error) {
+        t.error(error.status && error.status < 500 ? error.message : error.stack);
+        return handleHttpResponseError(error);
+      }
     });
 }

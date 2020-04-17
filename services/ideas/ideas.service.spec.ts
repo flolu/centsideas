@@ -43,7 +43,6 @@ describe('Ideas Service', () => {
         title: fakeIdeaTitle,
         description: fakeIdeaDescription,
       },
-      headers: {},
     });
   });
 });

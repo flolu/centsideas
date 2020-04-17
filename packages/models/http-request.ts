@@ -1,3 +1,4 @@
+// TODO i would prefer a solution that is less ugly!
 export interface HttpRequest<Body = any, Params = any, Query = any, Headers = any> {
   body: Body;
   ip: string;
