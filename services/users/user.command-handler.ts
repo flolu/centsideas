@@ -76,7 +76,7 @@ export class UserCommandHandler {
   };
 
   confirmEmailChange = async (token: string, t: ThreadLogger): Promise<User> => {
-    const data = decodeToken(token, env.changeEmailTokenSecret);
+    const data = decodeToken(token, env.tokenSecrets.changeEmailToken);
     const payload: IEmailChangeTokenPayload = data;
     t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
 
@@ -120,7 +120,7 @@ export class UserCommandHandler {
       newEmail,
       userId,
     };
-    const token = jwt.sign(tokenPayload, env.changeEmailTokenSecret, {
+    const token = jwt.sign(tokenPayload, env.tokenSecrets.changeEmailToken, {
       expiresIn: TokenExpirationTimes.EmailChangeToken,
     });
 

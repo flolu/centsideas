@@ -1,10 +1,10 @@
 export default {
-  environment: process.env.NODE_ENV || 'dev',
+  environment: process.env.ENV!,
+  port: 3000,
   kafka: {
-    brokers: [process.env.KAFKA_BROKER_HOST || 'localhost:9092'],
+    brokers: [process.env.KAFKA_BROKER_HOST!],
   },
   database: {
-    url: process.env.PROJECTION_DATABASE_URL || 'mongodb://projection-database:27017',
+    url: process.env.PROJECTION_DATABASE_URL!,
   },
-  port: 3000,
 };

@@ -42,7 +42,7 @@ export class AuthCommandHandler {
     t.debug(firstLogin ? 'first' : 'normal', 'login with loginId:', loginId);
 
     const tokenData: ILoginTokenPayload = { loginId, email, firstLogin };
-    const token = jwt.sign(tokenData, env.loginTokenSecret, {
+    const token = jwt.sign(tokenData, env.tokenSecrets.loginToken, {
       expiresIn: TokenExpirationTimes.LoginToken,
     });
 
@@ -61,7 +61,7 @@ export class AuthCommandHandler {
   };
 
   confirmLogin = async (token: string, t: ThreadLogger) => {
-    const data = decodeToken(token, env.loginTokenSecret);
+    const data = decodeToken(token, env.tokenSecrets.loginToken);
     t.debug('confirming login of token', token ? token.slice(0, 30) : token);
 
     const payload: ILoginTokenPayload = data;
@@ -184,7 +184,7 @@ export class AuthCommandHandler {
   };
 
   refreshToken = async (token: string, t: ThreadLogger) => {
-    const data: IRefreshTokenPayload = decodeToken(token, env.refreshTokenSecret);
+    const data: IRefreshTokenPayload = decodeToken(token, env.tokenSecrets.refreshToken);
     t.debug('refresh token is valid', token ? token.slice(0, 30) : token);
 
     const user = await this.userRepository.findById(data.userId);
@@ -246,7 +246,7 @@ export class AuthCommandHandler {
   };
 
   private generateAccessToken = (user: User) => {
-    return jwt.sign({ userId: user.persistedState.id }, env.accessTokenSecret, {
+    return jwt.sign({ userId: user.persistedState.id }, env.tokenSecrets.accessToken, {
       expiresIn: TokenExpirationTimes.AccessToken,
     });
   };
@@ -257,7 +257,7 @@ export class AuthCommandHandler {
         userId: user.persistedState.id,
         tokenId: user.persistedState.refreshTokenId,
       },
-      env.refreshTokenSecret,
+      env.tokenSecrets.refreshToken,
       { expiresIn: TokenExpirationTimes.RefreshToken },
     );
   };
