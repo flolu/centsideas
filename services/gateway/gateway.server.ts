@@ -1,18 +1,17 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
-import * as cors from 'cors';
-import * as jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';
 
 import { Logger } from '@cents-ideas/utils';
-import { ApiEndpoints, HeaderKeys, CentsCommandments } from '@cents-ideas/enums';
+import { ApiEndpoints } from '@cents-ideas/enums';
 
 import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';
 import { IdeasRoutes } from './ideas.routes';
 import { UsersRoutes } from './users.routes';
-import { IAccessTokenPayload } from '@cents-ideas/models';
+import { authMiddleware } from './auth.middleware';
+import { corsMiddleware } from './cors.middleware';
 
 @injectable()
 export class GatewayServer {
@@ -25,47 +24,14 @@ export class GatewayServer {
   ) {}
 
   start = () => {
+    // TODO clean up those logs on all services
     Logger.debug('initialized with env: ', env);
 
-    let whitelist = [env.frontendUrl];
-    if (env.environment === 'dev')
-      whitelist = [
-        ...whitelist,
-        'http://localhost:4000',
-        'http://localhost:5432',
-        'http://127.0.0.1:4000',
-        'http://127.0.0.1:5432',
-      ];
-    const checkOrigin = (
-      origin: string | undefined,
-      callback: (err: Error | null, allow?: boolean) => void,
-    ) => {
-      if (!origin || whitelist.includes(origin)) return callback(null, true);
-      callback(new Error('Not allowed by CORS'));
-    };
-    this.app.use(cors({ origin: checkOrigin, credentials: true }));
+    this.app.use(corsMiddleware);
     this.app.use(bodyParser());
     this.app.use(cookieParser());
-
-    // TODO move this middleware to utils and only use it on necessary routes?
-    this.app.use((req, res, next) => {
-      res.locals.userId = null;
-      const authHeader = req.headers[HeaderKeys.Auth];
-      if (!authHeader) return next();
-
-      try {
-        const accessToken = (authHeader as string).split(' ')[1];
-        const decoded = jwt.verify(accessToken, env.accessTokenSecret);
-        const data: IAccessTokenPayload = decoded as any;
-        res.locals.userId = data.userId;
-        // tslint:disable-next-line:no-empty
-      } catch (error) {}
-
-      /* Logger.debug(
-        `request was made by ${res.locals.userId ? res.locals.userId : 'a not authenticated user'}`,
-      ); */
-      next();
-    });
+    // FIXME does this middleware hurt performance? if it has a big impact we could just use the middleware on the routes where it is really necessary
+    this.app.use(authMiddleware);
 
     this.app.use(
       `/${ApiEndpoints.Ideas}`,
@@ -77,24 +43,9 @@ export class GatewayServer {
       this.usersRoutes.setup(env.hosts.users, env.hosts.consumer),
     );
 
-    this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
-      return res.status(200).send('gateway alive');
-    });
+    this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => res.status(200).send('gateway alive'));
+    this.app.get(`**`, (_req, res) => res.status(200).send(`centsideas gateway 404`));
 
-    this.app.get(`**`, (req, res) => {
-      return res.status(200).send(`hello ${req.ip}, greetings from cents-ideas gateway`);
-    });
-
-    this.app.listen(env.port, () =>
-      Logger.debug(
-        'gateway listening on internal port',
-        env.port,
-        CentsCommandments.Control,
-        CentsCommandments.Entry,
-        CentsCommandments.Need,
-        CentsCommandments.Time,
-        CentsCommandments.Scale,
-      ),
-    );
+    this.app.listen(env.port, () => Logger.debug('gateway listening on internal port', env.port));
   };
 }
