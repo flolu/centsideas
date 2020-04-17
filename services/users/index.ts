@@ -11,6 +11,8 @@ import { UserCommandHandler } from './user.command-handler';
 import { UserRepository } from './user.repository';
 import { UsersService } from './users.service';
 import { LoginRepository } from './login.repository';
+import { AuthService } from './auth.service';
+import { AuthCommandHandler } from './auth.command-handler';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Users;
 
@@ -19,6 +21,8 @@ registerProviders(
   UsersService,
   UserCommandHandler,
   UserRepository,
+  AuthService,
+  AuthCommandHandler,
   LoginRepository,
   MessageBroker,
   ExpressAdapter,

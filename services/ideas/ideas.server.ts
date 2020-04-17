@@ -24,9 +24,7 @@ export class IdeasServer {
     this.app.post(`/${IdeasApiRoutes.Update}`, this.expressAdapter.json(this.ideasService.update));
     this.app.post(`/${IdeasApiRoutes.Delete}`, this.expressAdapter.json(this.ideasService.delete));
 
-    this.app.get(`/${IdeasApiRoutes.Alive}`, (_req, res) => {
-      return res.status(200).send();
-    });
+    this.app.get(`/${IdeasApiRoutes.Alive}`, (_req, res) => res.status(200).send());
 
     this.app.listen(port, () => Logger.debug('ideas service listening on internal port', port));
   };

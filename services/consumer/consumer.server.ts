@@ -53,9 +53,7 @@ export class ConsumerServer {
       this.expressAdapter.json(this.queryService.getAllUsers),
     );
 
-    this.app.get('/alive', (_req, res) => {
-      return res.status(200).send();
-    });
+    this.app.get('/alive', (_req, res) => res.status(200).send());
 
     this.app.listen(env.port, () =>
       Logger.debug('consumer service listening on internal port', env.port),

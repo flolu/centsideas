@@ -6,6 +6,7 @@ import { Logger } from '@cents-ideas/utils';
 
 import env from './environment';
 import { User } from './user.entity';
+import { UserErrors } from './errors';
 import { IUserIdEmailMapping, IGoogleUserIdMapping, IUserIdUsernameMapping } from './models';
 
 @injectable()
@@ -25,6 +26,19 @@ export class UserRepository extends EventRepository<User> {
       this.initializeUsernameCollection,
     ]);
   }
+
+  checkUsernameAvailibility = async (username: string): Promise<boolean> => {
+    const existingUsername = await this.getUsernameMapping(username);
+    if (existingUsername && existingUsername.userId)
+      throw new UserErrors.UsernameUnavailableError(username);
+    return true;
+  };
+
+  checkEmailAvailability = async (email: string): Promise<boolean> => {
+    const existingEmail = await this.getUserIdEmailMapping(email);
+    if (existingEmail && existingEmail.userId) throw new UserErrors.EmailNotAvailableError(email);
+    return true;
+  };
 
   insertEmail = async (userId: string, email: string): Promise<IUserIdEmailMapping> => {
     const db = await this.getDatabase();

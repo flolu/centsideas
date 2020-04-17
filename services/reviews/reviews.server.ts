@@ -33,9 +33,7 @@ export class ReviewsServer {
       this.expressAdapter.json(this.reviewsService.delete),
     );
 
-    this.app.get('/alive', (_req, res) => {
-      return res.status(200).send();
-    });
+    this.app.get('/alive', (_req, res) => res.status(200).send());
 
     this.app.listen(port, () => Logger.debug('reviews service listening on internal port', port));
   };
