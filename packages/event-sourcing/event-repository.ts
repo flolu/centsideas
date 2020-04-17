@@ -164,7 +164,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     return entity.confirmEvents();
   };
 
-  // FIXME I think this should return promise of entity or null?
+  // FIXME I think this should return promise of entity OR null?
   findById = async (id: string): Promise<Entity> => {
     await this.waitUntilInitialized();
     const snapshot = await this.getSnapshot(id);

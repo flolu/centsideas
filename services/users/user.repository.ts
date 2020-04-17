@@ -6,13 +6,14 @@ import { Logger } from '@cents-ideas/utils';
 
 import env from './environment';
 import { User } from './user.entity';
-import { IUserIdEmailMapping } from './models';
-import { IGoogleUserIdMapping } from './models/google-user-id-collection';
+import { IUserIdEmailMapping, IGoogleUserIdMapping, IUserIdUsernameMapping } from './models';
 
 @injectable()
 export class UserRepository extends EventRepository<User> {
   private readonly emailCollectionName = 'emails';
   private readonly emailMappingKey = 'email';
+  private readonly usernameCollectionName = 'usernames';
+  private readonly usernameMappingKey = 'username';
   private readonly googleUserIdCollectionName = 'googleUserIds';
   private readonly googleUserIdMappingKey = 'googleId';
 
@@ -21,8 +22,65 @@ export class UserRepository extends EventRepository<User> {
     this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, [
       this.initializeEmailCollection,
       this.initializeGoogleUserIdCollection,
+      this.initializeUsernameCollection,
     ]);
   }
+
+  insertEmail = async (userId: string, email: string): Promise<IUserIdEmailMapping> => {
+    const db = await this.getDatabase();
+    const inserted = await db
+      .collection(this.emailCollectionName)
+      .insertOne({ userId, [this.emailMappingKey]: email });
+    Logger.debug(
+      `inserted email into ${this.emailCollectionName} mapping collection ${email}: ${userId}`,
+    );
+    return inserted.ops[0];
+  };
+
+  updateEmail = async (userId: string, newEmail: string): Promise<IUserIdEmailMapping> => {
+    const db = await this.getDatabase();
+    const updated = await db
+      .collection(this.emailCollectionName)
+      .findOneAndUpdate({ userId }, { $set: { [this.emailMappingKey]: newEmail } });
+    Logger.debug(`updated email in ${this.emailCollectionName} collection ${newEmail}: ${userId}`);
+    return updated.value;
+  };
+
+  getUserIdEmailMapping = async (email: string): Promise<IUserIdEmailMapping | null> => {
+    const db = await this.getDatabase();
+    return db.collection(this.emailCollectionName).findOne({ email });
+  };
+
+  // TODO implement into command handlers
+  insertUsername = async (userId: string, username: string): Promise<IUserIdUsernameMapping> => {
+    const db = await this.getDatabase();
+    const inserted = await db
+      .collection(this.usernameCollectionName)
+      .insertOne({ userId, [this.usernameMappingKey]: username });
+    Logger.debug(
+      `inserted username into ${this.usernameCollectionName} mapping collection ${username}: ${userId}`,
+    );
+    return inserted.ops[0];
+  };
+
+  // TODO implement into command handlers
+  updateUsername = async (userId: string, newUsername: string): Promise<IUserIdEmailMapping> => {
+    const db = await this.getDatabase();
+    const updated = await db
+      .collection(this.usernameCollectionName)
+      .findOneAndUpdate({ userId }, { $set: { [this.usernameMappingKey]: newUsername } });
+    Logger.debug(
+      `updated email in ${this.usernameCollectionName} collection ${newUsername}: ${userId}`,
+    );
+    return updated.value;
+  };
+
+  getUsernameMapping = async (username: string): Promise<IUserIdEmailMapping | null> => {
+    const db = await this.getDatabase();
+    return db
+      .collection(this.usernameCollectionName)
+      .findOne({ [this.usernameMappingKey]: username });
+  };
 
   insertGoogleUserId = async (googleId: string, userId: string): Promise<IGoogleUserIdMapping> => {
     const db = await this.getDatabase();
@@ -30,8 +88,7 @@ export class UserRepository extends EventRepository<User> {
       .collection(this.googleUserIdCollectionName)
       .insertOne({ [this.googleUserIdMappingKey]: googleId, userId });
     Logger.debug(
-      'inserted google user id into google user ids mapping collection',
-      `${googleId} -> ${userId}`,
+      `inserted username into ${this.googleUserIdCollectionName} mapping collection ${googleId}: ${userId}`,
     );
     return inserted.ops[0];
   };
@@ -43,32 +100,6 @@ export class UserRepository extends EventRepository<User> {
       .findOne({ [this.googleUserIdMappingKey]: googleId });
   };
 
-  insertEmail = async (userId: string, email: string): Promise<IUserIdEmailMapping> => {
-    const db = await this.getDatabase();
-    const inserted = await db
-      .collection(this.emailCollectionName)
-      .insertOne({ userId, [this.emailMappingKey]: email });
-    Logger.debug('inserted email into emails mapping collection', `${email} -> ${userId}`);
-    return inserted.ops[0];
-  };
-
-  updateEmail = async (userId: string, newEmail: string): Promise<IUserIdEmailMapping> => {
-    const db = await this.getDatabase();
-    const updated = await db
-      .collection(this.emailCollectionName)
-      .findOneAndUpdate({ userId }, { $set: { email: newEmail } });
-    Logger.debug('updated email in emails collection', {
-      userId,
-      newEmail,
-    });
-    return updated.value;
-  };
-
-  getUserIdEmailMapping = async (email: string): Promise<IUserIdEmailMapping | null> => {
-    const db = await this.getDatabase();
-    return db.collection(this.emailCollectionName).findOne({ email });
-  };
-
   private initializeGoogleUserIdCollection = async (): Promise<boolean> => {
     try {
       const db = await this.getDatabase();
@@ -76,7 +107,19 @@ export class UserRepository extends EventRepository<User> {
       await collection.createIndex({ [this.googleUserIdMappingKey]: 1 }, { unique: true });
       return true;
     } catch (error) {
-      Logger.error('Error while initializing email collection', error);
+      Logger.error(`Error while initializing ${this.googleUserIdCollectionName} collection`, error);
+      return false;
+    }
+  };
+
+  private initializeUsernameCollection = async (): Promise<boolean> => {
+    try {
+      const db = await this.getDatabase();
+      const collection = db.collection(this.usernameCollectionName);
+      await collection.createIndex({ [this.usernameMappingKey]: 1 }, { unique: true });
+      return true;
+    } catch (error) {
+      Logger.error(`Error while initializing ${this.usernameCollectionName} collection`, error);
       return false;
     }
   };
@@ -88,7 +131,7 @@ export class UserRepository extends EventRepository<User> {
       await collection.createIndex({ [this.emailMappingKey]: 1 }, { unique: true });
       return true;
     } catch (error) {
-      Logger.error('Error while initializing email collection', error);
+      Logger.error(`Error while initializing ${this.emailCollectionName} collection`, error);
       return false;
     }
   };

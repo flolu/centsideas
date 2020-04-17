@@ -119,6 +119,9 @@ export class UsersService {
             user.persistedState.id,
           );
 
+          // TODO token null should be an expected error
+          // TODO clear the cookie when the refresh failed
+
           resolve({
             status: HttpStatusCodes.Accepted,
             body: { user: user.persistedState, accessToken },

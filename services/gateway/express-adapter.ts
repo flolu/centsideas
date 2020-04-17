@@ -12,7 +12,6 @@ export class ExpressAdapter {
     return async (req: express.Request, res: express.Response) => {
       try {
         const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req, res);
-        Logger.log(`request to ${url}`);
         const response = await axios.post(url, httpRequest);
         const httpResponse: HttpResponse = response.data;
         this.handleExpressHttpResponse(res, httpResponse);

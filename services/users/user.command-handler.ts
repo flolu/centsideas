@@ -81,7 +81,7 @@ export class UserCommandHandler {
       throw new TokenInvalidError(token, `This login was already confirmed`);
 
     if (payload.firstLogin && payload.loginId) {
-      const createdUser = await this.handleUserCreation(payload.email);
+      const createdUser = await this.handleUserCreation(payload.email, t);
       // TODO set some flag or do something when first login (so that client knows it) NOOO!!! we can handle this in frontend only
       return this.handleConfirmedLogin(createdUser, login, t);
     }
@@ -168,16 +168,22 @@ export class UserCommandHandler {
       const loginId = Identifier.makeLongId();
       const login = Login.createGoogleLogin(loginId, userInfo.email, true, userInfo.id);
 
+      // TODO use method "handleUserCreation" for the user creation DRY!
+
       const userId = await this.userRepository.generateUniqueId();
       const refreshTokenId = Identifier.makeLongId();
-      // TODO username uniqueness?!
+
       // FIXME set username based on google username
       const username: string = faker.internet.userName().toLowerCase().toString();
+      await this.checkUsernameAvailibility(username);
+      t.debug(`username ${username} available`);
+
       let createdUser = User.create(userId, userInfo.email, username, refreshTokenId);
 
       // FIXME consider creating transaction and only apply if both succeeded? because its problematic if saving the user will fail after the userId has already bin inserted into the mapping collection
       await this.userRepository.insertGoogleUserId(userInfo.id, userId);
       await this.userRepository.insertEmail(userId, userInfo.email);
+      await this.userRepository.insertUsername(userId, username);
       createdUser = await this.userRepository.save(createdUser);
       t.debug('created user with id', createdUser.persistedState.id);
 
@@ -219,8 +225,6 @@ export class UserCommandHandler {
       UserErrors.UsernameRequiredError.validate(username);
       UserErrors.UsernameInvalidError.validate(username);
       t.debug('username', username, 'is valid');
-
-      // FIXME check username uniqueness
     }
 
     if (email) {
@@ -233,12 +237,24 @@ export class UserCommandHandler {
     const user = await this.userRepository.findById(userId);
     t.debug('found corresponding user');
 
-    const isNewEmail = email && user.persistedState.email !== email;
-    if (email && isNewEmail) await this.requestEmailChange(userId, email);
+    const isNewUsername = user && user.persistedState.username !== username;
+    if (username && isNewUsername) {
+      await this.checkUsernameAvailibility(username);
+      t.debug(`username ${username} available`);
+    }
 
+    const isNewEmail = email && user.persistedState.email !== email;
+    if (email && isNewEmail) {
+      await this.checkEmailAvailability(email);
+      t.debug('email is available');
+      await this.requestEmailChange(userId, email);
+    }
     // TODO important also update the userId - email mapping!
+    // TODO update username userid mapping
 
     user.update(username, isNewEmail ? email : null);
+
+    if (username) await this.userRepository.updateUsername(userId, username);
     return this.userRepository.save(user);
   };
 
@@ -247,7 +263,7 @@ export class UserCommandHandler {
     const payload: IEmailChangeTokenPayload = data;
     t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
 
-    // TODO check that no other user has signed up with this email in the mean-time
+    await this.checkEmailAvailability(payload.newEmail);
 
     const user = await this.userRepository.findById(payload.userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, payload.newEmail);
@@ -268,6 +284,7 @@ export class UserCommandHandler {
       `from ${payload.currentEmail} to ${payload.newEmail}`,
     );
 
+    await this.userRepository.updateEmail(user.persistedState.id, payload.newEmail);
     return this.userRepository.save(user);
   };
 
@@ -311,19 +328,22 @@ export class UserCommandHandler {
     return sendMail(env.mailing.fromAddress, newEmail, subject, text, text, env.mailing.apiKey);
   };
 
-  private handleUserCreation = async (email: string): Promise<User> => {
+  private handleUserCreation = async (email: string, t: ThreadLogger): Promise<User> => {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
 
-    const emailUserMapping = await this.userRepository.getUserIdEmailMapping(email);
-    if (emailUserMapping) throw new UserErrors.EmailAlreadySignedUpError(email);
+    await this.checkEmailAvailability(email);
+
+    const username: string = faker.internet.userName().toLowerCase().toString();
+    await this.checkUsernameAvailibility(username);
+    t.debug(`username ${username} available`);
 
     const userId = await this.userRepository.generateUniqueId();
     const tokenId = Identifier.makeLongId();
-    // TODO username uniqueness?!
-    const username: string = faker.internet.userName().toLowerCase().toString();
     const user = User.create(userId, email, username, tokenId);
 
+    // FIXME somehow make sure all three succeed to complte the user creation
+    await this.userRepository.insertUsername(userId, username);
     await this.userRepository.insertEmail(userId, email);
     return this.userRepository.save(user);
   };
@@ -397,5 +417,18 @@ export class UserCommandHandler {
   private getGoogleRedirectUri = (origin?: string) => {
     const frontendUrl = env.environment === 'dev' ? origin || env.frontendUrl : env.frontendUrl;
     return `${frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`;
+  };
+
+  private checkUsernameAvailibility = async (username: string): Promise<boolean> => {
+    const existingUsername = await this.userRepository.getUsernameMapping(username);
+    if (existingUsername && existingUsername.userId)
+      throw new UserErrors.UsernameUnavailableError(username);
+    return true;
+  };
+
+  private checkEmailAvailability = async (email: string): Promise<boolean> => {
+    const existingEmail = await this.userRepository.getUserIdEmailMapping(email);
+    if (existingEmail && existingEmail.userId) throw new UserErrors.EmailNotAvailableError(email);
+    return true;
   };
 }
