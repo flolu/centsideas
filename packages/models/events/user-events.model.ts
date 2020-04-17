@@ -23,5 +23,5 @@ export interface IUserCreatedEvent {
 export interface IRefreshTokenRevokedEvent {
   userId: string;
   reason: string;
-  newTokenId: string;
+  newRefreshTokenId: string;
 }

@@ -15,14 +15,16 @@ This is a project with the purpose of learning the architecture of complex web a
 | Local development                              | hot reload, docker-compose, vscode     | ✔️     |
 | Git flow                                       | branching, releases, rebasing          | ✔️     |
 | Gateway                                        | discovery, entry point, auth           | ✔️     |
+| Authentication                                 | passwordless, google login             | ✔️     |
+| Progressive Web App                            | pwa, service worker, mobile-friendly   | ✔️     |
 | [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker | ✅     |
 | Deployment                                     | ci, cd, build automation, bazel        | ✅     |
 | Testing                                        | unit Tests, integration Tests          | ✅     |
 | Kubernetes                                     | container orchestration                | ✅     |
-| Database(s)                                    | data storage, event store              | ✅     |
+| Database(s)                                    | data storage, event store, backups     | ✅     |
 | SEO                                            | server side rendering, marketing       | ✅     |
-| Authentication                                 | passwordless, google login             | ✅     |
-| Progressive Web App                            | pwa, service worker, mobile-friendly   | ✅     |
+| Frontend                                       | code splitting, 100% lighthouse score  | ✅     |
+| Security                                       | encryption, https                      | ✅     |
 | File storage                                   | blob storage                           | ❌     |
 | Static pages                                   | homepage, static content               | ❌     |
 | Search                                         | indexing, realtime search              | ❌     |
@@ -32,9 +34,10 @@ This is a project with the purpose of learning the architecture of complex web a
 | GDPR                                           | legal, privacy                         | ❌     |
 | User Interface                                 | modern, drag&drop, touch gestures      | ❌     |
 | Compute server                                 | non-nodejs server for high cpu tasks   | ❌     |
-| Frontend                                       | code splitting, 100% lighthouse score  | ❌     |
 | Push notifications                             | mobile and desktop                     | ❌     |
-| Security                                       | encryption, https                      | ❌     |
+| Payments                                       | payout, credit card, paypal            | ❌     |
+| Message Queue                                  | batching, scheduled tasks              | ❌     |
+| Language                                       | change language, easily add more       | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented

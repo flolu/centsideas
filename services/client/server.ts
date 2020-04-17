@@ -29,8 +29,6 @@ app.set('views', DIST_FOLDER);
 
 app.get('*.*', express.static(DIST_FOLDER, { maxAge: '1y' }));
 app.get('/alive', (_req, res) => res.status(200).send('client is alive'));
-app.get('*', (req, res) => {
-  res.render('index', { req, res });
-});
+app.get('*', (req, res) => res.render('index', { req, res }));
 
 app.listen(PORT, () => console.log(`🚀 Node Express server listening on http://localhost:${PORT}`));

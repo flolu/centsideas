@@ -37,7 +37,7 @@
     "dev": "yarn setup && yarn docker:dev",
     "deploy": "bazelisk run :kubernetes_deployment.apply --define configuration=prod",
     "client:dev": "ibazel run //services/client:live_server",
-    "client:prod": "export GATEWAY_HOST=http://localhost:3000 && export FRONTEND_URL=http://127.0.0.1:4000 && bazelisk run //services/client:prod_server",
+    "client:prod": "export GATEWAY_HOST=http://localhost:3000 && export FRONTEND_URL=http://localhost:4000 && bazelisk run //services/client:prod_server",
     "test": "bazelisk test //...",
     "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
     "setup": "ts-node setup",
