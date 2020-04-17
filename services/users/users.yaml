@@ -55,6 +55,11 @@ spec:
                 secretKeyRef:
                   name: cents-ideas-secret
                   key: GOOGLE_CLIENT_SECRET
+            - name: FRONTEND_SERVER_EXCHANGE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: FRONTEND_SERVER_EXCHANGE_SECRET
           readinessProbe:
             httpGet:
               path: /alive

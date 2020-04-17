@@ -6,7 +6,6 @@ import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { isPlatformServer, DOCUMENT, isPlatformBrowser } from '@angular/common';
@@ -22,7 +21,6 @@ export class AuthEffects {
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
-    private store: Store,
     private injector: Injector,
     @Inject(PLATFORM_ID) private platform,
     @Inject(DOCUMENT) private document: Document,
@@ -105,7 +103,8 @@ export class AuthEffects {
         if (isPlatformServer(this.platform)) {
           const expressRequest = this.injector.get(REQUEST);
           const refreshToken = expressRequest.cookies[CookieNames.RefreshToken];
-          return this.authService.fetchAccessTokenOnServer(refreshToken).pipe(
+          const exchangeSecret = process.env.FRONTEND_SERVER_EXCHANGE_SECRET;
+          return this.authService.fetchAccessTokenOnServer(refreshToken, exchangeSecret).pipe(
             map(data => AuthActions.fetchAccessTokenDone(data)),
             catchError(error => of(AuthActions.fetchAccessTokenFail({ error }))),
           );

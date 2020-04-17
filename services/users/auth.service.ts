@@ -96,9 +96,13 @@ export class AuthService {
     Logger.thread('refresh token', async t => {
       try {
         let currentRefreshToken = req.cookies[CookieNames.RefreshToken];
+
         if (!currentRefreshToken) {
-          // TODO only if the request came from the ssr frontend server
-          currentRefreshToken = req.body.refreshToken;
+          const { exchangeSecret } = req.body;
+          if (env.exchangeSecrets.frontendServer === exchangeSecret) {
+            currentRefreshToken = req.body.refreshToken;
+            t.debug('got token from trusted exchange from frontend server');
+          }
         }
 
         const data = await this.commandHandler.refreshToken(currentRefreshToken, t);

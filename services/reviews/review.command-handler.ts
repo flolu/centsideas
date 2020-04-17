@@ -11,7 +11,6 @@ import { IReviewScores } from '@cents-ideas/models';
 import { ReviewErrors } from './errors';
 import { Review } from './review.entity';
 import { ReviewRepository } from './review.repository';
-import { ReviewDeletedEvent } from './events/review-deleted.event';
 
 @injectable()
 export class ReviewCommandHandler {

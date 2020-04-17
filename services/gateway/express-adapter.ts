@@ -4,7 +4,6 @@ import { injectable } from 'inversify';
 
 import { HttpRequest, HttpResponse } from '@cents-ideas/models';
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import { Logger } from '@cents-ideas/utils';
 
 @injectable()
 export class ExpressAdapter {

@@ -34,9 +34,12 @@ export class AuthService {
     return this.http.post<Dtos.IGoogleLoggedInDto>(url, payload);
   };
 
-  fetchAccessTokenOnServer = (refreshToken: string): Observable<Dtos.IRefreshedTokenDto> => {
+  fetchAccessTokenOnServer = (
+    refreshToken: string,
+    exchangeSecret: string,
+  ): Observable<Dtos.IRefreshedTokenDto> => {
     const url = `${this.baseUrl}/${UsersApiRoutes.RefreshToken}`;
-    return this.http.post<Dtos.IRefreshedTokenDto>(url, { refreshToken });
+    return this.http.post<Dtos.IRefreshedTokenDto>(url, { refreshToken, exchangeSecret });
   };
 
   fetchAccessToken = (): Observable<Dtos.IRefreshedTokenDto> => {
