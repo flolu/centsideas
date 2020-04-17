@@ -1,23 +1,7 @@
 import { injectable } from 'inversify';
 
 import { HttpStatusCodes, CookieNames, TokenExpirationTimes } from '@cents-ideas/enums';
-// TODO export groups to prevent long import lists like this one
-import {
-  HttpRequest,
-  HttpResponse,
-  ILoginDto,
-  IUpdateUserDto,
-  IUserQueryDto,
-  IUserState,
-  IConfirmEmailChangeDto,
-  IConfirmLoginDto,
-  Cookie,
-  IConfirmedLoginDto,
-  IRefreshedTokenDto,
-  IGoogleLoginRedirectDto,
-  IGoogleLoggedInDto,
-  IGoogleLoginDto,
-} from '@cents-ideas/models';
+import { HttpRequest, HttpResponse, IUserState, Cookie, Dtos } from '@cents-ideas/models';
 import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
@@ -27,7 +11,7 @@ import env from './environment';
 export class UsersService {
   constructor(private commandHandler: UserCommandHandler) {}
 
-  login = (req: HttpRequest<ILoginDto>) =>
+  login = (req: HttpRequest<Dtos.ILoginDto>) =>
     Logger.thread('login', async t => {
       try {
         const { email } = req.body;
@@ -43,7 +27,9 @@ export class UsersService {
       }
     });
 
-  confirmLogin = (req: HttpRequest<IConfirmLoginDto>): Promise<HttpResponse<IConfirmedLoginDto>> =>
+  confirmLogin = (
+    req: HttpRequest<Dtos.IConfirmLoginDto>,
+  ): Promise<HttpResponse<Dtos.IConfirmedLoginDto>> =>
     Logger.thread('confirm login', async t => {
       try {
         const { loginToken } = req.body;
@@ -65,7 +51,7 @@ export class UsersService {
       }
     });
 
-  googleLoginRedirect = (req: HttpRequest): Promise<HttpResponse<IGoogleLoginRedirectDto>> =>
+  googleLoginRedirect = (req: HttpRequest): Promise<HttpResponse<Dtos.IGoogleLoginRedirectDto>> =>
     Logger.thread('google login redirect', async t => {
       try {
         const origin = req.headers.origin;
@@ -80,7 +66,9 @@ export class UsersService {
       }
     });
 
-  googleLogin = (req: HttpRequest<IGoogleLoginDto>): Promise<HttpResponse<IGoogleLoggedInDto>> =>
+  googleLogin = (
+    req: HttpRequest<Dtos.IGoogleLoginDto>,
+  ): Promise<HttpResponse<Dtos.IGoogleLoggedInDto>> =>
     Logger.thread('google login', async t => {
       try {
         const { code } = req.body;
@@ -104,7 +92,7 @@ export class UsersService {
       }
     });
 
-  refreshToken = (req: HttpRequest): Promise<HttpResponse<IRefreshedTokenDto>> =>
+  refreshToken = (req: HttpRequest): Promise<HttpResponse<Dtos.IRefreshedTokenDto>> =>
     Logger.thread('refresh token', async t => {
       try {
         let currentRefreshToken = req.cookies[CookieNames.RefreshToken];
@@ -140,7 +128,7 @@ export class UsersService {
     });
 
   updateUser = (
-    req: HttpRequest<IUpdateUserDto, IUserQueryDto>,
+    req: HttpRequest<Dtos.IUpdateUserDto, Dtos.IUserQueryDto>,
   ): Promise<HttpResponse<IUserState>> =>
     Logger.thread('update user', async t => {
       try {
@@ -162,7 +150,7 @@ export class UsersService {
     });
 
   confirmEmailChange = (
-    req: HttpRequest<IConfirmEmailChangeDto>,
+    req: HttpRequest<Dtos.IConfirmEmailChangeDto>,
   ): Promise<HttpResponse<IUserState>> =>
     Logger.thread('confirm email change', async t => {
       try {

@@ -1,14 +1,7 @@
 import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import {
-  HttpRequest,
-  HttpResponse,
-  IReviewState,
-  ICreateReviewDto,
-  IQueryReviewDto,
-  IUpdateReviewDto,
-} from '@cents-ideas/models';
+import { HttpRequest, HttpResponse, IReviewState, Dtos } from '@cents-ideas/models';
 import { Logger, handleHttpResponseError } from '@cents-ideas/utils';
 
 import { ReviewCommandHandler } from './review.command-handler';
@@ -17,7 +10,7 @@ import { ReviewCommandHandler } from './review.command-handler';
 export class ReviewsService {
   constructor(private commandHandler: ReviewCommandHandler) {}
 
-  create = (req: HttpRequest<ICreateReviewDto>): Promise<HttpResponse<IReviewState>> =>
+  create = (req: HttpRequest<Dtos.ICreateReviewDto>): Promise<HttpResponse<IReviewState>> =>
     Logger.thread('create', async t => {
       try {
         const auid = req.locals.userId || '';
@@ -38,7 +31,7 @@ export class ReviewsService {
     });
 
   update = (
-    req: HttpRequest<IUpdateReviewDto, IQueryReviewDto>,
+    req: HttpRequest<Dtos.IUpdateReviewDto, Dtos.IQueryReviewDto>,
   ): Promise<HttpResponse<IReviewState>> =>
     Logger.thread('update', async t => {
       try {
@@ -61,7 +54,7 @@ export class ReviewsService {
       }
     });
 
-  delete = (req: HttpRequest<null, IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
+  delete = (req: HttpRequest<null, Dtos.IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
     Logger.thread('delete', async t => {
       try {
         const userId = req.locals.userId || '';

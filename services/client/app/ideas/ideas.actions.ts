@@ -2,7 +2,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
 
-import { IIdeaViewModel, IIdeaState, ICreateIdeaDto } from '@cents-ideas/models';
+import { IIdeaViewModel, IIdeaState, Dtos } from '@cents-ideas/models';
 
 import { appPrefix, failSuffix, doneSuffix } from '../../shared/helpers/actions.helper';
 import { IIdeaForm } from './ideas.state';
@@ -23,7 +23,7 @@ const getIdeaById = createAction(getByIdPrefix, props<{ id: string }>());
 const getIdeaByIdDone = createAction(getByIdPrefix + doneSuffix, props<{ idea: IIdeaViewModel }>());
 const getIdeaByIdFail = createAction(getByIdPrefix + failSuffix, props<{ error: string }>());
 
-const createIdea = createAction(createPrefix, props<ICreateIdeaDto>());
+const createIdea = createAction(createPrefix, props<Dtos.ICreateIdeaDto>());
 const createIdeaDone = createAction(createPrefix + doneSuffix, props<{ created: IIdeaState }>());
 const createIdeaFail = createAction(createPrefix + failSuffix, props<{ error: string }>());
 

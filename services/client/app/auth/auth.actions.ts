@@ -2,13 +2,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
 
-import {
-  IConfirmedLoginDto,
-  IRefreshedTokenDto,
-  IGoogleLoginDto,
-  IGoogleLoginRedirectDto,
-  IGoogleLoggedInDto,
-} from '@cents-ideas/models';
+import { Dtos } from '@cents-ideas/models';
 
 import { appPrefix, failSuffix, doneSuffix } from '../../shared/helpers/actions.helper';
 
@@ -27,21 +21,24 @@ const loginFail = createAction(loginPrefix + failSuffix, props<{ error: string }
 const googleLoginRedirect = createAction(googleLoginRedirectPrefix);
 const googleLoginRedirectDone = createAction(
   googleLoginRedirectPrefix + doneSuffix,
-  props<IGoogleLoginRedirectDto>(),
+  props<Dtos.IGoogleLoginRedirectDto>(),
 );
 const googleLoginRedirectFail = createAction(
   googleLoginRedirectPrefix + failSuffix,
   props<{ error: string }>(),
 );
 
-const googleLogin = createAction(googleLoginPrefix, props<IGoogleLoginDto>());
-const googleLoginDone = createAction(googleLoginPrefix + doneSuffix, props<IGoogleLoggedInDto>());
+const googleLogin = createAction(googleLoginPrefix, props<Dtos.IGoogleLoginDto>());
+const googleLoginDone = createAction(
+  googleLoginPrefix + doneSuffix,
+  props<Dtos.IGoogleLoggedInDto>(),
+);
 const googleLoginFail = createAction(googleLoginPrefix + failSuffix, props<{ error: string }>());
 
 const fetchAccessToken = createAction(refreshTokenPrefix);
 const fetchAccessTokenDone = createAction(
   refreshTokenPrefix + doneSuffix,
-  props<IRefreshedTokenDto>(),
+  props<Dtos.IRefreshedTokenDto>(),
 );
 const fetchAccessTokenFail = createAction(
   refreshTokenPrefix + failSuffix,
@@ -49,7 +46,10 @@ const fetchAccessTokenFail = createAction(
 );
 
 const confirmLogin = createAction(confirmLoginPrefix, props<{ token: string }>());
-const confirmLoginDone = createAction(confirmLoginPrefix + doneSuffix, props<IConfirmedLoginDto>());
+const confirmLoginDone = createAction(
+  confirmLoginPrefix + doneSuffix,
+  props<Dtos.IConfirmedLoginDto>(),
+);
 const confirmLoginFail = createAction(confirmLoginPrefix + failSuffix, props<{ error: string }>());
 
 const logout = createAction(logoutPrefix);

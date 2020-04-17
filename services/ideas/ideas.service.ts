@@ -1,14 +1,7 @@
 import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@cents-ideas/enums';
-import {
-  HttpRequest,
-  HttpResponse,
-  IIdeaState,
-  IIdeaQueryDto,
-  ICreateIdeaDto,
-  IUpdateIdeaDto,
-} from '@cents-ideas/models';
+import { HttpRequest, HttpResponse, IIdeaState, Dtos } from '@cents-ideas/models';
 import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
 import { IdeaCommandHandler } from './idea.command-handler';
@@ -17,7 +10,7 @@ import { IdeaCommandHandler } from './idea.command-handler';
 export class IdeasService {
   constructor(private commandHandler: IdeaCommandHandler) {}
 
-  create = (req: HttpRequest<ICreateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  create = (req: HttpRequest<Dtos.ICreateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     Logger.thread('create', async t => {
       try {
         const { title, description } = req.body;
@@ -35,7 +28,7 @@ export class IdeasService {
       }
     });
 
-  update = (req: HttpRequest<IUpdateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
+  update = (req: HttpRequest<Dtos.IUpdateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     Logger.thread('update', async t => {
       try {
         const auid = req.locals.userId;
@@ -55,7 +48,7 @@ export class IdeasService {
       }
     });
 
-  delete = (req: HttpRequest<{}, IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
+  delete = (req: HttpRequest<{}, Dtos.IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
     Logger.thread('delete', async t => {
       try {
         const auid = req.locals.userId;
