@@ -18,13 +18,25 @@ export class UsersServer {
     this.app.use(bodyParser.json());
 
     this.app.post(`/${UsersApiRoutes.Login}`, this.expressAdapter.json(this.usersService.login));
+    // TODO seperate auth stuff into authService?
     this.app.post(
       `/${UsersApiRoutes.ConfirmLogin}`,
       this.expressAdapter.json(this.usersService.confirmLogin),
     );
+
     this.app.post(
-      `/${UsersApiRoutes.Authenticate}`,
-      this.expressAdapter.json(this.usersService.authenticate),
+      `/${UsersApiRoutes.GoogleLogin}`,
+      this.expressAdapter.json(this.usersService.googleLogin),
+    );
+
+    this.app.post(
+      `/${UsersApiRoutes.GoogleLoginRedirect}`,
+      this.expressAdapter.json(this.usersService.googleLoginRedirect),
+    );
+
+    this.app.post(
+      `/${UsersApiRoutes.RefreshToken}`,
+      this.expressAdapter.json(this.usersService.refreshToken),
     );
 
     this.app.post(
@@ -36,6 +48,8 @@ export class UsersServer {
       `/${UsersApiRoutes.ConfirmEmailChange}`,
       this.expressAdapter.json(this.usersService.confirmEmailChange),
     );
+
+    this.app.post(`/${UsersApiRoutes.Logout}`, this.expressAdapter.json(this.usersService.logout));
 
     this.app.get(`/${UsersApiRoutes.Alive}`, (_req, res) => {
       return res.status(200).send();

@@ -6,7 +6,7 @@ import { IEnvironment } from './environment.model';
 
 @Injectable()
 export class EnvironmentService {
-  // FIXME dont hardcode
+  // TODO dont hardcode
   private readonly defaultGatewayHost = 'https://api.centsideas.com';
   private readonly localstorageEnvironmentKey = 'environment';
   private readonly keyName = '@cents-ideas/environment';
@@ -25,10 +25,11 @@ export class EnvironmentService {
       );
       if (environment) this.environment = environment;
       else {
-        if (this.document.location.hostname === 'localhost')
-          // FIXME dont hardcode
-          this.environment = { gatewayHost: 'http://localhost:3000' };
-        else this.environment = this.defaultEnvironment;
+        this.environment = { gatewayHost: 'http://localhost:3000' };
+        // if (this.document.location.hostname === 'localhost' || this.document.location.hostname.includes('local.'))
+        //  // TODO dont hardcode
+        //  this.environment = { gatewayHost: 'http://localhost:3000' };
+        // else this.environment = this.defaultEnvironment;
       }
     } else {
       this.environment = this.defaultEnvironment;

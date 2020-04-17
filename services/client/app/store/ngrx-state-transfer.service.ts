@@ -4,7 +4,9 @@ import { Store, createAction, props, ActionReducer } from '@ngrx/store';
 import { isPlatformBrowser } from '@angular/common';
 import { take, tap } from 'rxjs/operators';
 
-const setRootStateActionName = '[state transfer] set root state';
+import { appPrefix } from '../../shared/helpers/actions.helper';
+
+const setRootStateActionName = `${appPrefix}/state-transfer/set-root-state`;
 const setRootState = createAction(setRootStateActionName, props<{ state: any }>());
 
 export function setTransferedState(reducer: ActionReducer<any>): ActionReducer<any> {

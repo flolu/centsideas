@@ -6,6 +6,7 @@
     "no-submodule-imports": false,
     "no-console": [true, "log"],
     "no-empty-interface": false,
+    "no-unused-variable": [true, { "ignore-pattern": "^_" }],
     "max-classes-per-file": false
   },
   "linterOptions": {

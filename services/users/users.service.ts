@@ -1,36 +1,40 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes, HeaderKeys } from '@cents-ideas/enums';
+import { HttpStatusCodes, CookieNames, TokenExpirationTimes } from '@cents-ideas/enums';
 import {
   HttpRequest,
   HttpResponse,
   ILoginDto,
-  IAuthenticateDto,
-  IAuthenticatedDto,
   IUpdateUserDto,
   IUserQueryDto,
   IUserState,
   IConfirmEmailChangeDto,
   IConfirmLoginDto,
+  Cookie,
+  IConfirmedLoginDto,
+  IRefreshedTokenDto,
+  IGoogleLoginRedirectDto,
 } from '@cents-ideas/models';
 import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
+import env from './environment';
 
 @injectable()
 export class UsersService {
   constructor(private commandHandler: UserCommandHandler) {}
 
   login = (req: HttpRequest<ILoginDto>): Promise<HttpResponse> =>
+    // TODO do i need promises here... or can i just create an async function that returns a value (would be cleaner)
     new Promise(resolve => {
       Logger.thread('login', async t => {
         try {
           const createdLogin = await this.commandHandler.login(req.body.email, t);
           t.log('created login with id', createdLogin.persistedState.id);
+
           resolve({
             status: HttpStatusCodes.Accepted,
             body: {},
-            headers: {},
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);
@@ -39,39 +43,89 @@ export class UsersService {
       });
     });
 
-  authenticate = (
-    req: HttpRequest<null, null, null, IAuthenticateDto>,
-  ): Promise<HttpResponse<IAuthenticatedDto>> =>
-    new Promise(resolve => {
-      Logger.thread('authenticate', async t => {
-        try {
-          const { token, user } = await this.commandHandler.authenticate(
-            req.headers[HeaderKeys.Auth],
-            t,
-          );
-          t.log('user with id', user.id, 'authenticated');
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: { token, user },
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
-    });
-
-  confirmLogin = (req: HttpRequest<IConfirmLoginDto>): Promise<HttpResponse<IAuthenticatedDto>> =>
+  confirmLogin = (req: HttpRequest<IConfirmLoginDto>): Promise<HttpResponse<IConfirmedLoginDto>> =>
     new Promise(resolve => {
       Logger.thread('confirm login', async t => {
         try {
-          const { token, user } = await this.commandHandler.confirmLogin(req.body.token, t);
+          const data = await this.commandHandler.confirmLogin(req.body.loginToken, t);
+          const { user, accessToken, refreshToken } = data;
+          const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
           t.log('confirmed login of user', user.id);
+
           resolve({
             status: HttpStatusCodes.Accepted,
-            body: { token, user },
-            headers: {},
+            body: { user, accessToken },
+            cookies: [refreshTokenCookie],
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  googleLoginRedirect = (req: HttpRequest): Promise<HttpResponse<IGoogleLoginRedirectDto>> =>
+    new Promise(resolve => {
+      Logger.thread('google login redirect', async t => {
+        try {
+          const url = this.commandHandler.googleLoginRedirect(req.headers.origin);
+          t.debug('generated google login url starting with', url.substr(0, 30));
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { url },
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  googleLogin = (req: HttpRequest): Promise<HttpResponse> =>
+    new Promise(resolve => {
+      Logger.thread('google login', async t => {
+        try {
+          const code: string = req.body.code;
+          t.debug('code starts with', code.substr(0, 20));
+
+          const data = await this.commandHandler.googleLogin(code, t, req.headers.origin);
+          const { user, accessToken, refreshToken } = data;
+          const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
+          t.log('successfully completed google login');
+
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { user, accessToken },
+            cookies: [refreshTokenCookie],
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  refreshToken = (req: HttpRequest): Promise<HttpResponse<IRefreshedTokenDto>> =>
+    new Promise(resolve => {
+      Logger.thread('refresh token', async t => {
+        try {
+          const currentRefreshToken =
+            req.cookies[CookieNames.RefreshToken] || req.body.refreshToken;
+          const data = await this.commandHandler.refreshToken(currentRefreshToken, t);
+          const { user, accessToken, refreshToken } = data;
+          const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
+          t.log(
+            'generated new access token and refreshed refresh token of user',
+            user.persistedState.id,
+          );
+
+          // TODO token null should be an expected error
+          // TODO clear the cookie when the refresh failed
+
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { user: user.persistedState, accessToken },
+            cookies: [refreshTokenCookie],
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);
@@ -124,5 +178,49 @@ export class UsersService {
           resolve(handleHttpResponseError(error));
         }
       });
+    });
+
+  logout = (_req: HttpRequest): Promise<HttpResponse> =>
+    new Promise(resolve => {
+      Logger.thread('logout', async t => {
+        try {
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: {},
+            cookies: [new Cookie(CookieNames.RefreshToken, '', { maxAge: 0 })],
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  // FIXME implement such that access to this controller is only for admins
+  revokeRefreshToken = (req: HttpRequest): Promise<HttpResponse> =>
+    new Promise(resolve => {
+      Logger.thread('revoke refresh token', async t => {
+        try {
+          const { userId, reason } = req.body;
+          const user = await this.commandHandler.revokeRefreshToken(userId, reason, t);
+          t.log(`successfully revoked refresh token of user ${userId}`);
+
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { updatedUser: user.persistedState },
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
+  private createRefreshTokenCookie = (refreshToken: string) =>
+    new Cookie(CookieNames.RefreshToken, refreshToken, {
+      httpOnly: true,
+      sameSite: env.environment === 'dev' ? 'none' : 'strict',
+      secure: env.environment === 'dev' ? false : true,
+      maxAge: TokenExpirationTimes.RefreshToken * 1000,
     });
 }

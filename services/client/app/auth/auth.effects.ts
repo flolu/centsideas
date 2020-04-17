@@ -2,18 +2,19 @@ import * as __ngrxEffectsTypes from '@ngrx/effects/src/models';
 import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import * as __rxjsTypes from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
+import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { isPlatformServer, DOCUMENT, isPlatformBrowser } from '@angular/common';
 
-import { TopLevelFrontendRoutes, UserFrontendRoutes } from '@cents-ideas/enums';
+import { TopLevelFrontendRoutes, UserFrontendRoutes, CookieNames } from '@cents-ideas/enums';
 
 import { AuthActions } from './auth.actions';
 import { AuthService } from './auth.service';
-import { AuthSelectors } from './auth.selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -22,6 +23,9 @@ export class AuthEffects {
     private authService: AuthService,
     private router: Router,
     private store: Store,
+    private injector: Injector,
+    @Inject(PLATFORM_ID) private platform,
+    @Inject(DOCUMENT) private document: Document,
   ) {}
 
   login$ = createEffect(() =>
@@ -39,60 +43,98 @@ export class AuthEffects {
   confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),
-      withLatestFrom(this.store.select(AuthSelectors.selectAuthState)),
-      switchMap(([action, authState]) => {
-        if (authState.token) {
-          this.authService.saveToken(authState.token);
-          return [];
-        }
-        return this.authService.confirmLogin(action.token).pipe(
-          map(({ token, user }) => AuthActions.confirmLoginDone({ token, user })),
+      switchMap(action =>
+        this.authService.confirmLogin(action.token).pipe(
+          map(({ accessToken, user }) => AuthActions.confirmLoginDone({ accessToken, user })),
           catchError(error => of(AuthActions.confirmLoginFail({ error }))),
-        );
-      }),
+        ),
+      ),
+    ),
+  );
+
+  googleLoginRedirect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.googleLoginRedirect),
+      switchMap(() =>
+        this.authService.googleLoginRedirect().pipe(
+          map(({ url }) => AuthActions.googleLoginRedirectDone({ url })),
+          catchError(error => of(AuthActions.googleLoginRedirectFail({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  googleLoginRedirectDone$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.googleLoginRedirectDone),
+        tap(({ url }) => {
+          if (isPlatformBrowser(this.platform)) {
+            this.document.location.href = url;
+          }
+        }),
+      ),
+    { dispatch: false },
+  );
+
+  googleLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.googleLogin),
+      switchMap(({ code }) =>
+        this.authService.googleLogin(code).pipe(
+          map(({ user, accessToken }) => AuthActions.googleLoginDone({ user, accessToken })),
+          catchError(error => of(AuthActions.googleLoginFail({ error }))),
+        ),
+      ),
     ),
   );
 
   confirmLoginDone$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(AuthActions.confirmLoginDone),
-        tap(action => this.authService.saveToken(action.token)),
+        ofType(AuthActions.confirmLoginDone, AuthActions.googleLoginDone),
         tap(() => this.router.navigate([TopLevelFrontendRoutes.User, UserFrontendRoutes.Me])),
       ),
     { dispatch: false },
   );
 
-  authenticate$ = createEffect(() =>
+  fetchAccessToken$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.authenticate),
+      ofType(AuthActions.fetchAccessToken),
       switchMap(() => {
-        if (this.authService.token) {
-          return this.authService.authenticate().pipe(
-            map(data => AuthActions.authenticateDone(data)),
-            catchError(error => of(AuthActions.authenticateFail({ error }))),
+        if (isPlatformServer(this.platform)) {
+          const expressRequest = this.injector.get(REQUEST);
+          const refreshToken = expressRequest.cookies[CookieNames.RefreshToken];
+          return this.authService.fetchAccessTokenOnServer(refreshToken).pipe(
+            map(data => AuthActions.fetchAccessTokenDone(data)),
+            catchError(error => of(AuthActions.fetchAccessTokenFail({ error }))),
           );
-        } else {
-          return [AuthActions.authenticateNoToken()];
         }
+        return this.authService.fetchAccessToken().pipe(
+          map(data => AuthActions.fetchAccessTokenDone(data)),
+          catchError(error => of(AuthActions.fetchAccessTokenFail({ error }))),
+        );
       }),
     ),
   );
 
-  authenticateDone$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.authenticateDone),
-        tap(action => this.authService.saveToken(action.token)),
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.logout),
+      switchMap(() =>
+        this.authService.logout().pipe(
+          map(() => AuthActions.logoutDone()),
+          catchError(error => of(AuthActions.logoutFail({ error }))),
+        ),
       ),
-    { dispatch: false },
+    ),
   );
 
-  authenticateFail$ = createEffect(
+  logoutDone$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(AuthActions.authenticateFail),
-        tap(() => this.authService.removeToken()),
+        ofType(AuthActions.logoutDone),
+        tap(() => this.router.navigate([TopLevelFrontendRoutes.Ideas])),
       ),
     { dispatch: false },
   );

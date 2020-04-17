@@ -15,14 +15,16 @@ This is a project with the purpose of learning the architecture of complex web a
 | Local development                              | hot reload, docker-compose, vscode     | ✔️     |
 | Git flow                                       | branching, releases, rebasing          | ✔️     |
 | Gateway                                        | discovery, entry point, auth           | ✔️     |
+| Authentication                                 | passwordless, google login             | ✔️     |
+| Progressive Web App                            | pwa, service worker, mobile-friendly   | ✔️     |
 | [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker | ✅     |
 | Deployment                                     | ci, cd, build automation, bazel        | ✅     |
 | Testing                                        | unit Tests, integration Tests          | ✅     |
 | Kubernetes                                     | container orchestration                | ✅     |
-| Database(s)                                    | data storage, event store              | ✅     |
+| Database(s)                                    | data storage, event store, backups     | ✅     |
 | SEO                                            | server side rendering, marketing       | ✅     |
-| Authentication                                 | passwordless, google login             | ✅     |
-| Progressive Web App                            | pwa, service worker, mobile-friendly   | ✅     |
+| Frontend                                       | code splitting, 100% lighthouse score  | ✅     |
+| Security                                       | encryption, https                      | ✅     |
 | File storage                                   | blob storage                           | ❌     |
 | Static pages                                   | homepage, static content               | ❌     |
 | Search                                         | indexing, realtime search              | ❌     |
@@ -32,8 +34,10 @@ This is a project with the purpose of learning the architecture of complex web a
 | GDPR                                           | legal, privacy                         | ❌     |
 | User Interface                                 | modern, drag&drop, touch gestures      | ❌     |
 | Compute server                                 | non-nodejs server for high cpu tasks   | ❌     |
-| Frontend                                       | code splitting, 100% lighthouse score  | ❌     |
 | Push notifications                             | mobile and desktop                     | ❌     |
+| Payments                                       | payout, credit card, paypal            | ❌     |
+| Message Queue                                  | batching, scheduled tasks              | ❌     |
+| Language                                       | change language, easily add more       | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented
@@ -139,8 +143,19 @@ _TODO consider creating script to automate this_
 
 ### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster and connect to it
 
+```bash
+gcloud beta container --project "centsideas" clusters create "cents-ideas" --zone "europe-west3-b" --no-enable-basic-auth --cluster-version "1.14.10-gke.27" --machine-type "n1-standard-1" --image-type "COS" --disk-type "pd-standard" --disk-size "10" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "3" --enable-stackdriver-kubernetes --enable-ip-alias --network "projects/centsideas/global/networks/default" --subnetwork "projects/centsideas/regions/europe-west3/subnetworks/default" --default-max-pods-per-node "110" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair --database-encryption-key "projects/centsideas/locations/europe-west3/keyRings/cents-ideas-gke-keyring/cryptoKeys/cents-ideas-gke-key"
 ```
+
+or just
+
+```bash
 gcloud beta container --project "centsideas" clusters create "cents-ideas" --zone "europe-west3-b"
+```
+
+and then connect to the cluster
+
+```bash
 gcloud container clusters get-credentials cents-ideas --zone europe-west3-b --project centsideas
 ```
 
@@ -148,17 +163,16 @@ _TODO add instructions on how to add Application-layer Secrets Encryption_
 
 ### 2. Setup [Helm](https://helm.sh/)
 
-```
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-helm repo add jetstack https://charts.jetstack.io/
+```bash
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/ && \
+helm repo add jetstack https://charts.jetstack.io/ && \
 helm repo update
 ```
 
 ### 3. Create an [NGINX Ingress](https://github.com/kubernetes/ingress-nginx)
 
-```
-kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $(gcloud config get-value account)
-
+```bash
+kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $(gcloud config get-value account) && \
 helm install nginx-ingress stable/nginx-ingress
 ```
 
@@ -174,8 +188,8 @@ Go to the created [Load Balancer](https://console.cloud.google.com/net-services/
 ### 5. Setup [Cert Manager](https://github.com/helm/charts/tree/master/stable/cert-manager)
 
 ```
-kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.0/deploy/manifests/00-crds.yaml
-kubectl create namespace cert-manager
+kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.0/deploy/manifests/00-crds.yaml && \
+kubectl create namespace cert-manager && \
 helm install cert-manager jetstack/cert-manager --namespace cert-manager
 ```
 

@@ -33,27 +33,20 @@ const userReducer = createReducer(
     ...LOADING_DONE,
     user: updated,
   })),
-  on(UserActions.confirmEmailChange, state => ({
-    ...state,
-    ...LOADING,
-  })),
+  on(UserActions.confirmEmailChange, state => ({ ...state, ...LOADING })),
   on(UserActions.confirmEmailChangeFail, (state, { error }) => ({
     ...state,
     ...LOADING_FAIL(error),
   })),
-  on(UserActions.confirmEmailChangeDone, (state, action) => ({
+  on(UserActions.confirmEmailChangeDone, (state, { updated }) => ({
     ...state,
     ...LOADING_DONE,
-    user: action.updated,
+    user: updated,
   })),
-  on(AuthActions.confirmLoginDone, (state, action) => ({
-    ...state,
-    user: action.user,
-  })),
-  on(AuthActions.authenticateDone, (state, action) => ({
-    ...state,
-    user: action.user,
-  })),
+  on(AuthActions.confirmLoginDone, (state, { user }) => ({ ...state, user })),
+  on(AuthActions.fetchAccessTokenDone, (state, { user }) => ({ ...state, user })),
+  on(AuthActions.logoutDone, state => ({ ...state, user: null })),
+  on(AuthActions.googleLoginDone, (state, { user }) => ({ ...state, user })),
 );
 
 export function reducer(state: IUserReducerState | undefined, action: Action) {

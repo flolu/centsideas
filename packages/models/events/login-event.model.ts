@@ -3,6 +3,12 @@ export interface ILoginRequestedEvent {
   firstLogin: boolean;
 }
 
+export interface IGoogleLoginRequestedEvnet {
+  email: string;
+  googleUserId: string;
+  firstLogin: boolean;
+}
+
 export interface ILoginMailSentEvent {
   email: string;
 }

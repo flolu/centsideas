@@ -19,11 +19,11 @@ spec:
             - configMapRef:
                 name: global-config
           env:
-            - name: JWT_SECRET
+            - name: ACCESS_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:
                   name: cents-ideas-secret
-                  key: JWT_SECRET
+                  key: ACCESS_TOKEN_SECRET
           readinessProbe:
             httpGet:
               path: /alive

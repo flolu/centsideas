@@ -1,31 +1,23 @@
-import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { isPlatformServer, isPlatformBrowser } from '@angular/common';
-import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
 
-import { ApiEndpoints, UsersApiRoutes, TokenExpirationTimes } from '@cents-ideas/enums';
-import { IAuthenticatedDto, ILoginDto, IConfirmLoginDto } from '@cents-ideas/models';
+import { ApiEndpoints, UsersApiRoutes } from '@cents-ideas/enums';
+import {
+  ILoginDto,
+  IConfirmLoginDto,
+  IConfirmedLoginDto,
+  IRefreshedTokenDto,
+  IGoogleLoginDto,
+  IGoogleLoginRedirectDto,
+  IGoogleLoggedInDto,
+} from '@cents-ideas/models';
+
 import { EnvironmentService } from '../../shared/environment/environment.service';
-
-export const TOKEN_KEY = 'token';
 
 @Injectable()
 export class AuthService {
-  private expressRequest: any;
-  private expressResponse: any;
-
-  constructor(
-    private http: HttpClient,
-    private injector: Injector,
-    private environmentService: EnvironmentService,
-    @Inject(PLATFORM_ID) private platform: string,
-  ) {
-    if (isPlatformServer(this.platform)) {
-      this.expressRequest = this.injector.get(REQUEST);
-      this.expressResponse = this.injector.get(RESPONSE);
-    }
-  }
+  constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
 
   login = (email: string): Observable<{}> => {
     const payload: ILoginDto = { email };
@@ -33,60 +25,40 @@ export class AuthService {
     return this.http.post<{}>(url, payload);
   };
 
-  confirmLogin = (token: string): Observable<IAuthenticatedDto> => {
-    const payload: IConfirmLoginDto = { token };
+  confirmLogin = (token: string): Observable<IConfirmedLoginDto> => {
+    const payload: IConfirmLoginDto = { loginToken: token };
     const url = `${this.baseUrl}/${UsersApiRoutes.ConfirmLogin}`;
-    return this.http.post<IAuthenticatedDto>(url, payload);
+    return this.http.post<IConfirmedLoginDto>(url, payload);
   };
 
-  authenticate = (): Observable<IAuthenticatedDto> => {
-    const url = `${this.baseUrl}/${UsersApiRoutes.Authenticate}`;
-    return this.http.post<IAuthenticatedDto>(url, {});
+  googleLoginRedirect = (): Observable<IGoogleLoginRedirectDto> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.GoogleLoginRedirect}`;
+    return this.http.get<IGoogleLoginRedirectDto>(url);
   };
 
-  logout = () => {
-    this.removeToken();
+  googleLogin = (code: string): Observable<IGoogleLoggedInDto> => {
+    const payload: IGoogleLoginDto = { code };
+    const url = `${this.baseUrl}/${UsersApiRoutes.GoogleLogin}`;
+    return this.http.post<IGoogleLoggedInDto>(url, payload);
   };
 
-  saveToken = (token: string) => {
-    this.removeToken();
-    if (isPlatformBrowser(this.platform)) {
-      document.cookie = `${TOKEN_KEY}=${token}; ; max-age=${TokenExpirationTimes.AuthToken};`;
-    }
-    if (isPlatformServer(this.platform)) {
-      this.expressResponse.cookie(TOKEN_KEY, token, {
-        maxAge: TokenExpirationTimes.AuthToken,
-        httpOnly: true,
-      });
-    }
+  fetchAccessTokenOnServer = (refreshToken: string): Observable<IRefreshedTokenDto> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.RefreshToken}`;
+    return this.http.post<IRefreshedTokenDto>(url, { refreshToken });
   };
 
-  removeToken = () => {
-    if (isPlatformBrowser(this.platform)) {
-      document.cookie = '';
-    }
-    if (isPlatformServer(this.platform)) {
-      this.expressResponse.clearCookie(TOKEN_KEY);
-    }
+  // TODO this request is expected to fail at some point (...so don't throw error)... only throw error if it is unexpected error
+  fetchAccessToken = (): Observable<IRefreshedTokenDto> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.RefreshToken}`;
+    return this.http.post<IRefreshedTokenDto>(url, {});
+  };
+
+  logout = (): Observable<{}> => {
+    const url = `${this.baseUrl}/${UsersApiRoutes.Logout}`;
+    return this.http.post<{}>(url, {});
   };
 
   private get baseUrl() {
     return `${this.environmentService.env.gatewayHost}/${ApiEndpoints.Users}`;
   }
-
-  get token() {
-    if (isPlatformBrowser(this.platform)) {
-      return this.getCookieValue(document.cookie, TOKEN_KEY);
-    }
-    if (isPlatformServer(this.platform)) {
-      return this.getCookieValue(this.expressRequest.headers.cookie, TOKEN_KEY);
-    }
-    return '';
-  }
-
-  private getCookieValue = (cookies: string, name: string): string => {
-    cookies = cookies || '';
-    const matches = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-    return matches ? matches.pop() : '';
-  };
 }

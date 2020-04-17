@@ -9,10 +9,32 @@ export interface IAuthenticateDto {
 }
 
 export interface IAuthenticatedDto {
-  token: string;
   user: IUserState;
 }
 
 export interface IConfirmLoginDto {
-  token: string;
+  loginToken: string;
+}
+
+export interface IConfirmedLoginDto {
+  user: IUserState;
+  accessToken: string;
+}
+
+export interface IRefreshedTokenDto {
+  user: IUserState;
+  accessToken: string;
+}
+
+export interface IGoogleLoginDto {
+  code: string;
+}
+
+export interface IGoogleLoginRedirectDto {
+  url: string;
+}
+
+export interface IGoogleLoggedInDto {
+  user: IUserState;
+  accessToken: string;
 }

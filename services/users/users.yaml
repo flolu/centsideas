@@ -20,16 +20,41 @@ spec:
             - configMapRef:
                 name: global-config
           env:
-            - name: JWT_SECRET
+            - name: REFRESH_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:
                   name: cents-ideas-secret
-                  key: JWT_SECRET
+                  key: REFRESH_TOKEN_SECRET
+            - name: ACCESS_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: ACCESS_TOKEN_SECRET
+            - name: LOGIN_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: LOGIN_TOKEN_SECRET
+            - name: CHANGE_EMAIL_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: CHANGE_EMAIL_TOKEN_SECRET
             - name: SEND_GRID_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: cents-ideas-secret
                   key: SEND_GRID_API_KEY
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: GOOGLE_CLIENT_ID
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cents-ideas-secret
+                  key: GOOGLE_CLIENT_SECRET
           readinessProbe:
             httpGet:
               path: /alive

@@ -2,17 +2,20 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, fromEvent, merge, of } from 'rxjs';
-import { mapTo, take, tap, takeWhile, startWith } from 'rxjs/operators';
+import { mapTo } from 'rxjs/operators';
 import { SwUpdate } from '@angular/service-worker';
 
 import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@cents-ideas/enums';
-
-import { AuthActions } from './auth/auth.actions';
 import { AuthSelectors } from './auth/auth.selectors';
 
 @Component({
   selector: 'ci-component',
   template: `
+    <span *ngIf="(authState$ | async)?.initializing">Initializing...</span>
+    <span *ngIf="(authState$ | async)?.initialized">Initialized</span>
+    <span *ngIf="(authState$ | async)?.accessToken">
+      access token: {{ (authState$ | async)?.accessToken }}
+    </span>
     <h1 *ngIf="offline$ | async">You're offline</h1>
     <div>
       <a [routerLink]="[topLevelRoutes.Ideas]">Ideas</a>
@@ -27,6 +30,7 @@ import { AuthSelectors } from './auth/auth.selectors';
   styleUrls: ['app.component.sass'],
 })
 export class AppComponent implements OnDestroy {
+  authState$ = this.store.select(AuthSelectors.selectAuthState);
   offline$: Observable<boolean>;
 
   alive = true;
@@ -39,26 +43,11 @@ export class AppComponent implements OnDestroy {
     private swUpdate: SwUpdate,
     @Inject(PLATFORM_ID) private platform: string,
   ) {
-    this.handleAuthentication();
     this.handleServiceWorkerUpdates();
     if (isPlatformBrowser(this.platform)) {
       this.handleOnlineOffline();
     }
   }
-
-  handleAuthentication = () => {
-    this.store
-      .select(AuthSelectors.selectAuthState)
-      .pipe(
-        take(1),
-        tap(state => {
-          if (state.authenticationTryCount < 1) {
-            this.store.dispatch(AuthActions.authenticate());
-          }
-        }),
-      )
-      .subscribe();
-  };
 
   handleServiceWorkerUpdates = () => {
     this.swUpdate.available.subscribe(evt => {

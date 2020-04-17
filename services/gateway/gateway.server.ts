@@ -1,17 +1,18 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';
 
 import { Logger } from '@cents-ideas/utils';
 import { ApiEndpoints, HeaderKeys, CentsCommandments } from '@cents-ideas/enums';
-import { ITokenDataFull, IAuthTokenPayload } from '@cents-ideas/models';
 
 import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';
 import { IdeasRoutes } from './ideas.routes';
 import { UsersRoutes } from './users.routes';
+import { IAccessTokenPayload } from '@cents-ideas/models';
 
 @injectable()
 export class GatewayServer {
@@ -26,29 +27,43 @@ export class GatewayServer {
   start = () => {
     Logger.debug('initialized with env: ', env);
 
-    this.app.use(bodyParser.json());
-    this.app.use(cors());
+    let whitelist = [env.frontendUrl];
+    if (env.environment === 'dev')
+      whitelist = [
+        ...whitelist,
+        'http://localhost:4000',
+        'http://localhost:5432',
+        'http://127.0.0.1:4000',
+        'http://127.0.0.1:5432',
+      ];
+    const checkOrigin = (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      if (!origin || whitelist.includes(origin)) return callback(null, true);
+      callback(new Error('Not allowed by CORS'));
+    };
+    this.app.use(cors({ origin: checkOrigin, credentials: true }));
+    this.app.use(bodyParser());
+    this.app.use(cookieParser());
 
+    // TODO move this middleware to utils and only use it on necessary routes?
     this.app.use((req, res, next) => {
       res.locals.userId = null;
-
-      const token = req.headers[HeaderKeys.Auth];
-      if (!token) return next();
+      const authHeader = req.headers[HeaderKeys.Auth];
+      if (!authHeader) return next();
 
       try {
-        const decoded = jwt.verify(token, env.jwtSecret);
-        const data: ITokenDataFull = decoded as any;
-
-        if (data.type === 'auth') {
-          const payload: IAuthTokenPayload = data.payload as any;
-          res.locals.userId = payload.userId;
-        }
+        const accessToken = (authHeader as string).split(' ')[1];
+        const decoded = jwt.verify(accessToken, env.accessTokenSecret);
+        const data: IAccessTokenPayload = decoded as any;
+        res.locals.userId = data.userId;
         // tslint:disable-next-line:no-empty
-      } catch (err) {}
+      } catch (error) {}
 
-      Logger.debug(
+      /* Logger.debug(
         `request was made by ${res.locals.userId ? res.locals.userId : 'a not authenticated user'}`,
-      );
+      ); */
       next();
     });
 

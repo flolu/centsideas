@@ -7,7 +7,7 @@ export class Identifier {
   };
 
   static makeLongId = (): string => {
-    return uuid.v1();
+    return uuid.v4();
   };
 
   static isValidId = (id: string): boolean => {
