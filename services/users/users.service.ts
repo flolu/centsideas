@@ -119,17 +119,22 @@ export class UsersService {
             user.persistedState.id,
           );
 
-          // TODO token null should be an expected error
-          // TODO clear the cookie when the refresh failed
-
           resolve({
             status: HttpStatusCodes.Accepted,
-            body: { user: user.persistedState, accessToken },
+            body: { user: user.persistedState, accessToken, ok: true },
             cookies: [refreshTokenCookie],
           });
         } catch (error) {
+          const clearRefreshTokenCookie = new Cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
+          if (error.status === HttpStatusCodes.BadRequest) {
+            return resolve({
+              status: HttpStatusCodes.Accepted,
+              body: { user: null, accessToken: '', ok: false },
+              cookies: [clearRefreshTokenCookie],
+            });
+          }
           t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
+          resolve(handleHttpResponseError(error, { cookies: [clearRefreshTokenCookie] }));
         }
       });
     });
@@ -184,10 +189,11 @@ export class UsersService {
     new Promise(resolve => {
       Logger.thread('logout', async t => {
         try {
+          const clearRefreshTokenCookie = new Cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
           resolve({
             status: HttpStatusCodes.Accepted,
             body: {},
-            cookies: [new Cookie(CookieNames.RefreshToken, '', { maxAge: 0 })],
+            cookies: [clearRefreshTokenCookie],
           });
         } catch (error) {
           t.error(error.status && error.status < 500 ? error.message : error.stack);

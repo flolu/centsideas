@@ -22,8 +22,9 @@ export interface IConfirmedLoginDto {
 }
 
 export interface IRefreshedTokenDto {
-  user: IUserState;
+  user: IUserState | null;
   accessToken: string;
+  ok: boolean;
 }
 
 export interface IGoogleLoginDto {
