@@ -10,7 +10,7 @@ export class UsersRoutes {
 
   constructor(private expressAdapter: ExpressAdapter) {}
 
-  // TODO consider creating abstraction layer (maybe with decorators)
+  // FIXME consider creating abstraction layer (maybe with decorators)
   setup = (host: string, consumerHost: string): express.Router => {
     this.router.get(
       `/`,

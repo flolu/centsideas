@@ -59,16 +59,7 @@ export class IdeasProjection {
   };
 
   private ideaDeleted = async (event: IEvent<IIdeaDeletedEvent>) => {
-    await this.ideasCollection.findOneAndUpdate(
-      { _id: event.aggregateId },
-      {
-        $set: {
-          deleted: true,
-          deletedAt: event.timestamp,
-          lastEventId: event.id,
-        },
-      },
-    );
+    await this.ideasCollection.findOneAndDelete({ _id: event.aggregateId });
   };
 
   private ideaUpdated = async (event: IEvent<IIdeaUpdatedEvent>) => {

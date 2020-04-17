@@ -8,7 +8,6 @@ import { IdeasSelectors } from './ideas.selectors';
 import { IdeasActions } from './ideas.actions';
 import { IIdeaForm } from './ideas.state';
 
-// TODO only owner should have access to idea after deletion! (is a backend thing)
 @Component({
   selector: 'ci-idea',
   template: `
