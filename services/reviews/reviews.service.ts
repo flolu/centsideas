@@ -29,9 +29,7 @@ export class ReviewsService {
       }
     });
 
-  update = (
-    req: HttpRequest<Dtos.IUpdateReviewDto, Dtos.IQueryReviewDto>,
-  ): Promise<HttpResponse<IReviewState>> =>
+  update = (req: HttpRequest<Dtos.IUpdateReviewDto>): Promise<HttpResponse<IReviewState>> =>
     Logger.thread('update', async t => {
       try {
         const auid = req.locals.userId || '';
@@ -51,7 +49,7 @@ export class ReviewsService {
       }
     });
 
-  delete = (req: HttpRequest<null, Dtos.IQueryReviewDto>): Promise<HttpResponse<IReviewState>> =>
+  delete = (req: HttpRequest): Promise<HttpResponse<IReviewState>> =>
     Logger.thread('delete', async t => {
       try {
         const userId = req.locals.userId || '';

@@ -34,7 +34,7 @@ export class QueryService {
       }
     });
 
-  getIdeaById = (req: HttpRequest<{}, { id: string }>): Promise<HttpResponse> =>
+  getIdeaById = (req: HttpRequest): Promise<HttpResponse> =>
     Logger.thread('get one idea by id', async t => {
       try {
         const ideasCollection = await this.projectionDatabase.ideas();
@@ -60,7 +60,7 @@ export class QueryService {
       }
     });
 
-  getUserById = (req: HttpRequest<{}, { id: string }>): Promise<HttpResponse> =>
+  getUserById = (req: HttpRequest): Promise<HttpResponse> =>
     Logger.thread('get one user by id', async t => {
       try {
         const usersCollection = await this.projectionDatabase.users();

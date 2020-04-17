@@ -46,7 +46,7 @@ export class IdeasService {
       }
     });
 
-  delete = (req: HttpRequest<{}, Dtos.IIdeaQueryDto>): Promise<HttpResponse<IIdeaState>> =>
+  delete = (req: HttpRequest): Promise<HttpResponse<IIdeaState>> =>
     Logger.thread('delete', async t => {
       try {
         const auid = req.locals.userId;

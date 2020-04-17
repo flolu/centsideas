@@ -10,9 +10,7 @@ import { UserCommandHandler } from './user.command-handler';
 export class UsersService {
   constructor(private commandHandler: UserCommandHandler) {}
 
-  updateUser = (
-    req: HttpRequest<Dtos.IUpdateUserDto, Dtos.IUserQueryDto>,
-  ): Promise<HttpResponse<IUserState>> =>
+  updateUser = (req: HttpRequest<Dtos.IUpdateUserDto>): Promise<HttpResponse<IUserState>> =>
     Logger.thread('update user', async t => {
       try {
         const auid = req.locals.userId;
