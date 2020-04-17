@@ -10,7 +10,6 @@ export class MessageBroker {
   private producer: Producer | undefined;
 
   initialize = (config: KafkaConfig) => {
-    Logger.debug(`initialize message broker with config: `, config);
     this.kafka = new Kafka({ ...config, logLevel: logLevel.WARN });
   };
 

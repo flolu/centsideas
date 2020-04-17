@@ -20,6 +20,7 @@ export class UsersServer {
   ) {}
 
   start = () => {
+    Logger.log('launch', env.environment);
     this.app.use(bodyParser.json());
 
     this.app.post(`/${UsersApiRoutes.Login}`, this.expressAdapter.json(this.authService.login));
@@ -57,9 +58,6 @@ export class UsersServer {
     );
 
     this.app.get(`/${UsersApiRoutes.Alive}`, (_req, res) => res.status(200).send());
-
-    this.app.listen(env.port, () =>
-      Logger.debug('users service listening on internal port', env.port),
-    );
+    this.app.listen(env.port);
   };
 }

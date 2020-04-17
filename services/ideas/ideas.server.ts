@@ -15,9 +15,7 @@ export class IdeasServer {
   constructor(private ideasService: IdeasService, private expressAdapter: ExpressAdapter) {}
 
   start = () => {
-    Logger.debug('initialized with env: ', env);
-    const { port } = env;
-
+    Logger.log('launch', env.environment);
     this.app.use(bodyParser.json());
 
     this.app.post(`/${IdeasApiRoutes.Create}`, this.expressAdapter.json(this.ideasService.create));
@@ -26,6 +24,6 @@ export class IdeasServer {
 
     this.app.get(`/${IdeasApiRoutes.Alive}`, (_req, res) => res.status(200).send());
 
-    this.app.listen(port, () => Logger.debug('ideas service listening on internal port', port));
+    this.app.listen(env.port);
   };
 }

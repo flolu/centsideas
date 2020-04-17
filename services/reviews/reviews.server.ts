@@ -15,9 +15,7 @@ export class ReviewsServer {
   constructor(private reviewsService: ReviewsService, private expressAdapter: ExpressAdapter) {}
 
   start = () => {
-    Logger.debug('initialized with env: ', env);
-    const { port } = env;
-
+    Logger.log('launch', env.environment);
     this.app.use(bodyParser.json());
 
     this.app.post(
@@ -35,6 +33,6 @@ export class ReviewsServer {
 
     this.app.get('/alive', (_req, res) => res.status(200).send());
 
-    this.app.listen(port, () => Logger.debug('reviews service listening on internal port', port));
+    this.app.listen(env.port);
   };
 }

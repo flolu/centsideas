@@ -24,11 +24,10 @@ export class GatewayServer {
   ) {}
 
   start = () => {
-    // TODO clean up those logs on all services
-    Logger.debug('initialized with env: ', env);
+    Logger.log('launch', env.environment);
 
     this.app.use(corsMiddleware);
-    this.app.use(bodyParser());
+    this.app.use(bodyParser.json());
     this.app.use(cookieParser());
     // FIXME does this middleware hurt performance? if it has a big impact we could just use the middleware on the routes where it is really necessary
     this.app.use(authMiddleware);
@@ -45,7 +44,6 @@ export class GatewayServer {
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => res.status(200).send('gateway alive'));
     this.app.get(`**`, (_req, res) => res.status(200).send(`centsideas gateway 404`));
-
-    this.app.listen(env.port, () => Logger.debug('gateway listening on internal port', env.port));
+    this.app.listen(env.port);
   };
 }

@@ -23,7 +23,6 @@ export class ReviewsProjection {
   }
 
   private initialize = async () => {
-    Logger.debug('initialize collections in reviews projection...');
     const collections = await Promise.all([
       this.projectionDatabase.reviews(),
       this.projectionDatabase.ideas(),

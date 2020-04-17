@@ -63,10 +63,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
         this.namespace = name;
         this.topicName = topicName;
 
-        Logger.debug(`initialize ${this.namespace} event repository (${url})`);
-
         this.client = await retry(async () => {
-          Logger.debug(`retry to connect to ${this.namespace} database`);
           const connection = await MongoClient.connect(url, {
             w: 1,
             useNewUrlParser: true,
@@ -75,7 +72,6 @@ export abstract class EventRepository<Entity extends IEventEntity>
           return connection;
         });
         this.db = this.client.db(this.namespace);
-        Logger.debug(`connected to ${this.namespace} database`);
 
         this.db.on('close', () => {
           Logger.debug(`disconnected from ${this.namespace} database`);
@@ -114,7 +110,6 @@ export abstract class EventRepository<Entity extends IEventEntity>
 
         await Promise.all(initFunctions.map(f => f()));
 
-        Logger.debug(`${name} event repository initialized`);
         this.hasInitialized = true;
         res();
       } catch (error) {

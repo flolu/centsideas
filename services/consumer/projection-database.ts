@@ -22,9 +22,7 @@ export class ProjectionDatabase {
   initialize = async () => {
     return new Promise(async (res, rej) => {
       try {
-        Logger.debug(`initialize projection database with ${env.database.url}`);
         this.client = await retry(async () => {
-          Logger.debug(`retry to connect to projection database with url: ${env.database.url}`);
           let connection: MongoClient;
           try {
             connection = await MongoClient.connect(env.database.url, {
@@ -42,11 +40,11 @@ export class ProjectionDatabase {
           }
           return connection;
         });
+
         this.db = this.client.db('projection-database');
         this.ideasCollection = this.db.collection('ideas');
         this.reviewsCollection = this.db.collection('reviews');
         this.usersCollection = this.db.collection('users');
-        Logger.debug('projection database initialized');
         this.hasInitialized = true;
         res();
       } catch (error) {

@@ -26,7 +26,7 @@ export class ConsumerServer {
   ) {}
 
   start = () => {
-    Logger.debug('initialized with env: ', env);
+    Logger.log('launch', env.environment);
 
     this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
@@ -54,9 +54,6 @@ export class ConsumerServer {
     );
 
     this.app.get('/alive', (_req, res) => res.status(200).send());
-
-    this.app.listen(env.port, () =>
-      Logger.debug('consumer service listening on internal port', env.port),
-    );
+    this.app.listen(env.port);
   };
 }
