@@ -22,8 +22,7 @@ export class AuthService {
 
         return { status: HttpStatusCodes.Accepted, body: {} };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 
@@ -46,8 +45,7 @@ export class AuthService {
           cookies: [refreshTokenCookie],
         };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 
@@ -61,8 +59,7 @@ export class AuthService {
 
         return { status: HttpStatusCodes.Accepted, body: { url } };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 
@@ -87,8 +84,7 @@ export class AuthService {
           cookies: [refreshTokenCookie],
         };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 
@@ -126,8 +122,7 @@ export class AuthService {
           };
         }
 
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error, { cookies: [clearRefreshTokenCookie] });
+        return handleHttpResponseError(error, t, { cookies: [clearRefreshTokenCookie] });
       }
     });
   logout = (_req: HttpRequest): Promise<HttpResponse<{}>> =>
@@ -141,8 +136,7 @@ export class AuthService {
           cookies: [clearRefreshTokenCookie],
         };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 
@@ -158,8 +152,7 @@ export class AuthService {
           body: {},
         };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 

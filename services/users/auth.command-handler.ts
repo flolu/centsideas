@@ -74,7 +74,6 @@ export class AuthCommandHandler {
 
     if (payload.firstLogin && payload.loginId) {
       const createdUser = await this.handleUserCreation(payload.email, t);
-      // TODO set some flag or do something when first login (so that client knows it) NOOO!!! we can handle this in frontend only
       return this.handleConfirmedLogin(createdUser, login, t);
     }
 

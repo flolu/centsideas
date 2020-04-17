@@ -27,8 +27,7 @@ export class UsersService {
           body: updatedUser.persistedState,
         };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 
@@ -47,8 +46,7 @@ export class UsersService {
           body: updatedUser.persistedState,
         };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 }

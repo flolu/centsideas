@@ -25,8 +25,7 @@ export class ReviewsService {
           body: review.persistedState,
         };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 
@@ -48,9 +47,7 @@ export class ReviewsService {
           body: review.persistedState,
         };
       } catch (error) {
-        // TODO pass thread logger into handle http response error to save this duplicate line in every controller
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 
@@ -69,8 +66,7 @@ export class ReviewsService {
           body: review.persistedState,
         };
       } catch (error) {
-        t.error(error.status && error.status < 500 ? error.message : error.stack);
-        return handleHttpResponseError(error);
+        return handleHttpResponseError(error, t);
       }
     });
 }

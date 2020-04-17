@@ -23,8 +23,3 @@ export interface IEmailChangeTokenPayload {
   newEmail: string;
   userId: string;
 }
-
-export interface ILoginTokenPayload {
-  loginId: string;
-  firstLogin: boolean;
-}
