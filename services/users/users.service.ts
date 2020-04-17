@@ -193,10 +193,29 @@ export class UsersService {
       });
     });
 
+  // FIXME implement such that access to this controller is only for admins
+  revokeRefreshToken = (req: HttpRequest): Promise<HttpResponse> =>
+    new Promise(resolve => {
+      Logger.thread('revoke refresh token', async t => {
+        try {
+          const { userId, reason } = req.body;
+          const user = await this.commandHandler.revokeRefreshToken(userId, reason, t);
+          t.log(`successfully revoked refresh token of user ${userId}`);
+
+          resolve({
+            status: HttpStatusCodes.Accepted,
+            body: { updatedUser: user.persistedState },
+          });
+        } catch (error) {
+          t.error(error.status && error.status < 500 ? error.message : error.stack);
+          resolve(handleHttpResponseError(error));
+        }
+      });
+    });
+
   private createRefreshTokenCookie = (refreshToken: string) =>
     new Cookie(CookieNames.RefreshToken, refreshToken, {
       httpOnly: true,
-      // TODO test if this works with subdomains (api.centsideas.com)? https://security.stackexchange.com/a/223477/232388
       sameSite: env.environment === 'dev' ? 'none' : 'strict',
       secure: env.environment === 'dev' ? false : true,
       maxAge: TokenExpirationTimes.RefreshToken * 1000,

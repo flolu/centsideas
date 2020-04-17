@@ -192,7 +192,7 @@ export class UserCommandHandler {
     const user = await this.userRepository.findById(data.userId);
     if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
-    if (user.persistedState.tokenId !== data.tokenId)
+    if (user.persistedState.refreshTokenId !== data.tokenId)
       throw new TokenInvalidError(token, 'token was invalidated');
 
     const accessToken = this.generateAccessToken(user);
@@ -251,7 +251,7 @@ export class UserCommandHandler {
 
     const user = await this.userRepository.findById(payload.userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, payload.newEmail);
-    user.confirmEmailChange(payload.userId, payload.newEmail);
+    user.confirmEmailChange(payload.newEmail);
 
     const subject = 'CENTS Ideas Email Was Changed';
     const text = `You have changed your email adress from ${payload.currentEmail} to ${payload.newEmail}`;
@@ -268,6 +268,20 @@ export class UserCommandHandler {
       `from ${payload.currentEmail} to ${payload.newEmail}`,
     );
 
+    return this.userRepository.save(user);
+  };
+
+  revokeRefreshToken = async (userId: string, reason: string, t: ThreadLogger): Promise<User> => {
+    UserErrors.UserIdRequiredError.validate(userId);
+
+    const user = await this.userRepository.findById(userId);
+    if (!user) throw new UserErrors.UserNotFoundError(userId);
+    t.debug(`found user for which to revoke refresh token`);
+
+    const refreshTokenId = Identifier.makeLongId();
+    user.revokeRefreshToken(refreshTokenId, reason);
+
+    // FIXME maybe send email to user
     return this.userRepository.save(user);
   };
 
@@ -336,7 +350,7 @@ export class UserCommandHandler {
     return jwt.sign(
       {
         userId: user.persistedState.id,
-        tokenId: user.persistedState.tokenId,
+        tokenId: user.persistedState.refreshTokenId,
       },
       env.refreshTokenSecret,
       { expiresIn: TokenExpirationTimes.RefreshToken },

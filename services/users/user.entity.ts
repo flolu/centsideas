@@ -11,8 +11,7 @@ export class User extends EventEntity<IUserState> {
     pendingEmail: null,
     createdAt: null,
     updatedAt: null,
-    // TODO implement token invalidation
-    tokenId: '',
+    refreshTokenId: '',
     lastEventId: '',
   };
 
@@ -29,6 +28,7 @@ export class User extends EventEntity<IUserState> {
     return user;
   }
 
+  // TODO consider moving error handling (especially payload validation into events, so that they dont clutter command handlers)
   update(username: string | null, pendingEmail: string | null) {
     if (!username && !pendingEmail) return this;
     this.pushEvents(
@@ -37,8 +37,17 @@ export class User extends EventEntity<IUserState> {
     return this;
   }
 
-  confirmEmailChange(userId: string, newEmail: string) {
-    this.pushEvents(new UserEvents.EmailChangeConfirmedEvent(userId, newEmail));
+  confirmEmailChange(newEmail: string) {
+    // TODO throw error if no persistet state found more generic
+    if (!this.persistedState.id) throw new Error(`no persisted state found`);
+    this.pushEvents(new UserEvents.EmailChangeConfirmedEvent(this.persistedState.id, newEmail));
+    return this;
+  }
+
+  revokeRefreshToken(newRefreshToken: string, reason: string) {
+    this.pushEvents(
+      new UserEvents.RefreshTokenRevokedEvent(this.persistedState.id, newRefreshToken, reason),
+    );
     return this;
   }
 }

@@ -5,6 +5,6 @@ export interface IUserState {
   pendingEmail: string | null;
   createdAt: string | null;
   updatedAt: string | null;
-  tokenId: string;
+  refreshTokenId: string;
   lastEventId: string;
 }

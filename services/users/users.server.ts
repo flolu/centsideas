@@ -28,6 +28,7 @@ export class UsersServer {
       `/${UsersApiRoutes.GoogleLogin}`,
       this.expressAdapter.json(this.usersService.googleLogin),
     );
+
     this.app.post(
       `/${UsersApiRoutes.GoogleLoginRedirect}`,
       this.expressAdapter.json(this.usersService.googleLoginRedirect),
