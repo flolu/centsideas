@@ -1,5 +1,6 @@
-export interface IIdeaState {
-  id: string;
+import { IEventEntityBase } from './event-base.model';
+
+export interface IIdeaState extends IEventEntityBase {
   userId: string;
   title: string;
   description: string;
@@ -7,5 +8,4 @@ export interface IIdeaState {
   updatedAt: string | null;
   deleted: boolean;
   deletedAt: string | null;
-  lastEventId: string;
 }

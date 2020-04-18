@@ -12,6 +12,7 @@ import { IdeasRoutes } from './ideas.routes';
 import { UsersRoutes } from './users.routes';
 import { authMiddleware } from './auth.middleware';
 import { corsMiddleware } from './cors.middleware';
+import { NotificationsRoutes } from './notifications.routes';
 
 @injectable()
 export class GatewayServer {
@@ -21,6 +22,7 @@ export class GatewayServer {
     private ideasRoutes: IdeasRoutes,
     private usersRoutes: UsersRoutes,
     private reviewsRoutes: ReviewsRoutes,
+    private notificationsRoutes: NotificationsRoutes,
   ) {}
 
   start = () => {
@@ -40,6 +42,11 @@ export class GatewayServer {
     this.app.use(
       `/${ApiEndpoints.Users}`,
       this.usersRoutes.setup(env.hosts.users, env.hosts.consumer),
+    );
+
+    this.app.use(
+      `/${ApiEndpoints.Notifications}`,
+      this.notificationsRoutes.setup(env.hosts.notifications),
     );
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => res.status(200).send('gateway alive'));

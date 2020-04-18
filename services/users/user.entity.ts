@@ -16,10 +16,10 @@ export class User extends EventEntity<IUserState> {
   };
 
   constructor(snapshot?: ISnapshot<IUserState>) {
-    super(commitFunctions, (snapshot && snapshot.state) || User.initialState);
-    if (snapshot) {
+    if (snapshot && snapshot.state) {
+      super(commitFunctions, snapshot.state);
       this.lastPersistedEventId = snapshot.lastEventId;
-    }
+    } else super(commitFunctions, User.initialState);
   }
 
   static create(userId: string, email: string, username: string, tokenId: string): User {

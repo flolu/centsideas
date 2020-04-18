@@ -8,5 +8,6 @@ export default {
     consumer: `http://${process.env.CONSUMER_SERVICE_HOST!}`,
     reviews: `http://${process.env.REVIEWS_SERVICE_HOST!}`,
     users: `http://${process.env.USERS_SERVICE_HOST!}`,
+    notifications: `http://${process.env.NOTIFICATIONS_SERVICE_HOST!}`,
   },
 };

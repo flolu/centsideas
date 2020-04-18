@@ -1,5 +1,6 @@
-export interface IReviewState {
-  id: string;
+import { IEventEntityBase } from './event-base.model';
+
+export interface IReviewState extends IEventEntityBase {
   ideaId: string;
   userId: string;
   content: string;
@@ -8,7 +9,6 @@ export interface IReviewState {
   createdAt: string | null;
   updatedAt: string | null;
   deletedAt: string | null;
-  lastEventId: string;
 }
 
 export interface IReviewScores {

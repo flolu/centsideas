@@ -18,10 +18,10 @@ export class Idea extends EventEntity<IIdeaState> {
   };
 
   constructor(snapshot?: ISnapshot<IIdeaState>) {
-    super(commitFunctions, (snapshot && snapshot.state) || Idea.initialState);
-    if (snapshot) {
+    if (snapshot && snapshot.state) {
+      super(commitFunctions, snapshot.state);
       this.lastPersistedEventId = snapshot.lastEventId;
-    }
+    } else super(commitFunctions, Idea.initialState);
   }
 
   static create(ideaId: string, userId: string, title: string, description: string): Idea {

@@ -10,10 +10,18 @@ import { ExpressAdapter } from './express-adapter';
 import { IdeasRoutes } from './ideas.routes';
 import { ReviewsRoutes } from './reviews.routes';
 import { UsersRoutes } from './users.routes';
+import { NotificationsRoutes } from './notifications.routes';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Gateway;
 
-registerProviders(ExpressAdapter, GatewayServer, IdeasRoutes, ReviewsRoutes, UsersRoutes);
+registerProviders(
+  ExpressAdapter,
+  GatewayServer,
+  IdeasRoutes,
+  ReviewsRoutes,
+  UsersRoutes,
+  NotificationsRoutes,
+);
 
 const server: GatewayServer = getProvider(GatewayServer);
 server.start();

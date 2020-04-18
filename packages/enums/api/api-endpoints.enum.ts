@@ -3,4 +3,5 @@ export enum ApiEndpoints {
   Reviews = 'reviews',
   Users = 'users',
   Alive = 'alive',
+  Notifications = 'notifications',
 }

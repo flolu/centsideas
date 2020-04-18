@@ -9,10 +9,6 @@ export interface IGoogleLoginRequestedEvnet {
   firstLogin: boolean;
 }
 
-export interface ILoginMailSentEvent {
-  email: string;
-}
-
 export interface ILoginConfirmedEvent {
   userId: string;
 }

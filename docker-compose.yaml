@@ -1,9 +1,9 @@
-version: '3'
+version: "3"
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - '2181'
+      - "2181"
     hostname: zookeeper
     logging:
       driver: none
@@ -16,7 +16,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - 'zookeeper'
+      - "zookeeper"
     logging:
       driver: none
 
@@ -99,8 +99,23 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/consumer --colors
     depends_on:
-      - 'kafka'
+      - "kafka"
   projection-database:
     image: mongo:4.2
     logging:
       driver: none
+
+  notifications:
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./register-aliases.ts:/register-aliases.ts
+      - ./services/notifications:/services/notifications
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/notifications --colors
+    depends_on:
+      - "kafka"

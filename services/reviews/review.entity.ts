@@ -19,10 +19,10 @@ export class Review extends EventEntity<IReviewState> {
   };
 
   constructor(snapshot?: ISnapshot<IReviewState>) {
-    super(commitFunctions, (snapshot && snapshot.state) || Review.initialState);
-    if (snapshot) {
+    if (snapshot && snapshot.state) {
+      super(commitFunctions, snapshot.state);
       this.lastPersistedEventId = snapshot.lastEventId;
-    }
+    } else super(commitFunctions, Review.initialState);
   }
 
   static create(
@@ -39,13 +39,13 @@ export class Review extends EventEntity<IReviewState> {
     return review;
   }
 
-  update = (content?: string, scores?: IReviewScores) => {
+  update(content?: string, scores?: IReviewScores) {
     this.pushEvents(new ReviewEvents.ReviewUpdatedEvent(this.currentState.id, content, scores));
     return this;
-  };
+  }
 
-  delete = () => {
+  delete() {
     this.pushEvents(new ReviewDeletedEvent(this.currentState.id));
     return this;
-  };
+  }
 }

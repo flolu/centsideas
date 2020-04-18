@@ -14,10 +14,10 @@ export class Login extends EventEntity<ILoginState> {
   };
 
   constructor(snapshot?: ISnapshot<ILoginState>) {
-    super(loginCommitFunctions, (snapshot && snapshot.state) || Login.initialState);
-    if (snapshot) {
+    if (snapshot && snapshot.state) {
+      super(loginCommitFunctions, snapshot.state);
       this.lastPersistedEventId = snapshot.lastEventId;
-    }
+    } else super(loginCommitFunctions, Login.initialState);
   }
 
   static create(loginId: string, email: string, firstLogin: boolean): Login {

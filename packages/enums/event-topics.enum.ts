@@ -3,4 +3,5 @@ export enum EventTopics {
   Reviews = 'reviews',
   Users = 'users',
   Logins = 'logins',
+  Notifications = 'notifications',
 }
