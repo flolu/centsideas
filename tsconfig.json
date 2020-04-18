@@ -4,10 +4,10 @@
     "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "target": "ES5",
     "paths": {
-      "@cents-ideas/*": ["./packages/*"]
+      "@centsideas/*": ["./packages/*"]
     },
-    "target": "es5",
     "types": ["reflect-metadata", "node", "jest"]
   },
   "exclude": ["bazel-out", "node_modules", "dist"]

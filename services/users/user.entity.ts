@@ -1,5 +1,5 @@
-import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
-import { IUserState } from '@cents-ideas/models';
+import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { IUserState } from '@centsideas/models';
 
 import { commitFunctions, UserEvents } from './events';
 
@@ -11,6 +11,7 @@ export class User extends EventEntity<IUserState> {
     pendingEmail: null,
     createdAt: null,
     updatedAt: null,
+    refreshTokenId: '',
     lastEventId: '',
   };
 
@@ -21,16 +22,26 @@ export class User extends EventEntity<IUserState> {
     }
   }
 
-  static create(userId: string, email: string, username: string): User {
+  static create(userId: string, email: string, username: string, tokenId: string): User {
     const user = new User();
-    user.pushEvents(new UserEvents.UserCreatedEvent(userId, email, username));
+    user.pushEvents(new UserEvents.UserCreatedEvent(userId, email, username, tokenId));
     return user;
   }
 
   update(username: string | null, pendingEmail: string | null) {
     if (!username && !pendingEmail) return this;
+    this.pushEvents(new UserEvents.UserUpdatedEvent(this.currentState.id, username, pendingEmail));
+    return this;
+  }
+
+  confirmEmailChange(newEmail: string) {
+    this.pushEvents(new UserEvents.EmailChangeConfirmedEvent(this.currentState.id, newEmail));
+    return this;
+  }
+
+  revokeRefreshToken(newRefreshToken: string, reason: string) {
     this.pushEvents(
-      new UserEvents.UserUpdatedEvent(this.persistedState.id, username, pendingEmail),
+      new UserEvents.RefreshTokenRevokedEvent(this.currentState.id, newRefreshToken, reason),
     );
     return this;
   }

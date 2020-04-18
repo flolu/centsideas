@@ -19,6 +19,47 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
+          env:
+            - name: REFRESH_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: REFRESH_TOKEN_SECRET
+            - name: ACCESS_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: ACCESS_TOKEN_SECRET
+            - name: LOGIN_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: LOGIN_TOKEN_SECRET
+            - name: CHANGE_EMAIL_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: CHANGE_EMAIL_TOKEN_SECRET
+            - name: SEND_GRID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: SEND_GRID_API_KEY
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: GOOGLE_CLIENT_ID
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: GOOGLE_CLIENT_SECRET
+            - name: FRONTEND_SERVER_EXCHANGE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: FRONTEND_SERVER_EXCHANGE_SECRET
           readinessProbe:
             httpGet:
               path: /alive
@@ -42,7 +83,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cents-ideas-users
+  name: centsideas-users
 spec:
   selector:
     app: users
@@ -86,7 +127,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cents-ideas-users-event-store
+  name: centsideas-users-event-store
 spec:
   selector:
     app: users-event-store

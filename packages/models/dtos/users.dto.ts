@@ -11,10 +11,6 @@ export interface IUpdateUserDto {
   email: string | null;
 }
 
-export interface IUserQueryDto {
-  id: string;
-}
-
 export interface IConfirmSignUpDto {
   token: string;
 }

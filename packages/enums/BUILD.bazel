@@ -8,5 +8,5 @@ ts_library(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@cents-ideas/enums",
+    module_name = "@centsideas/enums",
 )

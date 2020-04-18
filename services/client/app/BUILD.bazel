@@ -1,0 +1,80 @@
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+
+package(default_visibility = ["//:__subpackages__"])
+
+sass_binary(
+    name = "app_styles",
+    src = "app.component.sass",
+)
+
+ts_library(
+    name = "base",
+    srcs = [
+        "app.component.ts",
+        "app-base.module.ts",
+        "app-routing.module.ts",
+        "auth-token.interceptor.ts",
+    ],
+    angular_assets = [":app_styles"],
+    tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
+    deps = [
+        "//packages/enums",
+        "//services/client/app/auth",
+        "//services/client/app/auth:store",
+        "//services/client/app/ideas",
+        "//services/client/app/user",
+        "//services/client/shared/environment",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//@angular/service-worker",
+        "@npm//@ngrx/effects",
+        "@npm//@ngrx/store",
+        "@npm//rxjs",
+    ],
+)
+
+ts_library(
+    name = "dev",
+    srcs = ["app-dev.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
+    deps = [
+        ":base",
+        "//services/client/app/store:dev",
+        "//services/client/shared/environment",
+        "@npm//@angular/core",
+        "@npm//@angular/service-worker",
+    ],
+)
+
+ts_library(
+    name = "prod",
+    srcs = ["app-prod.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
+    deps = [
+        ":base",
+        "//services/client/app/store",
+        "//services/client/shared/environment",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/service-worker",
+    ],
+)
+
+ts_library(
+    name = "server",
+    srcs = ["app.server.module.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
+    deps = [
+        ":base",
+        ":prod",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-server",
+    ],
+)

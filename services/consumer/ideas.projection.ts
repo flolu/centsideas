@@ -1,15 +1,15 @@
 import { Collection } from 'mongodb';
 import { injectable } from 'inversify';
 
-import { Logger, renameObjectProperty } from '@cents-ideas/utils';
-import { IEvent } from '@cents-ideas/event-sourcing';
-import { IdeaEvents } from '@cents-ideas/enums';
+import { Logger, renameObjectProperty } from '@centsideas/utils';
+import { IEvent } from '@centsideas/event-sourcing';
+import { IdeaEvents } from '@centsideas/enums';
 import {
   IIdeaCreatedEvent,
   IIdeaDeletedEvent,
   IIdeaUpdatedEvent,
   IIdeaViewModel,
-} from '@cents-ideas/models';
+} from '@centsideas/models';
 
 import { ProjectionDatabase } from './projection-database';
 
@@ -59,16 +59,7 @@ export class IdeasProjection {
   };
 
   private ideaDeleted = async (event: IEvent<IIdeaDeletedEvent>) => {
-    await this.ideasCollection.findOneAndUpdate(
-      { _id: event.aggregateId },
-      {
-        $set: {
-          deleted: true,
-          deletedAt: event.timestamp,
-          lastEventId: event.id,
-        },
-      },
-    );
+    await this.ideasCollection.findOneAndDelete({ _id: event.aggregateId });
   };
 
   private ideaUpdated = async (event: IEvent<IIdeaUpdatedEvent>) => {

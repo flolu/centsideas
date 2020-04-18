@@ -3,8 +3,11 @@ export enum UsersApiRoutes {
   ConfirmLogin = 'confirm-login',
   Update = 'update',
   ConfirmEmailChange = 'confirm-email-change',
-  Authenticate = 'authenticate',
   GetById = 'get-by-id',
   GetAll = 'get-all',
   Alive = 'alive',
+  Logout = 'logout',
+  RefreshToken = 'refresh-token',
+  GoogleLogin = 'google-login',
+  GoogleLoginRedirect = 'google-login-redirect',
 }

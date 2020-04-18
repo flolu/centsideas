@@ -1,6 +1,6 @@
-import { Event } from '@cents-ideas/event-sourcing';
-import { LoginEvents } from '@cents-ideas/enums';
-import { ILoginRequestedEvent, ILoginState } from '@cents-ideas/models';
+import { Event } from '@centsideas/event-sourcing';
+import { LoginEvents } from '@centsideas/enums';
+import { ILoginRequestedEvent, ILoginState } from '@centsideas/models';
 
 export class LoginRequestedEvent extends Event<ILoginRequestedEvent> {
   static readonly eventName: string = LoginEvents.LoginRequested;

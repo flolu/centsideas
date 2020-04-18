@@ -1,5 +1,5 @@
-import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
-import { IIdeaState } from '@cents-ideas/models';
+import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { IIdeaState } from '@centsideas/models';
 
 import { commitFunctions, IdeasEvents } from './events';
 
@@ -31,12 +31,12 @@ export class Idea extends EventEntity<IIdeaState> {
   }
 
   update(title?: string, description?: string): Idea {
-    this.pushEvents(new IdeasEvents.IdeaUpdatedEvent(this.persistedState.id, title, description));
+    this.pushEvents(new IdeasEvents.IdeaUpdatedEvent(this.currentState.id, title, description));
     return this;
   }
 
   delete(): Idea {
-    this.pushEvents(new IdeasEvents.IdeaDeletedEvent(this.persistedState.id));
+    this.pushEvents(new IdeasEvents.IdeaDeletedEvent(this.currentState.id));
     return this;
   }
 }

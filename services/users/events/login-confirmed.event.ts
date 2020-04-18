@@ -1,6 +1,6 @@
-import { Event } from '@cents-ideas/event-sourcing';
-import { LoginEvents } from '@cents-ideas/enums';
-import { ILoginConfirmedEvent, ILoginState } from '@cents-ideas/models';
+import { Event } from '@centsideas/event-sourcing';
+import { LoginEvents } from '@centsideas/enums';
+import { ILoginConfirmedEvent, ILoginState } from '@centsideas/models';
 
 export class LoginConfirmedEvent extends Event<ILoginConfirmedEvent> {
   static readonly eventName: string = LoginEvents.LoginConfirmed;
@@ -11,6 +11,7 @@ export class LoginConfirmedEvent extends Event<ILoginConfirmedEvent> {
 
   static commit(state: ILoginState, event: LoginConfirmedEvent): ILoginState {
     state.confirmedAt = event.timestamp;
+    state.confirmedByUserId = event.data.userId;
     return state;
   }
 }

@@ -23,6 +23,11 @@ k8s_deploy(
 )
 
 k8s_deploy(
+    name = "secret",
+    template = ":secret.yaml",
+)
+
+k8s_deploy(
     name = "ingress",
     template = ":ingress.yaml",
 )

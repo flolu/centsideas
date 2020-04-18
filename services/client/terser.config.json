@@ -1,0 +1,13 @@
+{
+  "compress": {
+    "global_defs": {
+      "ngDevMode": false,
+      "__PROD__": true
+    },
+    "passes": 3,
+    "pure_getters": true
+  },
+  "toplevel": true,
+  "ecma": 6,
+  "safari10": true
+}

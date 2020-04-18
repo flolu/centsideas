@@ -2,8 +2,8 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { ReviewsApiRoutes } from '@cents-ideas/enums';
+import { Logger, ExpressAdapter } from '@centsideas/utils';
+import { ReviewsApiRoutes } from '@centsideas/enums';
 
 import { ReviewsService } from './reviews.service';
 import env from './environment';
@@ -15,9 +15,7 @@ export class ReviewsServer {
   constructor(private reviewsService: ReviewsService, private expressAdapter: ExpressAdapter) {}
 
   start = () => {
-    Logger.debug('initialized with env: ', env);
-    const { port } = env;
-
+    Logger.log('launch', env.environment);
     this.app.use(bodyParser.json());
 
     this.app.post(
@@ -33,10 +31,8 @@ export class ReviewsServer {
       this.expressAdapter.json(this.reviewsService.delete),
     );
 
-    this.app.get('/alive', (_req, res) => {
-      return res.status(200).send();
-    });
+    this.app.get('/alive', (_req, res) => res.status(200).send());
 
-    this.app.listen(port, () => Logger.debug('reviews service listening on internal port', port));
+    this.app.listen(env.port);
   };
 }

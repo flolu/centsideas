@@ -1,7 +1,7 @@
 /* tslint:disable:no-console */
 import * as chalk from 'chalk';
 
-import { LoggerPrefixes, LoggerStyles } from '@cents-ideas/enums';
+import { LoggerPrefixes, LoggerStyles } from '@centsideas/enums';
 // FIXME production logger
 
 const prefixMinLength = LoggerPrefixes.Gateway.length;

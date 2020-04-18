@@ -1,5 +1,5 @@
-import { EntityError } from '@cents-ideas/utils';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { EntityError } from '@centsideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 export class EmailRequiredError extends EntityError {
   static validate = (email: string): void => {

@@ -1,6 +1,6 @@
-import { Event } from '@cents-ideas/event-sourcing';
-import { IdeaEvents } from '@cents-ideas/enums';
-import { IIdeaUpdatedEvent, IIdeaState } from '@cents-ideas/models';
+import { Event } from '@centsideas/event-sourcing';
+import { IdeaEvents } from '@centsideas/enums';
+import { IIdeaUpdatedEvent, IIdeaState } from '@centsideas/models';
 
 export class IdeaUpdatedEvent extends Event<IIdeaUpdatedEvent> {
   static readonly eventName: string = IdeaEvents.IdeaUpdated;

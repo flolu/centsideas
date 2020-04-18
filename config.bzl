@@ -2,7 +2,7 @@ GOOGLE_CLOUD_PROJECT_ID = "centsideas"
 
 CLUSTER_ZONE = "europe-west3-b"
 
-CLUSTER_NAME = "cents-ideas"
+CLUSTER_NAME = "centsideas"
 
 KUBERNETES_CLUSTER = "_".join([
     "gke",

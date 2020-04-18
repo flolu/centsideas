@@ -1,5 +1,5 @@
-import { composeCommitFunctions } from '@cents-ideas/event-sourcing';
-import { IReviewState } from '@cents-ideas/models';
+import { composeCommitFunctions } from '@centsideas/event-sourcing';
+import { IReviewState } from '@centsideas/models';
 
 import { ReviewCreatedEvent } from './review-created.event';
 import { ReviewDeletedEvent } from './review-deleted.event';

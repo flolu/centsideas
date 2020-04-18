@@ -1,19 +1,8 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes, HeaderKeys } from '@cents-ideas/enums';
-import {
-  HttpRequest,
-  HttpResponse,
-  ILoginDto,
-  IAuthenticateDto,
-  IAuthenticatedDto,
-  IUpdateUserDto,
-  IUserQueryDto,
-  IUserState,
-  IConfirmEmailChangeDto,
-  IConfirmLoginDto,
-} from '@cents-ideas/models';
-import { handleHttpResponseError, Logger } from '@cents-ideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
+import { HttpRequest, HttpResponse, IUserState, Dtos } from '@centsideas/models';
+import { handleHttpResponseError, Logger } from '@centsideas/utils';
 
 import { UserCommandHandler } from './user.command-handler';
 
@@ -21,108 +10,41 @@ import { UserCommandHandler } from './user.command-handler';
 export class UsersService {
   constructor(private commandHandler: UserCommandHandler) {}
 
-  login = (req: HttpRequest<ILoginDto>): Promise<HttpResponse> =>
-    new Promise(resolve => {
-      Logger.thread('login', async t => {
-        try {
-          const createdLogin = await this.commandHandler.login(req.body.email, t);
-          t.log('created login with id', createdLogin.persistedState.id);
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: {},
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
-    });
+  updateUser = (req: HttpRequest<Dtos.IUpdateUserDto>): Promise<HttpResponse<IUserState>> =>
+    Logger.thread('update user', async t => {
+      try {
+        const auid = req.locals.userId;
+        const userId = req.params.id;
+        const { username, email } = req.body;
 
-  authenticate = (
-    req: HttpRequest<null, null, null, IAuthenticateDto>,
-  ): Promise<HttpResponse<IAuthenticatedDto>> =>
-    new Promise(resolve => {
-      Logger.thread('authenticate', async t => {
-        try {
-          const { token, user } = await this.commandHandler.authenticate(
-            req.headers[HeaderKeys.Auth],
-            t,
-          );
-          t.log('user with id', user.id, 'authenticated');
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: { token, user },
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
-    });
+        const updatedUser = await this.commandHandler.updateUser(auid, userId, username, email, t);
+        t.log('updated user');
 
-  confirmLogin = (req: HttpRequest<IConfirmLoginDto>): Promise<HttpResponse<IAuthenticatedDto>> =>
-    new Promise(resolve => {
-      Logger.thread('confirm login', async t => {
-        try {
-          const { token, user } = await this.commandHandler.confirmLogin(req.body.token, t);
-          t.log('confirmed login of user', user.id);
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: { token, user },
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
-    });
-
-  updateUser = (
-    req: HttpRequest<IUpdateUserDto, IUserQueryDto>,
-  ): Promise<HttpResponse<IUserState>> =>
-    new Promise(resolve => {
-      Logger.thread('update user', async t => {
-        try {
-          const updatedUser = await this.commandHandler.updateUser(
-            req.locals.userId,
-            req.params.id,
-            req.body.username,
-            req.body.email,
-            t,
-          );
-          t.log('updated user');
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: updatedUser.persistedState,
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
+        return {
+          status: HttpStatusCodes.Accepted,
+          body: updatedUser.persistedState,
+        };
+      } catch (error) {
+        return handleHttpResponseError(error, t);
+      }
     });
 
   confirmEmailChange = (
-    req: HttpRequest<IConfirmEmailChangeDto>,
+    req: HttpRequest<Dtos.IConfirmEmailChangeDto>,
   ): Promise<HttpResponse<IUserState>> =>
-    new Promise(resolve => {
-      Logger.thread('confirm email change', async t => {
-        try {
-          const updatedUser = await this.commandHandler.confirmEmailChange(req.body.token, t);
-          t.log('confirmed email change');
-          resolve({
-            status: HttpStatusCodes.Accepted,
-            body: updatedUser.persistedState,
-            headers: {},
-          });
-        } catch (error) {
-          t.error(error.status && error.status < 500 ? error.message : error.stack);
-          resolve(handleHttpResponseError(error));
-        }
-      });
+    Logger.thread('confirm email change', async t => {
+      try {
+        const { token } = req.body;
+
+        const updatedUser = await this.commandHandler.confirmEmailChange(token, t);
+        t.log('confirmed email change');
+
+        return {
+          status: HttpStatusCodes.Accepted,
+          body: updatedUser.persistedState,
+        };
+      } catch (error) {
+        return handleHttpResponseError(error, t);
+      }
     });
 }

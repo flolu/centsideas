@@ -6,6 +6,7 @@ package(default_visibility = ["//visibility:public"])
 exports_files([
     "tsconfig.json",
     "jest.config.js",
+    ".bzel_fix_commands.json",
 ])
 
 ts_library(
@@ -29,6 +30,7 @@ k8s_objects(
     name = "kubernetes_deployment",
     objects = [
         "//kubernetes:config",
+        "//kubernetes:secret",
         "//kubernetes:certificate_issuer",
         "//kubernetes:ingress",
         "//kubernetes:database_storage",
@@ -38,6 +40,6 @@ k8s_objects(
         "//services/ideas:k8s",
         "//services/reviews:k8s",
         "//services/users:k8s",
-        "//services/client/src:k8s",
+        "//services/client:k8s",
     ],
 )

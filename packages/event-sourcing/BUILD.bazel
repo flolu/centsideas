@@ -22,7 +22,7 @@ ts_library(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@cents-ideas/event-sourcing",
+    module_name = "@centsideas/event-sourcing",
     deps = lib_deps,
 )
 

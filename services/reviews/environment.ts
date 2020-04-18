@@ -1,8 +1,8 @@
 export default {
-  environment: process.env.NODE_ENV || 'dev',
+  environment: process.env.ENV!,
   port: 3000,
   database: {
-    url: process.env.IDEAS_DATABASE_URL || 'mongodb://reviews-event-store:27017',
+    url: process.env.IDEAS_DATABASE_URL!,
     name: 'reviews',
   },
 };

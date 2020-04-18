@@ -18,6 +18,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
+          env:
+            - name: ACCESS_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: ACCESS_TOKEN_SECRET
           readinessProbe:
             httpGet:
               path: /alive
@@ -42,7 +48,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cents-ideas-gateway
+  name: centsideas-gateway
 spec:
   selector:
     app: gateway

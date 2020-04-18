@@ -2,9 +2,9 @@ import 'reflect-metadata';
 // tslint:disable-next-line:no-var-requires
 if (process.env.ENV === 'dev') require('../../register-aliases').registerAliases();
 
-import { registerProviders, getProvider, ExpressAdapter } from '@cents-ideas/utils';
-import { LoggerPrefixes } from '@cents-ideas/enums';
-import { MessageBroker } from '@cents-ideas/event-sourcing';
+import { registerProviders, getProvider, ExpressAdapter } from '@centsideas/utils';
+import { LoggerPrefixes } from '@centsideas/enums';
+import { MessageBroker } from '@centsideas/event-sourcing';
 
 import { IdeasServer } from './ideas.server';
 import { IdeaCommandHandler } from './idea.command-handler';

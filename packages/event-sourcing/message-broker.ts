@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { Kafka, Producer, Consumer, KafkaConfig, Message, RecordMetadata, logLevel } from 'kafkajs';
 
-import { Logger } from '@cents-ideas/utils';
+import { Logger } from '@centsideas/utils';
 import { IEvent } from '.';
 
 @injectable()
@@ -10,7 +10,6 @@ export class MessageBroker {
   private producer: Producer | undefined;
 
   initialize = (config: KafkaConfig) => {
-    Logger.debug(`initialize message broker with config: `, config);
     this.kafka = new Kafka({ ...config, logLevel: logLevel.WARN });
   };
 

@@ -5,13 +5,12 @@ import {
   NotAuthenticatedError,
   ThreadLogger,
   NoPermissionError,
-} from '@cents-ideas/utils';
-import { IReviewScores } from '@cents-ideas/models';
+} from '@centsideas/utils';
+import { IReviewScores } from '@centsideas/models';
 
 import { ReviewErrors } from './errors';
 import { Review } from './review.entity';
 import { ReviewRepository } from './review.repository';
-import { ReviewDeletedEvent } from './events/review-deleted.event';
 
 @injectable()
 export class ReviewCommandHandler {
@@ -72,7 +71,7 @@ export class ReviewCommandHandler {
     NoPermissionError.validate(userId, review.persistedState.userId);
     t.debug('user has permision');
 
-    review.pushEvents(new ReviewDeletedEvent(reviewId));
+    review.delete();
     t.debug('start deleting review');
     return this.repository.save(review);
   };

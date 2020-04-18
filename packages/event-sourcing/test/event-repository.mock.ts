@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
-import { Identifier, EntityError } from '@cents-ideas/utils';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { Identifier, EntityError } from '@centsideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 import { IEventRepository, IEntityConstructor } from '../event-repository';
 import { IEventEntity, IEvent, ISnapshot } from '..';

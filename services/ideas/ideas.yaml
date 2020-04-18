@@ -42,7 +42,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cents-ideas-ideas
+  name: centsideas-ideas
 spec:
   selector:
     app: ideas
@@ -87,7 +87,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cents-ideas-ideas-event-store
+  name: centsideas-ideas-event-store
 spec:
   selector:
     app: ideas-event-store

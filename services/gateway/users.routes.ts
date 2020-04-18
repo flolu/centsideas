@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 
 import { ExpressAdapter } from './express-adapter';
-import { UsersApiRoutes, ApiEndpoints } from '@cents-ideas/enums';
+import { UsersApiRoutes, ApiEndpoints } from '@centsideas/enums';
 
 @injectable()
 export class UsersRoutes {
@@ -10,6 +10,7 @@ export class UsersRoutes {
 
   constructor(private expressAdapter: ExpressAdapter) {}
 
+  // FIXME consider creating abstraction layer (maybe with decorators)
   setup = (host: string, consumerHost: string): express.Router => {
     this.router.get(
       `/`,
@@ -17,31 +18,51 @@ export class UsersRoutes {
         `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
       ),
     );
+
+    this.router.post(
+      `/${UsersApiRoutes.GoogleLogin}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.GoogleLogin}`),
+    );
+    this.router.get(
+      `/${UsersApiRoutes.GoogleLoginRedirect}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.GoogleLoginRedirect}`),
+    );
+
     this.router.get(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(
         `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
       ),
     );
+
+    this.router.post(
+      `/${UsersApiRoutes.RefreshToken}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.RefreshToken}`),
+    );
+
     this.router.post(
       `/${UsersApiRoutes.Login}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Login}`),
     );
+
     this.router.post(
       `/${UsersApiRoutes.ConfirmLogin}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmLogin}`),
     );
-    this.router.post(
-      `/${UsersApiRoutes.Authenticate}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Authenticate}`),
-    );
+
     this.router.put(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`),
     );
+
     this.router.post(
       `/${UsersApiRoutes.ConfirmEmailChange}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmEmailChange}`),
+    );
+
+    this.router.post(
+      `/${UsersApiRoutes.Logout}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Logout}`),
     );
 
     return this.router;

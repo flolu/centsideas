@@ -1,4 +1,4 @@
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 import { EntityError } from '..';
 
@@ -10,6 +10,6 @@ export class NotAuthenticatedError extends EntityError {
   };
 
   constructor() {
-    super(`Not authenticated. Please login.`, HttpStatusCodes.BadRequest);
+    super(`Not authenticated. Please login.`, HttpStatusCodes.Unauthorized);
   }
 }

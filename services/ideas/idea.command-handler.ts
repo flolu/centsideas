@@ -5,7 +5,7 @@ import {
   NotAuthenticatedError,
   NoPermissionError,
   ThreadLogger,
-} from '@cents-ideas/utils';
+} from '@centsideas/utils';
 
 import { IdeaErrors } from './errors';
 import { Idea } from './idea.entity';

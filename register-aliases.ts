@@ -8,5 +8,5 @@ export const registerAliases = () => {
 };
 
 const addPackageAlias = (name: string) => {
-  moduleAlias.addAlias(`@cents-ideas/${name}`, `${__dirname}../../../packages/${name}`);
+  moduleAlias.addAlias(`@centsideas/${name}`, `${__dirname}../../../packages/${name}`);
 };

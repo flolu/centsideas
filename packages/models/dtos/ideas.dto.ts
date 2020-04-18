@@ -6,7 +6,3 @@ export interface ICreateIdeaDto {
 export interface IUpdateIdeaDto extends ICreateIdeaDto {
   id: string;
 }
-
-export interface IIdeaQueryDto {
-  id: string;
-}

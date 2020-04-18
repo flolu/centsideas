@@ -1,17 +1,25 @@
 export default {
-  environment: process.env.NODE_ENV || 'dev',
+  environment: process.env.ENV!,
   port: 3000,
-  databaseUrl: process.env.USERS_DATABASE_URL || 'mongodb://users-event-store:27017',
+  databaseUrl: process.env.USERS_DATABASE_URL!,
   userDatabaseName: 'users',
   loginDatabaseName: 'logins',
-  jwtSecret: process.env.JWT_SECRET || 'default-jwt-secret',
+  frontendUrl: process.env.FRONTEND_URL!,
   mailing: {
-    apiKey: process.env.SEND_GRID_API_KEY || '',
-    fromAddress: 'CENTS Ideas <dev@flolu.com>',
+    apiKey: process.env.SEND_GRID_API_KEY!,
+    fromAddress: 'CENTS Ideas <noreply@centsideas.com>',
   },
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5432',
-  loginTokenExpirationTime: 2 * 60 * 60,
-  timeUntilGenerateNewToken: 1 * 24 * 60 * 60,
-  authTokenExpirationTime: 7 * 24 * 60 * 60,
-  emailChangeTokenExpirationTime: 2 * 60 * 60,
+  tokenSecrets: {
+    accessToken: process.env.ACCESS_TOKEN_SECRET!,
+    refreshToken: process.env.REFRESH_TOKEN_SECRET!,
+    loginToken: process.env.LOGIN_TOKEN_SECRET!,
+    changeEmailToken: process.env.CHANGE_EMAIL_TOKEN_SECRET!,
+  },
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID!,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  },
+  exchangeSecrets: {
+    frontendServer: process.env.FRONTEND_SERVER_EXCHANGE_SECRET!,
+  },
 };

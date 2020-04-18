@@ -17,4 +17,11 @@ export interface IUserCreatedEvent {
   userId: string;
   email: string;
   username: string;
+  refreshTokenId: string;
+}
+
+export interface IRefreshTokenRevokedEvent {
+  userId: string;
+  reason: string;
+  newRefreshTokenId: string;
 }

@@ -2,8 +2,8 @@ import * as retry from 'async-retry';
 import { injectable } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 
-import { Identifier, renameObjectProperty, Logger, EntityError } from '@cents-ideas/utils';
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { Identifier, renameObjectProperty, Logger, EntityError } from '@centsideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
@@ -63,10 +63,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
         this.namespace = name;
         this.topicName = topicName;
 
-        Logger.debug(`initialize ${this.namespace} event repository (${url})`);
-
         this.client = await retry(async () => {
-          Logger.debug(`retry to connect to ${this.namespace} database`);
           const connection = await MongoClient.connect(url, {
             w: 1,
             useNewUrlParser: true,
@@ -75,7 +72,6 @@ export abstract class EventRepository<Entity extends IEventEntity>
           return connection;
         });
         this.db = this.client.db(this.namespace);
-        Logger.debug(`connected to ${this.namespace} database`);
 
         this.db.on('close', () => {
           Logger.debug(`disconnected from ${this.namespace} database`);
@@ -114,7 +110,6 @@ export abstract class EventRepository<Entity extends IEventEntity>
 
         await Promise.all(initFunctions.map(f => f()));
 
-        Logger.debug(`${name} event repository initialized`);
         this.hasInitialized = true;
         res();
       } catch (error) {
@@ -164,7 +159,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     return entity.confirmEvents();
   };
 
-  // FIXME I think this should return promise of entity or null?
+  // FIXME I think this should return promise of entity OR null?
   findById = async (id: string): Promise<Entity> => {
     await this.waitUntilInitialized();
     const snapshot = await this.getSnapshot(id);

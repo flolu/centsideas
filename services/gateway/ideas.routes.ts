@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import * as express from 'express';
 
-import { IdeasApiRoutes, ApiEndpoints } from '@cents-ideas/enums';
+import { IdeasApiRoutes, ApiEndpoints } from '@centsideas/enums';
 
 import { ExpressAdapter } from './express-adapter';
 

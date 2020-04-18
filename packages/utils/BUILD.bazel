@@ -31,7 +31,7 @@ ts_library(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@cents-ideas/utils",
+    module_name = "@centsideas/utils",
     deps = lib_deps,
 )
 

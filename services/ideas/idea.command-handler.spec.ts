@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { getProvider, registerProviders, overrideProvider, Logger } from '@cents-ideas/utils';
+import { getProvider, registerProviders, overrideProvider, Logger } from '@centsideas/utils';
 
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';

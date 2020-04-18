@@ -4,5 +4,6 @@ export * from './test';
 export * from './events';
 export * from './view-models';
 export * from './entities';
-export * from './dtos';
+export * as Dtos from './dtos';
 export * from './token-data';
+export * from './cookie';

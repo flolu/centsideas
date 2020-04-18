@@ -1,13 +1,13 @@
-import { HttpStatusCodes } from '@cents-ideas/enums';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 import { EntityError } from '..';
 
 export class NoPermissionError extends EntityError {
-  static validate = (authenticatedUserId: string | null, eligibleUserId: string): void => {
-    if (!authenticatedUserId) {
+  static validate = (auid: string | null, eligibleUserId: string): void => {
+    if (!auid) {
       throw new NoPermissionError();
     }
-    if (authenticatedUserId !== eligibleUserId) {
+    if (auid !== eligibleUserId) {
       throw new NoPermissionError();
     }
   };

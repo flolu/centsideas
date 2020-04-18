@@ -2,9 +2,9 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { MessageBroker } from '@cents-ideas/event-sourcing';
-import { Logger, ExpressAdapter } from '@cents-ideas/utils';
-import { ApiEndpoints, EventTopics, IdeasApiRoutes, UsersApiRoutes } from '@cents-ideas/enums';
+import { MessageBroker } from '@centsideas/event-sourcing';
+import { Logger, ExpressAdapter } from '@centsideas/utils';
+import { ApiEndpoints, EventTopics, IdeasApiRoutes, UsersApiRoutes } from '@centsideas/enums';
 
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
@@ -26,7 +26,7 @@ export class ConsumerServer {
   ) {}
 
   start = () => {
-    Logger.debug('initialized with env: ', env);
+    Logger.log('launch', env.environment);
 
     this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
@@ -53,12 +53,7 @@ export class ConsumerServer {
       this.expressAdapter.json(this.queryService.getAllUsers),
     );
 
-    this.app.get('/alive', (_req, res) => {
-      return res.status(200).send();
-    });
-
-    this.app.listen(env.port, () =>
-      Logger.debug('consumer service listening on internal port', env.port),
-    );
+    this.app.get('/alive', (_req, res) => res.status(200).send());
+    this.app.listen(env.port);
   };
 }

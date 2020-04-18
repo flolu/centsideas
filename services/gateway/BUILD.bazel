@@ -20,6 +20,8 @@ lib_deps = [
     "@npm//express",
     "@npm//inversify",
     "@npm//jsonwebtoken",
+    "@npm//cookie-parser",
+    "@npm//@types/cookie-parser",
     "@npm//module-alias",
     "@npm//reflect-metadata",
 ]
@@ -41,9 +43,7 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
-    images = {
-        "gateway:placeholder_name": ":image",
-    },
+    images = {"gateway:placeholder_name": ":image"},
     template = ":gateway.yaml",
 )
 

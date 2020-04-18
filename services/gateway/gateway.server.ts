@@ -1,17 +1,17 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import * as cors from 'cors';
-import * as jwt from 'jsonwebtoken';
+import * as cookieParser from 'cookie-parser';
 import { injectable } from 'inversify';
 
-import { Logger } from '@cents-ideas/utils';
-import { ApiEndpoints, HeaderKeys, CentsCommandments } from '@cents-ideas/enums';
-import { ITokenDataFull, IAuthTokenPayload } from '@cents-ideas/models';
+import { Logger } from '@centsideas/utils';
+import { ApiEndpoints } from '@centsideas/enums';
 
 import env from './environment';
 import { ReviewsRoutes } from './reviews.routes';
 import { IdeasRoutes } from './ideas.routes';
 import { UsersRoutes } from './users.routes';
+import { authMiddleware } from './auth.middleware';
+import { corsMiddleware } from './cors.middleware';
 
 @injectable()
 export class GatewayServer {
@@ -24,33 +24,13 @@ export class GatewayServer {
   ) {}
 
   start = () => {
-    Logger.debug('initialized with env: ', env);
+    Logger.log('launch', env.environment);
 
+    this.app.use(corsMiddleware);
     this.app.use(bodyParser.json());
-    this.app.use(cors());
-
-    this.app.use((req, res, next) => {
-      res.locals.userId = null;
-
-      const token = req.headers[HeaderKeys.Auth];
-      if (!token) return next();
-
-      try {
-        const decoded = jwt.verify(token, env.jwtSecret);
-        const data: ITokenDataFull = decoded as any;
-
-        if (data.type === 'auth') {
-          const payload: IAuthTokenPayload = data.payload as any;
-          res.locals.userId = payload.userId;
-        }
-        // tslint:disable-next-line:no-empty
-      } catch (err) {}
-
-      Logger.debug(
-        `request was made by ${res.locals.userId ? res.locals.userId : 'a not authenticated user'}`,
-      );
-      next();
-    });
+    this.app.use(cookieParser());
+    // FIXME does this middleware hurt performance? if it has a big impact we could just use the middleware on the routes where it is really necessary
+    this.app.use(authMiddleware);
 
     this.app.use(
       `/${ApiEndpoints.Ideas}`,
@@ -62,24 +42,8 @@ export class GatewayServer {
       this.usersRoutes.setup(env.hosts.users, env.hosts.consumer),
     );
 
-    this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
-      return res.status(200).send('gateway alive');
-    });
-
-    this.app.get(`**`, (req, res) => {
-      return res.status(200).send(`hello ${req.ip}, greetings from cents-ideas gateway`);
-    });
-
-    this.app.listen(env.port, () =>
-      Logger.debug(
-        'gateway listening on internal port',
-        env.port,
-        CentsCommandments.Control,
-        CentsCommandments.Entry,
-        CentsCommandments.Need,
-        CentsCommandments.Time,
-        CentsCommandments.Scale,
-      ),
-    );
+    this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => res.status(200).send('gateway alive'));
+    this.app.get(`**`, (_req, res) => res.status(200).send(`centsideas gateway 404`));
+    this.app.listen(env.port);
   };
 }

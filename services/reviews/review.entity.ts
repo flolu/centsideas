@@ -1,5 +1,5 @@
-import { EventEntity, ISnapshot } from '@cents-ideas/event-sourcing';
-import { IReviewScores, IReviewState } from '@cents-ideas/models';
+import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { IReviewScores, IReviewState } from '@centsideas/models';
 
 import { commitFunctions, ReviewEvents } from './events';
 import { ReviewDeletedEvent } from './events/review-deleted.event';
@@ -40,12 +40,12 @@ export class Review extends EventEntity<IReviewState> {
   }
 
   update = (content?: string, scores?: IReviewScores) => {
-    this.pushEvents(new ReviewEvents.ReviewUpdatedEvent(this.persistedState.id, content, scores));
+    this.pushEvents(new ReviewEvents.ReviewUpdatedEvent(this.currentState.id, content, scores));
     return this;
   };
 
   delete = () => {
-    this.pushEvents(new ReviewDeletedEvent(this.persistedState.id));
+    this.pushEvents(new ReviewDeletedEvent(this.currentState.id));
     return this;
   };
 }

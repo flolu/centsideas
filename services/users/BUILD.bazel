@@ -24,6 +24,8 @@ lib_deps = [
     "@npm//mongodb",
     "@npm//reflect-metadata",
     "@npm//shortid",
+    "@npm//query-string",
+    "@npm//axios",
 ]
 
 ts_library(
@@ -43,9 +45,7 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
-    images = {
-        "users:placeholder_name": ":image",
-    },
+    images = {"users:placeholder_name": ":image"},
     template = ":users.yaml",
 )
 

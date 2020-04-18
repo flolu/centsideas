@@ -5,10 +5,11 @@ import { UsernameRequiredError } from './username-required.error';
 import { UsernameInvalidError } from './username-invalid.error';
 import { EmailRequiredError } from './email-required.error';
 import { EmailInvalidError } from './email-invalid.error';
-import { EmailAlreadySignedUpError } from './email-already-signed-up.error';
 import { NoUserWithEmailError } from './no-user-with-email.error';
 import { EmailNotAvailableError } from './email-not-available.error';
 import { EmailMatchesCurrentEmailError } from './email-matches-current-email.error';
+import { GoogleLoginCodeRequiredError } from './google-login-code-required.error';
+import { UsernameUnavailableError } from './username-unavailable.error';
 
 export const UserErrors = {
   UserNotFoundError,
@@ -18,8 +19,9 @@ export const UserErrors = {
   UsernameInvalidError,
   EmailRequiredError,
   EmailInvalidError,
-  EmailAlreadySignedUpError,
   NoUserWithEmailError,
   EmailNotAvailableError,
   EmailMatchesCurrentEmailError,
+  GoogleLoginCodeRequiredError,
+  UsernameUnavailableError,
 };
