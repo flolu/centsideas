@@ -145,18 +145,7 @@ _TODO consider creating script to automate this_
 ### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster and connect to it
 
 ```bash
-gcloud beta container --project "centsideas" clusters create "centsideas" --zone "europe-west3-b" --no-enable-basic-auth --cluster-version "1.14.10-gke.27" --machine-type "n1-standard-1" --image-type "COS" --disk-type "pd-standard" --disk-size "10" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "3" --enable-stackdriver-kubernetes --enable-ip-alias --network "projects/centsideas/global/networks/default" --subnetwork "projects/centsideas/regions/europe-west3/subnetworks/default" --default-max-pods-per-node "110" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair --database-encryption-key "projects/centsideas/locations/europe-west3/keyRings/centsideas-gke-keyring/cryptoKeys/centsideas-gke-key"
-```
-
-or just
-
-```bash
-gcloud beta container --project "centsideas" clusters create "centsideas" --zone "europe-west3-b"
-```
-
-and then connect to the cluster
-
-```bash
+gcloud beta container --project "centsideas" clusters create "centsideas" --zone "europe-west3-b" --no-enable-basic-auth --machine-type "n1-standard-1" --disk-size "10"
 gcloud container clusters get-credentials centsideas --zone europe-west3-b --project centsideas
 ```
 
@@ -202,7 +191,7 @@ yarn deploy
 
 Wait until all Workloads are up and running. Now you should be able to visit https://centsideas.com
 
-## Thanks to:
+## Special thanks to:
 
 [@rayman1104](https://github.com/rayman1104)
 

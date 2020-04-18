@@ -110,6 +110,7 @@ rollup_bundle(
 terser_minified(
     name = "bundle.min",
     src = ":bundle",
+    config_file = ":terser.config.json",
 )
 
 html_insert_assets(
