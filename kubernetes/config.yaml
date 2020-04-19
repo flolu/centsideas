@@ -25,3 +25,6 @@ data:
   REVIEWS_DATABASE_URL: mongodb://centsideas-reviews-event-store:27017
   PROJECTION_DATABASE_URL: mongodb://centsideas-projection-database:27017
   USERS_DATABASE_URL: mongodb://centsideas-users-event-store:27017
+
+  # push notifications
+  VAPID_PUBLIC_KEY: BHn7rJHGwgUqZzATjOn80FQLxUFFR5ae-SPW-iDlEaSyLxHmoiythyH_qT7hQEarcnYMGu_XRnoZRFc5ZULCoXM

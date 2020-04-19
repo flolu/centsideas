@@ -2,6 +2,9 @@ import { IEventEntityBase } from './event-base.model';
 
 export interface INotificationSettingsState extends IEventEntityBase {
   userId: string;
+  pushSubscriptions: IPushSubscription[];
+  sendPushes: boolean;
+  sendEmails: boolean;
 }
 
 export interface IPushSubscription {

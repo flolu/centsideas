@@ -1,20 +1,21 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { IUserState } from '@centsideas/models';
 import { UserActions } from './user.actions';
-import { LOADING_DONE, LOADING_FAIL, LOADING } from '../../shared/helpers/state.helper';
+import {
+  LOADING_DONE,
+  LOADING_FAIL,
+  LOADING,
+  ILoadingState,
+  initialLoadingState,
+} from '../../shared/helpers/state.helper';
 import { AuthActions } from '../auth/auth.actions';
 
-export interface IUserReducerState {
-  loading: boolean;
-  loaded: boolean;
-  error: string;
+export interface IUserReducerState extends ILoadingState {
   user: IUserState | null;
 }
 
 const initialState: IUserReducerState = {
-  loading: false,
-  loaded: false,
-  error: '',
+  ...initialLoadingState,
   user: null,
 };
 

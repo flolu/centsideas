@@ -14,6 +14,7 @@ enableProdMode();
 
 process.env.angularEnvironment = JSON.stringify({
   gatewayHost: process.env.GATEWAY_HOST || 'https://api.centsideas.com',
+  vapidPublicKey: process.env.VAPID_PUBLIC_KEY,
 });
 
 const app = express();

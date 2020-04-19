@@ -7,17 +7,19 @@ import { UsersApiRoutes, NotificationsApiRoutes, HttpStatusCodes } from '@centsi
 import { HttpRequest, HttpResponse, Dtos } from '@centsideas/models';
 
 import { NotificationEnvironment } from './environment';
-// import { NotificationsHandlers } from './notifications.handlers';
+import { NotificationSettingsHandlers } from './notification-settings.handlers';
 
 @injectable()
 export class NotificationsServer {
   private app = express();
 
-  // TODO listen for push events
+  // FIXME is there any way to remove push subscriptions that have no service worker anymore?!
+  // TODO listen for push events (e.g. user creationg, email change, ...)
 
   constructor(
     // TODO make env service injectable on all backend services
-    private env: NotificationEnvironment, // private notificationHandlers: NotificationsHandlers,
+    private env: NotificationEnvironment,
+    private notificationSettingsHandlers: NotificationSettingsHandlers,
   ) {
     Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
@@ -35,20 +37,22 @@ export class NotificationsServer {
   subscribePush = (req: HttpRequest<Dtos.ISubscribePushDto>): Promise<HttpResponse> =>
     Logger.thread('subscribe to push', async t => {
       try {
-        // const { subscription } = req.body;
-        // const auid = req.locals.userId;
+        const { subscription } = req.body;
+        const auid = req.locals.userId || '';
 
-        // const notificationSetting = await this.notificationHandlers.upsertSubscriptionSettings();
-        // await this.notificationHandlers.addPushSubscription();
+        await this.notificationSettingsHandlers.upsert(auid, t);
+        const ns = await this.notificationSettingsHandlers.addPushSubscription(
+          auid,
+          subscription,
+          t,
+        );
 
         // TODO send sample push notification ("this is how you'll be notified")
 
-        // TODO move this fixme to appropriate place
-        // FIXME is there any way to remove push subscriptions that have no service worker anymore?!
-
         return {
           status: HttpStatusCodes.Accepted,
-          body: {},
+          // FIXME maybe do not return push subscription array
+          body: ns.persistedState,
         };
       } catch (error) {
         return handleHttpResponseError(error, t);

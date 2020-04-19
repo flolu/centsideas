@@ -11,7 +11,7 @@ export class NotificationsRoutes {
   constructor(private expressAdapter: ExpressAdapter) {}
 
   setup = (host: string): express.Router => {
-    this.router.get(
+    this.router.post(
       `/${NotificationsApiRoutes.SubscribePush}`,
       this.expressAdapter.makeJsonAdapter(`${host}/${NotificationsApiRoutes.SubscribePush}`),
     );

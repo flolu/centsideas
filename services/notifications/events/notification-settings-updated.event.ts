@@ -5,10 +5,10 @@ import { INotificationSettingsState, INotificationSettingsUpdatedEvent } from '@
 export class NotificationSettingsUpdatedEvent extends Event<INotificationSettingsUpdatedEvent> {
   static readonly eventName: string = NotificationSettingsEvents.Updated;
 
-  constructor(notificationSettingsId: string) {
+  constructor(notificationSettingsId: string, sendEmails: boolean, sendPushes: boolean) {
     super(
       NotificationSettingsUpdatedEvent.eventName,
-      { notificationSettingsId },
+      { sendEmails, sendPushes },
       notificationSettingsId,
     );
   }
@@ -17,6 +17,8 @@ export class NotificationSettingsUpdatedEvent extends Event<INotificationSetting
     state: INotificationSettingsState,
     event: NotificationSettingsUpdatedEvent,
   ): INotificationSettingsState {
+    state.sendEmails = event.data.sendEmails;
+    state.sendPushes = event.data.sendPushes;
     return state;
   }
 }

@@ -41,8 +41,8 @@ export class EnvironmentService {
   get env(): IEnvironment {
     if (!this.environment || !this.environment.gatewayHost) {
       if (this.document.location.hostname === 'localhost')
-        return { gatewayHost: 'http://localhost:3000' };
-      return { gatewayHost: `https://api.${this.document.location.hostname}` };
+        return { gatewayHost: 'http://localhost:3000', vapidPublicKey: '' };
+      return { gatewayHost: `https://api.${this.document.location.hostname}`, vapidPublicKey: '' };
     }
     return this.environment;
   }

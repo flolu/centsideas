@@ -1,14 +1,21 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
 load("//services/client:defaults.bzl", "store_srcs_matcher")
 
 package(default_visibility = ["//:__subpackages__"])
+
+sass_binary(
+    name = "me_container_styles",
+    src = "me.container.sass",
+)
 
 ts_library(
     name = "store",
     srcs = glob(include = store_srcs_matcher) + [
         "user-store.module.ts",
         "user.service.ts",
+        ":notifications/notifications.service.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
@@ -34,6 +41,7 @@ ts_library(
         "me.container.ts",
         "user.module.ts",
     ],
+    angular_assets = [":me_container_styles"],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
@@ -41,11 +49,13 @@ ts_library(
         "//packages/enums",
         "//packages/models",
         "//services/client/app/auth:store",
+        "//services/client/shared/environment",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@angular/router",
+        "@npm//@angular/service-worker",
         "@npm//@ngrx/store",
         "@npm//rxjs",
     ],

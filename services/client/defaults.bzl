@@ -1,9 +1,9 @@
 store_srcs_matcher = [
-    "*.actions.ts",
-    "*.effects.ts",
-    "*.reducer.ts",
-    "*.state.ts",
-    "*.selectors.ts",
+    "**/*.actions.ts",
+    "**/*.effects.ts",
+    "**/*.reducer.ts",
+    "**/*.state.ts",
+    "**/*.selectors.ts",
 ]
 
 static_assets = [

@@ -105,6 +105,7 @@ export class UserRepository extends EventRepository<User> {
     return inserted.ops[0];
   };
 
+  // TODO create abstraction for mappings
   getGoogleUserIdMapping = async (googleId: string): Promise<IGoogleUserIdMapping | null> => {
     const db = await this.getDatabase();
     return db

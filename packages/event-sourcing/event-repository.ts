@@ -285,14 +285,12 @@ export abstract class EventRepository<Entity extends IEventEntity>
 
   private waitUntilInitialized = (): Promise<boolean> => {
     return new Promise(async res => {
-      if (!this.hasInitializedBeenCalled) {
+      if (!this.hasInitializedBeenCalled)
         throw new Error(
           `You need to call ${this.initialize.name} in the constructor of the EventRepository`,
         );
-      }
-      if (this.hasInitialized) {
-        return res(true);
-      }
+
+      if (this.hasInitialized) return res(true);
       // tslint:disable-next-line:no-return-await
       await retry(async () => await this.initialize);
       res(true);

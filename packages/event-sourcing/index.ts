@@ -6,3 +6,4 @@ export * from './snapshot';
 export * from './message-broker';
 export * from './test';
 export * from './commit';
+export * from './entity-mapping';

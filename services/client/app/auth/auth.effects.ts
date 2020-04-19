@@ -87,6 +87,7 @@ export class AuthEffects {
     ),
   );
 
+  // FIXME ask for push permissions if user has push notification turned on
   confirmLoginDone$ = createEffect(
     () =>
       this.actions$.pipe(
