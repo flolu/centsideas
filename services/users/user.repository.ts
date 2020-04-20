@@ -2,7 +2,6 @@ import { injectable } from 'inversify';
 
 import { EventRepository, MessageBroker, EntityMapping } from '@centsideas/event-sourcing';
 import { EventTopics } from '@centsideas/enums';
-import { Logger } from '@centsideas/utils';
 
 import { UsersEnvironment } from './users.environment';
 import { User } from './user.entity';
@@ -11,141 +10,41 @@ import { IUserIdEmailMapping, IGoogleUserIdMapping, IUserIdUsernameMapping } fro
 
 @injectable()
 export class UserRepository extends EventRepository<User> {
-  private readonly emailCollectionName = 'emails';
-  private readonly emailMappingKey = 'email';
-  private readonly usernameCollectionName = 'usernames';
-  private readonly usernameMappingKey = 'username';
-  private readonly googleUserIdCollectionName = 'googleUserIds';
-  private readonly googleUserIdMappingKey = 'googleId';
+  private entityKeyId = 'userId';
+  emailMapping = new EntityMapping<IUserIdEmailMapping>(
+    this.env.databaseUrl,
+    'emails',
+    this.entityKeyId,
+    'email',
+  );
+  usernameMapping = new EntityMapping<IUserIdUsernameMapping>(
+    this.env.databaseUrl,
+    'usernames',
+    this.entityKeyId,
+    'username',
+  );
+  googleIdMapping = new EntityMapping<IGoogleUserIdMapping>(
+    this.env.databaseUrl,
+    'googleUserIds',
+    this.entityKeyId,
+    'googleId',
+  );
 
   constructor(private _messageBroker: MessageBroker, private env: UsersEnvironment) {
     super(_messageBroker);
-    this.initialize(User, this.env.databaseUrl, this.env.userDatabaseName, EventTopics.Users, [
-      this.initializeEmailCollection,
-      this.initializeGoogleUserIdCollection,
-      this.initializeUsernameCollection,
-    ]);
+    this.initialize(User, this.env.databaseUrl, this.env.userDatabaseName, EventTopics.Users);
   }
 
   checkUsernameAvailibility = async (username: string): Promise<boolean> => {
-    const existingUsername = await this.getUsernameMapping(username);
+    const existingUsername = await this.usernameMapping.get(username);
     if (existingUsername && existingUsername.userId)
       throw new UserErrors.UsernameUnavailableError(username);
     return true;
   };
 
   checkEmailAvailability = async (email: string): Promise<boolean> => {
-    const existingEmail = await this.getUserIdEmailMapping(email);
+    const existingEmail = await this.emailMapping.get(email);
     if (existingEmail && existingEmail.userId) throw new UserErrors.EmailNotAvailableError(email);
     return true;
-  };
-
-  insertEmail = async (userId: string, email: string): Promise<IUserIdEmailMapping> => {
-    const db = await this.getDatabase();
-    const inserted = await db
-      .collection(this.emailCollectionName)
-      .insertOne({ userId, [this.emailMappingKey]: email });
-    Logger.debug(
-      `inserted email into ${this.emailCollectionName} mapping collection ${email}: ${userId}`,
-    );
-    return inserted.ops[0];
-  };
-
-  updateEmail = async (userId: string, newEmail: string): Promise<IUserIdEmailMapping> => {
-    const db = await this.getDatabase();
-    const updated = await db
-      .collection(this.emailCollectionName)
-      .findOneAndUpdate({ userId }, { $set: { [this.emailMappingKey]: newEmail } });
-    Logger.debug(`updated email in ${this.emailCollectionName} collection ${newEmail}: ${userId}`);
-    return updated.value;
-  };
-
-  getUserIdEmailMapping = async (email: string): Promise<IUserIdEmailMapping | null> => {
-    const db = await this.getDatabase();
-    return db.collection(this.emailCollectionName).findOne({ email });
-  };
-
-  insertUsername = async (userId: string, username: string): Promise<IUserIdUsernameMapping> => {
-    const db = await this.getDatabase();
-    const inserted = await db
-      .collection(this.usernameCollectionName)
-      .insertOne({ userId, [this.usernameMappingKey]: username });
-    Logger.debug(
-      `inserted username into ${this.usernameCollectionName} mapping collection ${username}: ${userId}`,
-    );
-    return inserted.ops[0];
-  };
-
-  updateUsername = async (userId: string, newUsername: string): Promise<IUserIdEmailMapping> => {
-    const db = await this.getDatabase();
-    const updated = await db
-      .collection(this.usernameCollectionName)
-      .findOneAndUpdate({ userId }, { $set: { [this.usernameMappingKey]: newUsername } });
-    Logger.debug(
-      `updated email in ${this.usernameCollectionName} collection ${newUsername}: ${userId}`,
-    );
-    return updated.value;
-  };
-
-  getUsernameMapping = async (username: string): Promise<IUserIdEmailMapping | null> => {
-    const db = await this.getDatabase();
-    return db
-      .collection(this.usernameCollectionName)
-      .findOne({ [this.usernameMappingKey]: username });
-  };
-
-  insertGoogleUserId = async (googleId: string, userId: string): Promise<IGoogleUserIdMapping> => {
-    const db = await this.getDatabase();
-    const inserted = await db
-      .collection(this.googleUserIdCollectionName)
-      .insertOne({ [this.googleUserIdMappingKey]: googleId, userId });
-    Logger.debug(
-      `inserted username into ${this.googleUserIdCollectionName} mapping collection ${googleId}: ${userId}`,
-    );
-    return inserted.ops[0];
-  };
-
-  // TODO create abstraction for mappings
-  getGoogleUserIdMapping = async (googleId: string): Promise<IGoogleUserIdMapping | null> => {
-    const db = await this.getDatabase();
-    return db
-      .collection(this.googleUserIdCollectionName)
-      .findOne({ [this.googleUserIdMappingKey]: googleId });
-  };
-
-  private initializeGoogleUserIdCollection = async (): Promise<boolean> => {
-    try {
-      const db = await this.getDatabase();
-      const collection = db.collection(this.googleUserIdCollectionName);
-      await collection.createIndex({ [this.googleUserIdMappingKey]: 1 }, { unique: true });
-      return true;
-    } catch (error) {
-      Logger.error(`Error while initializing ${this.googleUserIdCollectionName} collection`, error);
-      return false;
-    }
-  };
-
-  private initializeUsernameCollection = async (): Promise<boolean> => {
-    try {
-      const db = await this.getDatabase();
-      const collection = db.collection(this.usernameCollectionName);
-      await collection.createIndex({ [this.usernameMappingKey]: 1 }, { unique: true });
-      return true;
-    } catch (error) {
-      Logger.error(`Error while initializing ${this.usernameCollectionName} collection`, error);
-      return false;
-    }
-  };
-
-  private initializeEmailCollection = async (): Promise<boolean> => {
-    try {
-      const db = await this.getDatabase();
-      const collection = db.collection(this.emailCollectionName);
-      await collection.createIndex({ [this.emailMappingKey]: 1 }, { unique: true });
-      return true;
-    } catch (error) {
-      Logger.error(`Error while initializing ${this.emailCollectionName} collection`, error);
-      return false;
-    }
   };
 }

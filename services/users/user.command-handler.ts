@@ -71,7 +71,7 @@ export class UserCommandHandler {
 
     user.update(username, isNewEmail ? email : null);
 
-    if (username) await this.userRepository.updateUsername(userId, username);
+    if (username) await this.userRepository.usernameMapping.update(userId, username);
     return this.userRepository.save(user);
   };
 
@@ -101,7 +101,7 @@ export class UserCommandHandler {
       `from ${payload.currentEmail} to ${payload.newEmail}`,
     );
 
-    await this.userRepository.updateEmail(user.persistedState.id, payload.newEmail);
+    await this.userRepository.emailMapping.update(user.persistedState.id, payload.newEmail);
     return this.userRepository.save(user);
   };
 
@@ -112,7 +112,7 @@ export class UserCommandHandler {
     const user = await this.userRepository.findById(userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, newEmail);
 
-    const emailUserMapping = await this.userRepository.getUserIdEmailMapping(newEmail);
+    const emailUserMapping = await this.userRepository.emailMapping.get(newEmail);
     if (emailUserMapping) throw new UserErrors.EmailNotAvailableError(newEmail);
 
     const tokenPayload: IEmailChangeTokenPayload = {

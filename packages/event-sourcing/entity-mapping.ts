@@ -18,7 +18,7 @@ export class EntityMapping<IEntityMapping> {
     private mappingEntityIdKey: string,
   ) {}
 
-  async initialize(): Promise<boolean> {
+  private async initialize(): Promise<boolean> {
     try {
       this.hasInitializedBeenCalled = true;
 

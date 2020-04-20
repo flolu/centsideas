@@ -40,7 +40,7 @@ export class AuthCommandHandler {
     UserErrors.EmailInvalidError.validate(email);
     t.debug('login with email', email);
 
-    const emailUserMapping = await this.userRepository.getUserIdEmailMapping(email);
+    const emailUserMapping = await this.userRepository.emailMapping.get(email);
     const firstLogin = !emailUserMapping;
     const loginId = await this.loginRepository.generateUniqueId();
     t.debug(firstLogin ? 'first' : 'normal', 'login with loginId:', loginId);
@@ -88,7 +88,7 @@ export class AuthCommandHandler {
       return this.handleConfirmedLogin(createdUser, login, t);
     }
 
-    const emailUserMapping = await this.userRepository.getUserIdEmailMapping(payload.email);
+    const emailUserMapping = await this.userRepository.emailMapping.get(payload.email);
     if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
 
     const user = await this.userRepository.findById(emailUserMapping.userId);
@@ -119,7 +119,7 @@ export class AuthCommandHandler {
     if (!userInfo.verified_email)
       throw new Error('Please verify your Google email before signing in with Google');
 
-    const existing = await this.userRepository.getGoogleUserIdMapping(userInfo.id);
+    const existing = await this.userRepository.googleIdMapping.get(userInfo.id);
     if (existing) {
       t.debug('found existing user with this google user id', existing.userId);
 
@@ -141,7 +141,7 @@ export class AuthCommandHandler {
       UserErrors.EmailRequiredError.validate(userInfo.email);
       UserErrors.EmailInvalidError.validate(userInfo.email);
 
-      const emailUserMapping = await this.userRepository.getUserIdEmailMapping(userInfo.email);
+      const emailUserMapping = await this.userRepository.emailMapping.get(userInfo.email);
       if (emailUserMapping) {
         t.debug(
           'found a user that has the email of the google user but has not registered its account with the google account',
@@ -160,7 +160,7 @@ export class AuthCommandHandler {
             `user associated with email ${emailUserMapping.email} not found although it should exist`,
           );
 
-        await this.userRepository.insertGoogleUserId(userInfo.id, user.persistedState.id);
+        await this.userRepository.googleIdMapping.insert(user.persistedState.id, userInfo.id);
         t.debug(`inserted new google user id mapping`);
 
         return this.handleConfirmedLogin(user, specialLogin, t);
@@ -173,10 +173,7 @@ export class AuthCommandHandler {
       // FIXME set username based on google username
       const createdUser = await this.handleUserCreation(userInfo.email, t);
       t.debug('created user with id', createdUser.persistedState.id);
-      await this.userRepository.insertGoogleUserId(
-        userInfo.id,
-        (await createdUser).persistedState.id,
-      );
+      await this.userRepository.googleIdMapping.insert(createdUser.persistedState.id, userInfo.id);
       return this.handleConfirmedLogin(createdUser, login, t);
     }
   };
@@ -226,8 +223,8 @@ export class AuthCommandHandler {
     const user = User.create(userId, email, username, refreshTokenId);
 
     // FIXME somehow make sure all three succeed to complte the user creation
-    await this.userRepository.insertUsername(userId, username);
-    await this.userRepository.insertEmail(userId, email);
+    await this.userRepository.usernameMapping.insert(userId, username);
+    await this.userRepository.emailMapping.insert(userId, email);
     return this.userRepository.save(user);
   };
 
