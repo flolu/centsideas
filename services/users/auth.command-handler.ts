@@ -22,14 +22,18 @@ import {
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
 import { UserErrors } from './errors';
-import env from './environment';
+import { UsersEnvironment } from './users.environment';
 import { Login } from './login.entity';
 import { LoginRepository } from './login.repository';
 import { IGoogleUserinfo } from './models';
 
 @injectable()
 export class AuthCommandHandler {
-  constructor(private userRepository: UserRepository, private loginRepository: LoginRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private loginRepository: LoginRepository,
+    private env: UsersEnvironment,
+  ) {}
 
   login = async (email: string, t: ThreadLogger): Promise<Login> => {
     UserErrors.EmailRequiredError.validate(email);
@@ -42,17 +46,24 @@ export class AuthCommandHandler {
     t.debug(firstLogin ? 'first' : 'normal', 'login with loginId:', loginId);
 
     const tokenData: ILoginTokenPayload = { loginId, email, firstLogin };
-    const token = jwt.sign(tokenData, env.tokenSecrets.loginToken, {
+    const token = jwt.sign(tokenData, this.env.tokenSecrets.loginToken, {
       expiresIn: TokenExpirationTimes.LoginToken,
     });
 
     t.debug('sendng login mail to ', email);
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
+    const activationRoute: string = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
     const expirationTimeHours = Math.floor(TokenExpirationTimes.LoginToken / 3600);
     const text = `URL to login into your account: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Login';
     // FIXME consider outsourcing sending mails into its own mailing service, which listens for event like LoginRequested
-    await sendMail(env.mailing.fromAddress, email, subject, text, text, env.mailing.apiKey);
+    await sendMail(
+      this.env.mailing.fromAddress,
+      email,
+      subject,
+      text,
+      text,
+      this.env.mailing.apiKey,
+    );
     t.debug('sent login confirmation email to', email);
 
     const login = Login.create(loginId, email, firstLogin);
@@ -61,7 +72,7 @@ export class AuthCommandHandler {
   };
 
   confirmLogin = async (token: string, t: ThreadLogger) => {
-    const data = decodeToken(token, env.tokenSecrets.loginToken);
+    const data = decodeToken(token, this.env.tokenSecrets.loginToken);
     t.debug('confirming login of token', token ? token.slice(0, 30) : token);
 
     const payload: ILoginTokenPayload = data;
@@ -88,7 +99,7 @@ export class AuthCommandHandler {
 
   googleLoginRedirect = (origin?: string) => {
     const params = queryString.stringify({
-      client_id: env.google.clientId,
+      client_id: this.env.google.clientId,
       redirect_uri: this.getGoogleRedirectUri(origin),
       scope: [
         'https://www.googleapis.com/auth/userinfo.email',
@@ -171,7 +182,7 @@ export class AuthCommandHandler {
   };
 
   refreshToken = async (token: string, t: ThreadLogger) => {
-    const data: IRefreshTokenPayload = decodeToken(token, env.tokenSecrets.refreshToken);
+    const data: IRefreshTokenPayload = decodeToken(token, this.env.tokenSecrets.refreshToken);
     t.debug('refresh token is valid', token ? token.slice(0, 30) : token);
 
     const user = await this.userRepository.findById(data.userId);
@@ -233,7 +244,7 @@ export class AuthCommandHandler {
   };
 
   private generateAccessToken = (user: User) => {
-    return jwt.sign({ userId: user.persistedState.id }, env.tokenSecrets.accessToken, {
+    return jwt.sign({ userId: user.persistedState.id }, this.env.tokenSecrets.accessToken, {
       expiresIn: TokenExpirationTimes.AccessToken,
     });
   };
@@ -244,7 +255,7 @@ export class AuthCommandHandler {
         userId: user.persistedState.id,
         tokenId: user.persistedState.refreshTokenId,
       },
-      env.tokenSecrets.refreshToken,
+      this.env.tokenSecrets.refreshToken,
       { expiresIn: TokenExpirationTimes.RefreshToken },
     );
   };
@@ -260,8 +271,8 @@ export class AuthCommandHandler {
       url: `https://oauth2.googleapis.com/token`,
       method: 'post',
       data: {
-        client_id: env.google.clientId,
-        client_secret: env.google.clientSecret,
+        client_id: this.env.google.clientId,
+        client_secret: this.env.google.clientSecret,
         redirect_uri: this.getGoogleRedirectUri(origin),
         grant_type: 'authorization_code',
         code,
@@ -287,7 +298,8 @@ export class AuthCommandHandler {
   };
 
   private getGoogleRedirectUri = (origin?: string) => {
-    const frontendUrl = env.environment === 'dev' ? origin || env.frontendUrl : env.frontendUrl;
+    const frontendUrl =
+      this.env.environment === 'dev' ? origin || this.env.frontendUrl : this.env.frontendUrl;
     return `${frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`;
   };
 }

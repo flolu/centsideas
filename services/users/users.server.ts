@@ -5,7 +5,7 @@ import * as bodyParser from 'body-parser';
 import { ExpressAdapter, Logger } from '@centsideas/utils';
 import { UsersApiRoutes } from '@centsideas/enums';
 
-import env from './environment';
+import { UsersEnvironment } from './users.environment';
 import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
 
@@ -17,10 +17,11 @@ export class UsersServer {
     private usersService: UsersService,
     private authService: AuthService,
     private expressAdapter: ExpressAdapter,
+    private env: UsersEnvironment,
   ) {}
 
   start = () => {
-    Logger.log('launch', env.environment);
+    Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
 
     this.app.post(`/${UsersApiRoutes.Login}`, this.expressAdapter.json(this.authService.login));
@@ -58,6 +59,6 @@ export class UsersServer {
     );
 
     this.app.get(`/${UsersApiRoutes.Alive}`, (_req, res) => res.status(200).send());
-    this.app.listen(env.port);
+    this.app.listen(this.env.port);
   };
 }

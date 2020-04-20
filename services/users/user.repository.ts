@@ -1,10 +1,10 @@
 import { injectable } from 'inversify';
 
-import { EventRepository, MessageBroker } from '@centsideas/event-sourcing';
+import { EventRepository, MessageBroker, EntityMapping } from '@centsideas/event-sourcing';
 import { EventTopics } from '@centsideas/enums';
 import { Logger } from '@centsideas/utils';
 
-import env from './environment';
+import { UsersEnvironment } from './users.environment';
 import { User } from './user.entity';
 import { UserErrors } from './errors';
 import { IUserIdEmailMapping, IGoogleUserIdMapping, IUserIdUsernameMapping } from './models';
@@ -18,9 +18,9 @@ export class UserRepository extends EventRepository<User> {
   private readonly googleUserIdCollectionName = 'googleUserIds';
   private readonly googleUserIdMappingKey = 'googleId';
 
-  constructor(private _messageBroker: MessageBroker) {
+  constructor(private _messageBroker: MessageBroker, private env: UsersEnvironment) {
     super(_messageBroker);
-    this.initialize(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, [
+    this.initialize(User, this.env.databaseUrl, this.env.userDatabaseName, EventTopics.Users, [
       this.initializeEmailCollection,
       this.initializeGoogleUserIdCollection,
       this.initializeUsernameCollection,

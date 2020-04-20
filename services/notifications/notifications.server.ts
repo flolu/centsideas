@@ -14,7 +14,7 @@ import {
 import { HttpRequest, HttpResponse, Dtos, IIdeaCreatedEvent } from '@centsideas/models';
 import { MessageBroker, IEvent } from '@centsideas/event-sourcing';
 
-import { NotificationEnvironment } from './environment';
+import { NotificationEnvironment } from './notifications.environment';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
 import { IPushPayload } from './models';
 
@@ -128,7 +128,7 @@ export class NotificationsServer {
 
   // TODO create notification events (NotificationSentEvent)
   private handleIdeasEvents = async (event: IEvent<any>) => {
-    Logger.thread('handle incomming idea events', async t => {
+    return Logger.thread('handle incomming idea events', async t => {
       try {
         if (event.name === IdeaEvents.IdeaCreated) {
           const createdEevent: IEvent<IIdeaCreatedEvent> = event;

@@ -11,6 +11,8 @@ import { IdeasRoutes } from './ideas.routes';
 import { ReviewsRoutes } from './reviews.routes';
 import { UsersRoutes } from './users.routes';
 import { NotificationsRoutes } from './notifications.routes';
+import { GatewayEnvironment } from './gateway.environment';
+import { GatewayMiddlewares } from './gateway.middlewares';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Gateway;
 
@@ -21,6 +23,8 @@ registerProviders(
   ReviewsRoutes,
   UsersRoutes,
   NotificationsRoutes,
+  GatewayEnvironment,
+  GatewayMiddlewares,
 );
 
 const server: GatewayServer = getProvider(GatewayServer);

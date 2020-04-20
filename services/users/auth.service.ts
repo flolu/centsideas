@@ -4,12 +4,12 @@ import { HttpStatusCodes, CookieNames, TokenExpirationTimes } from '@centsideas/
 import { HttpRequest, HttpResponse, Cookie, Dtos } from '@centsideas/models';
 import { handleHttpResponseError, Logger } from '@centsideas/utils';
 
-import env from './environment';
+import { UsersEnvironment } from './users.environment';
 import { AuthCommandHandler } from './auth.command-handler';
 
 @injectable()
 export class AuthService {
-  constructor(private commandHandler: AuthCommandHandler) {}
+  constructor(private commandHandler: AuthCommandHandler, private env: UsersEnvironment) {}
 
   login = (req: HttpRequest<Dtos.ILoginDto>) =>
     Logger.thread('login', async t => {
@@ -95,7 +95,7 @@ export class AuthService {
 
         if (!currentRefreshToken) {
           const { exchangeSecret } = req.body;
-          if (env.exchangeSecrets.frontendServer === exchangeSecret) {
+          if (this.env.exchangeSecrets.frontendServer === exchangeSecret) {
             currentRefreshToken = req.body.refreshToken;
             t.debug('got token from trusted exchange from frontend server');
           }
@@ -159,8 +159,8 @@ export class AuthService {
   private createRefreshTokenCookie = (refreshToken: string) =>
     new Cookie(CookieNames.RefreshToken, refreshToken, {
       httpOnly: true,
-      sameSite: env.environment === 'dev' ? 'none' : 'strict',
-      secure: env.environment === 'dev' ? false : true,
+      sameSite: this.env.environment === 'dev' ? 'none' : 'strict',
+      secure: this.env.environment === 'dev' ? false : true,
       maxAge: TokenExpirationTimes.RefreshToken * 1000,
     });
 }

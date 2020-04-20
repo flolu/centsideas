@@ -7,7 +7,7 @@ import { ThreadLogger, NotAuthenticatedError, Identifier } from '@centsideas/uti
 import { NotificationSettingsRepository } from './notification-settings.repository';
 import { NotificationSettings } from './notification-settings.entity';
 import { NotificationSettingsErrors } from './errors';
-import { NotificationEnvironment } from './environment';
+import { NotificationEnvironment } from './notifications.environment';
 import { IPushPayload } from './models';
 
 @injectable()

@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import { EventRepository, MessageBroker, EntityMapping } from '@centsideas/event-sourcing';
 import { EventTopics } from '@centsideas/enums';
 
-import { NotificationEnvironment } from './environment';
+import { NotificationEnvironment } from './notifications.environment';
 import { NotificationSettings } from './notification-settings.entity';
 import { IUserIdNotificationSettingsMapping } from './models';
 

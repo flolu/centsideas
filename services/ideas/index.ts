@@ -10,6 +10,7 @@ import { IdeasServer } from './ideas.server';
 import { IdeaCommandHandler } from './idea.command-handler';
 import { IdeaRepository } from './idea.repository';
 import { IdeasService } from './ideas.service';
+import { IdeasEnvironment } from './ideas.environment';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Ideas;
 
@@ -20,6 +21,7 @@ registerProviders(
   IdeasService,
   MessageBroker,
   ExpressAdapter,
+  IdeasEnvironment,
 );
 
 const server: IdeasServer = getProvider(IdeasServer);

@@ -9,7 +9,7 @@ import { ApiEndpoints, EventTopics, IdeasApiRoutes, UsersApiRoutes } from '@cent
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
-import env from './environment';
+import { ConsumerEnvironment } from './consumer.environment';
 import { UsersProjection } from './users.projection';
 
 @injectable()
@@ -23,12 +23,13 @@ export class ConsumerServer {
     private ideasProjection: IdeasProjection,
     private reviewsProjection: ReviewsProjection,
     private usersProjection: UsersProjection,
+    private env: ConsumerEnvironment,
   ) {}
 
   start = () => {
-    Logger.log('launch', env.environment);
+    Logger.log('launch', this.env.environment);
 
-    this.messageBroker.initialize({ brokers: env.kafka.brokers });
+    this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
     this.messageBroker.subscribe(EventTopics.Reviews, this.reviewsProjection.handleEvent);
     this.messageBroker.subscribe(EventTopics.Users, this.usersProjection.handleEvent);
@@ -54,6 +55,6 @@ export class ConsumerServer {
     );
 
     this.app.get('/alive', (_req, res) => res.status(200).send());
-    this.app.listen(env.port);
+    this.app.listen(this.env.port);
   };
 }

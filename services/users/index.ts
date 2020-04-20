@@ -13,6 +13,7 @@ import { UsersService } from './users.service';
 import { LoginRepository } from './login.repository';
 import { AuthService } from './auth.service';
 import { AuthCommandHandler } from './auth.command-handler';
+import { UsersEnvironment } from './users.environment';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Users;
 
@@ -26,6 +27,7 @@ registerProviders(
   LoginRepository,
   MessageBroker,
   ExpressAdapter,
+  UsersEnvironment,
 );
 
 const server: UsersServer = getProvider(UsersServer);

@@ -6,16 +6,20 @@ import { Logger, ExpressAdapter } from '@centsideas/utils';
 import { IdeasApiRoutes } from '@centsideas/enums';
 
 import { IdeasService } from './ideas.service';
-import env from './environment';
+import { IdeasEnvironment } from './ideas.environment';
 
 @injectable()
 export class IdeasServer {
   private app = express();
 
-  constructor(private ideasService: IdeasService, private expressAdapter: ExpressAdapter) {}
+  constructor(
+    private ideasService: IdeasService,
+    private expressAdapter: ExpressAdapter,
+    private env: IdeasEnvironment,
+  ) {}
 
   start = () => {
-    Logger.log('launch', env.environment);
+    Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
 
     this.app.post(`/${IdeasApiRoutes.Create}`, this.expressAdapter.json(this.ideasService.create));
@@ -24,6 +28,6 @@ export class IdeasServer {
 
     this.app.get(`/${IdeasApiRoutes.Alive}`, (_req, res) => res.status(200).send());
 
-    this.app.listen(env.port);
+    this.app.listen(this.env.port);
   };
 }

@@ -20,11 +20,11 @@ import {
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
 import { UserErrors } from './errors';
-import env from './environment';
+import { UsersEnvironment } from './users.environment';
 
 @injectable()
 export class UserCommandHandler {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private userRepository: UserRepository, private env: UsersEnvironment) {}
 
   updateUser = async (
     auid: string | null,
@@ -76,7 +76,7 @@ export class UserCommandHandler {
   };
 
   confirmEmailChange = async (token: string, t: ThreadLogger): Promise<User> => {
-    const data = decodeToken(token, env.tokenSecrets.changeEmailToken);
+    const data = decodeToken(token, this.env.tokenSecrets.changeEmailToken);
     const payload: IEmailChangeTokenPayload = data;
     t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
 
@@ -89,12 +89,12 @@ export class UserCommandHandler {
     const subject = 'CENTS Ideas Email Was Changed';
     const text = `You have changed your email adress from ${payload.currentEmail} to ${payload.newEmail}`;
     await sendMail(
-      env.mailing.fromAddress,
+      this.env.mailing.fromAddress,
       payload.currentEmail,
       subject,
       text,
       text,
-      env.mailing.apiKey,
+      this.env.mailing.apiKey,
     );
     t.debug(
       'sent email to notify user, that his email has changed',
@@ -120,14 +120,21 @@ export class UserCommandHandler {
       newEmail,
       userId,
     };
-    const token = jwt.sign(tokenPayload, env.tokenSecrets.changeEmailToken, {
+    const token = jwt.sign(tokenPayload, this.env.tokenSecrets.changeEmailToken, {
       expiresIn: TokenExpirationTimes.EmailChangeToken,
     });
 
-    const activationRoute: string = `${env.frontendUrl}/${TopLevelFrontendRoutes.User}/${UserFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
+    const activationRoute: string = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.User}/${UserFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
     const expirationTimeHours = Math.floor(TokenExpirationTimes.EmailChangeToken / 3600);
     const text = `URL to change your email: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
     const subject = 'CENTS Ideas Email Change';
-    return sendMail(env.mailing.fromAddress, newEmail, subject, text, text, env.mailing.apiKey);
+    return sendMail(
+      this.env.mailing.fromAddress,
+      newEmail,
+      subject,
+      text,
+      text,
+      this.env.mailing.apiKey,
+    );
   };
 }

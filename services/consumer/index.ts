@@ -12,6 +12,7 @@ import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
 import { UsersProjection } from './users.projection';
+import { ConsumerEnvironment } from './consumer.environment';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Consumer;
 
@@ -24,6 +25,7 @@ registerProviders(
   IdeasProjection,
   ReviewsProjection,
   UsersProjection,
+  ConsumerEnvironment,
 );
 const server: ConsumerServer = getProvider(ConsumerServer);
 

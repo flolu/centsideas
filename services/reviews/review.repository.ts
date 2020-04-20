@@ -4,12 +4,12 @@ import { EventRepository, MessageBroker } from '@centsideas/event-sourcing';
 import { EventTopics } from '@centsideas/enums';
 
 import { Review } from './review.entity';
-import env from './environment';
+import { ReviewsEnvironment } from './reviews.environment';
 
 @injectable()
 export class ReviewRepository extends EventRepository<Review> {
-  constructor(private _messageBroker: MessageBroker) {
+  constructor(private _messageBroker: MessageBroker, private env: ReviewsEnvironment) {
     super(_messageBroker);
-    this.initialize(Review, env.database.url, env.database.name, EventTopics.Reviews);
+    this.initialize(Review, this.env.database.url, this.env.database.name, EventTopics.Reviews);
   }
 }

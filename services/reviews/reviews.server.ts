@@ -6,16 +6,20 @@ import { Logger, ExpressAdapter } from '@centsideas/utils';
 import { ReviewsApiRoutes } from '@centsideas/enums';
 
 import { ReviewsService } from './reviews.service';
-import env from './environment';
+import { ReviewsEnvironment } from './reviews.environment';
 
 @injectable()
 export class ReviewsServer {
   private app = express();
 
-  constructor(private reviewsService: ReviewsService, private expressAdapter: ExpressAdapter) {}
+  constructor(
+    private reviewsService: ReviewsService,
+    private expressAdapter: ExpressAdapter,
+    private env: ReviewsEnvironment,
+  ) {}
 
   start = () => {
-    Logger.log('launch', env.environment);
+    Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
 
     this.app.post(
@@ -33,6 +37,6 @@ export class ReviewsServer {
 
     this.app.get('/alive', (_req, res) => res.status(200).send());
 
-    this.app.listen(env.port);
+    this.app.listen(this.env.port);
   };
 }

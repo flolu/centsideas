@@ -10,6 +10,7 @@ import { ReviewsServer } from './reviews.server';
 import { ReviewCommandHandler } from './review.command-handler';
 import { ReviewRepository } from './review.repository';
 import { ReviewsService } from './reviews.service';
+import { ReviewsEnvironment } from './reviews.environment';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Reviews;
 
@@ -20,6 +21,7 @@ registerProviders(
   ReviewsService,
   MessageBroker,
   ExpressAdapter,
+  ReviewsEnvironment,
 );
 
 const server: ReviewsServer = getProvider(ReviewsServer);

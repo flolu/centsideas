@@ -8,7 +8,7 @@ import { MessageBroker } from '@centsideas/event-sourcing';
 
 import { NotificationsServer } from './notifications.server';
 import { NotificationSettingsRepository } from './notification-settings.repository';
-import { NotificationEnvironment } from './environment';
+import { NotificationEnvironment } from './notifications.environment';
 import { NotificationsHandlers } from './notifications.handlers';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
 

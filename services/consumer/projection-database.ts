@@ -4,7 +4,7 @@ import { MongoClient, Db, Collection } from 'mongodb';
 
 import { Logger } from '@centsideas/utils';
 
-import env from './environment';
+import { ConsumerEnvironment } from './consumer.environment';
 
 @injectable()
 export class ProjectionDatabase {
@@ -15,7 +15,7 @@ export class ProjectionDatabase {
   private usersCollection!: Collection;
   private hasInitialized = false;
 
-  constructor() {
+  constructor(private env: ConsumerEnvironment) {
     this.initialize();
   }
 
@@ -25,14 +25,14 @@ export class ProjectionDatabase {
         this.client = await retry(async () => {
           let connection: MongoClient;
           try {
-            connection = await MongoClient.connect(env.database.url, {
+            connection = await MongoClient.connect(this.env.database.url, {
               w: 1,
               useNewUrlParser: true,
               useUnifiedTopology: true,
             });
           } catch (e) {
             Logger.error('error while connecting to projection database', e);
-            connection = await MongoClient.connect(env.database.url, {
+            connection = await MongoClient.connect(this.env.database.url, {
               w: 1,
               useNewUrlParser: true,
               useUnifiedTopology: true,
