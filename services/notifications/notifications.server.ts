@@ -3,11 +3,20 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import { Logger, ExpressAdapters, handleHttpResponseError } from '@centsideas/utils';
-import { UsersApiRoutes, NotificationsApiRoutes, HttpStatusCodes } from '@centsideas/enums';
-import { HttpRequest, HttpResponse, Dtos } from '@centsideas/models';
+import {
+  UsersApiRoutes,
+  NotificationsApiRoutes,
+  HttpStatusCodes,
+  EventTopics,
+  IdeaEvents,
+  TopLevelFrontendRoutes,
+} from '@centsideas/enums';
+import { HttpRequest, HttpResponse, Dtos, IIdeaCreatedEvent } from '@centsideas/models';
+import { MessageBroker, IEvent } from '@centsideas/event-sourcing';
 
 import { NotificationEnvironment } from './environment';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
+import { IPushPayload } from './models';
 
 @injectable()
 export class NotificationsServer {
@@ -20,7 +29,11 @@ export class NotificationsServer {
     // TODO make env service injectable on all backend services
     private env: NotificationEnvironment,
     private notificationSettingsHandlers: NotificationSettingsHandlers,
+    private messageBroker: MessageBroker,
   ) {
+    this.messageBroker.initialize({ brokers: env.kafka.brokers });
+    this.messageBroker.subscribe(EventTopics.Ideas, this.handleIdeasEvents);
+
     Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
 
@@ -109,6 +122,33 @@ export class NotificationsServer {
           return { status: HttpStatusCodes.Accepted, body: {} };
 
         return handleHttpResponseError(error, t);
+      }
+    });
+  };
+
+  // TODO create notification events (NotificationSentEvent)
+  private handleIdeasEvents = async (event: IEvent<any>) => {
+    Logger.thread('handle incomming idea events', async t => {
+      try {
+        if (event.name === IdeaEvents.IdeaCreated) {
+          const createdEevent: IEvent<IIdeaCreatedEvent> = event;
+          const pushPayload: IPushPayload = {
+            notification: {
+              title: 'Your Idea has been Published',
+              body: createdEevent.data.title,
+              data: {
+                url: `/${TopLevelFrontendRoutes.Ideas}/${createdEevent.aggregateId}`,
+              },
+            },
+          };
+          await this.notificationSettingsHandlers.sendPushNotificationToUser(
+            createdEevent.data.userId,
+            pushPayload,
+            t,
+          );
+        }
+      } catch (error) {
+        Logger.error(`Error while sendin idea created push notification`, error);
       }
     });
   };

@@ -2,7 +2,7 @@ import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { tap, takeWhile } from 'rxjs/operators';
 import { SwPush } from '@angular/service-worker';
 import { Store } from '@ngrx/store';
-import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { NotificationsActions } from './notifications.actions';
 import { EnvironmentService } from '../../../shared/environment/environment.service';
@@ -16,9 +16,12 @@ export class PushNotificationService implements OnDestroy {
     private swPush: SwPush,
     private store: Store,
     private envService: EnvironmentService,
-    @Inject(PLATFORM_ID) private platform: string,
-  ) {
-    if (isPlatformBrowser(this.platform)) {
+    private router: Router,
+  ) {}
+
+  // TODO get user's push subscription if enabled in settings but not enabled in browser
+  listenForEvents() {
+    if (this.swPush.isEnabled) {
       this.handleNotificationClicks();
       this.handleNotificationMessages();
     }
@@ -30,7 +33,7 @@ export class PushNotificationService implements OnDestroy {
 
   // TODO show in ui that is blocked if not granted
   async ensurePushPermission(): Promise<boolean> {
-    if (isPlatformBrowser(this.platform)) {
+    if (this.swPush.isEnabled) {
       if (!this.hasNotificationPermission) {
         const status = await Notification.requestPermission();
         if (status === 'denied') return false;
@@ -81,6 +84,8 @@ export class PushNotificationService implements OnDestroy {
         takeWhile(() => this.alive),
         tap(notification => {
           console.log('user clicked on notification', { notification });
+          const url = notification.notification.data.url;
+          this.router.navigateByUrl(url);
         }),
       )
       .subscribe();

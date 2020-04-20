@@ -6,7 +6,9 @@ import { mapTo } from 'rxjs/operators';
 import { SwUpdate } from '@angular/service-worker';
 
 import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
+
 import { AuthSelectors } from './auth/auth.selectors';
+import { PushNotificationService } from './user/notifications/push-notification.service';
 
 @Component({
   selector: 'ci-component',
@@ -41,12 +43,14 @@ export class AppComponent implements OnDestroy {
   constructor(
     private store: Store,
     private swUpdate: SwUpdate,
+    private pushNotificationService: PushNotificationService,
     @Inject(PLATFORM_ID) private platform: string,
   ) {
     this.handleServiceWorkerUpdates();
     if (isPlatformBrowser(this.platform)) {
       this.handleOnlineOffline();
     }
+    this.pushNotificationService.listenForEvents();
   }
 
   handleServiceWorkerUpdates = () => {

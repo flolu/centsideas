@@ -72,7 +72,7 @@ export class NotificationSettingsHandlers {
     return this.nsRepository.save(ns);
   }
 
-  async sendPushNotification(userId: string, payload: IPushPayload, t: ThreadLogger) {
+  async sendPushNotificationToUser(userId: string, payload: IPushPayload, t: ThreadLogger) {
     NotAuthenticatedError.validate(userId);
 
     webpush.setVapidDetails(
@@ -80,7 +80,6 @@ export class NotificationSettingsHandlers {
       this.env.vapidPublicKey,
       this.env.vapidPrivateKey,
     );
-    t.debug('set vapid details');
 
     const ns = await this.getSettingsOfUser(userId);
     t.debug('found settings');

@@ -10,4 +10,7 @@ export class NotificationEnvironment {
   frontendUrl = process.env.FRONTEND_URL!;
   vapidPrivateKey = process.env.VAPID_PRIVATE_KEY!;
   vapidPublicKey = process.env.VAPID_PUBLIC_KEY!;
+  kafka = {
+    brokers: [process.env.KAFKA_BROKER_HOST!],
+  };
 }
