@@ -23,7 +23,6 @@ export class EntityMapping<IEntityMapping> {
       this.hasInitializedBeenCalled = true;
 
       this.client = await retry(async () => {
-        Logger.log('retry', 'url:', this.databaseUrl);
         const connection = await MongoClient.connect(this.databaseUrl, {
           w: 1,
           useNewUrlParser: true,

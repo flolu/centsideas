@@ -4,15 +4,22 @@ import * as __rxjsTypes from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { NotificationsService } from './notifications.service';
 import { NotificationsActions } from './notifications.actions';
+import { PushNotificationService } from '../../../shared/push-notifications/push-notification.service';
 
 @Injectable()
 export class NotificationsEffects {
-  constructor(private actions$: Actions, private notficationsService: NotificationsService) {}
+  constructor(
+    private actions$: Actions,
+    private notficationsService: NotificationsService,
+    private pushService: PushNotificationService,
+    private store: Store,
+  ) {}
 
   // TODO generic effects factory function?
   addPushSubscription$ = createEffect(() =>
@@ -49,5 +56,20 @@ export class NotificationsEffects {
         ),
       ),
     ),
+  );
+  getSettingsDone$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(NotificationsActions.getSettingsDone),
+        tap(async ({ settings }) => {
+          if (settings.sendPushes && !this.pushService.hasNotificationPermission) {
+            const sub = await this.pushService.ensurePushPermission();
+            if (sub) {
+              this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
+            }
+          }
+        }),
+      ),
+    { dispatch: false },
   );
 }

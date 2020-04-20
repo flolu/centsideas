@@ -1,0 +1,18 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+
+package(default_visibility = ["//services/client:__subpackages__"])
+
+ts_library(
+    name = "push-notifications",
+    srcs = ["push-notification.service.ts"],
+    tsconfig = "//services/client:tsconfig.json",
+    use_angular_plugin = True,
+    deps = [
+        "//services/client/shared/environment",
+        "@npm//@angular/compiler-cli",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+        "@npm//@angular/service-worker",
+        "@npm//rxjs",
+    ],
+)

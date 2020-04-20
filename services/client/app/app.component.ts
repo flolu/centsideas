@@ -8,7 +8,7 @@ import { SwUpdate } from '@angular/service-worker';
 import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
 
 import { AuthSelectors } from './auth/auth.selectors';
-import { PushNotificationService } from './user/notifications/push-notification.service';
+import { PushNotificationService } from '../shared/push-notifications/push-notification.service';
 
 @Component({
   selector: 'ci-component',
@@ -50,7 +50,7 @@ export class AppComponent implements OnDestroy {
     if (isPlatformBrowser(this.platform)) {
       this.handleOnlineOffline();
     }
-    this.pushNotificationService.listenForEvents();
+    this.pushNotificationService.initialize();
   }
 
   handleServiceWorkerUpdates = () => {

@@ -48,6 +48,14 @@ export class NotificationSettingsHandlers {
     NotificationSettingsErrors.PushSubscriptionInvalidError.validate(subscription);
 
     const ns = await this.nsRepository.findById(nsId);
+
+    for (const sub of ns.persistedState.pushSubscriptions) {
+      if (sub.endpoint === subscription.endpoint) {
+        t.debug('subscription is already saved');
+        return ns;
+      }
+    }
+
     ns.addPushSubscription(subscription);
 
     t.debug(`adding push subscription to settings`);
@@ -90,6 +98,7 @@ export class NotificationSettingsHandlers {
     }
 
     t.debug(`start sending notification to ${ns.persistedState.pushSubscriptions.length} clients`);
+    // TODO remove subs that throw error
     await Promise.all(
       ns.persistedState.pushSubscriptions.map(sub =>
         webpush.sendNotification(sub, JSON.stringify(payload)),

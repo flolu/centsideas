@@ -148,7 +148,7 @@ export class NotificationsServer {
           );
         }
       } catch (error) {
-        Logger.error(`Error while sendin idea created push notification`, error);
+        t.error(`Error while sending idea-created push notification`, error);
       }
     });
   };

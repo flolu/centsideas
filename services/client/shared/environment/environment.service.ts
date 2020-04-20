@@ -28,6 +28,8 @@ export class EnvironmentService {
     if (isPlatformBrowser(this.platform)) {
       if (this.transferState.hasKey(this.key)) {
         const environment: IEnvironment = this.transferState.get(this.key, null);
+        // TODO it is probably not a good idea to save env in localohst (because it wont get env udpates)
+        // TODO use env like https://shorturl.at/nsxJN
         localStorage.setItem(this.localstorageEnvironmentKey, JSON.stringify(environment));
         this.environment = environment;
       }

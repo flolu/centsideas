@@ -1,63 +1,61 @@
-import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { tap, takeWhile } from 'rxjs/operators';
 import { SwPush } from '@angular/service-worker';
-import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 
-import { NotificationsActions } from './notifications.actions';
-import { EnvironmentService } from '../../../shared/environment/environment.service';
+import { EnvironmentService } from '../environment/environment.service';
 
 @Injectable({ providedIn: 'root' })
 export class PushNotificationService implements OnDestroy {
   private alive = true;
 
-  // TODO do all this stuff only if on the browser
   constructor(
     private swPush: SwPush,
-    private store: Store,
     private envService: EnvironmentService,
     private router: Router,
   ) {}
 
-  // TODO get user's push subscription if enabled in settings but not enabled in browser
-  listenForEvents() {
+  initialize() {
     if (this.swPush.isEnabled) {
       this.handleNotificationClicks();
       this.handleNotificationMessages();
     }
   }
 
-  private get hasNotificationPermission() {
+  get hasNotificationPermission() {
     return Notification.permission === 'granted';
   }
 
+  get areNotificationsBlocked() {
+    return Notification.permission === 'denied';
+  }
+
   // TODO show in ui that is blocked if not granted
-  async ensurePushPermission(): Promise<boolean> {
+  async ensurePushPermission(): Promise<PushSubscription | null> {
     if (this.swPush.isEnabled) {
       if (!this.hasNotificationPermission) {
         const status = await Notification.requestPermission();
-        if (status === 'denied') return false;
+        if (status === 'denied') return null;
       }
       return this.ensureSubscription();
     } else {
-      return false;
+      return null;
     }
   }
 
-  private async ensureSubscription(): Promise<boolean> {
+  private async ensureSubscription(): Promise<PushSubscription | null> {
     try {
       const sw = await navigator.serviceWorker.getRegistration();
-
       const existingSub = await sw.pushManager.getSubscription();
-      if (existingSub) return true;
+      if (existingSub) return existingSub;
 
       const sub = await this.swPush.requestSubscription({
         serverPublicKey: this.envService.env.vapidPublicKey,
       });
-      this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
+      return sub;
     } catch (error) {
       console.log('error while ensuring subscription', error);
-      return false;
+      return null;
     }
   }
 
@@ -82,10 +80,12 @@ export class PushNotificationService implements OnDestroy {
     this.swPush.notificationClicks
       .pipe(
         takeWhile(() => this.alive),
-        tap(notification => {
+        tap(({ notification }) => {
           console.log('user clicked on notification', { notification });
-          const url = notification.notification.data.url;
-          this.router.navigateByUrl(url);
+          if (notification.data && notification.data.url) {
+            const url = notification.data.url;
+            this.router.navigateByUrl(url);
+          }
         }),
       )
       .subscribe();

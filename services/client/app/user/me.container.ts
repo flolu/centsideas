@@ -15,8 +15,8 @@ import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';
 import { AuthActions } from '../auth/auth.actions';
 import { NotificationsSelectors } from './notifications/notifications.selectors';
-import { PushNotificationService } from './notifications/push-notification.service';
 import { NotificationsActions } from './notifications/notifications.actions';
+import { PushNotificationService } from '../../shared/push-notifications/push-notification.service';
 
 const selectChangeEmailToken = createSelector(
   createFeatureSelector<any>('router'),
@@ -107,7 +107,13 @@ export class MeContainer implements OnDestroy {
       }),
     );
 
-  onTestNotification = () => this.pushService.sendSampleNotificationLocally();
+  onTestNotification = () => {
+    if (this.pushService.areNotificationsBlocked) {
+      // FIXME shoe somethine in UI or so
+      console.log('you blocked the permision to send push notifications');
+    }
+    this.pushService.sendSampleNotificationLocally();
+  };
 
   onSaveNotificationSettings() {
     this.store.dispatch(
@@ -119,8 +125,13 @@ export class MeContainer implements OnDestroy {
     this.notificatoinsForm.valueChanges
       .pipe(
         takeWhile(() => this.alive),
-        tap((changes: Dtos.INotificationSettingsDto) => {
-          if (changes.sendPushes) this.pushService.ensurePushPermission();
+        tap(async (changes: Dtos.INotificationSettingsDto) => {
+          if (changes.sendPushes) {
+            const sub = await this.pushService.ensurePushPermission();
+            if (sub) {
+              this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
+            }
+          }
           // FIXME merge change events (in backend) that are close together in time
         }),
       )
