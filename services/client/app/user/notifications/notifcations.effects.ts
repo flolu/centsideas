@@ -14,6 +14,7 @@ import { NotificationsActions } from './notifications.actions';
 export class NotificationsEffects {
   constructor(private actions$: Actions, private notficationsService: NotificationsService) {}
 
+  // TODO generic effects factory function?
   addPushSubscription$ = createEffect(() =>
     this.actions$.pipe(
       ofType(NotificationsActions.addPushSub),
@@ -26,13 +27,25 @@ export class NotificationsEffects {
     ),
   );
 
-  updateNotificationSettings$ = createEffect(() =>
+  updateSettings$ = createEffect(() =>
     this.actions$.pipe(
       ofType(NotificationsActions.updateSettings),
       switchMap(action =>
         this.notficationsService.updateSettings(action.settings).pipe(
           map(settings => NotificationsActions.updateSettingsDone({ settings })),
           catchError(error => of(NotificationsActions.updateSettingsFail({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  getSettings$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(NotificationsActions.getSettings),
+      switchMap(() =>
+        this.notficationsService.getSettings().pipe(
+          map(settings => NotificationsActions.getSettingsDone({ settings })),
+          catchError(error => of(NotificationsActions.getSettingsFail({ error }))),
         ),
       ),
     ),

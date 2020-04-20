@@ -37,7 +37,7 @@
     "dev": "yarn setup && yarn docker:dev",
     "deploy": "bazelisk run :kubernetes_deployment.apply --define configuration=prod",
     "client:dev": "ibazel run //services/client:live_server",
-    "client:prod": "export GATEWAY_HOST=http://localhost:3000 && export FRONTEND_URL=http://localhost:4000 && bazelisk run //services/client:prod_server",
+    "client:prod": "env-cmd bazelisk run //services/client:prod_server",
     "test": "bazelisk test //...",
     "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
     "setup": "ts-node setup",
@@ -50,6 +50,7 @@
     "docker:prune": "docker system prune --volumes",
     "docker:clean": "yarn docker:stop && yarn docker:prune",
     "bazel:clean": "bazelisk clean",
+    "vapid": "web-push generate-vapid-keys --json",
     "postinstall": "ngcc"
   },
   "dependencies": {
@@ -77,6 +78,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "cors": "2.8.5",
+    "env-cmd": "^10.1.0",
     "express": "4.17.1",
     "faker": "4.1.0",
     "inversify": "5.0.1",
@@ -130,6 +132,7 @@
     "@types/nodemailer": "6.4.0",
     "@types/sanitize-html": "1.22.0",
     "@types/shortid": "0.0.29",
+    "@types/web-push": "^3.3.0",
     "codelyzer": "5.2.2",
     "history-server": "1.3.1",
     "html-insert-assets": "0.8.0",

@@ -1,11 +1,12 @@
+import * as __rxjsTypes from 'rxjs';
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { Dtos } from '@centsideas/models';
 import { NotificationsApiRoutes, ApiEndpoints } from '@centsideas/enums';
 
 import { EnvironmentService } from '../../../shared/environment/environment.service';
-import { Observable } from 'rxjs';
-import { Dtos } from '@centsideas/models';
 
 @Injectable()
 export class NotificationsService {
@@ -13,15 +14,17 @@ export class NotificationsService {
 
   constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
 
-  addPushSubscription(subscription: PushSubscription): Observable<Dtos.INotificationSettingsDto> {
+  addPushSubscription(subscription: PushSubscription) {
     const url = `${this.baseUrl}/${NotificationsApiRoutes.SubscribePush}`;
     return this.http.post<Dtos.INotificationSettingsDto>(url, { subscription });
   }
 
-  updateSettings(
-    settings: Dtos.INotificationSettingsDto,
-  ): Observable<Dtos.INotificationSettingsDto> {
-    const url = `${this.baseUrl}/${NotificationsApiRoutes.SubscribePush}`;
-    return this.http.post<Dtos.INotificationSettingsDto>(url, { settings });
+  updateSettings(settings: Dtos.INotificationSettingsDto) {
+    const url = `${this.baseUrl}/${NotificationsApiRoutes.UpdateSettings}`;
+    return this.http.post<Dtos.INotificationSettingsDto>(url, settings);
+  }
+
+  getSettings() {
+    return this.http.get<Dtos.INotificationSettingsDto>(this.baseUrl);
   }
 }

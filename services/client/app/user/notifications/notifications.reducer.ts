@@ -45,6 +45,16 @@ const notificationsReducer = createReducer(
     ...state,
     ...LOADING_FAIL(error),
   })),
+  on(NotificationsActions.getSettings, state => ({ ...state, ...LOADING })),
+  on(NotificationsActions.getSettingsDone, (state, { settings }) => ({
+    ...state,
+    ...LOADING_DONE,
+    settings,
+  })),
+  on(NotificationsActions.getSettingsFail, (state, { error }) => ({
+    ...state,
+    ...LOADING_FAIL(error),
+  })),
 );
 
 export function reducer(state: INotificationsReducerState | undefined, action: Action) {

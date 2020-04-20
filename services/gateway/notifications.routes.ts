@@ -16,6 +16,16 @@ export class NotificationsRoutes {
       this.expressAdapter.makeJsonAdapter(`${host}/${NotificationsApiRoutes.SubscribePush}`),
     );
 
+    this.router.post(
+      `/${NotificationsApiRoutes.UpdateSettings}`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${NotificationsApiRoutes.UpdateSettings}`),
+    );
+
+    this.router.get(
+      `/`,
+      this.expressAdapter.makeJsonAdapter(`${host}/${NotificationsApiRoutes.GetSettings}`),
+    );
+
     return this.router;
   };
 }

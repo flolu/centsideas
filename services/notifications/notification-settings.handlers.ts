@@ -1,15 +1,21 @@
 import { injectable } from 'inversify';
+import * as webpush from 'web-push';
 
-import { IPushSubscription } from '@centsideas/models';
+import { IPushSubscription, Dtos } from '@centsideas/models';
 import { ThreadLogger, NotAuthenticatedError, Identifier } from '@centsideas/utils';
 
 import { NotificationSettingsRepository } from './notification-settings.repository';
 import { NotificationSettings } from './notification-settings.entity';
 import { NotificationSettingsErrors } from './errors';
+import { NotificationEnvironment } from './environment';
+import { IPushPayload } from './models';
 
 @injectable()
 export class NotificationSettingsHandlers {
-  constructor(private nsRepository: NotificationSettingsRepository) {}
+  constructor(
+    private nsRepository: NotificationSettingsRepository,
+    private env: NotificationEnvironment,
+  ) {}
 
   async upsert(authenticatedUserId: string, t: ThreadLogger): Promise<NotificationSettings> {
     NotAuthenticatedError.validate(authenticatedUserId);
@@ -33,24 +39,84 @@ export class NotificationSettingsHandlers {
   }
 
   async addPushSubscription(
-    authenticatedUserId: string,
+    nsId: string,
+    auid: string,
     subscription: IPushSubscription,
     t: ThreadLogger,
   ): Promise<NotificationSettings> {
-    NotAuthenticatedError.validate(authenticatedUserId);
+    NotAuthenticatedError.validate(auid);
     NotificationSettingsErrors.PushSubscriptionInvalidError.validate(subscription);
 
-    const mapping = await this.nsRepository.userIdMapping.get(authenticatedUserId);
-    if (!mapping)
-      throw new NotificationSettingsErrors.NoNotificationSettingsWithUserIdFoundError(
-        authenticatedUserId,
-      );
-    t.debug(`found mapping, notificationSettingsId is: ${mapping.notificationSettingsId}`);
-
-    const ns = await this.nsRepository.findById(mapping.notificationSettingsId);
+    const ns = await this.nsRepository.findById(nsId);
     ns.addPushSubscription(subscription);
 
     t.debug(`adding push subscription to settings`);
     return this.nsRepository.save(ns);
+  }
+
+  async updateSettings(
+    nsId: string,
+    auid: string,
+    settings: Dtos.INotificationSettingsDto,
+    t: ThreadLogger,
+  ): Promise<NotificationSettings> {
+    NotAuthenticatedError.validate(auid);
+    NotificationSettingsErrors.NotificationSettingsPayloadInvalid.validate(settings);
+    t.debug('request is valid');
+
+    const ns = await this.nsRepository.findById(nsId);
+    t.debug('found settings');
+    ns.update(settings.sendEmails, settings.sendPushes);
+
+    t.debug('start saving updated settings');
+    return this.nsRepository.save(ns);
+  }
+
+  async sendPushNotification(userId: string, payload: IPushPayload, t: ThreadLogger) {
+    NotAuthenticatedError.validate(userId);
+
+    webpush.setVapidDetails(
+      `${this.env.frontendUrl}/contact`,
+      this.env.vapidPublicKey,
+      this.env.vapidPrivateKey,
+    );
+    t.debug('set vapid details');
+
+    const ns = await this.getSettingsOfUser(userId);
+    t.debug('found settings');
+
+    if (!ns.persistedState.sendPushes) {
+      t.debug(`push notifications are disabled`);
+      return true;
+    }
+
+    t.debug(`start sending notification to ${ns.persistedState.pushSubscriptions.length} clients`);
+    await Promise.all(
+      ns.persistedState.pushSubscriptions.map(sub =>
+        webpush.sendNotification(sub, JSON.stringify(payload)),
+      ),
+    );
+    t.debug('sent notificatios');
+
+    return true;
+  }
+
+  async getSettings(auid: string) {
+    NotAuthenticatedError.validate(auid);
+    return this.getSettingsOfUser(auid);
+  }
+
+  private async getSettingsOfUser(userId: string) {
+    const mapping = await this.nsRepository.userIdMapping.get(userId);
+    if (!mapping)
+      throw new NotificationSettingsErrors.NoNotificationSettingsWithUserIdFoundError(userId);
+
+    const notificationSettings = await this.nsRepository.findById(mapping.notificationSettingsId);
+    if (!notificationSettings)
+      throw new NotificationSettingsErrors.NotificationSettingsNotFoundError(
+        mapping.notificationSettingsId,
+      );
+
+    return notificationSettings;
   }
 }

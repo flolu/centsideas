@@ -39,6 +39,7 @@ export class EnvironmentService {
   };
 
   get env(): IEnvironment {
+    // TODO if env not exists then first do a fetch from the server, and only use defaults it it errors out
     if (!this.environment || !this.environment.gatewayHost) {
       if (this.document.location.hostname === 'localhost')
         return { gatewayHost: 'http://localhost:3000', vapidPublicKey: '' };

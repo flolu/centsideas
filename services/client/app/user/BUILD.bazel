@@ -40,6 +40,7 @@ ts_library(
     srcs = [
         "me.container.ts",
         "user.module.ts",
+        ":notifications/push-notification.service.ts",
     ],
     angular_assets = [":me_container_styles"],
     tsconfig = "//services/client:tsconfig.json",

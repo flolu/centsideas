@@ -7,6 +7,7 @@ import { Dtos } from '@centsideas/models';
 const prefix = `${appPrefix}/notifications`;
 const addPushSubscriptionPrefix = prefix + '/add-push-subscription';
 const updateSettingsPrefix = prefix + '/update-settings';
+const getSettingsPrefix = prefix + '/get-settigs';
 
 const addPushSub = createAction(
   addPushSubscriptionPrefix,
@@ -34,6 +35,14 @@ const updateSettingsFail = createAction(
   props<{ error: string }>(),
 );
 
+const getSettings = createAction(getSettingsPrefix);
+const getSettingsDone = createAction(
+  getSettingsPrefix + doneSuffix,
+  props<{ settings: Dtos.INotificationSettingsDto }>(),
+);
+// TODO consider creating consistend error dto
+const getSettingsFail = createAction(getSettingsPrefix + failSuffix, props<{ error: string }>());
+
 export const NotificationsActions = {
   addPushSub,
   addPushSubDone,
@@ -41,4 +50,7 @@ export const NotificationsActions = {
   updateSettings,
   updateSettingsDone,
   updateSettingsFail,
+  getSettings,
+  getSettingsDone,
+  getSettingsFail,
 };

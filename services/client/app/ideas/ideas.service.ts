@@ -10,6 +10,7 @@ import { EnvironmentService } from '../../shared/environment/environment.service
 export class IdeasService {
   constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
 
+  // TODO remove method return type annotations... they are redundent
   getIdeas = (): Observable<IIdeaViewModel[]> => {
     return this.http.get<IIdeaViewModel[]>(`${this.baseUrl}`);
   };

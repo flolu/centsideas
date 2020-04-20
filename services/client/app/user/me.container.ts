@@ -4,7 +4,7 @@ import * as __ngrxStore from '@ngrx/store/store';
 import { Component, OnDestroy } from '@angular/core';
 import { Store, createSelector, createFeatureSelector } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';
-import { tap, take, takeWhile } from 'rxjs/operators';
+import { tap, take, takeWhile, debounceTime } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
 
@@ -14,9 +14,9 @@ import { IUserState, Dtos } from '@centsideas/models';
 import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';
 import { AuthActions } from '../auth/auth.actions';
-import { NotificationsActions } from './notifications/notifications.actions';
-import { EnvironmentService } from '../../shared/environment/environment.service';
 import { NotificationsSelectors } from './notifications/notifications.selectors';
+import { PushNotificationService } from './notifications/push-notification.service';
+import { NotificationsActions } from './notifications/notifications.actions';
 
 const selectChangeEmailToken = createSelector(
   createFeatureSelector<any>('router'),
@@ -24,6 +24,7 @@ const selectChangeEmailToken = createSelector(
 );
 
 // FIXME live indicator of username and email availability
+// TODO live updating form
 @Component({
   selector: 'ci-me',
   template: `
@@ -60,11 +61,10 @@ const selectChangeEmailToken = createSelector(
         <span>Push</span>
       </label>
       <br />
-      <ng-container *ngIf="notificationsState$ | async as nState">
-        <span *ngIf="nState.loading">Updating...</span>
-        <span *ngIf="nState.loaded && !nState.loading">Saved settings</span>
-      </ng-container>
+      <button (click)="onSaveNotificationSettings()">Save</button>
+      <br />
     </form>
+    <button (click)="onTestNotification()">Test notification</button>
   `,
   styleUrls: ['me.container.sass'],
 })
@@ -80,33 +80,54 @@ export class MeContainer implements OnDestroy {
   });
 
   notificatoinsForm = new FormGroup({
-    sendEmails: new FormControl(false),
-    sendPushes: new FormControl(false),
+    sendEmails: new FormControl(),
+    sendPushes: new FormControl(),
   });
 
   constructor(
     private store: Store,
     private router: Router,
     private swPush: SwPush,
-    private envService: EnvironmentService,
+    private pushService: PushNotificationService,
   ) {
     this.handleConfirmEmailChange();
     this.updateUserForm();
-    this.listenNotificationForm();
+    this.updateNotificationForm();
+    this.listenNotificationFormChanges();
+    this.store.dispatch(NotificationsActions.getSettings());
   }
 
   onLogout = () => this.store.dispatch(AuthActions.logout());
 
-  onUpdate = () => {
+  onUpdate = () =>
     this.store.dispatch(
       UserActions.updateUser({
         email: this.form.value.email,
         username: this.form.value.username,
       }),
     );
-  };
 
-  updateUserForm = () => {
+  onTestNotification = () => this.pushService.sendSampleNotificationLocally();
+
+  onSaveNotificationSettings() {
+    this.store.dispatch(
+      NotificationsActions.updateSettings({ settings: this.notificatoinsForm.value }),
+    );
+  }
+
+  private listenNotificationFormChanges() {
+    this.notificatoinsForm.valueChanges
+      .pipe(
+        takeWhile(() => this.alive),
+        tap((changes: Dtos.INotificationSettingsDto) => {
+          if (changes.sendPushes) this.pushService.ensurePushPermission();
+          // FIXME merge change events (in backend) that are close together in time
+        }),
+      )
+      .subscribe();
+  }
+
+  private updateUserForm = () =>
     this.store
       .select(UserSelectors.selectUserState)
       .pipe(
@@ -118,9 +139,23 @@ export class MeContainer implements OnDestroy {
         takeWhile(() => this.alive),
       )
       .subscribe();
-  };
 
-  handleConfirmEmailChange = () => {
+  private updateNotificationForm = () =>
+    this.store
+      .select(NotificationsSelectors.selectNotificationsState)
+      .pipe(
+        tap(state => {
+          const patch = {
+            sendEmails: state.settings.sendEmails,
+            sendPushes: state.settings.sendPushes,
+          };
+          this.notificatoinsForm.patchValue(patch);
+        }),
+        takeWhile(() => this.alive),
+      )
+      .subscribe();
+
+  private handleConfirmEmailChange = () =>
     this.store
       .select(selectChangeEmailToken)
       .pipe(
@@ -136,29 +171,6 @@ export class MeContainer implements OnDestroy {
         take(1),
       )
       .subscribe();
-  };
-
-  async askForPushPermission() {
-    if (!this.swPush.isEnabled) {
-      const sub = await this.swPush.requestSubscription({
-        serverPublicKey: this.envService.env.vapidPublicKey,
-      });
-      this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
-    }
-  }
-
-  private listenNotificationForm() {
-    this.notificatoinsForm.valueChanges
-      .pipe(
-        takeWhile(() => this.alive),
-        tap((changes: Dtos.INotificationSettingsDto) => {
-          this.store.dispatch(NotificationsActions.updateSettings({ settings: changes }));
-          if (changes.sendPushes) this.askForPushPermission();
-          // FIXME merge change events (in backend) that are close together in time
-        }),
-      )
-      .subscribe();
-  }
 
   ngOnDestroy() {
     this.alive = false;
