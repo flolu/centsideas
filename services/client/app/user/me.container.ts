@@ -17,6 +17,7 @@ import { AuthActions } from '../auth/auth.actions';
 import { NotificationsSelectors } from './notifications/notifications.selectors';
 import { NotificationsActions } from './notifications/notifications.actions';
 import { PushNotificationService } from '../../shared/push-notifications/push-notification.service';
+import { INotificationSettingsForm } from './notifications/notifications.state';
 
 const selectChangeEmailToken = createSelector(
   createFeatureSelector<any>('router'),
@@ -49,22 +50,14 @@ const selectChangeEmailToken = createSelector(
       <button (click)="onUpdate()">Update</button>
       <button (click)="onLogout()">Logout</button>
     </form>
-    <h1>Notifications</h1>
-    <form [formGroup]="notificatoinsForm">
-      <label>
-        <input formControlName="sendEmails" type="checkbox" />
-        <span>Email</span>
-      </label>
-      <br />
-      <label>
-        <input formControlName="sendPushes" type="checkbox" />
-        <span>Push</span>
-      </label>
-      <br />
-      <button (click)="onSaveNotificationSettings()">Save</button>
-      <br />
-    </form>
-    <button (click)="onTestNotification()">Test notification</button>
+    <ng-container *ngIf="notificationsState$ | async as state">
+      <ci-notifications-form
+        *ngIf="state.persisted"
+        [status]="state.status"
+        [formState]="state.persisted"
+        (updateForm)="onUpdateNotificationSettingsForm($event)"
+      ></ci-notifications-form>
+    </ng-container>
   `,
   styleUrls: ['me.container.sass'],
 })
@@ -79,11 +72,6 @@ export class MeContainer implements OnDestroy {
     email: new FormControl(''),
   });
 
-  notificatoinsForm = new FormGroup({
-    sendEmails: new FormControl(),
-    sendPushes: new FormControl(),
-  });
-
   constructor(
     private store: Store,
     private router: Router,
@@ -92,8 +80,6 @@ export class MeContainer implements OnDestroy {
   ) {
     this.handleConfirmEmailChange();
     this.updateUserForm();
-    this.updateNotificationForm();
-    this.listenNotificationFormChanges();
     this.store.dispatch(NotificationsActions.getSettings());
   }
 
@@ -107,6 +93,14 @@ export class MeContainer implements OnDestroy {
       }),
     );
 
+  async onUpdateNotificationSettingsForm(event: INotificationSettingsForm) {
+    this.store.dispatch(NotificationsActions.formChanged({ value: event }));
+    if (event.sendPushes) {
+      const sub = await this.pushService.ensurePushPermission();
+      if (sub) this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
+    }
+  }
+
   onTestNotification = () => {
     if (this.pushService.areNotificationsBlocked) {
       // FIXME shoe somethine in UI or so
@@ -114,29 +108,6 @@ export class MeContainer implements OnDestroy {
     }
     this.pushService.sendSampleNotificationLocally();
   };
-
-  onSaveNotificationSettings() {
-    this.store.dispatch(
-      NotificationsActions.updateSettings({ settings: this.notificatoinsForm.value }),
-    );
-  }
-
-  private listenNotificationFormChanges() {
-    this.notificatoinsForm.valueChanges
-      .pipe(
-        takeWhile(() => this.alive),
-        tap(async (changes: Dtos.INotificationSettingsDto) => {
-          if (changes.sendPushes) {
-            const sub = await this.pushService.ensurePushPermission();
-            if (sub) {
-              this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
-            }
-          }
-          // FIXME merge change events (in backend) that are close together in time
-        }),
-      )
-      .subscribe();
-  }
 
   private updateUserForm = () =>
     this.store
@@ -146,21 +117,6 @@ export class MeContainer implements OnDestroy {
           if (!state.user) return;
           this.form.patchValue(state.user);
           this.user = state.user;
-        }),
-        takeWhile(() => this.alive),
-      )
-      .subscribe();
-
-  private updateNotificationForm = () =>
-    this.store
-      .select(NotificationsSelectors.selectNotificationsState)
-      .pipe(
-        tap(state => {
-          const patch = {
-            sendEmails: state.settings.sendEmails,
-            sendPushes: state.settings.sendPushes,
-          };
-          this.notificatoinsForm.patchValue(patch);
         }),
         takeWhile(() => this.alive),
       )

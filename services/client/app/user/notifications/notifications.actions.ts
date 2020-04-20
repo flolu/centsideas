@@ -1,13 +1,17 @@
 import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
-import { appPrefix, doneSuffix, failSuffix } from '../../../shared/helpers/actions.helper';
+
 import { Dtos } from '@centsideas/models';
+
+import { appPrefix, doneSuffix, failSuffix } from '../../../shared/helpers/actions.helper';
+import { INotificationSettingsForm } from './notifications.state';
 
 const prefix = `${appPrefix}/notifications`;
 const addPushSubscriptionPrefix = prefix + '/add-push-subscription';
 const updateSettingsPrefix = prefix + '/update-settings';
 const getSettingsPrefix = prefix + '/get-settigs';
+const formChangedPrefix = prefix + '/form-changed';
 
 const addPushSub = createAction(
   addPushSubscriptionPrefix,
@@ -43,6 +47,8 @@ const getSettingsDone = createAction(
 // TODO consider creating consistend error dto
 const getSettingsFail = createAction(getSettingsPrefix + failSuffix, props<{ error: string }>());
 
+const formChanged = createAction(formChangedPrefix, props<{ value: INotificationSettingsForm }>());
+
 export const NotificationsActions = {
   addPushSub,
   addPushSubDone,
@@ -53,4 +59,5 @@ export const NotificationsActions = {
   getSettings,
   getSettingsDone,
   getSettingsFail,
+  formChanged,
 };

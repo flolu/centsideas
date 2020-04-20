@@ -1,59 +1,58 @@
 import { createReducer, Action, on } from '@ngrx/store';
 
-import { Dtos } from '@centsideas/models';
-
-import {
-  ILoadingState,
-  initialLoadingState,
-  LOADING,
-  LOADING_DONE,
-  LOADING_FAIL,
-} from '../../../shared/helpers/state.helper';
 import { NotificationsActions } from './notifications.actions';
+import { INotificationSettingsForm } from './notifications.state';
 
-export interface INotificationsReducerState extends ILoadingState {
-  settings: Dtos.INotificationSettingsDto;
+export interface INotificationsReducerState {
+  persisted: INotificationSettingsForm;
+  formData: INotificationSettingsForm;
+  status: Status;
+}
+
+export enum Status {
+  Loading = 1,
+  Loaded = 2,
+  Syncing = 3,
+  Synced = 4,
+  PatchSyncing = 5,
+  Error = 6,
 }
 
 const initialState: INotificationsReducerState = {
-  ...initialLoadingState,
-  settings: {
-    sendPushes: false,
-    sendEmails: false,
-  },
+  persisted: null,
+  formData: { sendEmails: false, sendPushes: false },
+  status: Status.Loading,
 };
 
 const notificationsReducer = createReducer(
   initialState,
-  on(NotificationsActions.addPushSub, state => ({ ...state, ...LOADING })),
-  on(NotificationsActions.addPushSubDone, (state, { settings }) => ({
-    ...state,
-    ...LOADING_DONE,
-    settings,
-  })),
-  on(NotificationsActions.addPushSubFail, (state, { error }) => ({
-    ...state,
-    ...LOADING_FAIL(error),
-  })),
-  on(NotificationsActions.updateSettings, state => ({ ...state, ...LOADING })),
-  on(NotificationsActions.updateSettingsDone, (state, { settings }) => ({
-    ...state,
-    ...LOADING_DONE,
-    settings,
-  })),
-  on(NotificationsActions.updateSettingsFail, (state, { error }) => ({
-    ...state,
-    ...LOADING_FAIL(error),
-  })),
-  on(NotificationsActions.getSettings, state => ({ ...state, ...LOADING })),
+  on(NotificationsActions.getSettings, state => ({ ...state, status: Status.Loaded })),
   on(NotificationsActions.getSettingsDone, (state, { settings }) => ({
     ...state,
-    ...LOADING_DONE,
-    settings,
+    status: Status.Loaded,
+    persisted: settings,
   })),
   on(NotificationsActions.getSettingsFail, (state, { error }) => ({
     ...state,
-    ...LOADING_FAIL(error),
+    status: Status.Error,
+  })),
+
+  on(NotificationsActions.formChanged, (state, { value }) => ({
+    ...state,
+    formData: value,
+  })),
+
+  on(NotificationsActions.updateSettings, state => ({
+    ...state,
+    status: state.status === Status.Syncing ? Status.PatchSyncing : Status.Syncing,
+  })),
+  on(NotificationsActions.updateSettingsDone, state => ({
+    ...state,
+    status: state.status === Status.PatchSyncing ? Status.Syncing : Status.Synced,
+  })),
+  on(NotificationsActions.updateSettingsFail, (state, { error }) => ({
+    ...state,
+    status: Status.Error,
   })),
 );
 

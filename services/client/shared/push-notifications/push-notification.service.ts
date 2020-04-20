@@ -36,6 +36,7 @@ export class PushNotificationService implements OnDestroy {
       if (!this.hasNotificationPermission) {
         const status = await Notification.requestPermission();
         if (status === 'denied') return null;
+        await this.sendSampleNotificationLocally();
       }
       return this.ensureSubscription();
     } else {

@@ -21,6 +21,15 @@ export class NotificationsEffects {
     private store: Store,
   ) {}
 
+  formChanged$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(NotificationsActions.formChanged),
+      map(({ value }) => {
+        return NotificationsActions.updateSettings({ settings: value });
+      }),
+    ),
+  );
+
   // TODO generic effects factory function?
   addPushSubscription$ = createEffect(() =>
     this.actions$.pipe(
