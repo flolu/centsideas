@@ -1,6 +1,7 @@
+import * as __rxjsTypes from 'rxjs';
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 import { ApiEndpoints } from '@centsideas/enums';
 import { IIdeaViewModel, IIdeaState } from '@centsideas/models';
@@ -10,32 +11,31 @@ import { EnvironmentService } from '../../shared/environment/environment.service
 export class IdeasService {
   constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
 
-  // TODO remove method return type annotations... they are redundent
-  getIdeas = (): Observable<IIdeaViewModel[]> => {
+  getIdeas() {
     return this.http.get<IIdeaViewModel[]>(`${this.baseUrl}`);
-  };
+  }
 
-  getIdeaById = (id: string): Observable<IIdeaViewModel> => {
+  getIdeaById(id: string) {
     return this.http.get<IIdeaViewModel>(`${this.baseUrl}/${id}`);
-  };
+  }
 
-  createIdea = (title: string, description: string): Observable<IIdeaViewModel> => {
+  createIdea(title: string, description: string) {
     return this.http.post<IIdeaViewModel>(`${this.baseUrl}`, {
       title,
       description,
     });
-  };
+  }
 
-  updateIdea = (ideaId: string, title: string, description: string): Observable<IIdeaState> => {
+  updateIdea(ideaId: string, title: string, description: string) {
     return this.http.put<IIdeaState>(`${this.baseUrl}/${ideaId}`, {
       title,
       description,
     });
-  };
+  }
 
-  deleteIdea = (ideaId: string): Observable<IIdeaState> => {
+  deleteIdea(ideaId: string) {
     return this.http.delete<IIdeaState>(`${this.baseUrl}/${ideaId}`);
-  };
+  }
 
   private get baseUrl() {
     return `${this.environmentService.env.gatewayHost}/${ApiEndpoints.Ideas}`;
