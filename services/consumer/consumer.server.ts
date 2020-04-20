@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import { MessageBroker } from '@centsideas/event-sourcing';
-import { Logger, ExpressAdapter } from '@centsideas/utils';
+import { Logger, ExpressAdapters } from '@centsideas/utils';
 import { ApiEndpoints, EventTopics, IdeasApiRoutes, UsersApiRoutes } from '@centsideas/enums';
 
 import { QueryService } from './query.service';
@@ -18,7 +18,6 @@ export class ConsumerServer {
 
   constructor(
     private messageBroker: MessageBroker,
-    private expressAdapter: ExpressAdapter,
     private queryService: QueryService,
     private ideasProjection: IdeasProjection,
     private reviewsProjection: ReviewsProjection,
@@ -38,20 +37,20 @@ export class ConsumerServer {
 
     this.app.post(
       `/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetAll}`,
-      this.expressAdapter.json(this.queryService.getAllIdeas),
+      ExpressAdapters.json(this.queryService.getAllIdeas),
     );
     this.app.post(
       `/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetById}`,
-      this.expressAdapter.json(this.queryService.getIdeaById),
+      ExpressAdapters.json(this.queryService.getIdeaById),
     );
 
     this.app.post(
       `/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
-      this.expressAdapter.json(this.queryService.getUserById),
+      ExpressAdapters.json(this.queryService.getUserById),
     );
     this.app.post(
       `/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
-      this.expressAdapter.json(this.queryService.getAllUsers),
+      ExpressAdapters.json(this.queryService.getAllUsers),
     );
 
     this.app.get('/alive', (_req, res) => res.status(200).send());

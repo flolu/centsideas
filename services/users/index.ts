@@ -2,7 +2,7 @@ import 'reflect-metadata';
 // tslint:disable-next-line:no-var-requires
 if (process.env.ENV === 'dev') require('../../register-aliases').registerAliases();
 
-import { registerProviders, getProvider, ExpressAdapter } from '@centsideas/utils';
+import { registerProviders, getProvider } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { LoggerPrefixes } from '@centsideas/enums';
 
@@ -26,7 +26,6 @@ registerProviders(
   AuthCommandHandler,
   LoginRepository,
   MessageBroker,
-  ExpressAdapter,
   UsersEnvironment,
 );
 

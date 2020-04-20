@@ -23,10 +23,9 @@ export class NotificationsServer {
   private app = express();
 
   // FIXME is there any way to remove push subscriptions that have no service worker anymore?!
-  // TODO listen for push events (e.g. user creationg, email change, ...)
+  // TODO implement email sending
 
   constructor(
-    // TODO make env service injectable on all backend services
     private env: NotificationEnvironment,
     private notificationSettingsHandlers: NotificationSettingsHandlers,
     private messageBroker: MessageBroker,

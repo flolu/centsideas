@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { ExpressAdapter, Logger } from '@centsideas/utils';
+import { Logger, ExpressAdapters } from '@centsideas/utils';
 import { UsersApiRoutes } from '@centsideas/enums';
 
 import { UsersEnvironment } from './users.environment';
@@ -16,7 +16,6 @@ export class UsersServer {
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
-    private expressAdapter: ExpressAdapter,
     private env: UsersEnvironment,
   ) {}
 
@@ -24,38 +23,35 @@ export class UsersServer {
     Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
 
-    this.app.post(`/${UsersApiRoutes.Login}`, this.expressAdapter.json(this.authService.login));
+    this.app.post(`/${UsersApiRoutes.Login}`, ExpressAdapters.json(this.authService.login));
 
     this.app.post(
       `/${UsersApiRoutes.ConfirmLogin}`,
-      this.expressAdapter.json(this.authService.confirmLogin),
+      ExpressAdapters.json(this.authService.confirmLogin),
     );
 
     this.app.post(
       `/${UsersApiRoutes.GoogleLogin}`,
-      this.expressAdapter.json(this.authService.googleLogin),
+      ExpressAdapters.json(this.authService.googleLogin),
     );
 
     this.app.post(
       `/${UsersApiRoutes.GoogleLoginRedirect}`,
-      this.expressAdapter.json(this.authService.googleLoginRedirect),
+      ExpressAdapters.json(this.authService.googleLoginRedirect),
     );
 
-    this.app.post(`/${UsersApiRoutes.Logout}`, this.expressAdapter.json(this.authService.logout));
+    this.app.post(`/${UsersApiRoutes.Logout}`, ExpressAdapters.json(this.authService.logout));
 
     this.app.post(
       `/${UsersApiRoutes.RefreshToken}`,
-      this.expressAdapter.json(this.authService.refreshToken),
+      ExpressAdapters.json(this.authService.refreshToken),
     );
 
-    this.app.post(
-      `/${UsersApiRoutes.Update}`,
-      this.expressAdapter.json(this.usersService.updateUser),
-    );
+    this.app.post(`/${UsersApiRoutes.Update}`, ExpressAdapters.json(this.usersService.updateUser));
 
     this.app.post(
       `/${UsersApiRoutes.ConfirmEmailChange}`,
-      this.expressAdapter.json(this.usersService.confirmEmailChange),
+      ExpressAdapters.json(this.usersService.confirmEmailChange),
     );
 
     this.app.get(`/${UsersApiRoutes.Alive}`, (_req, res) => res.status(200).send());

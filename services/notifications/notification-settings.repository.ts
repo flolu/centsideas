@@ -8,7 +8,6 @@ import { IUserIdNotificationSettingsMapping } from './models';
 
 @injectable()
 export class NotificationSettingsRepository extends EventRepository<NotificationSettings> {
-  // TODO also use the entity mapping abstraction in other repos
   userIdMapping = new EntityMapping<IUserIdNotificationSettingsMapping>(
     this.env.databaseUrl,
     'userIdMappings',
