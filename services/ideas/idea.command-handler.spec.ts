@@ -22,7 +22,8 @@ describe('Idea Command Handler', () => {
           fakeIdeaDescription,
           t,
         );
-        expect(created.lastPersistedEventId).toBeDefined();
+        expect(created.persistedState.lastEventId).toBeDefined();
+        expect(created.persistedState.lastEventNumber).toBeDefined();
       });
     });
   });

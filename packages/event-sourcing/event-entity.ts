@@ -1,8 +1,9 @@
+import { IEventEntityBase } from '@centsideas/models';
+
 import { Reducer } from './reducer';
 import { IEvent, Event } from './event';
 
 export interface IEventEntity {
-  lastPersistedEventId: string | null;
   persistedState: any;
   pendingEvents: IEvent[];
   pushEvents(...events: IEvent[]): any;
@@ -15,7 +16,6 @@ export interface IEventCommitFunctions<IEntityState> {
 }
 
 export abstract class EventEntity<IEntityState> implements IEventEntity {
-  lastPersistedEventId: string | null = null;
   persistedState: IEntityState;
   pendingEvents: IEvent[] = [];
 
@@ -35,10 +35,7 @@ export abstract class EventEntity<IEntityState> implements IEventEntity {
 
   confirmEvents = (): EventEntity<IEntityState> => {
     this.persistedState = this.reducer.reduce(this.persistedState, this.pendingEvents);
-    if (this.pendingEvents.length) {
-      this.lastPersistedEventId = this.pendingEvents[this.pendingEvents.length - 1].id;
-      this.pendingEvents = [];
-    }
+    if (this.pendingEvents.length) this.pendingEvents = [];
     return this;
   };
 
@@ -46,3 +43,9 @@ export abstract class EventEntity<IEntityState> implements IEventEntity {
     return this.reducer.reduce(this.persistedState, this.pendingEvents);
   }
 }
+
+export const initialEntityBaseState: IEventEntityBase = {
+  id: '',
+  lastEventNumber: 0,
+  lastEventId: '',
+};

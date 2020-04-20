@@ -1,8 +1,8 @@
 import { IReviewViewModel } from './review.view-model';
 import { IReviewScores } from '../entities';
+import { IEventEntityBase } from '../entities/event-base.model';
 
-export interface IIdeaViewModel {
-  id: string;
+export interface IIdeaViewModel extends IEventEntityBase {
   title: string;
   userId: string;
   description: string;
@@ -12,6 +12,5 @@ export interface IIdeaViewModel {
   deletedAt: string | null;
   reviews: IReviewViewModel[];
   scores: IReviewScores;
-  lastEventId: string;
   reviewCount: number;
 }

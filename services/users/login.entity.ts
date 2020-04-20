@@ -1,22 +1,21 @@
-import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
 import { ILoginState } from '@centsideas/models';
 
 import { loginCommitFunctions, LoginEvents } from './events';
 
 export class Login extends EventEntity<ILoginState> {
   static initialState: ILoginState = {
-    id: '',
+    ...initialEntityBaseState,
     email: '',
     createdAt: null,
     confirmedAt: null,
     confirmedByUserId: '',
-    lastEventId: '',
   };
 
   constructor(snapshot?: ISnapshot<ILoginState>) {
     if (snapshot && snapshot.state) {
       super(loginCommitFunctions, snapshot.state);
-      this.lastPersistedEventId = snapshot.lastEventId;
+      this.persistedState.lastEventId = snapshot.lastEventId;
     } else super(loginCommitFunctions, Login.initialState);
   }
 

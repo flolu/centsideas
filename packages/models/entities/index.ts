@@ -4,3 +4,4 @@ export * from './user-entity.model';
 export * from './login-entity.model';
 export * from './notification-settings.model';
 export * from './notification.model';
+export * from './event-base.model';

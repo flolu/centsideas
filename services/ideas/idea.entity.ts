@@ -1,4 +1,4 @@
-import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
 import { IIdeaState } from '@centsideas/models';
 
 import { commitFunctions, IdeasEvents } from './events';
@@ -6,7 +6,7 @@ import { commitFunctions, IdeasEvents } from './events';
 // FIXME consider creating "locked values" (e.g. userId should be locked after first set, because it must never change)
 export class Idea extends EventEntity<IIdeaState> {
   static initialState: IIdeaState = {
-    id: '',
+    ...initialEntityBaseState,
     userId: '',
     title: '',
     description: '',
@@ -14,13 +14,12 @@ export class Idea extends EventEntity<IIdeaState> {
     updatedAt: null,
     deleted: false,
     deletedAt: null,
-    lastEventId: '',
   };
 
   constructor(snapshot?: ISnapshot<IIdeaState>) {
     if (snapshot && snapshot.state) {
       super(commitFunctions, snapshot.state);
-      this.lastPersistedEventId = snapshot.lastEventId;
+      this.persistedState.lastEventId = snapshot.lastEventId;
     } else super(commitFunctions, Idea.initialState);
   }
 

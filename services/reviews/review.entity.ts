@@ -1,4 +1,4 @@
-import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
 import { IReviewScores, IReviewState } from '@centsideas/models';
 
 import { commitFunctions, ReviewEvents } from './events';
@@ -6,7 +6,7 @@ import { ReviewDeletedEvent } from './events/review-deleted.event';
 
 export class Review extends EventEntity<IReviewState> {
   static initialState: IReviewState = {
-    id: '',
+    ...initialEntityBaseState,
     ideaId: '',
     userId: '',
     content: '',
@@ -15,13 +15,12 @@ export class Review extends EventEntity<IReviewState> {
     updatedAt: null,
     deleted: false,
     deletedAt: null,
-    lastEventId: '',
   };
 
   constructor(snapshot?: ISnapshot<IReviewState>) {
     if (snapshot && snapshot.state) {
       super(commitFunctions, snapshot.state);
-      this.lastPersistedEventId = snapshot.lastEventId;
+      this.persistedState.lastEventId = snapshot.lastEventId;
     } else super(commitFunctions, Review.initialState);
   }
 

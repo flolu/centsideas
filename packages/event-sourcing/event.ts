@@ -27,6 +27,6 @@ export class Event<IData> implements IEvent<IData> {
     this.name = name;
     this.data = data;
     this.timestamp = new Date().toISOString();
-    this.eventNumber = -1;
+    this.eventNumber = 0;
   }
 }

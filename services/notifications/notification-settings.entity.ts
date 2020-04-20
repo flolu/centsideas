@@ -1,22 +1,21 @@
-import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
 import { INotificationSettingsState, IPushSubscription } from '@centsideas/models';
 
 import { notificationSettingsCommitFunctions, NotificationSettingsEvents } from './events';
 
 export class NotificationSettings extends EventEntity<INotificationSettingsState> {
   static initialState: INotificationSettingsState = {
-    id: '',
+    ...initialEntityBaseState,
     userId: '',
     pushSubscriptions: [],
     sendPushes: false,
     sendEmails: false,
-    lastEventId: '',
   };
 
   constructor(snapshot?: ISnapshot<INotificationSettingsState>) {
     if (snapshot && snapshot.state) {
       super(notificationSettingsCommitFunctions, snapshot.state);
-      this.lastPersistedEventId = snapshot.lastEventId;
+      this.persistedState.lastEventId = snapshot.lastEventId;
     } else super(notificationSettingsCommitFunctions, NotificationSettings.initialState);
   }
 

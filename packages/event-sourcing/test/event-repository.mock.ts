@@ -28,11 +28,18 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
   save = (entity: Entity) => {
     const streamId: string = entity.persistedState.id || entity.currentState.id;
     const lastPersistedEvent = this.getLastEventOfStream(streamId);
-    let eventNumber = (lastPersistedEvent && lastPersistedEvent.eventNumber) || 0;
-    if (lastPersistedEvent && entity.lastPersistedEventId !== lastPersistedEvent.id) {
-      throw new Error('concurrency issue!');
+
+    if (lastPersistedEvent) {
+      const streamNumber = lastPersistedEvent.eventNumber;
+      const entityNumber = entity.persistedState.eventNumber;
+      if (streamNumber !== entityNumber) {
+        throw new Error(
+          `optimistic concurrency control issue! (${streamNumber} !== ${entityNumber})`,
+        );
+      }
     }
 
+    let eventNumber = lastPersistedEvent?.eventNumber || 0;
     const eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
       eventNumber = eventNumber + 1;
       return { ...event, eventNumber };

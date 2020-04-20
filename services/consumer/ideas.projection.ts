@@ -50,6 +50,7 @@ export class IdeasProjection {
       updatedAt: null,
       deleted: false,
       deletedAt: null,
+      lastEventNumber: 0,
       lastEventId: '',
       reviews: [],
       scores: { control: 0, entry: 0, need: 0, time: 0, scale: 0 },

@@ -21,4 +21,5 @@ export const fakeIdeaState: IIdeaState = {
   deleted: false,
   deletedAt: new Date().toISOString(),
   lastEventId: '',
+  lastEventNumber: 0,
 };

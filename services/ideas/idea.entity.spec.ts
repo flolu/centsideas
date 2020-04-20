@@ -21,7 +21,7 @@ describe('Idea Entity', () => {
     };
     const idea = new Idea(snapshot);
 
-    expect(idea.lastPersistedEventId).toEqual(snapshot.lastEventId);
+    expect(idea.persistedState.lastEventId).toEqual(snapshot.lastEventId);
     expect(idea.persistedState).toEqual(snapshot.state);
   });
 

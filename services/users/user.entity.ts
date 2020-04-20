@@ -1,24 +1,23 @@
-import { EventEntity, ISnapshot } from '@centsideas/event-sourcing';
+import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
 import { IUserState } from '@centsideas/models';
 
 import { commitFunctions, UserEvents } from './events';
 
 export class User extends EventEntity<IUserState> {
   static initialState: IUserState = {
-    id: '',
+    ...initialEntityBaseState,
     username: '',
     email: '',
     pendingEmail: null,
     createdAt: null,
     updatedAt: null,
     refreshTokenId: '',
-    lastEventId: '',
   };
 
   constructor(snapshot?: ISnapshot<IUserState>) {
     if (snapshot && snapshot.state) {
       super(commitFunctions, snapshot.state);
-      this.lastPersistedEventId = snapshot.lastEventId;
+      this.persistedState.lastEventId = snapshot.lastEventId;
     } else super(commitFunctions, User.initialState);
   }
 

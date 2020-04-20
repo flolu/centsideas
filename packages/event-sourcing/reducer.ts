@@ -1,12 +1,16 @@
 import { IEvent } from './event';
+import { IEventCommitFunctions } from './event-entity';
 
 export class Reducer<IEntityState> {
-  constructor(private knownEvents: any) {}
+  constructor(private knownEvents: IEventCommitFunctions<IEntityState>) {}
 
-  reduce = (state: IEntityState, events: IEvent[]): IEntityState => {
-    return events.reduce<IEntityState>((s: IEntityState, event: IEvent) => {
-      const eventHandler = this.knownEvents[event.name];
-      return eventHandler({ ...s, lastEventId: event.id }, event);
-    }, state);
+  reduce = (currentState: IEntityState, events: IEvent[]): IEntityState => {
+    return events.reduce<IEntityState>((state: IEntityState, event: IEvent) => {
+      const commitFunction = this.knownEvents[event.name];
+      return commitFunction(
+        { ...state, lastEventId: event.id, lastEventNumber: event.eventNumber },
+        event,
+      );
+    }, currentState);
   };
 }

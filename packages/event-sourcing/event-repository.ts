@@ -125,13 +125,22 @@ export abstract class EventRepository<Entity extends IEventEntity>
 
   save = async (entity: Entity) => {
     await this.waitUntilInitialized();
+
     const streamId: string = entity.currentState.id;
     const lastPersistedEvent = await this.getLastEventOfStream(streamId);
-    let eventNumber = (lastPersistedEvent && lastPersistedEvent.eventNumber) || 0;
-    // FIXME this won't work if multiple processes save events... instead use eventNumber! (https://youtu.be/GzrZworHpIk?t=1028)
-    if (lastPersistedEvent && entity.lastPersistedEventId !== lastPersistedEvent.id) {
-      throw new Error('concurrency issue!');
+
+    // optimistic concurrency control https://youtu.be/GzrZworHpIk?t=1028
+    if (lastPersistedEvent) {
+      const streamNumber = lastPersistedEvent.eventNumber;
+      const entityNumber = entity.persistedState.lastEventNumber;
+      if (streamNumber !== entityNumber) {
+        throw new Error(
+          `optimistic concurrency control issue! (${streamNumber} !== ${entityNumber})`,
+        );
+      }
     }
+
+    let eventNumber = lastPersistedEvent?.eventNumber || 0;
 
     const eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
       eventNumber = eventNumber + 1;

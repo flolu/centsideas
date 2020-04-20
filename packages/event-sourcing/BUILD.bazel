@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
     "//packages/enums",
+    "//packages/models",
     "//packages/utils",
     "@npm//@types/async-retry",
     "@npm//@types/inversify",
