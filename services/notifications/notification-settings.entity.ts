@@ -47,4 +47,14 @@ export class NotificationSettings extends EventEntity<INotificationSettingsState
     );
     return this;
   }
+
+  removeSubscriptions(subscriptions: IPushSubscription[]) {
+    this.pushEvents(
+      new NotificationSettingsEvents.PushSubscriptionsRemovedEvent(
+        this.currentState.id,
+        subscriptions,
+      ),
+    );
+    return this;
+  }
 }

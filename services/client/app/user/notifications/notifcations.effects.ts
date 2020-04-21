@@ -55,6 +55,7 @@ export class NotificationsEffects {
     ),
   );
 
+  // FIXME maybe run this on appliation start?
   getSettings$ = createEffect(() =>
     this.actions$.pipe(
       ofType(NotificationsActions.getSettings),
@@ -73,9 +74,7 @@ export class NotificationsEffects {
         tap(async ({ settings }) => {
           if (settings.sendPushes && !this.pushService.hasNotificationPermission) {
             const sub = await this.pushService.ensurePushPermission();
-            if (sub) {
-              this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
-            }
+            if (sub) this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
           }
         }),
       ),

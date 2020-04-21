@@ -7,6 +7,7 @@ export interface INotificationsReducerState {
   persisted: INotificationSettingsForm;
   formData: INotificationSettingsForm;
   status: Status;
+  error: string;
 }
 
 export enum Status {
@@ -22,6 +23,7 @@ const initialState: INotificationsReducerState = {
   persisted: null,
   formData: { sendEmails: false, sendPushes: false },
   status: Status.Loading,
+  error: '',
 };
 
 const notificationsReducer = createReducer(
@@ -35,6 +37,7 @@ const notificationsReducer = createReducer(
   on(NotificationsActions.getSettingsFail, (state, { error }) => ({
     ...state,
     status: Status.Error,
+    error,
   })),
 
   on(NotificationsActions.formChanged, (state, { value }) => ({
@@ -53,6 +56,7 @@ const notificationsReducer = createReducer(
   on(NotificationsActions.updateSettingsFail, (state, { error }) => ({
     ...state,
     status: Status.Error,
+    error,
   })),
 );
 

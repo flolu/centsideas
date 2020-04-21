@@ -13,3 +13,7 @@ export interface INotificationSettingsUpdatedEvent {
 export interface IPushSubscriptionAddedEvent {
   subscription: IPushSubscription;
 }
+
+export interface IPushSubscriptionsRemovedEvent {
+  subscriptions: IPushSubscription[];
+}

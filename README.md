@@ -25,20 +25,20 @@ This is a project with the purpose of learning the architecture of complex web a
 | Search Engine Optimization                     | server side rendering, marketing, google | ✅     |
 | Frontend                                       | code splitting, 100% lighthouse score    | ✅     |
 | Security                                       | encryption, https                        | ✅     |
-| File storage                                   | blob storage, encrypted, access control  | ❌     |
-| Static pages                                   | homepage, static content                 | ❌     |
-| Search                                         | indexing, realtime search                | ❌     |
+| Push notifications                             | mobile and desktop                       | ❌     |
 | Admin panel                                    | monitoring, event handling, logs         | ❌     |
+| File storage                                   | blob storage, encrypted, access control  | ❌     |
+| General Data Protection Regulation             | legal, privacy, gdpr, eu law             | ❌     |
 | Backups                                        | automatic, manual, restore               | ❌     |
 | Realtime                                       | some kind of realtime integration        | ❌     |
-| General Data Protection Regulation             | legal, privacy, gdpr, eu law             | ❌     |
-| User Interface                                 | modern, drag&drop, touch gestures        | ❌     |
-| Compute server                                 | non-nodejs server for high cpu tasks     | ❌     |
-| Push notifications                             | mobile and desktop                       | ❌     |
-| Payments                                       | payout, credit card, paypal              | ❌     |
-| Message Queue                                  | batching, scheduled tasks                | ❌     |
 | Multi-Language                                 | change language, easily add more         | ❌     |
+| Static pages                                   | homepage, static content                 | ❌     |
+| Search                                         | indexing, realtime search                | ❌     |
+| User Interface                                 | modern, drag&drop, touch gestures        | ❌     |
 | Trusted Web Activity                           | twa, publish app on play store           | ❌     |
+| Message Queue                                  | batching, scheduled tasks                | ❌     |
+| Compute server                                 | non-nodejs server for high cpu tasks     | ❌     |
+| Payments                                       | payout, credit card, paypal              | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented

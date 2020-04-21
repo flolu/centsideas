@@ -9,6 +9,7 @@ import { NotificationSettings } from './notification-settings.entity';
 import { NotificationSettingsErrors } from './errors';
 import { NotificationEnvironment } from './notifications.environment';
 import { IPushPayload } from './models';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 @injectable()
 export class NotificationSettingsHandlers {
@@ -80,9 +81,12 @@ export class NotificationSettingsHandlers {
     return this.nsRepository.save(ns);
   }
 
-  async sendPushNotificationToUser(userId: string, payload: IPushPayload, t: ThreadLogger) {
-    NotAuthenticatedError.validate(userId);
+  async getSettings(auid: string) {
+    NotAuthenticatedError.validate(auid);
+    return this.getSettingsOfUser(auid);
+  }
 
+  async sendPushNotificationToUser(userId: string, payload: IPushPayload, t: ThreadLogger) {
     webpush.setVapidDetails(
       `${this.env.frontendUrl}/contact`,
       this.env.vapidPublicKey,
@@ -98,20 +102,33 @@ export class NotificationSettingsHandlers {
     }
 
     t.debug(`start sending notification to ${ns.persistedState.pushSubscriptions.length} clients`);
-    // TODO remove subs that throw error
+    const invalidSubscriptions: IPushSubscription[] = [];
+
     await Promise.all(
       ns.persistedState.pushSubscriptions.map(sub =>
-        webpush.sendNotification(sub, JSON.stringify(payload)),
+        webpush.sendNotification(sub, JSON.stringify(payload)).catch(error => {
+          if (error.statusCode === HttpStatusCodes.Gone) invalidSubscriptions.push(sub);
+          else throw error;
+        }),
       ),
     );
-    t.debug('sent notificatios');
+    t.debug(
+      `sent ${
+        ns.persistedState.pushSubscriptions.length - invalidSubscriptions.length
+      } notificatios`,
+    );
+    // TODO create events for sent notifications
 
+    await this.removeSubscriptions(ns, invalidSubscriptions);
     return true;
   }
 
-  async getSettings(auid: string) {
-    NotAuthenticatedError.validate(auid);
-    return this.getSettingsOfUser(auid);
+  private async removeSubscriptions(
+    notificationSettings: NotificationSettings,
+    invalidSubscriptions: IPushSubscription[],
+  ) {
+    notificationSettings.removeSubscriptions(invalidSubscriptions);
+    return this.nsRepository.save(notificationSettings);
   }
 
   private async getSettingsOfUser(userId: string) {
