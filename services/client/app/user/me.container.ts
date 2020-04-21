@@ -33,7 +33,6 @@ const selectChangeEmailToken = createSelector(
       <ci-me-form
         [status]="state.status"
         [formState]="state.persisted"
-        [pendingEmail]="state?.persisted.pendingEmail"
         (updateForm)="onUpdateUserForm($event)"
       >
       </ci-me-form>

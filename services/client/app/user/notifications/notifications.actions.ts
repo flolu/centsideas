@@ -4,6 +4,7 @@ import { createAction, props } from '@ngrx/store';
 
 import { Dtos } from '@centsideas/models';
 
+// FIXME frontend aliases (currently module_name + us_angular_plugin isn't working)
 import { appPrefix, doneSuffix, failSuffix } from '../../../shared/helpers/actions.helper';
 import { INotificationSettingsForm } from './notifications.state';
 
@@ -44,7 +45,7 @@ const getSettingsDone = createAction(
   getSettingsPrefix + doneSuffix,
   props<{ settings: Dtos.INotificationSettingsDto }>(),
 );
-// TODO consider creating consistend error dto
+// FIXME consider creating consistend error dto
 const getSettingsFail = createAction(getSettingsPrefix + failSuffix, props<{ error: string }>());
 
 const formChanged = createAction(formChangedPrefix, props<{ value: INotificationSettingsForm }>());

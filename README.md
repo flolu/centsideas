@@ -27,10 +27,10 @@ This is a project with the purpose of learning the architecture of complex web a
 | Security                                       | encryption, https                        | ✅     |
 | Push notifications                             | mobile and desktop                       | ❌     |
 | Admin panel                                    | monitoring, event handling, logs         | ❌     |
+| Realtime                                       | some kind of realtime integration        | ❌     |
 | File storage                                   | blob storage, encrypted, access control  | ❌     |
 | General Data Protection Regulation             | legal, privacy, gdpr, eu law             | ❌     |
 | Backups                                        | automatic, manual, restore               | ❌     |
-| Realtime                                       | some kind of realtime integration        | ❌     |
 | Multi-Language                                 | change language, easily add more         | ❌     |
 | Static pages                                   | homepage, static content                 | ❌     |
 | Search                                         | indexing, realtime search                | ❌     |
@@ -145,7 +145,7 @@ _TODO consider creating script to automate this_
 ### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster and connect to it
 
 ```bash
-gcloud beta container --project "centsideas" clusters create "centsideas" --zone "europe-west3-b" --no-enable-basic-auth --machine-type "n1-standard-1" --disk-size "10"
+gcloud beta container --project "centsideas" clusters create "centsideas" --zone "europe-west3-b" --no-enable-basic-auth --machine-type "n1-standard-1" --disk-size "10" && \
 gcloud container clusters get-credentials centsideas --zone europe-west3-b --project centsideas
 ```
 

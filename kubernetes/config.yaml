@@ -14,6 +14,7 @@ data:
   CONSUMER_SERVICE_HOST: centsideas-consumer:3000
   USERS_SERVICE_HOST: centsideas-users:3000
   REVIEWS_SERVICE_HOST: centsideas-reviews:3000
+  NOTIFICATIONS_SERVICE_HOST: centsideas-notifications:3000
 
   # kafka
   KAFKA_BROKER_HOST: kafka-service:9092
@@ -25,6 +26,7 @@ data:
   REVIEWS_DATABASE_URL: mongodb://centsideas-reviews-event-store:27017
   PROJECTION_DATABASE_URL: mongodb://centsideas-projection-database:27017
   USERS_DATABASE_URL: mongodb://centsideas-users-event-store:27017
+  NOTIFICATIONS_DATABASE_URL: mongodb://centsideas-notifications-event-store:27017
 
   # push notifications
   VAPID_PUBLIC_KEY: BHn7rJHGwgUqZzATjOn80FQLxUFFR5ae-SPW-iDlEaSyLxHmoiythyH_qT7hQEarcnYMGu_XRnoZRFc5ZULCoXM

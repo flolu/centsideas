@@ -44,7 +44,6 @@ export class IdeasEffects {
     ),
   );
 
-  // TODO take a look at ngrx/data
   createIdea$ = createEffect(() =>
     this.actions$.pipe(
       ofType(IdeasActions.createIdea),

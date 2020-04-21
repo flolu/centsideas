@@ -26,6 +26,7 @@ ts_config(
     ],
 )
 
+# FIXME fiure out how to deploy only changed (not update-to-date with cluster) objects for increased deployment speeds
 k8s_objects(
     name = "kubernetes_deployment",
     objects = [
@@ -41,5 +42,6 @@ k8s_objects(
         "//services/reviews:k8s",
         "//services/users:k8s",
         "//services/client:k8s",
+        "//services/notifications:k8s",
     ],
 )

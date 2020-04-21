@@ -28,7 +28,6 @@ export class NotificationsEffects {
     ),
   );
 
-  // TODO generic effects factory function?
   addPushSubscription$ = createEffect(() =>
     this.actions$.pipe(
       ofType(NotificationsActions.addPushSub),

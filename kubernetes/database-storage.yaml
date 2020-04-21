@@ -50,6 +50,19 @@ spec:
       storage: 7Gi
 
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: notifications-event-store-pvc
+spec:
+  storageClassName: cloud-ssd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 7Gi
+
+---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:

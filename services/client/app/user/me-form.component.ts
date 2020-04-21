@@ -30,7 +30,10 @@ import { Status } from '../../shared/helpers/state.helper';
       <br />
       <input id="email" type="text" formControlName="email" />
       <br />
-      <span>pending email: {{ pendingEmail }} (you need to open the email on this device)</span>
+      <span *ngIf="formState"
+        >pending email: {{ formState.pendingEmail }} (you need to open the email on this
+        device)</span
+      >
       <br />
     </form>
     <p>{{ status }}</p>
@@ -39,7 +42,6 @@ import { Status } from '../../shared/helpers/state.helper';
 export class MeFormComponent implements OnDestroy, OnChanges {
   @Input() status: number;
   @Input() formState: IUserForm;
-  @Input() pendingEmail: string;
   @Output() updateForm = new EventEmitter<IUserForm>();
 
   form: FormGroup = new FormGroup({

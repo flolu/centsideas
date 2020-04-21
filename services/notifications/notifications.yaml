@@ -1,6 +1,107 @@
-# // TODO implement k8s
-#            - name: SEND_GRID_API_KEY
-#              valueFrom:
-#                secretKeyRef:
-#                  name: centsideas-secret
-#                  key: SEND_GRID_API_KEY
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifications-deployment
+spec:
+  selector:
+    matchLabels:
+      app: notifications
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: notifications
+    spec:
+      containers:
+        - name: notifications
+          image: notifications:placeholder_name
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: global-config
+          env:
+            - name: SEND_GRID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: SEND_GRID_API_KEY
+            - name: VAPID_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: VAPID_PRIVATE_KEY
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 50m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: centsideas-notifications
+spec:
+  selector:
+    app: notifications
+  ports:
+    - name: http
+      port: 3000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifications-event-store-deployment
+spec:
+  selector:
+    matchLabels:
+      app: notifications-event-store
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: notifications-event-store
+    spec:
+      containers:
+        - name: notifications-event-store
+          image: mongo:4.0
+          volumeMounts:
+            - name: persistent-db-storage
+              mountPath: /data/db
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 50m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+      volumes:
+        - name: persistent-db-storage
+          persistentVolumeClaim:
+            claimName: notifications-event-store-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: centsideas-notifications-event-store
+spec:
+  selector:
+    app: notifications-event-store
+  ports:
+    - name: mongo
+      port: 27017
+  type: ClusterIP
