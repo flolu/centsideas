@@ -16,6 +16,13 @@ import { UserSelectors } from './user.selectors';
 export class UserEffects {
   constructor(private actions$: Actions, private usersService: UserService, private store: Store) {}
 
+  formChanged$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.formChanged),
+      map(({ value }) => UserActions.updateUser(value)),
+    ),
+  );
+
   updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.updateUser),

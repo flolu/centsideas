@@ -42,6 +42,7 @@ describe('Ideas Service', () => {
         createdAt,
         title: fakeIdeaTitle,
         description: fakeIdeaDescription,
+        lastEventNumber: 1,
       },
     });
   });

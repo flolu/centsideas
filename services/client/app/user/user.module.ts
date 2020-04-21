@@ -11,6 +11,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { UserStoreModule } from './user-store.module';
 import { UserService } from './user.service';
 import { NotificationsFormComponent } from './notifications/notifications-form.component';
+import { MeFormComponent } from './me-form.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,6 @@ import { NotificationsFormComponent } from './notifications/notifications-form.c
     ]),
   ],
   providers: [AuthGuard, UserService],
-  declarations: [MeContainer, NotificationsFormComponent],
+  declarations: [MeContainer, NotificationsFormComponent, MeFormComponent],
 })
 export class UserModule {}

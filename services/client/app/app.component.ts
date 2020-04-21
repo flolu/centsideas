@@ -15,9 +15,7 @@ import { PushNotificationService } from '../shared/push-notifications/push-notif
   template: `
     <span *ngIf="(authState$ | async)?.initializing">Initializing...</span>
     <span *ngIf="(authState$ | async)?.initialized">Initialized</span>
-    <span *ngIf="(authState$ | async)?.accessToken">
-      access token: {{ (authState$ | async)?.accessToken }}
-    </span>
+    <span *ngIf="(authState$ | async)?.accessToken">you're signed in</span>
     <h1 *ngIf="offline$ | async">You're offline</h1>
     <div>
       <a [routerLink]="[topLevelRoutes.Ideas]">Ideas</a>

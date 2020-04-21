@@ -2,26 +2,19 @@ import { createReducer, Action, on } from '@ngrx/store';
 
 import { NotificationsActions } from './notifications.actions';
 import { INotificationSettingsForm } from './notifications.state';
+import { Status } from '../../../shared/helpers/state.helper';
 
 export interface INotificationsReducerState {
-  persisted: INotificationSettingsForm;
-  formData: INotificationSettingsForm;
+  // FIXME persisted state is inaccurate
+  persisted: INotificationSettingsForm | null;
+  formData: INotificationSettingsForm | null;
   status: Status;
   error: string;
 }
 
-export enum Status {
-  Loading = 1,
-  Loaded = 2,
-  Syncing = 3,
-  Synced = 4,
-  PatchSyncing = 5,
-  Error = 6,
-}
-
 const initialState: INotificationsReducerState = {
   persisted: null,
-  formData: { sendEmails: false, sendPushes: false },
+  formData: null,
   status: Status.Loading,
   error: '',
 };
@@ -40,18 +33,16 @@ const notificationsReducer = createReducer(
     error,
   })),
 
-  on(NotificationsActions.formChanged, (state, { value }) => ({
-    ...state,
-    formData: value,
-  })),
+  on(NotificationsActions.formChanged, (state, { value }) => ({ ...state, formData: value })),
 
   on(NotificationsActions.updateSettings, state => ({
     ...state,
     status: state.status === Status.Syncing ? Status.PatchSyncing : Status.Syncing,
   })),
-  on(NotificationsActions.updateSettingsDone, state => ({
+  on(NotificationsActions.updateSettingsDone, (state, { settings }) => ({
     ...state,
     status: state.status === Status.PatchSyncing ? Status.Syncing : Status.Synced,
+    persisted: settings,
   })),
   on(NotificationsActions.updateSettingsFail, (state, { error }) => ({
     ...state,

@@ -9,7 +9,7 @@ const selectUserState = createSelector(
   AppSelectors.selectUserFeatureState,
   (state: IUserFeatureReducerState) => state.user,
 );
-const selectUser = createSelector(selectUserState, state => state.user);
+const selectUser = createSelector(selectUserState, state => state.persisted);
 
 export const UserSelectors = {
   selectUserState,

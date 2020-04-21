@@ -72,7 +72,10 @@ export class UserCommandHandler {
     user.update(username, isNewEmail ? email : null);
 
     if (username) await this.userRepository.usernameMapping.update(userId, username);
-    return this.userRepository.save(user);
+    // NOW on  this persisted state is lastEventNumber always zero
+    const saved: User = await this.userRepository.save(user);
+    t.log('saved user: ', JSON.stringify(saved));
+    return saved;
   };
 
   confirmEmailChange = async (token: string, t: ThreadLogger): Promise<User> => {

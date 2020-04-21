@@ -3,19 +3,19 @@ import {
   Input,
   Output,
   EventEmitter,
-  SimpleChanges,
-  OnChanges,
   OnDestroy,
   OnInit,
+  OnChanges,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { takeWhile, debounceTime, tap, skip } from 'rxjs/operators';
+import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
 import { INotificationSettingsForm } from './notifications.state';
+import { Status } from '../../../shared/helpers/state.helper';
 
 @Component({
   selector: 'ci-notifications-form',
-  template: `
+  template: `-
     <h2>Notification Settings</h2>
     <form [formGroup]="form">
       <label>
@@ -29,11 +29,10 @@ import { INotificationSettingsForm } from './notifications.state';
       </label>
       <br />
     </form>
-    <p>{{ status }}</p>
-  `,
+    <p>{{ status }}</p> `,
 })
-export class NotificationsFormComponent implements OnDestroy, OnInit {
-  @Input() status: string;
+export class NotificationsFormComponent implements OnDestroy, OnChanges {
+  @Input() status: number;
   @Input() formState: INotificationSettingsForm;
   @Output() updateForm = new EventEmitter<INotificationSettingsForm>();
 
@@ -47,18 +46,16 @@ export class NotificationsFormComponent implements OnDestroy, OnInit {
   constructor() {
     this.form.valueChanges
       .pipe(
-        skip(1),
         debounceTime(500),
-        tap(value => {
-          this.updateForm.emit(value);
-        }),
+        tap(value => this.updateForm.emit(value)),
         takeWhile(() => this.alive),
       )
       .subscribe();
   }
 
-  ngOnInit() {
-    this.form.patchValue(this.formState);
+  ngOnChanges() {
+    if (this.formState && this.status !== Status.Syncing && this.status >= 0)
+      this.form.patchValue(this.formState, { emitEvent: false });
   }
 
   ngOnDestroy() {

@@ -22,7 +22,6 @@ import { IPushPayload } from './models';
 export class NotificationsServer {
   private app = express();
 
-  // FIXME is there any way to remove push subscriptions that have no service worker anymore?!
   // TODO implement email sending
 
   constructor(

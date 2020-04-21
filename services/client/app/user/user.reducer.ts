@@ -1,53 +1,73 @@
 import { createReducer, on, Action } from '@ngrx/store';
-import { IUserState } from '@centsideas/models';
-import { UserActions } from './user.actions';
-import {
-  LOADING_DONE,
-  LOADING_FAIL,
-  LOADING,
-  ILoadingState,
-  initialLoadingState,
-} from '../../shared/helpers/state.helper';
-import { AuthActions } from '../auth/auth.actions';
 
-export interface IUserReducerState extends ILoadingState {
-  user: IUserState | null;
+import { IUserState } from '@centsideas/models';
+
+import { UserActions } from './user.actions';
+import { Status } from '../../shared/helpers/state.helper';
+import { AuthActions } from '../auth/auth.actions';
+import { IUserForm } from './user.state';
+
+export interface IUserReducerState {
+  persisted: IUserState | null;
+  formData: IUserForm | null;
+  status: Status;
+  // FIXME advanced error handling, where error is displayed for a specific input field
+  error: string;
 }
 
 const initialState: IUserReducerState = {
-  ...initialLoadingState,
-  user: null,
+  persisted: null,
+  formData: null,
+  status: Status.Loading,
+  error: '',
 };
 
 const userReducer = createReducer(
   initialState,
+  on(AuthActions.fetchAccessTokenDone, (state, { user }) => ({
+    ...state,
+    persisted: user,
+    status: Status.Loaded,
+  })),
+  on(AuthActions.confirmLoginDone, (state, { user }) => ({
+    ...state,
+    persisted: user,
+    status: Status.Loaded,
+  })),
+  on(AuthActions.googleLoginDone, (state, { user }) => ({
+    ...state,
+    persisted: user,
+    status: Status.Loaded,
+  })),
+  on(AuthActions.logoutDone, state => ({ ...state, persisted: null, status: Status.None })),
+
+  on(UserActions.formChanged, (state, { value }) => ({ ...state, formData: value })),
   on(UserActions.updateUser, state => ({
     ...state,
-    ...LOADING,
+    status: state.status === Status.Syncing ? Status.PatchSyncing : Status.Syncing,
   })),
   on(UserActions.updateUserFail, (state, { error }) => ({
     ...state,
-    ...LOADING_FAIL(error),
+    status: Status.Error,
+    error: error.error,
   })),
   on(UserActions.updateUserDone, (state, { updated }) => ({
     ...state,
-    ...LOADING_DONE,
-    user: updated,
+    persisted: updated,
+    status: state.status === Status.PatchSyncing ? Status.Syncing : Status.Synced,
   })),
-  on(UserActions.confirmEmailChange, state => ({ ...state, ...LOADING })),
+
+  on(UserActions.confirmEmailChange, state => ({ ...state, status: Status.Loading })),
   on(UserActions.confirmEmailChangeFail, (state, { error }) => ({
     ...state,
-    ...LOADING_FAIL(error),
+    status: Status.Error,
+    error,
   })),
   on(UserActions.confirmEmailChangeDone, (state, { updated }) => ({
     ...state,
-    ...LOADING_DONE,
-    user: updated,
+    persisted: updated,
+    status: Status.Loaded,
   })),
-  on(AuthActions.confirmLoginDone, (state, { user }) => ({ ...state, user })),
-  on(AuthActions.fetchAccessTokenDone, (state, { user }) => ({ ...state, user })),
-  on(AuthActions.logoutDone, state => ({ ...state, user: null })),
-  on(AuthActions.googleLoginDone, (state, { user }) => ({ ...state, user })),
 );
 
 export function reducer(state: IUserReducerState | undefined, action: Action) {

@@ -24,9 +24,7 @@ export class NotificationsEffects {
   formChanged$ = createEffect(() =>
     this.actions$.pipe(
       ofType(NotificationsActions.formChanged),
-      map(({ value }) => {
-        return NotificationsActions.updateSettings({ settings: value });
-      }),
+      map(({ value }) => NotificationsActions.updateSettings({ settings: value })),
     ),
   );
 

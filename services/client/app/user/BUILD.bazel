@@ -41,6 +41,7 @@ ts_library(
     name = "user",
     srcs = [
         "me.container.ts",
+        "me-form.component.ts",
         "user.module.ts",
         ":notifications/notifications-form.component.ts",
     ],

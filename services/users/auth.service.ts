@@ -38,6 +38,7 @@ export class AuthService {
         const { user, accessToken, refreshToken } = data;
         const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
         t.log('confirmed login of user', user.id);
+        t.log('set refresh token cookie', refreshTokenCookie.val);
 
         return {
           status: HttpStatusCodes.Accepted,
