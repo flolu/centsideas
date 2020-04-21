@@ -1,9 +1,11 @@
 export interface IEmailChangeConfirmedEvent {
   newEmail: string;
+  oldEmail: string;
 }
 
 export interface IEmailChangeRequestedEvent {
   email: string;
+  token: string;
 }
 
 export interface IUserUpdatedEvent {

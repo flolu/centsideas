@@ -8,10 +8,6 @@ export class UsersEnvironment {
   userDatabaseName = 'users';
   loginDatabaseName = 'logins';
   frontendUrl = process.env.FRONTEND_URL!;
-  mailing = {
-    apiKey: process.env.SEND_GRID_API_KEY!,
-    fromAddress: 'CENTS Ideas <noreply@centsideas.com>',
-  };
   tokenSecrets = {
     accessToken: process.env.ACCESS_TOKEN_SECRET!,
     refreshToken: process.env.REFRESH_TOKEN_SECRET!,

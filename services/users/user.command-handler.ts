@@ -3,19 +3,13 @@ import * as jwt from 'jsonwebtoken';
 
 import {
   sanitizeHtml,
-  sendMail,
   decodeToken,
   ThreadLogger,
   NotAuthenticatedError,
   NoPermissionError,
 } from '@centsideas/utils';
 import { IEmailChangeTokenPayload } from '@centsideas/models';
-import {
-  TopLevelFrontendRoutes,
-  QueryParamKeys,
-  UserFrontendRoutes,
-  TokenExpirationTimes,
-} from '@centsideas/enums';
+import { TokenExpirationTimes } from '@centsideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -53,7 +47,7 @@ export class UserCommandHandler {
       t.debug('email', email, 'is valid');
     }
 
-    const user = await this.userRepository.findById(userId);
+    let user = await this.userRepository.findById(userId);
     t.debug('found corresponding user');
 
     const isNewUsername = user && user.persistedState.username !== username;
@@ -66,15 +60,13 @@ export class UserCommandHandler {
     if (email && isNewEmail) {
       await this.userRepository.checkEmailAvailability(email);
       t.debug('email is available');
-      await this.requestEmailChange(userId, email);
+      user = await this.requestEmailChange(userId, email);
     }
 
     user.update(username, isNewEmail ? email : null);
 
     if (username) await this.userRepository.usernameMapping.update(userId, username);
-    // NOW on  this persisted state is lastEventNumber always zero
     const saved: User = await this.userRepository.save(user);
-    t.log('saved user: ', JSON.stringify(saved));
     return saved;
   };
 
@@ -87,28 +79,13 @@ export class UserCommandHandler {
 
     const user = await this.userRepository.findById(payload.userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, payload.newEmail);
-    user.confirmEmailChange(payload.newEmail);
-
-    const subject = 'CENTS Ideas Email Was Changed';
-    const text = `You have changed your email adress from ${payload.currentEmail} to ${payload.newEmail}`;
-    await sendMail(
-      this.env.mailing.fromAddress,
-      payload.currentEmail,
-      subject,
-      text,
-      text,
-      this.env.mailing.apiKey,
-    );
-    t.debug(
-      'sent email to notify user, that his email has changed',
-      `from ${payload.currentEmail} to ${payload.newEmail}`,
-    );
+    user.confirmEmailChange(payload.newEmail, payload.currentEmail);
 
     await this.userRepository.emailMapping.update(user.persistedState.id, payload.newEmail);
     return this.userRepository.save(user);
   };
 
-  private requestEmailChange = async (userId: string, newEmail: string): Promise<any> => {
+  private requestEmailChange = async (userId: string, newEmail: string): Promise<User> => {
     UserErrors.EmailRequiredError.validate(newEmail);
     UserErrors.EmailInvalidError.validate(newEmail);
 
@@ -127,17 +104,6 @@ export class UserCommandHandler {
       expiresIn: TokenExpirationTimes.EmailChangeToken,
     });
 
-    const activationRoute: string = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.User}/${UserFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
-    const expirationTimeHours = Math.floor(TokenExpirationTimes.EmailChangeToken / 3600);
-    const text = `URL to change your email: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
-    const subject = 'CENTS Ideas Email Change';
-    return sendMail(
-      this.env.mailing.fromAddress,
-      newEmail,
-      subject,
-      text,
-      text,
-      this.env.mailing.apiKey,
-    );
+    return user.requestEmailChange(newEmail, token);
   };
 }

@@ -10,7 +10,6 @@ lib_deps = [
     "@npm//@types/jest",
     "@npm//@types/module-alias",
     "@npm//@types/node",
-    "@npm//@sendgrid/mail",
     "@npm//@types/sanitize-html",
     "@npm//@types/shortid",
     "@npm//@types/uuid",

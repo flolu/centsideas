@@ -40,11 +40,6 @@ spec:
                 secretKeyRef:
                   name: centsideas-secret
                   key: CHANGE_EMAIL_TOKEN_SECRET
-            - name: SEND_GRID_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: centsideas-secret
-                  key: SEND_GRID_API_KEY
             - name: GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:

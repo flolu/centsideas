@@ -13,4 +13,8 @@ export class NotificationEnvironment {
   kafka = {
     brokers: [process.env.KAFKA_BROKER_HOST!],
   };
+  mailing = {
+    apiKey: process.env.SEND_GRID_API_KEY!,
+    fromAddress: 'CENTS Ideas <noreply@centsideas.com>',
+  };
 }

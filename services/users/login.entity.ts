@@ -19,9 +19,9 @@ export class Login extends EventEntity<ILoginState> {
     } else super(loginCommitFunctions, Login.initialState);
   }
 
-  static create(loginId: string, email: string, firstLogin: boolean): Login {
+  static create(loginId: string, email: string, token: string, firstLogin: boolean): Login {
     const login = new Login();
-    login.pushEvents(new LoginEvents.LoginRequestedEvent(loginId, email, firstLogin));
+    login.pushEvents(new LoginEvents.LoginRequestedEvent(loginId, email, token, firstLogin));
     return login;
   }
 

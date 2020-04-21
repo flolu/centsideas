@@ -33,14 +33,23 @@ export class User extends EventEntity<IUserState> {
     return this;
   }
 
-  confirmEmailChange(newEmail: string) {
-    this.pushEvents(new UserEvents.EmailChangeConfirmedEvent(this.currentState.id, newEmail));
+  confirmEmailChange(newEmail: string, oldEmail: string) {
+    this.pushEvents(
+      new UserEvents.EmailChangeConfirmedEvent(this.currentState.id, newEmail, oldEmail),
+    );
     return this;
   }
 
   revokeRefreshToken(newRefreshToken: string, reason: string) {
     this.pushEvents(
       new UserEvents.RefreshTokenRevokedEvent(this.currentState.id, newRefreshToken, reason),
+    );
+    return this;
+  }
+
+  requestEmailChange(newEmail: string, token: string) {
+    this.pushEvents(
+      new UserEvents.EmailChangeRequestedEvent(this.currentState.id, newEmail, token),
     );
     return this;
   }

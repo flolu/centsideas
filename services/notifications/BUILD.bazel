@@ -17,6 +17,7 @@ lib_deps = [
     "@npm//inversify",
     "@npm//web-push",
     "@npm//@types/web-push",
+    "@npm//@sendgrid/mail",
 ]
 
 ts_library(
@@ -39,3 +40,5 @@ nodejs_image(
 #     images = {"notifications:placeholder_name": ":image"},
 #     template = ":notifications.yaml",
 # )
+
+# // TODO add dummy test

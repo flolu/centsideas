@@ -38,7 +38,6 @@ export class AuthEffects {
     ),
   );
 
-  // NOW email login might not work
   confirmLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.confirmLogin),

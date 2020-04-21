@@ -10,27 +10,39 @@ import {
   EventTopics,
   IdeaEvents,
   TopLevelFrontendRoutes,
+  LoginEvents,
+  UserEvents,
 } from '@centsideas/enums';
-import { HttpRequest, HttpResponse, Dtos, IIdeaCreatedEvent } from '@centsideas/models';
+import {
+  HttpRequest,
+  HttpResponse,
+  Dtos,
+  IIdeaCreatedEvent,
+  ILoginRequestedEvent,
+  IEmailChangeRequestedEvent,
+  IEmailChangeConfirmedEvent,
+} from '@centsideas/models';
 import { MessageBroker, IEvent } from '@centsideas/event-sourcing';
 
 import { NotificationEnvironment } from './notifications.environment';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
 import { IPushPayload } from './models';
+import { EmailService } from './email.service';
 
 @injectable()
 export class NotificationsServer {
   private app = express();
 
-  // TODO implement email sending
-
   constructor(
     private env: NotificationEnvironment,
     private notificationSettingsHandlers: NotificationSettingsHandlers,
     private messageBroker: MessageBroker,
+    private emailService: EmailService,
   ) {
     this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.handleIdeasEvents);
+    this.messageBroker.subscribe(EventTopics.Logins, this.handleLoginEvents);
+    this.messageBroker.subscribe(EventTopics.Users, this.handleUsersEvents);
 
     Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
@@ -125,8 +137,8 @@ export class NotificationsServer {
   };
 
   // TODO create notification events (NotificationSentEvent)
-  private handleIdeasEvents = async (event: IEvent<any>) => {
-    return Logger.thread('handle incomming idea events', async t => {
+  private handleIdeasEvents = (event: IEvent<any>) => {
+    Logger.thread('handle incomming idea events', async t => {
       try {
         if (event.name === IdeaEvents.IdeaCreated) {
           const createdEevent: IEvent<IIdeaCreatedEvent> = event;
@@ -146,7 +158,60 @@ export class NotificationsServer {
           );
         }
       } catch (error) {
-        t.error(`Error while sending idea-created push notification`, error);
+        t.error(error);
+      }
+    });
+  };
+
+  private handleLoginEvents = (event: IEvent<any>) => {
+    Logger.thread('handle incomming login event', async t => {
+      try {
+        switch (event.name) {
+          case LoginEvents.LoginRequested: {
+            const loginEvent: IEvent<ILoginRequestedEvent> = event;
+            t.debug(`start sending login email to ${loginEvent.data.email}`);
+            await this.emailService.sendLoginMail(
+              loginEvent.data.email,
+              loginEvent.data.token,
+              loginEvent.data.firstLogin,
+            );
+            t.debug('sent login email');
+          }
+        }
+      } catch (error) {
+        t.error(error);
+      }
+    });
+  };
+
+  private handleUsersEvents = (event: IEvent<any>) => {
+    Logger.thread('handle incomming users event', async t => {
+      try {
+        switch (event.name) {
+          case UserEvents.EmailChangeRequested: {
+            const emailEvent: IEvent<IEmailChangeRequestedEvent> = event;
+            t.debug(`start sending request email change email to ${emailEvent.data.email}`);
+            await this.emailService.sendRequestEmailChangeEmail(
+              emailEvent.data.email,
+              emailEvent.data.token,
+            );
+            t.debug('sent');
+            break;
+          }
+
+          case UserEvents.EmailChangeConfirmed: {
+            const emailEvent: IEvent<IEmailChangeConfirmedEvent> = event;
+            t.debug(`start sending email change confirmed email to ${emailEvent.data.oldEmail}`);
+            await this.emailService.sendEmailChangedEmail(
+              emailEvent.data.oldEmail,
+              emailEvent.data.newEmail,
+            );
+            t.debug('sent');
+            break;
+          }
+        }
+      } catch (error) {
+        t.error(error);
       }
     });
   };

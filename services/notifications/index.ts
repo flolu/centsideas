@@ -11,6 +11,7 @@ import { NotificationSettingsRepository } from './notification-settings.reposito
 import { NotificationEnvironment } from './notifications.environment';
 import { NotificationsHandlers } from './notifications.handlers';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
+import { EmailService } from './email.service';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Notifications;
 
@@ -21,6 +22,7 @@ registerProviders(
   NotificationSettingsHandlers,
   MessageBroker,
   NotificationSettingsRepository,
+  EmailService,
 );
 
 getProvider(NotificationsServer);

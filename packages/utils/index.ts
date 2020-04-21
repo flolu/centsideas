@@ -8,5 +8,4 @@ export * from './test';
 export * from './http-error-response-handler';
 export * from './errors/entity.error';
 export * from './errors';
-export * from './mailing';
 export * from './token';

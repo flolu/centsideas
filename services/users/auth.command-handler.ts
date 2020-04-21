@@ -4,18 +4,11 @@ import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
 import * as queryString from 'query-string';
 
-import {
-  sendMail,
-  decodeToken,
-  TokenInvalidError,
-  ThreadLogger,
-  Identifier,
-} from '@centsideas/utils';
+import { decodeToken, TokenInvalidError, ThreadLogger, Identifier } from '@centsideas/utils';
 import { ILoginTokenPayload, IRefreshTokenPayload } from '@centsideas/models';
 import {
   TopLevelFrontendRoutes,
   AuthFrontendRoutes,
-  QueryParamKeys,
   TokenExpirationTimes,
 } from '@centsideas/enums';
 
@@ -50,23 +43,7 @@ export class AuthCommandHandler {
       expiresIn: TokenExpirationTimes.LoginToken,
     });
 
-    t.debug('sendng login mail to ', email);
-    const activationRoute: string = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
-    const expirationTimeHours = Math.floor(TokenExpirationTimes.LoginToken / 3600);
-    const text = `URL to login into your account: ${activationRoute} (URL will expire after ${expirationTimeHours} hours)`;
-    const subject = 'CENTS Ideas Login';
-    // FIXME consider outsourcing sending mails into its own mailing service, which listens for event like LoginRequested
-    await sendMail(
-      this.env.mailing.fromAddress,
-      email,
-      subject,
-      text,
-      text,
-      this.env.mailing.apiKey,
-    );
-    t.debug('sent login confirmation email to', email);
-
-    const login = Login.create(loginId, email, firstLogin);
+    const login = Login.create(loginId, email, token, firstLogin);
     t.debug('start saving newly created login with id:', loginId);
     return this.loginRepository.save(login);
   };

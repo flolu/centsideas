@@ -1,0 +1,6 @@
+# // TODO implement k8s
+#            - name: SEND_GRID_API_KEY
+#              valueFrom:
+#                secretKeyRef:
+#                  name: centsideas-secret
+#                  key: SEND_GRID_API_KEY
