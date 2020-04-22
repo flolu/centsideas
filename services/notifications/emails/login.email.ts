@@ -1,7 +1,8 @@
 import { IUserState } from '@centsideas/models';
+import { IEmailContent } from '../models';
 
-const suject = 'CENTS Ideas Login Confirmation';
-const sujectFirst = 'Complete Your Sign Up at CENTS Ideas';
+const subject = 'CENTS Ideas Login Confirmation';
+const subjectFirst = 'Complete Your Sign Up at CENTS Ideas';
 
 const html = (url: string, user?: IUserState) =>
   `
@@ -31,11 +32,14 @@ Finish your sign up by navigating to the link below:
 ${url}
 `;
 
-export const LoginEmail = {
-  suject,
-  sujectFirst,
-  html,
-  htmlFirst,
-  text,
-  textFirst,
-};
+export const getFirstLoginEmail = (url: string): IEmailContent => ({
+  subject: subjectFirst,
+  html: htmlFirst(url),
+  text: textFirst(url),
+});
+
+export const getLoginEmail = (url: string): IEmailContent => ({
+  subject,
+  html: html(url),
+  text: text(url),
+});

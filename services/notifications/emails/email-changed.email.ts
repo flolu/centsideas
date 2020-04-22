@@ -1,3 +1,5 @@
+import { IEmailContent } from '../models';
+
 const subject = 'Your Email Adress Has Been Updated';
 const html = (newEmail: string) =>
   `
@@ -8,8 +10,8 @@ const text = (newEmail: string) =>
 You have successfully changed your email to ${newEmail}
 `;
 
-export const EmailChangedEmail = {
+export const getEmailChangedEmail = (newEmail: string): IEmailContent => ({
   subject,
-  html,
-  text,
-};
+  html: html(newEmail),
+  text: text(newEmail),
+});

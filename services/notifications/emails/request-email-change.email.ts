@@ -1,3 +1,5 @@
+import { IEmailContent } from '../models';
+
 const subject = 'Change your CENTS Ideas Email Adress';
 const html = (url: string) =>
   `
@@ -11,8 +13,8 @@ Open the link below to change your email adress
 ${url}
 `;
 
-export const RequestEmailChangeEmail = {
+export const getRequestEmailChangeEmail = (url: string): IEmailContent => ({
   subject,
-  html,
-  text,
-};
+  html: html(url),
+  text: text(url),
+});

@@ -10,51 +10,39 @@ import {
 } from '@centsideas/enums';
 
 import { NotificationEnvironment } from './notifications.environment';
-import { LoginEmail, RequestEmailChangeEmail, EmailChangedEmail } from './emails';
+import {
+  getFirstLoginEmail,
+  getLoginEmail,
+  getRequestEmailChangeEmail,
+  getEmailChangedEmail,
+} from './emails';
+import { IEmailContent } from './models';
 
 @injectable()
 export class EmailService {
   private readonly from = this.env.mailing.fromAddress;
   private readonly key = this.env.mailing.apiKey;
 
-  constructor(private env: NotificationEnvironment) {}
+  constructor(private env: NotificationEnvironment) {
+    sgMail.setApiKey(this.key);
+  }
 
   sendLoginMail(email: string, token: string, firstLogin: boolean, user?: IUserState) {
     const url = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
-    // TODO email class / util function to simplify this part
-    if (firstLogin)
-      return this.sendMail(
-        email,
-        LoginEmail.sujectFirst,
-        LoginEmail.htmlFirst(url),
-        LoginEmail.textFirst(url),
-      );
-    else return this.sendMail(email, LoginEmail.suject, LoginEmail.html(url), LoginEmail.text(url));
+    return this.sendMail(email, firstLogin ? getFirstLoginEmail(url) : getLoginEmail(url));
   }
 
   sendRequestEmailChangeEmail(newEmail: string, token: string) {
     const url = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.User}/${UserFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
-    return this.sendMail(
-      newEmail,
-      RequestEmailChangeEmail.subject,
-      RequestEmailChangeEmail.html(url),
-      RequestEmailChangeEmail.text(url),
-    );
+    return this.sendMail(newEmail, getRequestEmailChangeEmail(url));
   }
 
   sendEmailChangedEmail(oldEmail: string, newEmail: string) {
-    return this.sendMail(
-      oldEmail,
-      EmailChangedEmail.subject,
-      EmailChangedEmail.html(newEmail),
-      EmailChangedEmail.text(newEmail),
-    );
+    return this.sendMail(oldEmail, getEmailChangedEmail(newEmail));
   }
 
-  private sendMail(to: string, subject: string, html: string, text: string): Promise<any> {
+  private sendMail(to: string, { subject, text, html }: IEmailContent): Promise<any> {
     const message = { to, from: this.from, subject, text, html };
-    // FIXME maybe it's sufficient to set the key once in the constructor
-    sgMail.setApiKey(this.key);
     return sgMail.send(message);
   }
 }
