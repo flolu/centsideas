@@ -31,6 +31,7 @@ import { IPushPayload } from './models';
 import { EmailService } from './email.service';
 import { Notification } from './notification.entity';
 import { NotificationsRepository } from './notifications.repository';
+import { NotificationsHandlers } from './notifications.handlers';
 
 @injectable()
 export class NotificationsServer {
@@ -42,6 +43,7 @@ export class NotificationsServer {
     private messageBroker: MessageBroker,
     private emailService: EmailService,
     private notificationsRepository: NotificationsRepository,
+    private notificationsHandler: NotificationsHandlers,
   ) {
     this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.subscribe(EventTopics.Ideas, this.handleIdeasEvents);
@@ -140,45 +142,12 @@ export class NotificationsServer {
     });
   };
 
-  // TODO move this stuff into own service
   private handleIdeasEvents = (event: IEvent<any>) => {
     Logger.thread('handle incomming idea events', async t => {
       try {
         switch (event.name) {
-          case IdeaEvents.IdeaCreated: {
-            const createdEevent: IEvent<IIdeaCreatedEvent> = event;
-            const pushPayload: IPushPayload = {
-              notification: {
-                title: 'Your Idea has been Published',
-                body: createdEevent.data.title,
-                data: {
-                  url: `/${TopLevelFrontendRoutes.Ideas}/${createdEevent.aggregateId}`,
-                },
-              },
-            };
-            // TODO only crate notification when we know it will be sent (e.g. not when push notifications are diabled)
-            const notificationId = Identifier.makeLongId();
-            const notification = Notification.create(
-              notificationId,
-              createdEevent.data.userId,
-              {
-                eventId: createdEevent.id,
-                eventName: createdEevent.name,
-                topic: EventTopics.Ideas,
-              },
-              NotificationMedium.PushNotification,
-            );
-
-            await this.notificationSettingsHandlers.sendPushNotificationToUser(
-              createdEevent.data.userId,
-              pushPayload,
-              t,
-            );
-
-            notification.sent();
-            await this.notificationsRepository.save(notification);
-            break;
-          }
+          case IdeaEvents.IdeaCreated:
+            return this.notificationsHandler.handleIdeaCreatedNotification(event, t);
         }
       } catch (error) {
         t.error(error);
@@ -190,29 +159,8 @@ export class NotificationsServer {
     Logger.thread('handle incomming login event', async t => {
       try {
         switch (event.name) {
-          case LoginEvents.LoginRequested: {
-            const loginEvent: IEvent<ILoginRequestedEvent> = event;
-            t.debug(`start sending login email to ${loginEvent.data.email}`);
-
-            const notificationId = Identifier.makeLongId();
-            const notification = Notification.create(
-              notificationId,
-              null,
-              { eventId: loginEvent.id, eventName: loginEvent.name, topic: EventTopics.Logins },
-              NotificationMedium.Email,
-            );
-
-            await this.emailService.sendLoginMail(
-              loginEvent.data.email,
-              loginEvent.data.token,
-              loginEvent.data.firstLogin,
-            );
-
-            notification.sent();
-            await this.notificationsRepository.save(notification);
-            t.debug('sent login email');
-            break;
-          }
+          case LoginEvents.LoginRequested:
+            return this.notificationsHandler.handleLoginNotification(event, t);
         }
       } catch (error) {
         t.error(error);
@@ -224,51 +172,11 @@ export class NotificationsServer {
     Logger.thread('handle incomming users event', async t => {
       try {
         switch (event.name) {
-          case UserEvents.EmailChangeRequested: {
-            const emailEvent: IEvent<IEmailChangeRequestedEvent> = event;
-            t.debug(`start sending request email change email to ${emailEvent.data.email}`);
+          case UserEvents.EmailChangeRequested:
+            return this.notificationsHandler.handleEmailChangeRequestedNotification(event, t);
 
-            const notificationId = Identifier.makeLongId();
-            const notification = Notification.create(
-              notificationId,
-              null,
-              { eventId: emailEvent.id, eventName: emailEvent.name, topic: EventTopics.Logins },
-              NotificationMedium.Email,
-            );
-
-            await this.emailService.sendRequestEmailChangeEmail(
-              emailEvent.data.email,
-              emailEvent.data.token,
-            );
-
-            notification.sent();
-            await this.notificationsRepository.save(notification);
-            t.debug('sent');
-            break;
-          }
-
-          case UserEvents.EmailChangeConfirmed: {
-            const emailEvent: IEvent<IEmailChangeConfirmedEvent> = event;
-            t.debug(`start sending email change confirmed email to ${emailEvent.data.oldEmail}`);
-
-            const notificationId = Identifier.makeLongId();
-            const notification = Notification.create(
-              notificationId,
-              null,
-              { eventId: emailEvent.id, eventName: emailEvent.name, topic: EventTopics.Logins },
-              NotificationMedium.Email,
-            );
-
-            await this.emailService.sendEmailChangedEmail(
-              emailEvent.data.oldEmail,
-              emailEvent.data.newEmail,
-            );
-
-            notification.sent();
-            await this.notificationsRepository.save(notification);
-            t.debug('sent');
-            break;
-          }
+          case UserEvents.EmailChangeConfirmed:
+            return this.notificationsHandler.handleEmailChangedNotification(event, t);
         }
       } catch (error) {
         t.error(error);

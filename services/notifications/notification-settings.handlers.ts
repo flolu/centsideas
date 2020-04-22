@@ -1,22 +1,15 @@
 import { injectable } from 'inversify';
-import * as webpush from 'web-push';
 
 import { IPushSubscription, Dtos } from '@centsideas/models';
 import { ThreadLogger, NotAuthenticatedError, Identifier } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
 
 import { NotificationSettingsRepository } from './notification-settings.repository';
 import { NotificationSettings } from './notification-settings.entity';
 import { NotificationSettingsErrors } from './errors';
-import { NotificationEnvironment } from './notifications.environment';
-import { IPushPayload } from './models';
 
 @injectable()
 export class NotificationSettingsHandlers {
-  constructor(
-    private nsRepository: NotificationSettingsRepository,
-    private env: NotificationEnvironment,
-  ) {}
+  constructor(private nsRepository: NotificationSettingsRepository) {}
 
   async upsert(authenticatedUserId: string, t: ThreadLogger): Promise<NotificationSettings> {
     NotAuthenticatedError.validate(authenticatedUserId);
@@ -86,43 +79,7 @@ export class NotificationSettingsHandlers {
     return this.getSettingsOfUser(auid);
   }
 
-  async sendPushNotificationToUser(userId: string, payload: IPushPayload, t: ThreadLogger) {
-    webpush.setVapidDetails(
-      `${this.env.frontendUrl}/contact`,
-      this.env.vapidPublicKey,
-      this.env.vapidPrivateKey,
-    );
-
-    const ns = await this.getSettingsOfUser(userId);
-    t.debug('found settings');
-
-    if (!ns.persistedState.sendPushes) {
-      t.debug(`push notifications are disabled`);
-      return true;
-    }
-
-    t.debug(`start sending notification to ${ns.persistedState.pushSubscriptions.length} clients`);
-    const invalidSubscriptions: IPushSubscription[] = [];
-
-    await Promise.all(
-      ns.persistedState.pushSubscriptions.map(sub =>
-        webpush.sendNotification(sub, JSON.stringify(payload)).catch(error => {
-          if (error.statusCode === HttpStatusCodes.Gone) invalidSubscriptions.push(sub);
-          else throw error;
-        }),
-      ),
-    );
-    t.debug(
-      `sent ${
-        ns.persistedState.pushSubscriptions.length - invalidSubscriptions.length
-      } notificatios`,
-    );
-
-    await this.removeSubscriptions(ns, invalidSubscriptions);
-    return true;
-  }
-
-  private async removeSubscriptions(
+  async removeSubscriptions(
     notificationSettings: NotificationSettings,
     invalidSubscriptions: IPushSubscription[],
   ) {
@@ -130,7 +87,7 @@ export class NotificationSettingsHandlers {
     return this.nsRepository.save(notificationSettings);
   }
 
-  private async getSettingsOfUser(userId: string) {
+  async getSettingsOfUser(userId: string) {
     const mapping = await this.nsRepository.userIdMapping.get(userId);
     if (!mapping)
       throw new NotificationSettingsErrors.NoNotificationSettingsWithUserIdFoundError(userId);
