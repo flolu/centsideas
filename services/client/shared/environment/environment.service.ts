@@ -28,8 +28,7 @@ export class EnvironmentService {
     if (isPlatformBrowser(this.platform)) {
       if (this.transferState.hasKey(this.key)) {
         const environment: IEnvironment = this.transferState.get(this.key, null);
-        // TODO it is probably not a good idea to save env in localohst (because it wont get env udpates)
-        // TODO use env like https://shorturl.at/nsxJN
+        // TODO it is probably not a good idea to save env in localohst (because it wont get env udpates) https://shorturl.at/nsxJN
         localStorage.setItem(this.localstorageEnvironmentKey, JSON.stringify(environment));
         this.environment = environment;
       }
@@ -41,7 +40,6 @@ export class EnvironmentService {
   };
 
   get env(): IEnvironment {
-    // TODO if env not exists then first do a fetch from the server, and only use defaults it it errors out
     if (!this.environment || !this.environment.gatewayHost) {
       if (this.document.location.hostname === 'localhost')
         return { gatewayHost: 'http://localhost:3000', vapidPublicKey: '' };

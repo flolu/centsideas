@@ -3,7 +3,7 @@ import { LoginEvents } from '@centsideas/enums';
 import { IGoogleLoginRequestedEvnet, ILoginState } from '@centsideas/models';
 
 export class GoogleLoginRequestedEvent extends Event<IGoogleLoginRequestedEvnet> {
-  static readonly eventName: string = LoginEvents.LoginRequested;
+  static readonly eventName: string = LoginEvents.GoogleLoginRequested;
 
   constructor(loginId: string, email: string, firstLogin: boolean, googleUserId: string) {
     super(GoogleLoginRequestedEvent.eventName, { email, firstLogin, googleUserId }, loginId);

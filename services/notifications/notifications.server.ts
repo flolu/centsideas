@@ -9,10 +9,8 @@ import {
   HttpStatusCodes,
   EventTopics,
   IdeaEvents,
-  TopLevelFrontendRoutes,
   LoginEvents,
   UserEvents,
-  NotificationMedium,
 } from '@centsideas/enums';
 import {
   HttpRequest,
@@ -41,8 +39,6 @@ export class NotificationsServer {
     private env: NotificationEnvironment,
     private notificationSettingsHandlers: NotificationSettingsHandlers,
     private messageBroker: MessageBroker,
-    private emailService: EmailService,
-    private notificationsRepository: NotificationsRepository,
     private notificationsHandler: NotificationsHandlers,
   ) {
     this.messageBroker.initialize({ brokers: env.kafka.brokers });

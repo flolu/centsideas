@@ -1,41 +1,33 @@
 steps:
-  # TODO only rebuild image when necessary
-  #- name: "gcr.io/cloud-builders/docker"
-  #  args:
-  #    [
-  #      "build",
-  #      "-t",
-  #      "gcr.io/centsideas/bazelisk",
-  #      "-f",
-  #      "images/bazelisk.Dockerfile",
-  #      ".",
-  #    ]
-  #- name: "gcr.io/cloud-builders/docker"
-  #  args: ["push", "gcr.io/centsideas/bazelisk"]
+  # FIXME only rebuild image when necessary
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/centsideas/bazelisk', '-f', 'images/bazelisk.Dockerfile', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/centsideas/bazelisk']
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/consumer/..."]
+    args: ['test', '//services/consumer/...']
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/gateway/..."]
+    args: ['test', '//services/gateway/...']
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/ideas/..."]
+    args: ['test', '//services/ideas/...']
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/reviews/..."]
+    args: ['test', '//services/reviews/...']
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/users/..."]
+    args: ['test', '//services/users/...']
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/notifications/..."]
+    args: ['test', '//services/notifications/...']
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//packages/event-sourcing/..."]
+    args: ['test', '//packages/event-sourcing/...']
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//packages/utils/..."]
+    args: ['test', '//packages/utils/...']
 timeout: 3600s
 #options:
 #  machineType: "N1_HIGHCPU_8"

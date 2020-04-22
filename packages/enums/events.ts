@@ -24,6 +24,7 @@ export enum UserEvents {
 
 export enum LoginEvents {
   LoginRequested = 'login-requested',
+  GoogleLoginRequested = 'google-login-requested',
   LoginConfirmed = 'login-confirmed',
 }
 
