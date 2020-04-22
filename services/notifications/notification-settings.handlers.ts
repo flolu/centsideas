@@ -3,13 +3,13 @@ import * as webpush from 'web-push';
 
 import { IPushSubscription, Dtos } from '@centsideas/models';
 import { ThreadLogger, NotAuthenticatedError, Identifier } from '@centsideas/utils';
+import { HttpStatusCodes } from '@centsideas/enums';
 
 import { NotificationSettingsRepository } from './notification-settings.repository';
 import { NotificationSettings } from './notification-settings.entity';
 import { NotificationSettingsErrors } from './errors';
 import { NotificationEnvironment } from './notifications.environment';
 import { IPushPayload } from './models';
-import { HttpStatusCodes } from '@centsideas/enums';
 
 @injectable()
 export class NotificationSettingsHandlers {
@@ -117,7 +117,6 @@ export class NotificationSettingsHandlers {
         ns.persistedState.pushSubscriptions.length - invalidSubscriptions.length
       } notificatios`,
     );
-    // TODO create events for sent notifications
 
     await this.removeSubscriptions(ns, invalidSubscriptions);
     return true;

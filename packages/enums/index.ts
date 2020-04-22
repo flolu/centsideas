@@ -9,3 +9,4 @@ export * from './frontend-routing';
 export * from './query-params.enum';
 export * from './expiration-times.enum';
 export * from './cookie-names.enum';
+export * from './notification-mediums.enum';

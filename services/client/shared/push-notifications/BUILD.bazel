@@ -9,6 +9,7 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         "//services/client/shared/environment",
+        "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/router",

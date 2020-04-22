@@ -10,6 +10,7 @@ ts_library(
     ),
     module_name = "@centsideas/models",
     deps = [
+        "//packages/enums",
         "@npm//@types/express",
         "@npm//express",
     ],

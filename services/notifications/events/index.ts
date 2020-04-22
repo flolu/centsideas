@@ -5,6 +5,8 @@ import { NotificationSettingsCreatedEvent } from './notification-settings-create
 import { NotificationSettingsUpdatedEvent } from './notification-settings-updated.event';
 import { PushSubscriptionAddedEvent } from './push-subscription-added.event';
 import { PushSubscriptionsRemovedEvent } from './push-subscriptions-removed.event';
+import { NotificationCreatedEvent } from './notification-created.event';
+import { NotificationSentEvent } from './notification-sent.event';
 
 export const NotificationSettingsEvents = {
   NotificationSettingsCreatedEvent,
@@ -12,11 +14,15 @@ export const NotificationSettingsEvents = {
   PushSubscriptionAddedEvent,
   PushSubscriptionsRemovedEvent,
 };
-export const NotificationsEvents = {};
+export const NotificationsEvents = {
+  NotificationCreatedEvent,
+  NotificationSentEvent,
+};
 
 export const notificationSettingsCommitFunctions = composeCommitFunctions<
   INotificationSettingsState
 >(NotificationSettingsEvents);
+
 export const notificationsCommitFunctions = composeCommitFunctions<INotificationState>(
   NotificationsEvents,
 );

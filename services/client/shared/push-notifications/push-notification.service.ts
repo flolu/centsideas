@@ -1,7 +1,8 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { tap, takeWhile } from 'rxjs/operators';
 import { SwPush } from '@angular/service-worker';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 import { EnvironmentService } from '../environment/environment.service';
 
@@ -13,6 +14,7 @@ export class PushNotificationService implements OnDestroy {
     private swPush: SwPush,
     private envService: EnvironmentService,
     private router: Router,
+    @Inject(PLATFORM_ID) private platform: string,
   ) {}
 
   initialize() {
@@ -23,11 +25,13 @@ export class PushNotificationService implements OnDestroy {
   }
 
   get hasNotificationPermission() {
-    return Notification.permission === 'granted';
+    if (isPlatformBrowser(this.platform)) return Notification.permission === 'granted';
+    return false;
   }
 
   get areNotificationsBlocked() {
-    return Notification.permission === 'denied';
+    if (isPlatformBrowser(this.platform)) return Notification.permission === 'denied';
+    return true;
   }
 
   // TODO show in ui that is blocked if not granted
