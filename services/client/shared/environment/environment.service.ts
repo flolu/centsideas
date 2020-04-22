@@ -6,7 +6,7 @@ import { IEnvironment } from './environment.model';
 
 @Injectable()
 export class EnvironmentService {
-  private readonly localstorageEnvironmentKey = 'environment';
+  private readonly localstorageEnvironmentKey = '@centsideas/environment';
   private readonly keyName = '@centsideas/environment';
   private readonly key = makeStateKey(this.keyName);
   private environment: IEnvironment;

@@ -3,16 +3,21 @@ import { Component, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, fromEvent, merge, of } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
-import { SwUpdate } from '@angular/service-worker';
+import { UpdateAvailableEvent } from '@angular/service-worker';
 
 import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
 
 import { AuthSelectors } from './auth/auth.selectors';
 import { PushNotificationService } from '../shared/push-notifications/push-notification.service';
+import { ServiceWorkerService } from './check-for-update.service';
 
 @Component({
   selector: 'ci-component',
   template: `
+    <div *ngIf="availableSwUpdate" (click)="onUpdateServiceWorker()" id="update_banner">
+      Click to update the app
+    </div>
+    <button (click)="checkUpdates()">Check for updates now</button>
     <span *ngIf="(authState$ | async)?.initializing">Initializing...</span>
     <span *ngIf="(authState$ | async)?.initialized">Initialized</span>
     <span *ngIf="(authState$ | async)?.accessToken">you're signed in</span>
@@ -33,31 +38,35 @@ export class AppComponent implements OnDestroy {
   authState$ = this.store.select(AuthSelectors.selectAuthState);
   offline$: Observable<boolean>;
 
+  commitHref = `https://github.com/flolu/centsideas/commit/${commit}`;
+  commitIdShort = commit.substr(0, 6);
   alive = true;
   cents = `${CentsCommandments.Control}, ${CentsCommandments.Entry}, ${CentsCommandments.Need}, ${CentsCommandments.Time}, ${CentsCommandments.Scale}`;
   topLevelRoutes = TopLevelFrontendRoutes;
   authRoutes = AuthFrontendRoutes;
+  availableSwUpdate: UpdateAvailableEvent;
 
   constructor(
     private store: Store,
-    private swUpdate: SwUpdate,
     private pushNotificationService: PushNotificationService,
+    private serviceWorkerService: ServiceWorkerService,
     @Inject(PLATFORM_ID) private platform: string,
   ) {
-    this.handleServiceWorkerUpdates();
     if (isPlatformBrowser(this.platform)) {
       this.handleOnlineOffline();
+      this.pushNotificationService.initialize();
+      this.serviceWorkerService.launchUpdateCheckingRoutine();
+      this.serviceWorkerService.launchUpdateHandler(event => (this.availableSwUpdate = event));
     }
-    this.pushNotificationService.initialize();
   }
 
-  handleServiceWorkerUpdates = () => {
-    this.swUpdate.available.subscribe(evt => {
-      console.log('[AppComponent] Service worker update is available', evt);
-      this.swUpdate.activateUpdate();
-      console.log('[AppComponent] Activated service worker update');
-    });
-  };
+  onUpdateServiceWorker() {
+    this.serviceWorkerService.forceUpdateNow();
+  }
+
+  checkUpdates() {
+    this.serviceWorkerService.checkUpdateNow();
+  }
 
   handleOnlineOffline = () => {
     // FIXME this doesn't seem to be notified when turning off internet at os level

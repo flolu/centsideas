@@ -25,10 +25,10 @@
       "name": "api-freshness",
       "urls": ["https://api.centsideas.com/**"],
       "cacheConfig": {
-        "maxAge": "1d",
+        "maxAge": "2h",
         "maxSize": 100,
         "strategy": "freshness",
-        "timeout": "10s"
+        "timeout": "5s"
       }
     }
   ]

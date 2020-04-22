@@ -14,6 +14,7 @@ import { EnvironmentModule } from '../shared/environment/environment.module';
 import { AuthActions } from './auth/auth.actions';
 import { AuthSelectors } from './auth/auth.selectors';
 import { LoadStatus } from '../shared/helpers/state.helper';
+import { ServiceWorkerService } from './check-for-update.service';
 
 const initApplication = (store: Store) => {
   return () =>
@@ -45,6 +46,7 @@ const initApplication = (store: Store) => {
   ],
   declarations: [AppComponent],
   providers: [
+    ServiceWorkerService,
     { provide: APP_INITIALIZER, useFactory: initApplication, multi: true, deps: [Store] },
     { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
   ],

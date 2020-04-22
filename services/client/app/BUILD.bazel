@@ -15,12 +15,14 @@ ts_library(
         "app-base.module.ts",
         "app-routing.module.ts",
         "auth-token.interceptor.ts",
+        "check-for-update.service.ts",
     ],
     angular_assets = [":app_styles"],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
         "//packages/enums",
+        "//packages/version",
         "//services/client/app/auth",
         "//services/client/app/auth:store",
         "//services/client/app/ideas",
@@ -56,7 +58,9 @@ ts_library(
 
 ts_library(
     name = "prod",
-    srcs = ["app-prod.module.ts"],
+    srcs = [
+        "app-prod.module.ts",
+    ],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
@@ -66,6 +70,7 @@ ts_library(
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/service-worker",
+        "@npm//rxjs",
     ],
 )
 
