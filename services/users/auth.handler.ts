@@ -21,7 +21,7 @@ import { LoginRepository } from './login.repository';
 import { IGoogleUserinfo } from './models';
 
 @injectable()
-export class AuthCommandHandler {
+export class AuthHandler {
   constructor(
     private userRepository: UserRepository,
     private loginRepository: LoginRepository,

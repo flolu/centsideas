@@ -2,16 +2,16 @@ import 'reflect-metadata';
 
 import { getProvider, registerProviders, overrideProvider, Logger } from '@centsideas/utils';
 
-import { IdeaCommandHandler } from './idea.command-handler';
+import { IdeasHandler } from './ideas.handler';
 import { IdeaRepository } from './idea.repository';
 import { IdeaRepositoryMock } from './test/idea.repository.mock';
 import { fakeUserId, fakeIdeaTitle, fakeIdeaDescription } from './test';
 
 describe('Idea Command Handler', () => {
-  registerProviders(IdeaCommandHandler, IdeaRepository);
+  registerProviders(IdeasHandler, IdeaRepository);
   overrideProvider(IdeaRepository, IdeaRepositoryMock);
 
-  const commandHandler: IdeaCommandHandler = getProvider(IdeaCommandHandler);
+  const commandHandler: IdeasHandler = getProvider(IdeasHandler);
 
   describe('create', () => {
     it('should work', () => {

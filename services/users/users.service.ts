@@ -4,11 +4,11 @@ import { HttpStatusCodes } from '@centsideas/enums';
 import { HttpRequest, HttpResponse, IUserState, Dtos } from '@centsideas/models';
 import { handleHttpResponseError, Logger } from '@centsideas/utils';
 
-import { UserCommandHandler } from './user.command-handler';
+import { UsersHandler } from './users.handler';
 
 @injectable()
 export class UsersService {
-  constructor(private commandHandler: UserCommandHandler) {}
+  constructor(private commandHandler: UsersHandler) {}
 
   updateUser = (req: HttpRequest<Dtos.IUpdateUserDto>): Promise<HttpResponse<IUserState>> =>
     Logger.thread('update user', async t => {

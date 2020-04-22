@@ -4,7 +4,7 @@ import { Idea } from '../idea.entity';
 import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeUserId } from './idea.entity.fake';
 
 @injectable()
-export class IdeaCommandHandlerMock {
+export class IdeasHandlerMock {
   create = async (): Promise<Idea> => {
     const idea = Idea.create(fakeIdeaId, fakeUserId, fakeIdeaTitle, fakeIdeaDescription);
     idea.confirmEvents();

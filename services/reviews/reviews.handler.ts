@@ -13,7 +13,7 @@ import { Review } from './review.entity';
 import { ReviewRepository } from './review.repository';
 
 @injectable()
-export class ReviewCommandHandler {
+export class ReviewsHandler {
   constructor(private repository: ReviewRepository) {}
 
   create = async (

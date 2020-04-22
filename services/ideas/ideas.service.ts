@@ -4,11 +4,11 @@ import { HttpStatusCodes } from '@centsideas/enums';
 import { HttpRequest, HttpResponse, IIdeaState, Dtos } from '@centsideas/models';
 import { handleHttpResponseError, Logger } from '@centsideas/utils';
 
-import { IdeaCommandHandler } from './idea.command-handler';
+import { IdeasHandler } from './ideas.handler';
 
 @injectable()
 export class IdeasService {
-  constructor(private commandHandler: IdeaCommandHandler) {}
+  constructor(private commandHandler: IdeasHandler) {}
 
   create = (req: HttpRequest<Dtos.ICreateIdeaDto>): Promise<HttpResponse<IIdeaState>> =>
     Logger.thread('create', async t => {

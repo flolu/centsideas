@@ -5,11 +5,11 @@ import { HttpRequest, HttpResponse, Cookie, Dtos } from '@centsideas/models';
 import { handleHttpResponseError, Logger } from '@centsideas/utils';
 
 import { UsersEnvironment } from './users.environment';
-import { AuthCommandHandler } from './auth.command-handler';
+import { AuthHandler } from './auth.handler';
 
 @injectable()
 export class AuthService {
-  constructor(private commandHandler: AuthCommandHandler, private env: UsersEnvironment) {}
+  constructor(private commandHandler: AuthHandler, private env: UsersEnvironment) {}
 
   login = (req: HttpRequest<Dtos.ILoginDto>) =>
     Logger.thread('login', async t => {

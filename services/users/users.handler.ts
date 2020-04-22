@@ -17,7 +17,7 @@ import { UserErrors } from './errors';
 import { UsersEnvironment } from './users.environment';
 
 @injectable()
-export class UserCommandHandler {
+export class UsersHandler {
   constructor(private userRepository: UserRepository, private env: UsersEnvironment) {}
 
   updateUser = async (

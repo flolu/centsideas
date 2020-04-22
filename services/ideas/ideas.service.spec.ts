@@ -6,20 +6,20 @@ import { makeFakeHttpRequest } from '@centsideas/models';
 
 import { IdeasService } from './ideas.service';
 import {
-  IdeaCommandHandlerMock,
+  IdeasHandlerMock,
   fakeIdeaId,
   fakeUserId,
   fakeIdeaTitle,
   fakeIdeaDescription,
 } from './test';
 import { Idea } from './idea.entity';
-import { IdeaCommandHandler } from './idea.command-handler';
+import { IdeasHandler } from './ideas.handler';
 import { IdeaRepository } from './idea.repository';
 import { IdeaRepositoryMock } from './test/idea.repository.mock';
 
 describe('Ideas Service', () => {
-  registerProviders(IdeasService, IdeaCommandHandler, IdeaRepository);
-  overrideProvider(IdeaCommandHandler, IdeaCommandHandlerMock);
+  registerProviders(IdeasService, IdeasHandler, IdeaRepository);
+  overrideProvider(IdeasHandler, IdeasHandlerMock);
   overrideProvider(IdeaRepository, IdeaRepositoryMock);
 
   const service: IdeasService = getProvider(IdeasService);

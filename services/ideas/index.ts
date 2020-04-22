@@ -7,7 +7,7 @@ import { LoggerPrefixes } from '@centsideas/enums';
 import { MessageBroker } from '@centsideas/event-sourcing';
 
 import { IdeasServer } from './ideas.server';
-import { IdeaCommandHandler } from './idea.command-handler';
+import { IdeasHandler } from './ideas.handler';
 import { IdeaRepository } from './idea.repository';
 import { IdeasService } from './ideas.service';
 import { IdeasEnvironment } from './ideas.environment';
@@ -16,7 +16,7 @@ process.env.LOGGER_PREFIX = LoggerPrefixes.Ideas;
 
 registerProviders(
   IdeasServer,
-  IdeaCommandHandler,
+  IdeasHandler,
   IdeaRepository,
   IdeasService,
   MessageBroker,

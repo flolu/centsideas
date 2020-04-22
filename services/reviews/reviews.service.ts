@@ -4,11 +4,11 @@ import { HttpStatusCodes } from '@centsideas/enums';
 import { HttpRequest, HttpResponse, IReviewState, Dtos } from '@centsideas/models';
 import { Logger, handleHttpResponseError } from '@centsideas/utils';
 
-import { ReviewCommandHandler } from './review.command-handler';
+import { ReviewsHandler } from './reviews.handler';
 
 @injectable()
 export class ReviewsService {
-  constructor(private commandHandler: ReviewCommandHandler) {}
+  constructor(private commandHandler: ReviewsHandler) {}
 
   create = (req: HttpRequest<Dtos.ICreateReviewDto>): Promise<HttpResponse<IReviewState>> =>
     Logger.thread('create', async t => {

@@ -1,2 +1,2 @@
 export * from './idea.entity.fake';
-export * from './idea.command-handler.mock';
+export * from './ideas.handler.mock';

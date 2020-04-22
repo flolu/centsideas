@@ -12,7 +12,7 @@ import { Idea } from './idea.entity';
 import { IdeaRepository } from './idea.repository';
 
 @injectable()
-export class IdeaCommandHandler {
+export class IdeasHandler {
   constructor(private repository: IdeaRepository) {}
 
   create = async (
