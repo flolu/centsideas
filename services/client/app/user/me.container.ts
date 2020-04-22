@@ -34,10 +34,10 @@ const selectChangeEmailToken = createSelector(
         [status]="state.status"
         [formState]="state.persisted"
         (updateForm)="onUpdateUserForm($event)"
-      >
-      </ci-me-form>
+      ></ci-me-form>
     </ng-container>
     <button (click)="onLogout()">Logout</button>
+
     <ng-container *ngIf="notificationsState$ | async as state">
       <ci-notifications-form
         [status]="state.status"
@@ -45,6 +45,9 @@ const selectChangeEmailToken = createSelector(
         (updateForm)="onUpdateNotificationSettingsForm($event)"
       ></ci-notifications-form>
     </ng-container>
+    <span *ngIf="!hasPushPermission">
+      You need to allow notifications in your browser to receive push notifications!
+    </span>
   `,
   styleUrls: ['me.container.sass'],
 })
@@ -56,6 +59,7 @@ export class MeContainer {
     username: new FormControl(''),
     email: new FormControl(''),
   });
+  hasPushPermission = this.pushService.hasNotificationPermission;
 
   constructor(
     private store: Store,
@@ -73,6 +77,7 @@ export class MeContainer {
   async onUpdateNotificationSettingsForm(event: INotificationSettingsForm) {
     this.store.dispatch(NotificationsActions.formChanged({ value: event }));
     if (event.sendPushes) {
+      this.hasPushPermission = this.pushService.hasNotificationPermission;
       const sub = await this.pushService.ensurePushPermission();
       if (sub) this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
     }

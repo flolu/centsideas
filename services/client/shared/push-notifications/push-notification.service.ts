@@ -34,7 +34,6 @@ export class PushNotificationService implements OnDestroy {
     return true;
   }
 
-  // TODO show in ui that is blocked if not granted
   async ensurePushPermission(): Promise<PushSubscription | null> {
     if (this.swPush.isEnabled) {
       if (!this.hasNotificationPermission) {
