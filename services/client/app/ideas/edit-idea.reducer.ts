@@ -2,17 +2,16 @@ import * as __entityTypes from '@ngrx/entity';
 
 import { createReducer, on, Action } from '@ngrx/store';
 
-import { LOADING, LOADING_DONE, LOADING_FAIL } from '../../shared/helpers/state.helper';
+import { LoadStatus } from '../../shared/helpers/state.helper';
 import { IIdeaEditState } from './ideas.state';
 import { IdeasActions } from './ideas.actions';
 
 const initialState: IIdeaEditState = {
-  loading: false,
-  loaded: false,
   error: '',
   editing: false,
   form: { title: '', description: '' },
   ideaId: '',
+  status: LoadStatus.None,
 };
 
 const ideasReducer = createReducer(
@@ -29,15 +28,19 @@ const ideasReducer = createReducer(
     form: initialState.form,
     ideaId: '',
   })),
-  on(IdeasActions.updateIdea, state => ({ ...state, ...LOADING })),
+  on(IdeasActions.updateIdea, state => ({ ...state, status: LoadStatus.Loading })),
   on(IdeasActions.updateIdeaDone, state => ({
     ...state,
-    ...LOADING_DONE,
+    status: LoadStatus.Loaded,
     editing: false,
     ideaId: '',
     form: initialState.form,
   })),
-  on(IdeasActions.updateIdeaFail, (state, { error }) => ({ ...state, ...LOADING_FAIL(error) })),
+  on(IdeasActions.updateIdeaFail, (state, { error }) => ({
+    ...state,
+    error,
+    status: LoadStatus.Error,
+  })),
   on(IdeasActions.ideaFormChanged, (state, { value }) => ({ ...state, form: value })),
   on(IdeasActions.deleteIdeaDone, state => ({
     ...state,

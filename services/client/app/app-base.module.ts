@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { EnvironmentModule } from '../shared/environment/environment.module';
 import { AuthActions } from './auth/auth.actions';
 import { AuthSelectors } from './auth/auth.selectors';
+import { LoadStatus } from '../shared/helpers/state.helper';
 
 const initApplication = (store: Store) => {
   return () =>
@@ -21,7 +22,10 @@ const initApplication = (store: Store) => {
       store
         .select(AuthSelectors.selectAuthState)
         .pipe(
-          skipWhile(authState => !authState.initialized),
+          skipWhile(
+            authState =>
+              authState.status === LoadStatus.None || authState.status === LoadStatus.Loading,
+          ),
           take(1),
           tap(() => resolve()),
         )

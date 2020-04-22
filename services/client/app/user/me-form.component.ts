@@ -11,7 +11,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
 import { IUserForm } from './user.state';
-import { Status } from '../../shared/helpers/state.helper';
+import { SyncStatus } from '../../shared/helpers/state.helper';
 
 @Component({
   selector: 'ci-me-form',
@@ -64,7 +64,7 @@ export class MeFormComponent implements OnDestroy, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.formState && this.status !== Status.Syncing && this.status >= 0)
+    if (this.formState && this.status !== SyncStatus.Syncing && this.status >= 0)
       this.form.patchValue(this.formState, { emitEvent: false });
   }
 

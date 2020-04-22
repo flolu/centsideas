@@ -1,51 +1,46 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
-import {
-  ILoadingState,
-  initialLoadingState,
-  LOADING,
-  LOADING_FAIL,
-  LOADING_DONE,
-} from '../../shared/helpers/state.helper';
+import { LoadStatus } from '../../shared/helpers/state.helper';
 import { AuthActions } from './auth.actions';
 
-export type ILoginReducerState = ILoadingState;
+export interface ILoginReducerState {
+  status: LoadStatus;
+  error: string;
+}
 
-const initialState: ILoadingState = {
-  ...initialLoadingState,
+const initialState: ILoginReducerState = {
+  status: LoadStatus.None,
+  error: '',
 };
 
 const loginPageReducer = createReducer(
   initialState,
-  on(AuthActions.login, state => ({
-    ...state,
-    ...LOADING,
-  })),
-  on(AuthActions.loginFail, (state, { error }) => ({
-    ...state,
-    ...LOADING_FAIL(error),
-  })),
-  on(AuthActions.loginDone, state => ({
-    ...state,
-    ...LOADING_DONE,
-  })),
+  on(AuthActions.login, state => ({ ...state, status: LoadStatus.Loading })),
+  on(AuthActions.loginDone, state => ({ ...state, status: LoadStatus.Loaded })),
+  on(AuthActions.loginFail, (state, { error }) => ({ ...state, status: LoadStatus.Error, error })),
 
-  on(AuthActions.confirmLogin, state => ({ ...state, ...LOADING })),
-  on(AuthActions.confirmLoginDone, state => ({ ...state, LOADING_DONE })),
+  on(AuthActions.confirmLogin, state => ({ ...state, status: LoadStatus.Loading })),
+  on(AuthActions.confirmLoginDone, state => ({ ...state, status: LoadStatus.Loaded })),
   on(AuthActions.confirmLoginFail, (state, { error }) => ({
     ...state,
-    ...LOADING_FAIL(error),
+    status: LoadStatus.Error,
+    error,
   })),
 
-  on(AuthActions.googleLogin, state => ({ ...state, ...LOADING })),
-  on(AuthActions.googleLoginDone, state => ({ ...state, ...LOADING_DONE })),
-  on(AuthActions.googleLoginFail, (state, { error }) => ({ ...state, ...LOADING_FAIL(error) })),
+  on(AuthActions.googleLogin, state => ({ ...state, status: LoadStatus.Loading })),
+  on(AuthActions.googleLoginDone, state => ({ ...state, status: LoadStatus.Loaded })),
+  on(AuthActions.googleLoginFail, (state, { error }) => ({
+    ...state,
+    status: LoadStatus.Error,
+    error,
+  })),
 
-  on(AuthActions.googleLoginRedirect, state => ({ ...state, ...LOADING })),
-  on(AuthActions.googleLoginRedirectDone, state => ({ ...state, ...LOADING_DONE })),
+  on(AuthActions.googleLoginRedirect, state => ({ ...state, status: LoadStatus.Loading })),
+  on(AuthActions.googleLoginRedirectDone, state => ({ ...state, status: LoadStatus.Loaded })),
   on(AuthActions.googleLoginRedirectFail, (state, { error }) => ({
     ...state,
-    ...LOADING_FAIL(error),
+    status: LoadStatus.Error,
+    error,
   })),
 );
 

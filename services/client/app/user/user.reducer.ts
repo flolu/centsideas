@@ -3,14 +3,14 @@ import { createReducer, on, Action } from '@ngrx/store';
 import { IUserState } from '@centsideas/models';
 
 import { UserActions } from './user.actions';
-import { Status } from '../../shared/helpers/state.helper';
+import { SyncStatus } from '../../shared/helpers/state.helper';
 import { AuthActions } from '../auth/auth.actions';
 import { IUserForm } from './user.state';
 
 export interface IUserReducerState {
   persisted: IUserState | null;
   formData: IUserForm | null;
-  status: Status;
+  status: SyncStatus;
   // FIXME advanced error handling, where error is displayed for a specific input field
   error: string;
 }
@@ -18,7 +18,7 @@ export interface IUserReducerState {
 const initialState: IUserReducerState = {
   persisted: null,
   formData: null,
-  status: Status.Loading,
+  status: SyncStatus.Loading,
   error: '',
 };
 
@@ -27,46 +27,46 @@ const userReducer = createReducer(
   on(AuthActions.fetchAccessTokenDone, (state, { user }) => ({
     ...state,
     persisted: user,
-    status: Status.Loaded,
+    status: SyncStatus.Loaded,
   })),
   on(AuthActions.confirmLoginDone, (state, { user }) => ({
     ...state,
     persisted: user,
-    status: Status.Loaded,
+    status: SyncStatus.Loaded,
   })),
   on(AuthActions.googleLoginDone, (state, { user }) => ({
     ...state,
     persisted: user,
-    status: Status.Loaded,
+    status: SyncStatus.Loaded,
   })),
-  on(AuthActions.logoutDone, state => ({ ...state, persisted: null, status: Status.None })),
+  on(AuthActions.logoutDone, state => ({ ...state, persisted: null, status: SyncStatus.None })),
 
   on(UserActions.formChanged, (state, { value }) => ({ ...state, formData: value })),
   on(UserActions.updateUser, state => ({
     ...state,
-    status: state.status === Status.Syncing ? Status.PatchSyncing : Status.Syncing,
+    status: state.status === SyncStatus.Syncing ? SyncStatus.PatchSyncing : SyncStatus.Syncing,
   })),
   on(UserActions.updateUserFail, (state, { error }) => ({
     ...state,
-    status: Status.Error,
+    status: SyncStatus.Error,
     error: error.error,
   })),
   on(UserActions.updateUserDone, (state, { updated }) => ({
     ...state,
     persisted: updated,
-    status: state.status === Status.PatchSyncing ? Status.Syncing : Status.Synced,
+    status: state.status === SyncStatus.PatchSyncing ? SyncStatus.Syncing : SyncStatus.Synced,
   })),
 
-  on(UserActions.confirmEmailChange, state => ({ ...state, status: Status.Loading })),
+  on(UserActions.confirmEmailChange, state => ({ ...state, status: SyncStatus.Loading })),
   on(UserActions.confirmEmailChangeFail, (state, { error }) => ({
     ...state,
-    status: Status.Error,
+    status: SyncStatus.Error,
     error,
   })),
   on(UserActions.confirmEmailChangeDone, (state, { updated }) => ({
     ...state,
     persisted: updated,
-    status: Status.Loaded,
+    status: SyncStatus.Loaded,
   })),
 );
 

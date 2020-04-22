@@ -11,7 +11,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
 import { INotificationSettingsForm } from './notifications.state';
-import { Status } from '../../../shared/helpers/state.helper';
+import { SyncStatus } from '../../../shared/helpers/state.helper';
 
 @Component({
   selector: 'ci-notifications-form',
@@ -54,7 +54,7 @@ export class NotificationsFormComponent implements OnDestroy, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.formState && this.status !== Status.Syncing && this.status >= 0)
+    if (this.formState && this.status !== SyncStatus.Syncing && this.status >= 0)
       this.form.patchValue(this.formState, { emitEvent: false });
   }
 

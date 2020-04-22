@@ -26,6 +26,7 @@ ts_library(
         "//services/client/app/ideas",
         "//services/client/app/user",
         "//services/client/shared/environment",
+        "//services/client/shared/helpers",
         "//services/client/shared/push-notifications",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",

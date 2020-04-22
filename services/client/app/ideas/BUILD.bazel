@@ -44,6 +44,7 @@ ts_library(
         ":store",
         "//packages/enums",
         "//packages/models",
+        "//services/client/shared/helpers",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",

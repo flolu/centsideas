@@ -1,9 +1,11 @@
 import { EntityState } from '@ngrx/entity';
+
 import { IIdeaViewModel } from '@centsideas/models';
 
+import { LoadStatus } from '../../shared/helpers/state.helper';
+
 export interface IIdeasState extends EntityState<IIdeaViewModel> {
-  loading: boolean;
-  loaded: boolean;
+  status: LoadStatus;
   error: string;
 }
 
@@ -13,12 +15,11 @@ export interface IIdeaForm {
 }
 
 export interface IIdeaEditState {
-  loading: boolean;
-  loaded: boolean;
   error: string;
   editing: boolean;
   form: IIdeaForm;
   ideaId: string;
+  status: LoadStatus;
 }
 
 export interface IIdeasFeatureReducerState {

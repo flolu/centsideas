@@ -1,23 +1,4 @@
-// TODO remove those
-export const LOADING_DONE = {
-  loading: false,
-  loaded: true,
-  error: '',
-};
-export const LOADING = {
-  loading: true,
-  loaded: false,
-  error: '',
-};
-export const LOADING_FAIL = (error: string) => ({ loading: false, loaded: false, error });
-export interface ILoadingState {
-  loading: boolean;
-  loaded: boolean;
-  error: string;
-}
-export const initialLoadingState: ILoadingState = { loading: false, loaded: false, error: '' };
-
-export enum Status {
+export enum SyncStatus {
   Error = -1,
   None = 0,
   Loading = 1,
@@ -25,4 +6,11 @@ export enum Status {
   Syncing = 3,
   PatchSyncing = 4,
   Synced = 5,
+}
+
+export enum LoadStatus {
+  Error = -1,
+  None = 0,
+  Loading = 1,
+  Loaded = 2,
 }

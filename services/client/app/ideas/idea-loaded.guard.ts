@@ -7,6 +7,7 @@ import { map, skipWhile, withLatestFrom } from 'rxjs/operators';
 import { IdeasSelectors } from './ideas.selectors';
 import { IdeasActions } from './ideas.actions';
 import { TopLevelFrontendRoutes } from '@centsideas/enums';
+import { LoadStatus } from '../../shared/helpers/state.helper';
 
 @Injectable()
 export class IdeaLoadedGuard implements CanActivate {
@@ -20,7 +21,7 @@ export class IdeaLoadedGuard implements CanActivate {
         const idea = data[0][0];
         const ideaId = data[0][1];
         const ideasState = data[1];
-        if (!idea && !ideasState.loading) {
+        if (!idea && ideasState.status === LoadStatus.None) {
           this.store.dispatch(IdeasActions.getIdeaById({ id: ideaId }));
         }
         if (ideasState.error) {

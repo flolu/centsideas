@@ -8,6 +8,7 @@ import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
 
 import { AuthActions } from './auth.actions';
 import { AuthSelectors } from './auth.selectors';
+import { LoadStatus } from '../../shared/helpers/state.helper';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -17,11 +18,11 @@ export class AuthGuard implements CanActivate {
     return this.store.select(AuthSelectors.selectAuthState).pipe(
       // FIXME not sure if this skipWHile is needed anyore since we have an app initializer which already hanldes it
       skipWhile(state => {
-        if (!state.initialized && !state.initializing) {
+        if (state.status === LoadStatus.None) {
           this.store.dispatch(AuthActions.fetchAccessToken());
           return true;
         }
-        return !state.initialized;
+        return state.status !== LoadStatus.Loaded;
       }),
       map(state => {
         if (!state.accessToken)
