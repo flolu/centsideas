@@ -12,9 +12,7 @@ import { IdeasEnvironment } from './ideas.environment';
 export class IdeasServer {
   private app = express();
 
-  constructor(private ideasService: IdeasService, private env: IdeasEnvironment) {}
-
-  start = () => {
+  constructor(private ideasService: IdeasService, private env: IdeasEnvironment) {
     Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
 
@@ -25,5 +23,5 @@ export class IdeasServer {
     this.app.get(`/${IdeasApiRoutes.Alive}`, (_req, res) => res.status(200).send());
 
     this.app.listen(this.env.port);
-  };
+  }
 }

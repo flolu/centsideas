@@ -12,9 +12,7 @@ import { ReviewsEnvironment } from './reviews.environment';
 export class ReviewsServer {
   private app = express();
 
-  constructor(private reviewsService: ReviewsService, private env: ReviewsEnvironment) {}
-
-  start = () => {
+  constructor(private reviewsService: ReviewsService, private env: ReviewsEnvironment) {
     Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
 
@@ -23,7 +21,6 @@ export class ReviewsServer {
     this.app.post(`/${ReviewsApiRoutes.Delete}`, ExpressAdapters.json(this.reviewsService.delete));
 
     this.app.get('/alive', (_req, res) => res.status(200).send());
-
     this.app.listen(this.env.port);
-  };
+  }
 }

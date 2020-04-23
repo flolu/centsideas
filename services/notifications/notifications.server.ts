@@ -22,6 +22,7 @@ import { NotificationsHandlers } from './notifications.handlers';
 @injectable()
 export class NotificationsServer {
   private app = express();
+  private routes = NotificationsApiRoutes;
 
   constructor(
     private env: NotificationEnvironment,
@@ -37,15 +38,9 @@ export class NotificationsServer {
     Logger.log('launch', this.env.environment);
     this.app.use(bodyParser.json());
 
-    this.app.post(
-      `/${NotificationsApiRoutes.SubscribePush}`,
-      ExpressAdapters.json(this.subscribePush),
-    );
-    this.app.post(
-      `/${NotificationsApiRoutes.UpdateSettings}`,
-      ExpressAdapters.json(this.updateSettings),
-    );
-    this.app.post(`/${NotificationsApiRoutes.GetSettings}`, ExpressAdapters.json(this.getSettings));
+    this.app.post(`/${this.routes.SubscribePush}`, ExpressAdapters.json(this.subscribePush));
+    this.app.post(`/${this.routes.UpdateSettings}`, ExpressAdapters.json(this.updateSettings));
+    this.app.post(`/${this.routes.GetSettings}`, ExpressAdapters.json(this.getSettings));
 
     this.app.get(`/${UsersApiRoutes.Alive}`, (_req, res) => res.status(200).send());
     this.app.listen(this.env.port);

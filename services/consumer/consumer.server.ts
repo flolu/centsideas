@@ -23,9 +23,7 @@ export class ConsumerServer {
     private reviewsProjection: ReviewsProjection,
     private usersProjection: UsersProjection,
     private env: ConsumerEnvironment,
-  ) {}
-
-  start = () => {
+  ) {
     Logger.log('launch', this.env.environment);
 
     this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
@@ -35,6 +33,13 @@ export class ConsumerServer {
 
     this.app.use(bodyParser.json());
 
+    this.registerQueryRoutes();
+
+    this.app.get('/alive', (_req, res) => res.status(200).send());
+    this.app.listen(this.env.port);
+  }
+
+  private registerQueryRoutes() {
     this.app.post(
       `/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetAll}`,
       ExpressAdapters.json(this.queryService.getAllIdeas),
@@ -52,8 +57,5 @@ export class ConsumerServer {
       `/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
       ExpressAdapters.json(this.queryService.getAllUsers),
     );
-
-    this.app.get('/alive', (_req, res) => res.status(200).send());
-    this.app.listen(this.env.port);
-  };
+  }
 }

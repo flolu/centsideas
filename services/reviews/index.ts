@@ -23,5 +23,4 @@ registerProviders(
   ReviewsEnvironment,
 );
 
-const server: ReviewsServer = getProvider(ReviewsServer);
-server.start();
+getProvider(ReviewsServer);

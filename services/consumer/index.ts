@@ -26,6 +26,5 @@ registerProviders(
   UsersProjection,
   ConsumerEnvironment,
 );
-const server: ConsumerServer = getProvider(ConsumerServer);
 
-server.start();
+getProvider(ConsumerServer);

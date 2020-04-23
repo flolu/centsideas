@@ -27,5 +27,4 @@ registerProviders(
   GatewayMiddlewares,
 );
 
-const server: GatewayServer = getProvider(GatewayServer);
-server.start();
+getProvider(GatewayServer);

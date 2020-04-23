@@ -6,39 +6,39 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Goals
 
-| Requirement                                    | Keywords                                 | Status |
-| ---------------------------------------------- | ---------------------------------------- | ------ |
-| Microservices                                  | small services, docker                   | ✔️     |
-| Redux frontend                                 | reactive, actions, effects               | ✔️     |
-| Monorepo                                       | all packages and services in one repo    | ✔️     |
-| Typescript                                     | types everywhere!                        | ✔️     |
-| Local development                              | hot reload, docker-compose, vscode       | ✔️     |
-| Git flow                                       | branching, releases, rebasing            | ✔️     |
-| Gateway                                        | discovery, entry point, auth             | ✔️     |
-| Authentication                                 | passwordless, google login               | ✔️     |
-| Progressive Web App                            | pwa, service worker, mobile-friendly     | ✔️     |
-| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker   | ✅     |
-| Deployment                                     | ci, cd, build automation, bazel          | ✅     |
-| Testing                                        | unit Tests, integration Tests            | ✅     |
-| Kubernetes                                     | container orchestration                  | ✅     |
-| Database(s)                                    | data storage, event store, backups       | ✅     |
-| Search Engine Optimization                     | server side rendering, marketing, google | ✅     |
-| Frontend                                       | code splitting, 100% lighthouse score    | ✅     |
-| Security                                       | encryption, https                        | ✅     |
-| Push notifications                             | mobile and desktop                       | ❌     |
-| Admin panel                                    | monitoring, event handling, logs         | ❌     |
-| Realtime                                       | some kind of realtime integration        | ❌     |
-| File storage                                   | blob storage, encrypted, access control  | ❌     |
-| General Data Protection Regulation             | legal, privacy, gdpr, eu law             | ❌     |
-| Backups                                        | automatic, manual, restore               | ❌     |
-| Multi-Language                                 | change language, easily add more         | ❌     |
-| Static pages                                   | homepage, static content                 | ❌     |
-| Search                                         | indexing, realtime search                | ❌     |
-| User Interface                                 | modern, drag&drop, touch gestures        | ❌     |
-| Trusted Web Activity                           | twa, publish app on play store           | ❌     |
-| Message Queue                                  | batching, scheduled tasks                | ❌     |
-| Compute server                                 | non-nodejs server for high cpu tasks     | ❌     |
-| Payments                                       | payout, credit card, paypal              | ❌     |
+| Requirement                                    | Keywords                                   | Status |
+| ---------------------------------------------- | ------------------------------------------ | ------ |
+| Microservices                                  | small services, docker                     | ✔️     |
+| Redux frontend                                 | reactive, actions, effects                 | ✔️     |
+| Monorepo                                       | all packages and services in one repo      | ✔️     |
+| Typescript                                     | types everywhere!                          | ✔️     |
+| Local development                              | hot reload, docker-compose, vscode         | ✔️     |
+| Git flow                                       | branching, releases, rebasing              | ✔️     |
+| Gateway                                        | discovery, entry point, auth               | ✔️     |
+| Authentication                                 | passwordless, google login                 | ✔️     |
+| Progressive Web App                            | pwa, service worker, mobile-friendly       | ✔️     |
+| Frontend                                       | code splitting, 100% lighthouse score      | ✔️     |
+| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker     | ✅     |
+| Deployment                                     | ci, cd, build automation, bazel            | ✅     |
+| Testing                                        | unit Tests, integration Tests              | ✅     |
+| Kubernetes                                     | container orchestration, local k8s cluster | ✅     |
+| Database(s)                                    | data storage, event store, backups         | ✅     |
+| Search Engine Optimization                     | server side rendering, marketing, google   | ✅     |
+| Security                                       | encryption, https                          | ✅     |
+| Push notifications                             | mobile and desktop                         | ✅     |
+| Admin panel                                    | monitoring, event handling, logs           | ❌     |
+| Realtime                                       | some kind of realtime integration          | ❌     |
+| File storage                                   | blob storage, encrypted, access control    | ❌     |
+| General Data Protection Regulation             | legal, privacy, gdpr, eu law               | ❌     |
+| Backups                                        | automatic, manual, restore                 | ❌     |
+| Multi-Language                                 | change language, easily add more           | ❌     |
+| Static pages                                   | homepage, static content                   | ❌     |
+| Search                                         | indexing, realtime search                  | ❌     |
+| User Interface                                 | modern, drag&drop, touch gestures          | ❌     |
+| Trusted Web Activity                           | twa, publish app on play store             | ❌     |
+| Message Queue                                  | batching, scheduled tasks                  | ❌     |
+| Compute server                                 | non-nodejs server for high cpu tasks       | ❌     |
+| Payments                                       | payout, credit card, paypal                | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented

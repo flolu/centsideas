@@ -9,17 +9,16 @@ import { LoggerPrefixes } from '@centsideas/enums';
 import { UsersServer } from './users.server';
 import { UsersHandler } from './users.handler';
 import { UserRepository } from './user.repository';
-import { UsersService } from './users.service';
 import { LoginRepository } from './login.repository';
 import { AuthService } from './auth.service';
 import { AuthHandler } from './auth.handler';
 import { UsersEnvironment } from './users.environment';
+import { UsersService } from './users.service';
 
 process.env.LOGGER_PREFIX = LoggerPrefixes.Users;
 
 registerProviders(
   UsersServer,
-  UsersService,
   UsersHandler,
   UserRepository,
   AuthService,
@@ -27,7 +26,7 @@ registerProviders(
   LoginRepository,
   MessageBroker,
   UsersEnvironment,
+  UsersService,
 );
 
-const server: UsersServer = getProvider(UsersServer);
-server.start();
+getProvider(UsersServer);
