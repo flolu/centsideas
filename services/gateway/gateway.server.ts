@@ -2,6 +2,8 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import { injectable } from 'inversify';
+import * as http from 'http';
+import * as socketIO from 'socket.io';
 
 import { Logger } from '@centsideas/utils';
 import { ApiEndpoints } from '@centsideas/enums';
@@ -16,6 +18,8 @@ import { GatewayEnvironment } from './gateway.environment';
 @injectable()
 export class GatewayServer {
   private app = express();
+  private httpServer = http.createServer(this.app);
+  private io = socketIO(this.httpServer);
 
   constructor(
     private ideasRoutes: IdeasRoutes,
@@ -34,9 +38,10 @@ export class GatewayServer {
     this.app.use(this.middlewares.auth);
 
     this.registerServiceRoutes();
+    this.setupSocketIO();
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => res.status(200).send('gateway alive'));
-    this.app.listen(this.env.port);
+    this.httpServer.listen(this.env.port);
   }
 
   private registerServiceRoutes() {
@@ -54,5 +59,20 @@ export class GatewayServer {
       `/${ApiEndpoints.Notifications}`,
       this.notificationsRoutes.setup(this.env.hosts.notifications),
     );
+  }
+
+  setupSocketIO() {
+    this.io.on('connection', socket => {
+      Logger.log('a user connected');
+
+      socket.on('disconnect', () => {
+        Logger.log('user disconnected');
+      });
+
+      socket.on('message', message => {
+        Logger.log('Message Received: ' + message);
+        this.io.emit('message', { type: 'new-message', text: message });
+      });
+    });
   }
 }

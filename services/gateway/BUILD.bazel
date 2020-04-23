@@ -12,6 +12,7 @@ lib_deps = [
     "//packages/utils",
     "@npm//@types/body-parser",
     "@npm//@types/cors",
+    "@npm//@types/node",
     "@npm//@types/express",
     "@npm//@types/jsonwebtoken",
     "@npm//axios",
@@ -24,6 +25,8 @@ lib_deps = [
     "@npm//@types/cookie-parser",
     "@npm//module-alias",
     "@npm//reflect-metadata",
+    "@npm//socket.io",
+    "@npm//@types/socket.io",
 ]
 
 ts_library(

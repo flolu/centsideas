@@ -39,6 +39,7 @@ This is a project with the purpose of learning the architecture of complex web a
 | Message Queue                                  | batching, scheduled tasks                  | ❌     |
 | Compute server                                 | non-nodejs server for high cpu tasks       | ❌     |
 | Payments                                       | payout, credit card, paypal                | ❌     |
+| Recommendation System                          | machine learning                           | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented

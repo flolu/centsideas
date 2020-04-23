@@ -2,7 +2,6 @@ import { injectable } from 'inversify';
 
 import { MessageBroker, IEvent } from '@centsideas/event-sourcing';
 import { Logger } from '@centsideas/utils';
-import { EventTopics } from '@centsideas/enums';
 
 import { AdminEnvironment } from './admin.environment';
 
