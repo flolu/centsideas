@@ -8,7 +8,6 @@ load("//services/client:ngsw_config.bzl", "ngsw_config")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
-load("//services/client:defaults.bzl", "inserted_assets", "static_assets")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -17,10 +16,20 @@ exports_files([
     "tsconfig.json",
 ])
 
+inserted_assets = [
+    ":styles.css",
+    "@npm//:node_modules/zone.js/dist/zone.min.js",
+]
+
+static_assets = [
+    ":_index.html",
+    ":manifest.webmanifest",
+] + inserted_assets
+
 filegroup(
     name = "rxjs_umd_modules",
     srcs = [
-        ":rxjs_shims.js",
+        "//packages/angular-bazel:rxjs_shims.js",
         "@npm//:node_modules/rxjs/bundles/rxjs.umd.js",
     ],
 )
@@ -69,7 +78,7 @@ ts_devserver(
     entry_module = "cents_ideas/services/client/main.dev",
     scripts = [
         "@npm//:node_modules/tslib/tslib.js",
-        ":rxjs_umd_modules",
+        "//packages/angular-bazel:rxjs_umd_modules",
     ],
     static_files = [
         ":inject_scripts_for_dev",
@@ -152,10 +161,7 @@ ngsw_config(
 history_server(
     name = "pwa_server",
     data = [":pwa"],
-    templated_args = [
-        "-a",
-        "$(rlocation cents_ideas/services/client/pwa)",
-    ],
+    templated_args = ["-a $$(rlocation $(rootpath :pwa))"],
 )
 
 ts_library(

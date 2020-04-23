@@ -38,6 +38,8 @@
     "deploy": "bazelisk run :kubernetes_deployment.apply --define configuration=prod",
     "client:dev": "ibazel run //services/client:live_server",
     "client:prod": "env-cmd bazelisk run //services/client:prod_server",
+    "admin:dev": "ibazel run //services/admin-client:live_server",
+    "admin:prod": "env-cmd bazelisk run //services/admin-client:prod_server",
     "test": "bazelisk test //...",
     "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
     "setup": "ts-node setup",

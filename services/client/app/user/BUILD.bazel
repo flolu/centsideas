@@ -1,7 +1,7 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
-load("//services/client:defaults.bzl", "store_srcs_matcher")
+load("//packages/angular-bazel:defaults.bzl", "store_srcs_matcher")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -100,7 +100,7 @@ karma_web_test_suite(
     runtime_deps = ["//services/client:initialize_testbed"],
     deps = [
         ":test_lib",
-        "//services/client:rxjs_umd_modules",
+        "//packages/angular-bazel:rxjs_umd_modules",
         "@npm//:node_modules/tslib/tslib.js",
     ],
 )

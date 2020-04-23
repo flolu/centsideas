@@ -12,7 +12,7 @@ import { PushNotificationService } from '../shared/push-notifications/push-notif
 import { ServiceWorkerService } from './check-for-update.service';
 
 @Component({
-  selector: 'ci-component',
+  selector: 'ci-root',
   template: `
     <div *ngIf="availableSwUpdate" (click)="onUpdateServiceWorker()" id="update_banner">
       Click to update the app
