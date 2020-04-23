@@ -193,7 +193,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
   generateUniqueId = (longId: boolean = true): Promise<string> => {
     const checkAvailability = async (resolve: (id: string) => any) => {
       await this.waitUntilInitialized();
-      const id = longId ? Identifier.makeLongId() : Identifier.makeUniqueId();
+      const id = longId ? Identifier.makeLongId() : Identifier.makeShortId();
       const result = await this.eventCollection.findOne({ aggregateId: id });
       result ? await checkAvailability(resolve) : resolve(id);
     };

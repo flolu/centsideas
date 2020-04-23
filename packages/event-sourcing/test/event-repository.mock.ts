@@ -83,7 +83,7 @@ export class EventRepositoryMock<Entity extends IEventEntity> implements IEventR
 
   generateUniqueId = (): Promise<string> => {
     const checkAvailability = (resolve: (id: string) => any) => {
-      const id = Identifier.makeUniqueId();
+      const id = Identifier.makeShortId();
       const result = Object.keys(this.events).includes(id);
       result ? checkAvailability(resolve) : resolve(id);
     };

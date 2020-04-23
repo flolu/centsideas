@@ -27,9 +27,9 @@ export class ConsumerServer {
     Logger.log('launch', this.env.environment);
 
     this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
-    this.messageBroker.subscribe(EventTopics.Ideas, this.ideasProjection.handleEvent);
-    this.messageBroker.subscribe(EventTopics.Reviews, this.reviewsProjection.handleEvent);
-    this.messageBroker.subscribe(EventTopics.Users, this.usersProjection.handleEvent);
+    this.messageBroker.events(EventTopics.Ideas).subscribe(this.ideasProjection.handleEvent);
+    this.messageBroker.events(EventTopics.Reviews).subscribe(this.reviewsProjection.handleEvent);
+    this.messageBroker.events(EventTopics.Users).subscribe(this.usersProjection.handleEvent);
 
     this.app.use(bodyParser.json());
 

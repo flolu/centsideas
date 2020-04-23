@@ -2,7 +2,7 @@ import * as shortid from 'shortid';
 import * as uuid from 'uuid';
 
 export class Identifier {
-  static makeUniqueId = (): string => {
+  static makeShortId = (): string => {
     return shortid();
   };
 

@@ -1,7 +1,7 @@
 export enum EventTopics {
-  Ideas = 'ideas',
-  Reviews = 'reviews',
-  Users = 'users',
-  Logins = 'logins',
-  Notifications = 'notifications',
+  Ideas = 'centsideas-ideas',
+  Reviews = 'centsideas-reviews',
+  Users = 'centsideas-users',
+  Logins = 'centsideas-logins',
+  Notifications = 'centsideas-notifications',
 }

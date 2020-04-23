@@ -15,6 +15,7 @@ lib_deps = [
     "@npm//inversify",
     "@npm//kafkajs",
     "@npm//mongodb",
+    "@npm//rxjs",
 ]
 
 ts_library(

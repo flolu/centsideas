@@ -1,7 +1,8 @@
 import { injectable } from 'inversify';
 import { Kafka, Producer, Consumer, KafkaConfig, Message, RecordMetadata, logLevel } from 'kafkajs';
+import { Observable, Observer } from 'rxjs';
 
-import { Logger } from '@centsideas/utils';
+import { Logger, Identifier } from '@centsideas/utils';
 
 import { IEvent } from '.';
 
@@ -14,10 +15,7 @@ export class MessageBroker {
     this.kafka = new Kafka({ ...config, logLevel: logLevel.WARN });
   };
 
-  send = async (
-    topic: string = 'test-topic',
-    messages: Message[] = [],
-  ): Promise<RecordMetadata[]> => {
+  send = async (topic: string, messages: Message[] = []): Promise<RecordMetadata[]> => {
     if (!this.producer) {
       if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
       this.producer = this.kafka.producer();
@@ -27,20 +25,26 @@ export class MessageBroker {
     return this.producer.send({ topic, messages });
   };
 
-  subscribe = async (topic: string, callback: (event: IEvent) => void) => {
+  events = (topic: string | RegExp): Observable<IEvent> => {
     if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
     const consumer: Consumer = this.kafka.consumer({
-      groupId: 'test-group' + Math.random().toString(36).substr(2, 9),
+      groupId: `centsideas-consumer-${Identifier.makeLongId()}`,
       rebalanceTimeout: 1000,
     });
-    await consumer.connect();
-    await consumer.subscribe({ topic });
-    await consumer.run({
-      eachMessage: async ({ message }) => {
-        const event: IEvent = JSON.parse(message.value.toString());
-        Logger.debug(`consumed ${event.name} event from topic: ${topic}`);
-        callback(event);
-      },
+    return Observable.create(async (observer: Observer<IEvent>) => {
+      await consumer.connect();
+      await consumer.subscribe({ topic });
+      return consumer.run({
+        eachMessage: async ({ message }) => {
+          try {
+            const event: IEvent = JSON.parse(message.value.toString());
+            Logger.debug(`consumed ${event.name} event from topic: ${topic}`);
+            observer.next(event);
+          } catch (error) {
+            Logger.error('Error while consuming event', error);
+          }
+        },
+      });
     });
   };
 }
