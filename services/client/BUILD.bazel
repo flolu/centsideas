@@ -88,6 +88,7 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         "//services/client/app:prod",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
     ],

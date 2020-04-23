@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ideas-deployment
+  name: admin-deployment
 spec:
   selector:
     matchLabels:
-      app: ideas
+      app: admin
   replicas: 1
   template:
     metadata:
       labels:
-        app: ideas
+        app: admin
     spec:
       containers:
-        - name: ideas
-          image: ideas:placeholder_name
+        - name: admin
+          image: admin:placeholder_name
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
@@ -42,10 +42,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: centsideas-ideas
+  name: centsideas-admin
 spec:
   selector:
-    app: ideas
+    app: admin
   ports:
     - name: http
       port: 3000
@@ -54,19 +54,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ideas-event-store-deployment
+  name: admin-database-deployment
 spec:
   selector:
     matchLabels:
-      app: ideas-event-store
+      app: admin-database
   replicas: 1
   template:
     metadata:
       labels:
-        app: ideas-event-store
+        app: admin-database
     spec:
       containers:
-        - name: ideas-event-store
+        - name: admin-database
           image: mongo:4.2.6
           volumeMounts:
             - name: persistent-db-storage
@@ -81,16 +81,15 @@ spec:
       volumes:
         - name: persistent-db-storage
           persistentVolumeClaim:
-            claimName: ideas-event-store-pvc
-
+            claimName: amdin-database-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: centsideas-ideas-event-store
+  name: centsideas-admin-database
 spec:
   selector:
-    app: ideas-event-store
+    app: admin-database
   ports:
     - name: mongo
       port: 27017

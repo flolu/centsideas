@@ -19,6 +19,7 @@ ts_library(
         "//services/client/shared/environment",
         "//services/client/shared/helpers",
         "@npm//@angular/common",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/router",
         "@npm//@ngrx/effects",

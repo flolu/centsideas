@@ -41,6 +41,7 @@ ts_library(
         ":store",
         "//packages/enums",
         "@npm//@angular/common",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@angular/router",

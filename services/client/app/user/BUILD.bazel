@@ -28,6 +28,7 @@ ts_library(
         "//services/client/shared/helpers",
         "//services/client/shared/push-notifications",
         "@npm//@angular/common",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/router",
         "@npm//@angular/service-worker",

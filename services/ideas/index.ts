@@ -23,5 +23,6 @@ registerProviders(
   IdeasEnvironment,
 );
 
+// TODO refactor like notifications service
 const server: IdeasServer = getProvider(IdeasServer);
 server.start();

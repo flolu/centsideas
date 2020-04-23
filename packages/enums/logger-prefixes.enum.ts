@@ -5,6 +5,7 @@ export enum LoggerPrefixes {
   Consumer = 'consumer',
   Ideas = 'ideas',
   Notifications = 'notifications',
+  Admin = 'admin',
 }
 
 export const LoggerStyles: Record<string, string[]> = {
@@ -14,5 +15,6 @@ export const LoggerStyles: Record<string, string[]> = {
   [LoggerPrefixes.Reviews]: ['bold', 'cyan'],
   [LoggerPrefixes.Consumer]: ['bold', 'blue'],
   [LoggerPrefixes.Notifications]: ['bold', 'magenta'],
+  [LoggerPrefixes.Admin]: ['bold', 'red'],
   undefined: ['bold', 'strikethrough'],
 };

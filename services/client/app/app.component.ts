@@ -38,8 +38,6 @@ export class AppComponent implements OnDestroy {
   authState$ = this.store.select(AuthSelectors.selectAuthState);
   offline$: Observable<boolean>;
 
-  commitHref = `https://github.com/flolu/centsideas/commit/${commit}`;
-  commitIdShort = commit.substr(0, 6);
   alive = true;
   cents = `${CentsCommandments.Control}, ${CentsCommandments.Entry}, ${CentsCommandments.Need}, ${CentsCommandments.Time}, ${CentsCommandments.Scale}`;
   topLevelRoutes = TopLevelFrontendRoutes;

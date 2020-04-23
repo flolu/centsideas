@@ -1,3 +1,4 @@
+# FIXME how to determine the sotrage request size? auto-increase size if needed?
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -8,7 +9,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 7Gi
+      storage: 1Gi
 
 ---
 apiVersion: v1
@@ -21,7 +22,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 7Gi
+      storage: 1Gi
 
 ---
 apiVersion: v1
@@ -34,7 +35,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 7Gi
+      storage: 1Gi
 
 ---
 apiVersion: v1
@@ -47,7 +48,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 7Gi
+      storage: 1Gi
 
 ---
 apiVersion: v1
@@ -60,7 +61,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 7Gi
+      storage: 1Gi
 
 ---
 apiVersion: storage.k8s.io/v1
@@ -70,3 +71,16 @@ metadata:
 provisioner: kubernetes.io/gce-pd
 parameters:
   type: pd-standard
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: amdin-database-pvc
+spec:
+  storageClassName: cloud-ssd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

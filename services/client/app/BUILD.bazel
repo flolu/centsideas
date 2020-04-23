@@ -22,7 +22,6 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         "//packages/enums",
-        "//packages/version",
         "//services/client/app/auth",
         "//services/client/app/auth:store",
         "//services/client/app/ideas",
@@ -51,6 +50,7 @@ ts_library(
         ":base",
         "//services/client/app/store:dev",
         "//services/client/shared/environment",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/service-worker",
     ],
@@ -68,6 +68,7 @@ ts_library(
         "//services/client/app/store",
         "//services/client/shared/environment",
         "@npm//@angular/common",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/service-worker",
         "@npm//rxjs",
@@ -82,6 +83,7 @@ ts_library(
     deps = [
         ":base",
         ":prod",
+        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/platform-server",
     ],

@@ -78,7 +78,7 @@ spec:
     spec:
       containers:
         - name: notifications-event-store
-          image: mongo:4.0
+          image: mongo:4.2.6
           volumeMounts:
             - name: persistent-db-storage
               mountPath: /data/db

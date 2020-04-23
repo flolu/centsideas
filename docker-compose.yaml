@@ -48,7 +48,7 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/ideas --colors
   ideas-event-store:
-    image: mongo:4.2
+    image: mongo:4.2.6
     logging:
       driver: none
 
@@ -65,7 +65,7 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/reviews --colors
   reviews-event-store:
-    image: mongo:4.2
+    image: mongo:4.2.6
     logging:
       driver: none
 
@@ -82,7 +82,7 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/users --colors
   users-event-store:
-    image: mongo:4.2
+    image: mongo:4.2.6
     logging:
       driver: none
 
@@ -101,7 +101,7 @@ services:
     depends_on:
       - 'kafka'
   projection-database:
-    image: mongo:4.2
+    image: mongo:4.2.6
     logging:
       driver: none
 
@@ -120,6 +120,25 @@ services:
     depends_on:
       - 'kafka'
   notifications-event-store:
-    image: mongo:4.2
+    image: mongo:4.2.6
+    logging:
+      driver: none
+
+  admin:
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./register-aliases.ts:/register-aliases.ts
+      - ./services/admin:/services/admin
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/admin --colors
+    depends_on:
+      - 'kafka'
+  admin-database:
+    image: mongo:4.2.6
     logging:
       driver: none
