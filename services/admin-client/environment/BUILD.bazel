@@ -8,6 +8,7 @@ ts_library(
         "environment.ts",
         "index.ts",
     ],
+    module_name = "@cia/environment",
     tsconfig = "//services/admin-client:tsconfig.json",
     use_angular_plugin = True,
     deps = [

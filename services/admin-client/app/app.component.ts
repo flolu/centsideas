@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 
-import { ENVIRONMENT, IAdminClientEnvironment } from '../environment';
+import { ENVIRONMENT, IAdminClientEnvironment } from '@cia/environment';
 
 @Component({ selector: 'cia-root', template: ` <h1>Admin Panel</h1> ` })
 export class AppComponent {
