@@ -4,10 +4,7 @@ package(default_visibility = ["//:__subpackages__"])
 
 ts_library(
     name = "environment",
-    srcs = [
-        "environment.ts",
-        "index.ts",
-    ],
+    srcs = glob(["*.ts"]),
     module_name = "@cia/environment",
     tsconfig = "//services/admin-client:tsconfig.json",
     use_angular_plugin = True,

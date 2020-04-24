@@ -9,13 +9,12 @@ import { Router } from '@angular/router';
 
 import { QueryParamKeys } from '@centsideas/enums';
 import { IUserState } from '@centsideas/models';
-
+import { PushNotificationService } from '@cic/push-notifications';
 import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';
 import { AuthActions } from '../auth/auth.actions';
 import { NotificationsSelectors } from './notifications/notifications.selectors';
 import { NotificationsActions } from './notifications/notifications.actions';
-import { PushNotificationService } from '../../shared/push-notifications/push-notification.service';
 import { INotificationSettingsForm } from './notifications/notifications.state';
 import { IUserForm } from './user.state';
 
