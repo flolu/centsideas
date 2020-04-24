@@ -7,7 +7,7 @@ steps:
         "-t",
         "gcr.io/centsideas/bazelisk",
         "-f",
-        "bazelisk.Dockerfile",
+        "misc/bazelisk.Dockerfile",
         ".",
       ]
   - name: "gcr.io/cloud-builders/docker"
