@@ -7,7 +7,7 @@ export class UsersEnvironment {
   databaseUrl = process.env.USERS_DATABASE_URL!;
   userDatabaseName = 'users';
   loginDatabaseName = 'logins';
-  frontendUrl = process.env.FRONTEND_URL!;
+  frontendUrl = process.env.MAIN_CLIENT_URL!;
   tokenSecrets = {
     accessToken: process.env.ACCESS_TOKEN_SECRET!,
     refreshToken: process.env.REFRESH_TOKEN_SECRET!,

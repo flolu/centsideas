@@ -6,7 +6,7 @@ import { ENVIRONMENT, environment } from '@cia/environment';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  imports: [BrowserModule, SocketIoModule.forRoot({ url: environment.gatewayHost, options: {} })],
+  imports: [BrowserModule, SocketIoModule.forRoot({ url: environment.gatewayUrl, options: {} })],
   declarations: [AppComponent],
   providers: [{ provide: ENVIRONMENT, useValue: environment }],
 })

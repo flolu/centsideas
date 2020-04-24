@@ -53,6 +53,6 @@ export class AuthService {
   }
 
   private get baseUrl() {
-    return `${this.environment.gatewayHost}/${ApiEndpoints.Users}`;
+    return `${this.environment.gatewayUrl}/${ApiEndpoints.Users}`;
   }
 }

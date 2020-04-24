@@ -17,7 +17,7 @@ ts_library(
 protractor_web_test_suite(
     name = "dev_server_test",
     on_prepare = ":dev-server.on-prepare.js",
-    server = "//services/client:live_server",
+    server = "//services/client:dev_server",
     deps = [":e2e"],
 )
 

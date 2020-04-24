@@ -42,6 +42,7 @@ html_insert_assets(
 ts_devserver(
     name = "live_server",
     entry_module = "cents_ideas/services/admin-client/main.dev",
+    port = 4201,
     scripts = [
         "@npm//:node_modules/tslib/tslib.js",
         "//packages/angular-bazel:rxjs_umd_modules",
@@ -110,7 +111,7 @@ pkg_web(
 )
 
 history_server(
-    name = "prod_server",
+    name = "admin-client",
     data = [":prod_app"],
     templated_args = ["-a $$(rlocation $(rootpath :prod_app))"],
 )

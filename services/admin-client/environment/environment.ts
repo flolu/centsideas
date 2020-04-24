@@ -3,5 +3,5 @@
 import { IAdminClientEnvironment } from '.';
 
 export const environment: IAdminClientEnvironment = {
-  gatewayHost: 'http://localhost:3000',
+  gatewayUrl: 'http://localhost:3000',
 };

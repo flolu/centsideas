@@ -1,51 +1,5 @@
 {
   "name": "centsideas",
-  "description": "Modern Web Application with a Microservices Architecture (in development)",
-  "homepage": "https://github.com/flolu/centsideas",
-  "bugs": {
-    "url": "https://github.com/flolu/centsideas/issues",
-    "email": "fllu@pm.me"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Florian Ludewig",
-    "email": "fllu@pm.me",
-    "url": "https://flolu.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/flolu/centsideas.git"
-  },
-  "config": {
-    "client_env_template": "services/client/environment/environment.template.ts",
-    "client_env": "services/client/environment/environment.ts",
-    "admin_env_template": "services/admin-client/environment/environment.template.ts",
-    "admin_env": "services/admin-client/environment/environment.ts"
-  },
-  "scripts": {
-    "dev": "yarn setup && yarn docker:dev",
-    "deploy": "bazelisk run :kubernetes_deployment.apply --define configuration=prod",
-    "client:dev": "yarn setup && ibazel run //services/client:live_server",
-    "client:prod": "yarn setup && bazelisk run //services/client:prod_server",
-    "client:envsub": "envsub --env-file misc/.env $npm_package_config_client_env_template $npm_package_config_client_env",
-    "admin:dev": "yarn setup && ibazel run //services/admin-client:live_server",
-    "admin:prod": "yarn setup &&  bazelisk run //services/admin-client:prod_server",
-    "admin:envsub": "envsub --env-file misc/.env $npm_package_config_admin_env_template $npm_package_config_admin_env",
-    "test": "yarn setup && bazelisk test //...",
-    "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
-    "setup": "ts-node misc/setup && yarn admin:envsub && yarn client:envsub",
-    "lint": "tslint --project .",
-    "lint:fix": "tslint --fix --project .",
-    "up": "yarn upgrade-interactive --latest",
-    "docker:dev": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
-    "docker:dev:verbose": "docker-compose up --build",
-    "docker:stop": "docker container stop $(docker container ls -aq)",
-    "docker:prune": "docker system prune --volumes",
-    "docker:clean": "yarn docker:stop && yarn docker:prune",
-    "bazel:clean": "bazelisk clean",
-    "vapid": "web-push generate-vapid-keys --json",
-    "postinstall": "ngcc && yarn setup"
-  },
   "dependencies": {
     "@angular/animations": "9.1.3",
     "@angular/common": "9.1.3",
@@ -157,6 +111,58 @@
     "tslint": "6.1.1",
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.8.3"
+  },
+  "homepage": "https://github.com/flolu/centsideas",
+  "bugs": {
+    "url": "https://github.com/flolu/centsideas/issues",
+    "email": "fllu@pm.me"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Florian Ludewig",
+    "email": "fllu@pm.me",
+    "url": "https://flolu.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flolu/centsideas.git"
+  },
+  "scripts": {
+    "setup": "yarn install && yarn env:setup && yarn envsub:dev",
+    "dev": "yarn envsub:dev && yarn docker",
+    "client:dev": "yarn envsub:dev && ibazel run //services/client:dev_server",
+    "admin:dev": "yarn envsub:dev && ibazel run //services/admin-client:live_server",
+    "client": "yarn envsub:dev && bazelisk run //services/client",
+    "admin": "yarn envsub:dev && bazelisk run //services/admin-client",
+    "test": "yarn envsub:dev && bazelisk test //...",
+    "deploy": "yarn envsub:prod && bazelisk run :k8s.apply",
+    "clean": "yarn env:clean && rm -rf node_modules && bazelisk clean && yarn docker:clean",
+    "lint": "tslint --project .",
+    "up": "yarn upgrade-interactive --latest",
+    "envsub:dev": "yarn env:setup && yarn envsub:k8s:config && yarn envsub:k8s:secret && yarn envsub:client:dev && yarn envsub:admin:dev",
+    "envsub:prod": "yarn env:setup && yarn envsub:k8s:config && yarn envsub:k8s:secret && yarn envsub:client:prod && yarn envsub:admin:prod",
+    "envsub:k8s:config": "envsub --env-file .env.prod $npm_package_config_k8s_template $npm_package_config_k8s",
+    "envsub:k8s:secret": "envsub --env-file .env.prod $npm_package_config_k8s_secret_template $npm_package_config_k8s_secret",
+    "envsub:client:prod": "envsub --env-file .env.prod $npm_package_config_client_env_template $npm_package_config_client_env",
+    "envsub:client:dev": "envsub --env-file .env.dev $npm_package_config_client_env_template $npm_package_config_client_env",
+    "envsub:admin:prod": "envsub --env-file .env.prod $npm_package_config_admin_env_template $npm_package_config_admin_env",
+    "envsub:admin:dev": "envsub --env-file .env.dev $npm_package_config_admin_env_template $npm_package_config_admin_env",
+    "env:clean": "rm -f $npm_package_config_client_env && rm -f $npm_package_config_admin_env && rm -f $npm_package_config_k8s && rm -f $npm_package_config_k8s_secret",
+    "env:setup": "ts-node misc/setup",
+    "docker": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "docker:clean": "docker system prune --volumes",
+    "vapid": "web-push generate-vapid-keys --json",
+    "postinstall": "ngcc"
+  },
+  "config": {
+    "client_env_template": "services/client/environment/environment.template.ts",
+    "client_env": "services/client/environment/environment.ts",
+    "admin_env_template": "services/admin-client/environment/environment.template.ts",
+    "admin_env": "services/admin-client/environment/environment.ts",
+    "k8s_template": "packages/kubernetes/config.template.yaml",
+    "k8s": "packages/kubernetes/config.yaml",
+    "k8s_secret_template": "packages/kubernetes/secret.template.yaml",
+    "k8s_secret": "packages/kubernetes/secret.yaml"
   },
   "husky": {
     "hooks": {

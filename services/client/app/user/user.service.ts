@@ -10,7 +10,7 @@ import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 
 @Injectable()
 export class UserService {
-  private readonly baseUrl = `${this.environment.gatewayHost}/${ApiEndpoints.Users}`;
+  private readonly baseUrl = `${this.environment.gatewayUrl}/${ApiEndpoints.Users}`;
 
   constructor(
     private http: HttpClient,

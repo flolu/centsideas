@@ -74,8 +74,9 @@ html_insert_assets(
 )
 
 ts_devserver(
-    name = "live_server",
+    name = "dev_server",
     entry_module = "cents_ideas/services/client/main.dev",
+    port = 4200,
     scripts = [
         "@npm//:node_modules/tslib/tslib.js",
         "//packages/angular-bazel:rxjs_umd_modules",
@@ -184,7 +185,7 @@ ts_library(
 )
 
 nodejs_binary(
-    name = "prod_server",
+    name = "client",
     data = [
         ":pwa",
         ":server_lib",

@@ -5,7 +5,7 @@ export class GatewayEnvironment {
   environment = process.env.ENV!;
   port = 3000;
   accessTokenSecret = process.env.ACCESS_TOKEN_SECRET!;
-  frontendUrl = process.env.FRONTEND_URL!;
+  frontendUrl = process.env.MAIN_CLIENT_URL!;
   hosts = {
     ideas: `http://${process.env.IDEAS_SERVICE_HOST!}`,
     consumer: `http://${process.env.CONSUMER_SERVICE_HOST!}`,

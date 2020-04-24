@@ -12,7 +12,7 @@ services:
     hostname: kafka
     ports:
       - 9092:9092
-    env_file: misc/.env
+    env_file: .env.dev
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -30,7 +30,7 @@ services:
       - ./services/gateway:/services/gateway
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: misc/.env
+    env_file: .env.dev
     command: yarn run ts-node-dev services/gateway --colors
     ports:
       - 3000:3000
@@ -45,7 +45,7 @@ services:
       - ./services/ideas:/services/ideas
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: misc/.env
+    env_file: .env.dev
     command: yarn run ts-node-dev services/ideas --colors
   ideas-event-store:
     image: mongo:4.2.6
@@ -62,7 +62,7 @@ services:
       - ./services/reviews:/services/reviews
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: misc/.env
+    env_file: .env.dev
     command: yarn run ts-node-dev services/reviews --colors
   reviews-event-store:
     image: mongo:4.2.6
@@ -79,7 +79,7 @@ services:
       - ./services/users:/services/users
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: misc/.env
+    env_file: .env.dev
     command: yarn run ts-node-dev services/users --colors
   users-event-store:
     image: mongo:4.2.6
@@ -96,7 +96,7 @@ services:
       - ./services/consumer:/services/consumer
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: misc/.env
+    env_file: .env.dev
     command: yarn run ts-node-dev services/consumer --colors
     depends_on:
       - 'kafka'
@@ -115,7 +115,7 @@ services:
       - ./services/notifications:/services/notifications
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: misc/.env
+    env_file: .env.dev
     command: yarn run ts-node-dev services/notifications --colors
     depends_on:
       - 'kafka'
@@ -134,7 +134,7 @@ services:
       - ./services/admin:/services/admin
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: misc/.env
+    env_file: .env.dev
     command: yarn run ts-node-dev services/admin --colors
     depends_on:
       - 'kafka'
@@ -142,3 +142,4 @@ services:
     image: mongo:4.2.6
     logging:
       driver: none
+# TOOD use global, reusable volumes

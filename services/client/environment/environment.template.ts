@@ -3,6 +3,6 @@
 import { IClientEnvironment } from '.';
 
 export const environment: IClientEnvironment = {
-  gatewayHost: '${GATEWAY_HOST}',
+  gatewayUrl: '${GATEWAY_URL}',
   vapidPublicKey: '${VAPID_PUBLIC_KEY}',
 };

@@ -19,7 +19,7 @@ ts_library(
 
 # FIXME fiure out how to deploy only changed (not update-to-date with cluster) objects for increased deployment speeds
 k8s_objects(
-    name = "kubernetes_deployment",
+    name = "k8s",
     objects = [
         "//packages/kubernetes:config",
         "//packages/kubernetes:secret",

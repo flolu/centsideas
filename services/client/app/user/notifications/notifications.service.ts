@@ -10,7 +10,7 @@ import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 
 @Injectable()
 export class NotificationsService {
-  private readonly baseUrl = `${this.environment.gatewayHost}/${ApiEndpoints.Notifications}`;
+  private readonly baseUrl = `${this.environment.gatewayUrl}/${ApiEndpoints.Notifications}`;
 
   constructor(
     private http: HttpClient,

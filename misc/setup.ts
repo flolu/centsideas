@@ -1,34 +1,18 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-// NOW paths
-const EXAMPLE_ENV_FILE_PATH: string = 'misc/.env.template';
-const DEVELOPMENT_ENV_FILE_PATH: string = 'misc/.env';
-const setupEnvFile = async () => {
+async function setupEnvFile(templatePath: string, envFilePath: string) {
   try {
-    await fs.promises.readFile(DEVELOPMENT_ENV_FILE_PATH);
-  } catch (error) {
-    const exampleEnvFile = await fs.promises.readFile(EXAMPLE_ENV_FILE_PATH);
-    await fs.promises.writeFile(DEVELOPMENT_ENV_FILE_PATH, exampleEnvFile);
+    await fs.promises.readFile(envFilePath);
+  } catch (_error) {
+    const template = await fs.promises.readFile(templatePath);
+    await fs.promises.writeFile(envFilePath, template);
   }
-  return;
-};
-
-// NOW paths
-const EXAMPLE_K8S_SECRET_FILE_PATH: string = path.join('kubernetes', 'secret.template.yaml');
-const DEVELOPMENT_K8S_SECRET_FILE_PATH: string = path.join('kubernetes', 'secret.yaml');
-const setupKubernetesSecretFile = async () => {
-  try {
-    await fs.promises.readFile(DEVELOPMENT_K8S_SECRET_FILE_PATH);
-  } catch (error) {
-    const exampleEnvFile = await fs.promises.readFile(EXAMPLE_K8S_SECRET_FILE_PATH);
-    await fs.promises.writeFile(DEVELOPMENT_K8S_SECRET_FILE_PATH, exampleEnvFile);
-  }
-  return;
-};
+}
 
 const main = async () => {
-  await Promise.all([setupEnvFile(), setupKubernetesSecretFile()]);
+  await setupEnvFile(path.join('misc', '.env.dev.template'), path.join('.env.dev'));
+  await setupEnvFile(path.join('misc', '.env.prod.template'), path.join('.env.prod'));
   return;
 };
 

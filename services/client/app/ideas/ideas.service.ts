@@ -41,6 +41,6 @@ export class IdeasService {
   }
 
   private get baseUrl() {
-    return `${this.environment.gatewayHost}/${ApiEndpoints.Ideas}`;
+    return `${this.environment.gatewayUrl}/${ApiEndpoints.Ideas}`;
   }
 }

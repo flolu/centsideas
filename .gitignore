@@ -1,6 +1,11 @@
 node_modules
-.env
-secret.yaml
+
+.env.dev
+.env.prod
+packages/kubernetes/config.yaml
+packages/kubernetes/secret.yaml
+services/client/environment/environment.ts
+services/admin-client/environment/environment.ts
 
 .idea
 

@@ -44,9 +44,9 @@ export class GatewayMiddlewares {
       whitelist = [
         ...whitelist,
         'http://localhost:4000',
-        'http://localhost:5432',
-        'http://127.0.0.1:4000',
-        'http://127.0.0.1:5432',
+        'http://localhost:4200',
+        'http://localhost:4201',
+        'http://localhost:8080',
       ];
     return whitelist;
   }

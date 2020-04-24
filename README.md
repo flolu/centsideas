@@ -47,79 +47,96 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Development
 
-## Commands
+**Setup**
 
-- `yarn` to install all necessary dependencies for local development
-- `yarn dev` to start all backend services locally (gateway is available under http://localhost:3000)
-- `yarn client:dev` to start the frontend application (live at http://localhost:5432)
-- `yarn test` to run all unit tests
-- `yarn client:prod` to start the frontend application with server side rendering (http://localhost:4000)
-- `yarn clean` to clear node_modules, Bazel and Docker
-- `yarn lint` to detect linting problems
-- `yarn up` to find node module updates
+`yarn setup` install dependencies, add environments
 
-## Setup on Ubuntu
+- Afterwards you might want to add your credentials into `.env.dev`. Those variables will bill used across all services.
 
-> Currently Ubuntu is the only OS where everything was tested
+**Backend**
 
-**Required**
+`yarn dev` backend services http://localhost:3000
+
+**Main web app**
+
+`yarn client` production server http://localhost:4000
+
+`yarn client:dev` development server http://localhost:4200
+
+**Admin web app**
+
+`yarn admin` production server http://localhost:8080
+
+`yarn admin:dev` development server http://localhost:4201
+
+**Testing**
+
+`yarn test` all tests
+
+**Misc**
+
+`yarn clean` clear the mess
+
+`yarn lint` check syntax improvements
+
+`yarn up` upgrade npm dependencies
+
+## Develop on Ubuntu 20.04
+
+**Required installs**
 
 ```bash
-# install git, nodejs, docker-compose
 sudo apt update && \
-sudo apt install git nodejs docker-compose -y && \
+sudo apt install curl git nodejs python gcc docker-compose -y
 
-# install yarn
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+# vscode
+sudo snap install code --classic
+
+# yarn
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
 sudo apt update && sudo apt install yarn
 
-# install bazel
+# bazel
 sudo yarn global add @bazel/buildifier --prefix /usr/local && \
 sudo yarn global add @bazel/bazelisk --prefix /usr/local
 ```
 
-**Optional**
+**Optional installs**
 
 ```bash
 # install vscode, chromium, kubectl, helm
 sudo snap install chromium --classic && \
-sudo snap install code --classic && \
 sudo snap install kubectl --classic && \
 sudo snap install helm --classic
 
 # gcloud
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-sudo apt-get update && sudo apt-get install google-cloud-sdk
-gcloud init
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+sudo apt-get update && sudo apt-get install google-cloud-sdk && \
+gcloud init && \
 gcloud auth configure-docker
-
-# angular cli
-sudo yarn global add @angular/cli --prefix /usr/local
 ```
 
 ## Git Flow
 
-**Read [this](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) for more detail**
-
 **Creating a feature branch**
 
-```
+```bash
 git checkout dev
 git checkout -b <name-of-feature-branch>
 ```
 
 **Finishing a feature branch**
 
-```
+```bash
 git checkout dev
 git merge <name-of-feature-branch>
 ```
 
 **Release branches**
 
-```
+```bash
 git checkout dev
 git checkout -b release/0.1.0
 # release work
@@ -127,21 +144,7 @@ git checkout master
 git merge release/0.1.0
 ```
 
-**Hotfix branches**
-
-```
-git checkout master
-git checkout -b <name-of-hotfix-branch>
-git checkout master
-git merge <name-of-hotfix-branch>
-git checkout dev
-git merge <name-of-hotfix-branch>
-git branch -D <name-of-hotfix-branch>
-```
-
 # Deployment
-
-_TODO consider creating script to automate this_
 
 ### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster and connect to it
 
@@ -150,7 +153,7 @@ gcloud beta container --project "centsideas" clusters create "centsideas" --zone
 gcloud container clusters get-credentials centsideas --zone europe-west3-b --project centsideas
 ```
 
-_TODO add instructions on how to add Application-layer Secrets Encryption_
+_# FIXME add instructions on how to add Application-layer Secrets Encryption_
 
 ### 2. Setup [Helm](https://helm.sh/)
 
@@ -192,8 +195,6 @@ yarn deploy
 
 Wait until all Workloads are up and running. Now you should be able to visit https://centsideas.com
 
-## Special thanks to:
+# Thank you!
 
-[@rayman1104](https://github.com/rayman1104)
-
-[@marcus-sa](https://github.com/marcus-sa)
+[@rayman1104](https://github.com/rayman1104) [@marcus-sa](https://github.com/marcus-sa)
