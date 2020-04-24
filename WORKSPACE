@@ -95,11 +95,14 @@ load("@io_bazel_rules_k8s//k8s:k8s_go_deps.bzl", k8s_go_deps = "deps")
 
 k8s_go_deps()
 
-load("//:config.bzl", "CONTAINER_REGISTRY", "KUBERNETES_CLUSTER")
-
 k8s_defaults(
     name = "k8s_deploy",
-    cluster = KUBERNETES_CLUSTER,
-    image_chroot = CONTAINER_REGISTRY,
+    cluster = "_".join([
+        "gke",
+        "centsideas",
+        "europe-west3-b",
+        "centsideas",
+    ]),
+    image_chroot = "gcr.io/centsideas",
     kind = "deployment",
 )

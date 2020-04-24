@@ -1,28 +1,19 @@
-load("@npm_bazel_typescript//:index.bzl", "ts_config", "ts_library")
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "tsconfig.json",
-    "jest.config.js",
     ".bzel_fix_commands.json",
 ])
 
 ts_library(
     name = "register-aliases.js",
-    srcs = ["register-aliases.ts"],
+    srcs = ["misc/register-aliases.ts"],
     deps = [
         "@npm//@types/node",
         "@npm//module-alias",
-    ],
-)
-
-ts_config(
-    name = "tsconfig.jest.json",
-    src = "tsconfig.test.json",
-    deps = [
-        ":tsconfig.json",
     ],
 )
 
@@ -30,12 +21,12 @@ ts_config(
 k8s_objects(
     name = "kubernetes_deployment",
     objects = [
-        "//kubernetes:config",
-        "//kubernetes:secret",
-        "//kubernetes:certificate_issuer",
-        "//kubernetes:ingress",
-        "//kubernetes:database_storage",
-        "//kubernetes:kafka",
+        "//packages/kubernetes:config",
+        "//packages/kubernetes:secret",
+        "//packages/kubernetes:certificate_issuer",
+        "//packages/kubernetes:ingress",
+        "//packages/kubernetes:database_storage",
+        "//packages/kubernetes:kafka",
         "//services/gateway:k8s",
         "//services/consumer:k8s",
         "//services/ideas:k8s",

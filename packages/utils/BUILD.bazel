@@ -1,5 +1,5 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
-load("@cents_ideas//:jest.bzl", "jest_test")
+load("@cents_ideas//packages/jest:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -37,7 +37,7 @@ ts_library(
 ts_library(
     name = "test_lib",
     srcs = glob(include = ["**/*.spec.ts"]),
-    tsconfig = "//:tsconfig.jest.json",
+    tsconfig = "//:tsconfig.json",
     deps = [":utils"] + lib_deps,
 )
 
@@ -50,6 +50,6 @@ filegroup(
 jest_test(
     name = "test",
     srcs = [":test_lib.js"],
-    jest_config = "//:jest.config.js",
+    jest_config = "//packages/jest:jest.config.js",
     deps = [":utils"],
 )
