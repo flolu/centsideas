@@ -17,8 +17,8 @@
     "url": "https://github.com/flolu/centsideas.git"
   },
   "config": {
-    "admin_env_template": "services/admin-client/app/environment/environment.template.ts",
-    "admin_env": "services/admin-client/app/environment/environment.ts"
+    "admin_env_template": "services/admin-client/environment/environment.template.ts",
+    "admin_env": "services/admin-client/environment/environment.ts"
   },
   "scripts": {
     "dev": "yarn setup && yarn docker:dev",

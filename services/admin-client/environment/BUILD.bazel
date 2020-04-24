@@ -1,0 +1,17 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+
+package(default_visibility = ["//:__subpackages__"])
+
+ts_library(
+    name = "environment",
+    srcs = [
+        "environment.ts",
+        "index.ts",
+    ],
+    tsconfig = "//services/admin-client:tsconfig.json",
+    use_angular_plugin = True,
+    deps = [
+        "@npm//@angular/compiler-cli",
+        "@npm//@angular/core",
+    ],
+)

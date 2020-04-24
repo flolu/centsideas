@@ -7,12 +7,11 @@ ts_library(
     srcs = [
         "app.component.ts",
         "app-base.module.ts",
-        "environment/environment.ts",
-        "environment/index.ts",
     ],
     tsconfig = "//services/admin-client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
+        "//services/admin-client/environment",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
