@@ -69,7 +69,7 @@ ts_library(
 
 rollup_bundle(
     name = "bundle",
-    config_file = "rollup.config.js",
+    config_file = "//packages/angular-bazel:rollup.config.js",
     entry_points = {
         ":main.prod.ts": "index.es2015",
     },
@@ -84,6 +84,7 @@ rollup_bundle(
 terser_minified(
     name = "bundle.min",
     src = ":bundle",
+    config_file = "//packages/angular-bazel:terser.config.json",
 )
 
 html_insert_assets(
