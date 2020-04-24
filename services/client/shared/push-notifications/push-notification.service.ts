@@ -4,7 +4,7 @@ import { SwPush } from '@angular/service-worker';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
-import { EnvironmentService } from '../environment/environment.service';
+import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PushNotificationService implements OnDestroy {
@@ -12,9 +12,9 @@ export class PushNotificationService implements OnDestroy {
 
   constructor(
     private swPush: SwPush,
-    private envService: EnvironmentService,
     private router: Router,
     @Inject(PLATFORM_ID) private platform: string,
+    @Inject(ENVIRONMENT) private environment: IClientEnvironment,
   ) {}
 
   initialize() {
@@ -54,7 +54,7 @@ export class PushNotificationService implements OnDestroy {
       if (existingSub) return existingSub;
 
       const sub = await this.swPush.requestSubscription({
-        serverPublicKey: this.envService.env.vapidPublicKey,
+        serverPublicKey: this.environment.vapidPublicKey,
       });
       return sub;
     } catch (error) {

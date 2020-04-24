@@ -13,7 +13,7 @@ import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 import { IIdeaForm } from './ideas.state';
 
 @Component({
-  selector: 'ci-edit-idea',
+  selector: 'cic-edit-idea',
   template: `
     <h3>Edit mode</h3>
     <form [formGroup]="form">

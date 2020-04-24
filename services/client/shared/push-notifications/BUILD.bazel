@@ -8,7 +8,7 @@ ts_library(
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
-        "//services/client/shared/environment",
+        "//services/client/environment",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",

@@ -1,18 +1,21 @@
 import * as __rxjsTypes from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { ApiEndpoints, UsersApiRoutes } from '@centsideas/enums';
 import { IUserState, Dtos } from '@centsideas/models';
 
-import { EnvironmentService } from '../../shared/environment/environment.service';
+import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 
 @Injectable()
 export class UserService {
-  private readonly baseUrl = `${this.environmentService.env.gatewayHost}/${ApiEndpoints.Users}`;
+  private readonly baseUrl = `${this.environment.gatewayHost}/${ApiEndpoints.Users}`;
 
-  constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(ENVIRONMENT) private environment: IClientEnvironment,
+  ) {}
 
   confirmEmailChange(token: string) {
     const payload: Dtos.IConfirmEmailChangeDto = { token };

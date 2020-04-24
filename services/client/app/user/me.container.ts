@@ -26,24 +26,24 @@ const selectChangeEmailToken = createSelector(
 
 // FIXME live indicator of username and email availability
 @Component({
-  selector: 'ci-me',
+  selector: 'cic-me',
   template: `
     <h1>Me</h1>
     <ng-container *ngIf="userState$ | async as state">
-      <ci-me-form
+      <cic-me-form
         [status]="state.status"
         [formState]="state.persisted"
         (updateForm)="onUpdateUserForm($event)"
-      ></ci-me-form>
+      ></cic-me-form>
     </ng-container>
     <button (click)="onLogout()">Logout</button>
 
     <ng-container *ngIf="notificationsState$ | async as state">
-      <ci-notifications-form
+      <cic-notifications-form
         [status]="state.status"
         [formState]="state.persisted"
         (updateForm)="onUpdateNotificationSettingsForm($event)"
-      ></ci-notifications-form>
+      ></cic-notifications-form>
     </ng-container>
     <span *ngIf="!hasPushPermission">
       You need to allow notifications in your browser to receive push notifications!

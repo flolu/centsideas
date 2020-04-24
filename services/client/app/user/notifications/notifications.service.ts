@@ -1,18 +1,21 @@
 import * as __rxjsTypes from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Dtos } from '@centsideas/models';
 import { NotificationsApiRoutes, ApiEndpoints } from '@centsideas/enums';
 
-import { EnvironmentService } from '../../../shared/environment/environment.service';
+import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 
 @Injectable()
 export class NotificationsService {
-  private readonly baseUrl = `${this.environmentService.env.gatewayHost}/${ApiEndpoints.Notifications}`;
+  private readonly baseUrl = `${this.environment.gatewayHost}/${ApiEndpoints.Notifications}`;
 
-  constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(ENVIRONMENT) private environment: IClientEnvironment,
+  ) {}
 
   addPushSubscription(subscription: PushSubscription) {
     const url = `${this.baseUrl}/${NotificationsApiRoutes.SubscribePush}`;

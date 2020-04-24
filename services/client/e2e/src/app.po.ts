@@ -13,6 +13,6 @@ export class AppPage {
   }
 
   async getTitleText() {
-    return (await this.waitForElement(element(by.css('ci-root p')))).getText();
+    return (await this.waitForElement(element(by.css('cic-root p')))).getText();
   }
 }

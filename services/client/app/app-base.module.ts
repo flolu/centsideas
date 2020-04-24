@@ -10,11 +10,11 @@ import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { EnvironmentModule } from '../shared/environment/environment.module';
 import { AuthActions } from './auth/auth.actions';
 import { AuthSelectors } from './auth/auth.selectors';
 import { LoadStatus } from '../shared/helpers/state.helper';
 import { ServiceWorkerService } from './check-for-update.service';
+import { ENVIRONMENT, environment } from '@cic/environment';
 
 const initApplication = (store: Store) => {
   return () =>
@@ -42,13 +42,13 @@ const initApplication = (store: Store) => {
     AuthModule,
     IdeasModule,
     UserModule,
-    EnvironmentModule,
   ],
   declarations: [AppComponent],
   providers: [
     ServiceWorkerService,
     { provide: APP_INITIALIZER, useFactory: initApplication, multi: true, deps: [Store] },
     { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
+    { provide: ENVIRONMENT, useValue: environment },
   ],
 })
 export class AppBaseModule {}

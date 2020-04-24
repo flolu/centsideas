@@ -1,16 +1,18 @@
 import * as __rxjsTypes from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 import { ApiEndpoints, UsersApiRoutes } from '@centsideas/enums';
 import { Dtos } from '@centsideas/models';
 
-import { EnvironmentService } from '../../shared/environment/environment.service';
-
 @Injectable()
 export class AuthService {
-  constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(ENVIRONMENT) private environment: IClientEnvironment,
+  ) {}
 
   login(email: string) {
     const payload: Dtos.ILoginDto = { email };
@@ -51,6 +53,6 @@ export class AuthService {
   }
 
   private get baseUrl() {
-    return `${this.environmentService.env.gatewayHost}/${ApiEndpoints.Users}`;
+    return `${this.environment.gatewayHost}/${ApiEndpoints.Users}`;
   }
 }

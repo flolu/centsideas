@@ -14,7 +14,7 @@ import { INotificationSettingsForm } from './notifications.state';
 import { SyncStatus } from '../../../shared/helpers/state.helper';
 
 @Component({
-  selector: 'ci-notifications-form',
+  selector: 'cic-notifications-form',
   template: `-
     <h2>Notification Settings</h2>
     <form [formGroup]="form">

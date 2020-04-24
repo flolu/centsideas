@@ -17,20 +17,23 @@
     "url": "https://github.com/flolu/centsideas.git"
   },
   "config": {
+    "client_env_template": "services/client/environment/environment.template.ts",
+    "client_env": "services/client/environment/environment.ts",
     "admin_env_template": "services/admin-client/environment/environment.template.ts",
     "admin_env": "services/admin-client/environment/environment.ts"
   },
   "scripts": {
     "dev": "yarn setup && yarn docker:dev",
     "deploy": "bazelisk run :kubernetes_deployment.apply --define configuration=prod",
-    "client:dev": "ibazel run //services/client:live_server",
-    "client:prod": "env-cmd bazelisk run //services/client:prod_server",
-    "admin:dev": "yarn admin:envsub && ibazel run //services/admin-client:live_server",
-    "admin:prod": "yarn admin:envsub &&  bazelisk run //services/admin-client:prod_server",
+    "client:dev": "yarn setup && ibazel run //services/client:live_server",
+    "client:prod": "yarn setup && bazelisk run //services/client:prod_server",
+    "client:envsub": "envsub --env-file .env $npm_package_config_client_env_template $npm_package_config_client_env",
+    "admin:dev": "yarn setup && ibazel run //services/admin-client:live_server",
+    "admin:prod": "yarn setup &&  bazelisk run //services/admin-client:prod_server",
     "admin:envsub": "envsub --env-file .env $npm_package_config_admin_env_template $npm_package_config_admin_env",
-    "test": "bazelisk test //...",
+    "test": "yarn setup && bazelisk test //...",
     "clean": "rm -rf node_modules && yarn bazel:clean && yarn docker:clean",
-    "setup": "ts-node setup",
+    "setup": "ts-node setup && yarn admin:envsub && yarn client:envsub",
     "lint": "tslint --project .",
     "lint:fix": "tslint --fix --project .",
     "up": "yarn upgrade-interactive --latest",
@@ -41,7 +44,7 @@
     "docker:clean": "yarn docker:stop && yarn docker:prune",
     "bazel:clean": "bazelisk clean",
     "vapid": "web-push generate-vapid-keys --json",
-    "postinstall": "ngcc"
+    "postinstall": "ngcc && yarn setup"
   },
   "dependencies": {
     "@angular/animations": "9.1.2",
@@ -68,7 +71,6 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "cors": "2.8.5",
-    "env-cmd": "^10.1.0",
     "express": "4.17.1",
     "faker": "4.1.0",
     "inversify": "5.0.1",

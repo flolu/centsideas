@@ -9,20 +9,20 @@ import { IdeasActions } from './ideas.actions';
 import { IIdeaForm } from './ideas.state';
 
 @Component({
-  selector: 'ci-idea',
+  selector: 'cic-idea',
   template: `
     <h1 *ngIf="(idea$ | async)?.deleted">
       You have deleted this idea at {{ (idea$ | async)?.deletedAt | date }}
     </h1>
     <ng-container *ngIf="!(editState$ | async)?.editing">
       <button *ngIf="isOwner$ | async" (click)="onEdit()">Edit</button>
-      <ci-ideas-card *ngIf="idea$ | async" [idea]="idea$ | async"></ci-ideas-card>
+      <cic-ideas-card *ngIf="idea$ | async" [idea]="idea$ | async"></cic-ideas-card>
       <p>{{ (idea$ | async)?.description }}</p>
       <p>Posted by: {{ (idea$ | async)?.userId }}</p>
       <p>Published at: {{ (idea$ | async)?.createdAt | date }}</p>
-      <!--<ci-reviews [reviews]="(idea$ | async)?.reviews"></ci-reviews>-->
+      <!--<cic-reviews [reviews]="(idea$ | async)?.reviews"></cic-reviews>-->
     </ng-container>
-    <ci-edit-idea
+    <cic-edit-idea
       *ngIf="(editState$ | async)?.editing"
       [formState]="(editState$ | async)?.form"
       (updateForm)="onUpdateForm($event)"
@@ -30,7 +30,7 @@ import { IIdeaForm } from './ideas.state';
       (save)="onSaveEdit()"
       (delete)="onDelete()"
     >
-    </ci-edit-idea>
+    </cic-edit-idea>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

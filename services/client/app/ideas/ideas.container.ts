@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { TopLevelFrontendRoutes } from '@centsideas/enums';
 
 @Component({
-  selector: 'ci-ideas',
+  selector: 'cic-ideas',
   template: `
     <div class="container">
       <div *ngIf="(state$ | async)?.loading">Loading...</div>
@@ -32,11 +32,11 @@ import { TopLevelFrontendRoutes } from '@centsideas/enums';
         <button (click)="onCreate()">Create</button>
       </form>
       <h1>All Ideas</h1>
-      <ci-ideas-card
+      <cic-ideas-card
         *ngFor="let i of ideas$ | async"
         [idea]="i"
         (clickedTitle)="onIdeaTitleClicked(i)"
-      ></ci-ideas-card>
+      ></cic-ideas-card>
       <div *ngIf="!(ideas$ | async)?.length">No ideas found</div>
     </div>
   `,

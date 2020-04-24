@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { IIdeaViewModel } from '@centsideas/models';
 
 @Component({
-  selector: 'ci-ideas-card',
+  selector: 'cic-ideas-card',
   template: `
     <div class="card">
       <div class="score" [style.opacity]="opacity" [style.color]="color">

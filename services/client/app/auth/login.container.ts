@@ -19,7 +19,7 @@ const selectGoogleCodeFromUrl = createSelector(
 );
 
 @Component({
-  selector: 'ci-login',
+  selector: 'cic-login',
   template: `
     <h1>Login</h1>
     <form [formGroup]="form">

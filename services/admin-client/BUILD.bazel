@@ -45,6 +45,7 @@ ts_devserver(
     scripts = [
         "@npm//:node_modules/tslib/tslib.js",
         "//packages/angular-bazel:rxjs_umd_modules",
+        "@npm//socket.io-client:socket.io-client__umd",
     ],
     static_files = [
         ":dev_html",

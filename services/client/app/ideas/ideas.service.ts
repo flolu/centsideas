@@ -1,15 +1,18 @@
 import * as __rxjsTypes from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 import { ApiEndpoints } from '@centsideas/enums';
 import { IIdeaViewModel, IIdeaState } from '@centsideas/models';
-import { EnvironmentService } from '../../shared/environment/environment.service';
 
 @Injectable()
 export class IdeasService {
-  constructor(private http: HttpClient, private environmentService: EnvironmentService) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(ENVIRONMENT) private environment: IClientEnvironment,
+  ) {}
 
   getIdeas() {
     return this.http.get<IIdeaViewModel[]>(`${this.baseUrl}`);
@@ -38,6 +41,6 @@ export class IdeasService {
   }
 
   private get baseUrl() {
-    return `${this.environmentService.env.gatewayHost}/${ApiEndpoints.Ideas}`;
+    return `${this.environment.gatewayHost}/${ApiEndpoints.Ideas}`;
   }
 }

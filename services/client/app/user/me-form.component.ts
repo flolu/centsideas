@@ -14,7 +14,7 @@ import { IUserForm } from './user.state';
 import { SyncStatus } from '../../shared/helpers/state.helper';
 
 @Component({
-  selector: 'ci-me-form',
+  selector: 'cic-me-form',
   template: `
     <h2>Notification Settings</h2>
     <form [formGroup]="form">

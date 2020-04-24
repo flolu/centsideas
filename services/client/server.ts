@@ -12,13 +12,6 @@ import { AppServerModule } from './app/app.server.module';
 
 enableProdMode();
 
-process.env.angularEnvironment = JSON.stringify({
-  gatewayHost: process.env.GATEWAY_HOST || 'https://api.centsideas.com',
-  vapidPublicKey: process.env.VAPID_PUBLIC_KEY,
-});
-
-if (process.env.ENV === 'dev') console.log(JSON.parse(process.env.angularEnvironment));
-
 const app = express();
 const PORT = argv.port || process.env.PORT || 4000;
 const DIST_FOLDER = join(process.cwd(), 'services/client/pwa');
