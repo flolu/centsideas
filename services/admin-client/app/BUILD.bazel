@@ -7,6 +7,8 @@ ts_library(
     srcs = [
         "app.component.ts",
         "app-base.module.ts",
+        "environment/environment.ts",
+        "environment/index.ts",
     ],
     tsconfig = "//services/admin-client:tsconfig.json",
     use_angular_plugin = True,
@@ -15,6 +17,7 @@ ts_library(
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
+        "@npm//ngx-socket-io",
     ],
 )
 

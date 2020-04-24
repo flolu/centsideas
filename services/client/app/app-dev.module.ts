@@ -4,7 +4,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppDevStoreModule } from './store/app-dev.store.module';
 import { AppBaseModule } from './app-base.module';
 import { AppComponent } from './app.component';
-// import { EnvironmentService } from '@centsideas/client/shared/environment/environment.service';
 import { EnvironmentService } from '../shared/environment/environment.service';
 
 @NgModule({

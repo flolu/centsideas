@@ -69,9 +69,9 @@ export class GatewayServer {
         Logger.log('user disconnected');
       });
 
-      socket.on('message', message => {
-        Logger.log('Message Received: ' + message);
-        this.io.emit('message', { type: 'new-message', text: message });
+      socket.on('message', msg => {
+        Logger.log('message from frontend: ', msg);
+        this.io.emit('message', 'hello from backend');
       });
     });
   }
