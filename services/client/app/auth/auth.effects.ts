@@ -103,7 +103,7 @@ export class AuthEffects {
       switchMap(() => {
         if (isPlatformServer(this.platform)) {
           const expressRequest = this.injector.get(REQUEST);
-          const refreshToken = expressRequest.cookies[CookieNames.RefreshToken];
+          const refreshToken = (expressRequest as any).cookies[CookieNames.RefreshToken];
           const exchangeSecret = process.env.FRONTEND_SERVER_EXCHANGE_SECRET;
           return this.authService.fetchAccessTokenOnServer(refreshToken, exchangeSecret).pipe(
             map(data => AuthActions.fetchAccessTokenDone(data)),
