@@ -14,7 +14,7 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         "//packages/enums",
-        "//services/client/shared/helpers",
+        "//services/client/helpers",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",

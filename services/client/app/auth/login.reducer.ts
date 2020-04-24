@@ -1,6 +1,6 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
-import { LoadStatus } from '../../shared/helpers/state.helper';
+import { LoadStatus } from '@cic/helpers';
 import { AuthActions } from './auth.actions';
 
 export interface ILoginReducerState {

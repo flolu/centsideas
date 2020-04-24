@@ -1,17 +1,9 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  OnChanges,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnChanges } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
+import { SyncStatus } from '@cic/helpers';
 import { INotificationSettingsForm } from './notifications.state';
-import { SyncStatus } from '../../../shared/helpers/state.helper';
 
 @Component({
   selector: 'cic-notifications-form',

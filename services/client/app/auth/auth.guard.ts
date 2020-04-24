@@ -5,10 +5,9 @@ import { Injectable } from '@angular/core';
 import { map, skipWhile } from 'rxjs/operators';
 
 import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
-
 import { AuthActions } from './auth.actions';
 import { AuthSelectors } from './auth.selectors';
-import { LoadStatus } from '../../shared/helpers/state.helper';
+import { LoadStatus } from '@cic/helpers';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

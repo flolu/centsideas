@@ -2,7 +2,7 @@ import * as __entityTypes from '@ngrx/entity';
 
 import { createReducer, on, Action } from '@ngrx/store';
 
-import { LoadStatus } from '../../shared/helpers/state.helper';
+import { LoadStatus } from '@cic/helpers';
 import { IIdeaEditState } from './ideas.state';
 import { IdeasActions } from './ideas.actions';
 

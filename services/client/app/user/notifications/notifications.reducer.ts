@@ -1,8 +1,8 @@
 import { createReducer, Action, on } from '@ngrx/store';
 
+import { SyncStatus } from '@cic/helpers';
 import { NotificationsActions } from './notifications.actions';
 import { INotificationSettingsForm } from './notifications.state';
-import { SyncStatus } from '../../../shared/helpers/state.helper';
 
 export interface INotificationsReducerState {
   // FIXME persisted state is inaccurate

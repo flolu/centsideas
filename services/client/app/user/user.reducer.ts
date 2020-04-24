@@ -1,9 +1,8 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
 import { IUserState } from '@centsideas/models';
-
+import { SyncStatus } from '@cic/helpers';
 import { UserActions } from './user.actions';
-import { SyncStatus } from '../../shared/helpers/state.helper';
 import { AuthActions } from '../auth/auth.actions';
 import { IUserForm } from './user.state';
 

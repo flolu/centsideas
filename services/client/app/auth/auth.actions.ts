@@ -3,8 +3,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import { createAction, props } from '@ngrx/store';
 
 import { Dtos } from '@centsideas/models';
-
-import { appPrefix, failSuffix, doneSuffix } from '../../shared/helpers/actions.helper';
+import { appPrefix, failSuffix, doneSuffix } from '@cic/helpers';
 
 const prefix = `${appPrefix}/auth`;
 const loginPrefix = prefix + '/login';

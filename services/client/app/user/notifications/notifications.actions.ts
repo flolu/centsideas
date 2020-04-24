@@ -3,9 +3,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import { createAction, props } from '@ngrx/store';
 
 import { Dtos } from '@centsideas/models';
-
-// FIXME frontend aliases (currently module_name + us_angular_plugin isn't working)
-import { appPrefix, doneSuffix, failSuffix } from '../../../shared/helpers/actions.helper';
+import { appPrefix, doneSuffix, failSuffix } from '@cic/helpers';
 import { INotificationSettingsForm } from './notifications.state';
 
 const prefix = `${appPrefix}/notifications`;

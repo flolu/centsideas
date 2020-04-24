@@ -4,10 +4,9 @@ import { createReducer, on, Action } from '@ngrx/store';
 import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 import { IIdeaViewModel } from '@centsideas/models';
-
+import { LoadStatus } from '@cic/helpers';
 import { IIdeasState } from './ideas.state';
 import { IdeasActions } from './ideas.actions';
-import { LoadStatus } from '../../shared/helpers/state.helper';
 
 const adapter: EntityAdapter<IIdeaViewModel> = createEntityAdapter({
   selectId: (idea: IIdeaViewModel) => idea.id,

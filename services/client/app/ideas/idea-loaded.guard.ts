@@ -4,10 +4,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, skipWhile, withLatestFrom } from 'rxjs/operators';
 
+import { LoadStatus } from '@cic/helpers';
 import { IdeasSelectors } from './ideas.selectors';
 import { IdeasActions } from './ideas.actions';
 import { TopLevelFrontendRoutes } from '@centsideas/enums';
-import { LoadStatus } from '../../shared/helpers/state.helper';
 
 @Injectable()
 export class IdeaLoadedGuard implements CanActivate {

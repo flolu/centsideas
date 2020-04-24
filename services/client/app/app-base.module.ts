@@ -4,6 +4,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { skipWhile, tap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
+import { ENVIRONMENT, environment } from '@cic/environment';
+import { LoadStatus } from '@cic/helpers';
 import { IdeasModule } from './ideas/ideas.module';
 import { UserModule } from './user/user.module';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
@@ -12,9 +14,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthActions } from './auth/auth.actions';
 import { AuthSelectors } from './auth/auth.selectors';
-import { LoadStatus } from '../shared/helpers/state.helper';
 import { ServiceWorkerService } from './check-for-update.service';
-import { ENVIRONMENT, environment } from '@cic/environment';
 
 const initApplication = (store: Store) => {
   return () =>
