@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnDestroy, OnChanges } from '@a
 import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
-import { SyncStatus } from '@cic/helpers';
+import { SyncStatus } from '@cic/shared';
 import { INotificationSettingsForm } from './notifications.state';
 
 @Component({

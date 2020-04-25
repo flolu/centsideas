@@ -1,7 +1,7 @@
 import { EntityState } from '@ngrx/entity';
 
 import { IIdeaViewModel } from '@centsideas/models';
-import { LoadStatus } from '@cic/helpers';
+import { LoadStatus } from '@cic/shared';
 
 export interface IIdeasState extends EntityState<IIdeaViewModel> {
   status: LoadStatus;

@@ -4,7 +4,7 @@ import { createReducer, on, Action } from '@ngrx/store';
 import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 import { IIdeaViewModel } from '@centsideas/models';
-import { LoadStatus } from '@cic/helpers';
+import { LoadStatus } from '@cic/shared';
 import { IIdeasState } from './ideas.state';
 import { IdeasActions } from './ideas.actions';
 

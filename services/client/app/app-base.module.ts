@@ -5,7 +5,7 @@ import { skipWhile, tap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { ENVIRONMENT, environment } from '@cic/environment';
-import { LoadStatus } from '@cic/helpers';
+import { LoadStatus } from '@cic/shared';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { AppComponent } from './app.component';

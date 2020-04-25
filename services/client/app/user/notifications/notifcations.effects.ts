@@ -8,7 +8,7 @@ import { switchMap, map, catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import { PushNotificationService } from '@cic/push-notifications';
+import { PushNotificationService } from '@cic/shared';
 import { NotificationsService } from './notifications.service';
 import { NotificationsActions } from './notifications.actions';
 

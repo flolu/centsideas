@@ -3,7 +3,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import { createAction, props } from '@ngrx/store';
 
 import { IIdeaViewModel, IIdeaState, Dtos } from '@centsideas/models';
-import { appPrefix, failSuffix, doneSuffix } from '@cic/helpers';
+import { appPrefix, failSuffix, doneSuffix } from '@cic/shared';
 import { IIdeaForm } from './ideas.state';
 
 const prefix = `${appPrefix}/ideas`;

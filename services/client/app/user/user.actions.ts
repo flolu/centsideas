@@ -3,7 +3,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 import { createAction, props } from '@ngrx/store';
 
 import { IUserState, Dtos } from '@centsideas/models';
-import { appPrefix, doneSuffix, failSuffix } from '@cic/helpers';
+import { appPrefix, doneSuffix, failSuffix } from '@cic/shared';
 import { IUserForm } from './user.state';
 
 const prefix = `${appPrefix}/user`;

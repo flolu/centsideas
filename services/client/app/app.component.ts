@@ -6,7 +6,7 @@ import { mapTo } from 'rxjs/operators';
 import { UpdateAvailableEvent } from '@angular/service-worker';
 
 import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
-import { PushNotificationService } from '@cic/push-notifications';
+import { PushNotificationService } from '@cic/shared';
 import { AuthSelectors } from './auth/auth.selectors';
 import { ServiceWorkerService } from './check-for-update.service';
 

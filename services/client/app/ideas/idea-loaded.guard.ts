@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, skipWhile, withLatestFrom } from 'rxjs/operators';
 
-import { LoadStatus } from '@cic/helpers';
+import { LoadStatus } from '@cic/shared';
 import { IdeasSelectors } from './ideas.selectors';
 import { IdeasActions } from './ideas.actions';
 import { TopLevelFrontendRoutes } from '@centsideas/enums';

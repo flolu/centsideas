@@ -1,6 +1,6 @@
 import { createReducer, Action, on } from '@ngrx/store';
 
-import { SyncStatus } from '@cic/helpers';
+import { SyncStatus } from '@cic/shared';
 import { NotificationsActions } from './notifications.actions';
 import { INotificationSettingsForm } from './notifications.state';
 

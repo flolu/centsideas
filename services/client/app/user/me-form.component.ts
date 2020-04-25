@@ -3,7 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
 import { IUserState } from '@centsideas/models';
-import { SyncStatus } from '@cic/helpers';
+import { SyncStatus } from '@cic/shared';
 import { IUserForm } from './user.state';
 
 @Component({

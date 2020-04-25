@@ -1,7 +1,7 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
 import { IUserState } from '@centsideas/models';
-import { LoadStatus } from '@cic/helpers';
+import { LoadStatus } from '@cic/shared';
 import { AuthActions } from './auth.actions';
 
 export interface IAuthReducerState {

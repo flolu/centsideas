@@ -16,7 +16,7 @@ ts_library(
         "//packages/enums",
         "//packages/models",
         "//services/client/environment",
-        "//services/client/helpers",
+        "//services/client/shared",
         "//services/client/store",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",

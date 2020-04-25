@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 
 import { QueryParamKeys } from '@centsideas/enums';
 import { IUserState } from '@centsideas/models';
-import { PushNotificationService } from '@cic/push-notifications';
+import { PushNotificationService } from '@cic/shared';
 import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';
 import { AuthActions } from '../auth/auth.actions';

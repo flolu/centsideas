@@ -10,8 +10,9 @@
     "paths": {
       "@centsideas/*": ["../../packages/*"],
       "@cic/environment": ["./environment"],
+      // TODO move to shared
       "@cic/helpers": ["./helpers"],
-      "@cic/push-notifications": ["./push-notifications"],
+      "@cic/shared": ["./shared"],
       "@cic/store": ["./store"]
     }
   }
