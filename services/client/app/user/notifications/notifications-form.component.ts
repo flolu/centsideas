@@ -7,7 +7,7 @@ import { INotificationSettingsForm } from './notifications.state';
 
 @Component({
   selector: 'cic-notifications-form',
-  template: `-
+  template: `
     <h2>Notification Settings</h2>
     <form [formGroup]="form">
       <label>
@@ -21,7 +21,8 @@ import { INotificationSettingsForm } from './notifications.state';
       </label>
       <br />
     </form>
-    <p>{{ status }}</p> `,
+    <p>{{ status }}</p>
+  `,
 })
 export class NotificationsFormComponent implements OnDestroy, OnChanges {
   @Input() status: number;

@@ -17,6 +17,7 @@ import { NotificationsSelectors } from './notifications/notifications.selectors'
 import { NotificationsActions } from './notifications/notifications.actions';
 import { INotificationSettingsForm } from './notifications/notifications.state';
 import { IUserForm } from './user.state';
+import { AuthSelectors } from '../auth/auth.selectors';
 
 const selectChangeEmailToken = createSelector(
   createFeatureSelector<any>('router'),
@@ -28,22 +29,20 @@ const selectChangeEmailToken = createSelector(
   selector: 'cic-me',
   template: `
     <h1>Me</h1>
-    <ng-container *ngIf="userState$ | async as state">
-      <cic-me-form
-        [status]="state.status"
-        [formState]="state.persisted"
-        (updateForm)="onUpdateUserForm($event)"
-      ></cic-me-form>
-    </ng-container>
+    <cic-me-form
+      *ngIf="user$ | async as user"
+      [status]="(userState$ | async).status"
+      [formState]="user"
+      (updateForm)="onUpdateUserForm($event)"
+    ></cic-me-form>
     <button (click)="onLogout()">Logout</button>
 
-    <ng-container *ngIf="notificationsState$ | async as state">
-      <cic-notifications-form
-        [status]="state.status"
-        [formState]="state.persisted"
-        (updateForm)="onUpdateNotificationSettingsForm($event)"
-      ></cic-notifications-form>
-    </ng-container>
+    <cic-notifications-form
+      *ngIf="notificationsState$ | async as state"
+      [status]="state.status"
+      [formState]="state.persisted"
+      (updateForm)="onUpdateNotificationSettingsForm($event)"
+    ></cic-notifications-form>
     <span *ngIf="!hasPushPermission">
       You need to allow notifications in your browser to receive push notifications!
     </span>
@@ -53,6 +52,7 @@ const selectChangeEmailToken = createSelector(
 export class MeContainer {
   notificationsState$ = this.store.select(NotificationsSelectors.selectNotificationsState);
   userState$ = this.store.select(UserSelectors.selectUserState);
+  user$ = this.store.select(AuthSelectors.selectUser);
   user: IUserState;
   form = new FormGroup({
     username: new FormControl(''),
@@ -88,7 +88,7 @@ export class MeContainer {
 
   onTestNotification = () => {
     if (this.pushService.areNotificationsBlocked) {
-      // FIXME show somethine in UI or so
+      // FIXME show something in UI or so
       console.log('you blocked the permission to send push notifications');
     }
     this.pushService.sendSampleNotificationLocally();

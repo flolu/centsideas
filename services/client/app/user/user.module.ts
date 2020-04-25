@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 
 import { UserFrontendRoutes } from '@centsideas/enums';
 
@@ -17,7 +16,6 @@ import { MeFormComponent } from './me-form.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HttpClientModule,
     UserStoreModule,
     RouterModule.forChild([
       { path: UserFrontendRoutes.Me, component: MeContainer, canActivate: [AuthGuard] },

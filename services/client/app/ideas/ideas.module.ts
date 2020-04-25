@@ -14,11 +14,11 @@ import { EditIdeaComponent } from './edit-idea.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    IdeasStoreModule,
     RouterModule.forChild([
       { path: '', component: IdeasContainer },
       { path: ':id', component: IdeaContainer, canActivate: [IdeaLoadedGuard] },
     ]),
-    IdeasStoreModule,
   ],
   declarations: [IdeasContainer, IdeaContainer, IdeaCardComponent, EditIdeaComponent],
   providers: [IdeaLoadedGuard],

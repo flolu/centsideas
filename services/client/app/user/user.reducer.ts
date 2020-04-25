@@ -1,13 +1,11 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
-import { IUserState } from '@centsideas/models';
 import { SyncStatus } from '@cic/helpers';
 import { UserActions } from './user.actions';
 import { AuthActions } from '../auth/auth.actions';
 import { IUserForm } from './user.state';
 
 export interface IUserReducerState {
-  persisted: IUserState | null;
   formData: IUserForm | null;
   status: SyncStatus;
   // FIXME advanced error handling, where error is displayed for a specific input field
@@ -15,7 +13,6 @@ export interface IUserReducerState {
 }
 
 const initialState: IUserReducerState = {
-  persisted: null,
   formData: null,
   status: SyncStatus.Loading,
   error: '',
@@ -25,17 +22,14 @@ const userReducer = createReducer(
   initialState,
   on(AuthActions.fetchAccessTokenDone, (state, { user }) => ({
     ...state,
-    persisted: user,
     status: SyncStatus.Loaded,
   })),
   on(AuthActions.confirmLoginDone, (state, { user }) => ({
     ...state,
-    persisted: user,
     status: SyncStatus.Loaded,
   })),
   on(AuthActions.googleLoginDone, (state, { user }) => ({
     ...state,
-    persisted: user,
     status: SyncStatus.Loaded,
   })),
   on(AuthActions.logoutDone, state => ({ ...state, persisted: null, status: SyncStatus.None })),
@@ -64,7 +58,6 @@ const userReducer = createReducer(
   })),
   on(UserActions.confirmEmailChangeDone, (state, { updated }) => ({
     ...state,
-    persisted: updated,
     status: SyncStatus.Loaded,
   })),
 );

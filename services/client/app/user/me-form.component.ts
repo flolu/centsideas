@@ -2,13 +2,14 @@ import { Component, Input, Output, EventEmitter, OnDestroy, OnChanges } from '@a
 import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
+import { IUserState } from '@centsideas/models';
 import { SyncStatus } from '@cic/helpers';
 import { IUserForm } from './user.state';
 
 @Component({
   selector: 'cic-me-form',
   template: `
-    <h2>Notification Settings</h2>
+    <h2>User Settings</h2>
     <form [formGroup]="form">
       <label for="username">
         Username
@@ -22,10 +23,9 @@ import { IUserForm } from './user.state';
       <br />
       <input id="email" type="text" formControlName="email" />
       <br />
-      <span *ngIf="formState"
-        >pending email: {{ formState.pendingEmail }} (you need to open the email on this
-        device)</span
-      >
+      <span *ngIf="formState.pendingEmail">
+        pending email: {{ formState.pendingEmail }} (you need to open the email on this device)
+      </span>
       <br />
     </form>
     <p>{{ status }}</p>
@@ -33,7 +33,7 @@ import { IUserForm } from './user.state';
 })
 export class MeFormComponent implements OnDestroy, OnChanges {
   @Input() status: number;
-  @Input() formState: IUserForm;
+  @Input() formState: IUserState;
   @Output() updateForm = new EventEmitter<IUserForm>();
 
   form: FormGroup = new FormGroup({

@@ -10,7 +10,7 @@ import { of } from 'rxjs';
 
 import { UserService } from './user.service';
 import { UserActions } from './user.actions';
-import { UserSelectors } from './user.selectors';
+import { AuthSelectors } from '../auth/auth.selectors';
 
 @Injectable()
 export class UserEffects {
@@ -26,7 +26,7 @@ export class UserEffects {
   updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.updateUser),
-      withLatestFrom(this.store.select(UserSelectors.selectUser)),
+      withLatestFrom(this.store.select(AuthSelectors.selectUser)),
       switchMap(([payload, user]) =>
         this.usersService.updateUser(payload, user.id).pipe(
           map(updated => UserActions.updateUserDone({ updated })),

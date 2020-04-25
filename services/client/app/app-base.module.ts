@@ -6,8 +6,6 @@ import { Store } from '@ngrx/store';
 
 import { ENVIRONMENT, environment } from '@cic/environment';
 import { LoadStatus } from '@cic/helpers';
-import { IdeasModule } from './ideas/ideas.module';
-import { UserModule } from './user/user.module';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { AppComponent } from './app.component';
@@ -39,9 +37,8 @@ const initApplication = (store: Store) => {
     BrowserModule.withServerTransition({ appId: 'client' }),
     BrowserTransferStateModule,
     AppRoutingModule,
+    // TODO better modularization of ngrx, which allows to lazy load auth module, too
     AuthModule,
-    IdeasModule,
-    UserModule,
   ],
   declarations: [AppComponent],
   providers: [

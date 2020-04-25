@@ -10,4 +10,6 @@ const selectAuthState = createSelector(
   (state: IAuthFeatureReducerState) => state.auth,
 );
 
-export const AuthSelectors = { selectAuthState };
+const selectUser = createSelector(selectAuthState, state => state.persistedUser);
+
+export const AuthSelectors = { selectAuthState, selectUser };

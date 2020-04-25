@@ -7,8 +7,8 @@ import { IIdeaViewModel } from '@centsideas/models';
 
 import { IIdeasFeatureReducerState } from './ideas.state';
 import * as fromIdeas from './ideas.reducer';
-import { UserSelectors } from '../user/user.selectors';
 import { AppSelectors } from '../store/app.selectors';
+import { AuthSelectors } from '../auth/auth.selectors';
 
 const selectIdeasState = createSelector(
   AppSelectors.selectIdeasFeatureState,
@@ -32,7 +32,7 @@ const selectEditIdeaState = createSelector(
   (state: IIdeasFeatureReducerState) => state.edit,
 );
 const selectIsCurrentUserOwner = createSelector(
-  UserSelectors.selectUser,
+  AuthSelectors.selectUser,
   selectSelectedIdea,
   (user, idea) => (user && idea ? user.id === idea.userId : false),
 );
