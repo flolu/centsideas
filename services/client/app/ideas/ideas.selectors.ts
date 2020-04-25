@@ -5,9 +5,9 @@ import { createSelector } from '@ngrx/store';
 
 import { IIdeaViewModel } from '@centsideas/models';
 
+import { AppSelectors } from '@cic/store';
 import { IIdeasFeatureReducerState } from './ideas.state';
 import * as fromIdeas from './ideas.reducer';
-import { AppSelectors } from '../store/app.selectors';
 import { AuthSelectors } from '../auth/auth.selectors';
 
 const selectIdeasState = createSelector(

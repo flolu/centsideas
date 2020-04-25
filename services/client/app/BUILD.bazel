@@ -48,8 +48,8 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         ":base",
-        "//services/client/app/store:dev",
         "//services/client/environment",
+        "//services/client/store:dev",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/service-worker",
@@ -58,15 +58,13 @@ ts_library(
 
 ts_library(
     name = "prod",
-    srcs = [
-        "app-prod.module.ts",
-    ],
+    srcs = ["app-prod.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
         ":base",
-        "//services/client/app/store",
         "//services/client/environment",
+        "//services/client/store:prod",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",

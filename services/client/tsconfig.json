@@ -11,7 +11,8 @@
       "@centsideas/*": ["../../packages/*"],
       "@cic/environment": ["./environment"],
       "@cic/helpers": ["./helpers"],
-      "@cic/push-notifications": ["./push-notifications"]
+      "@cic/push-notifications": ["./push-notifications"],
+      "@cic/store": ["./store"]
     }
   }
 }

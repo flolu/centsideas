@@ -1,18 +1,18 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
-package(default_visibility = ["//:__subpackages__"])
+package(default_visibility = ["//services/client:__subpackages__"])
 
 ts_library(
-    name = "store",
+    name = "prod",
     srcs = [
-        "app.selectors.ts",
-        "app.store.module.ts",
         "custom-route-serializer.ts",
         "ngrx-state-transfer.service.ts",
+        "prod-store.module.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
+        ":store",
         "//packages/enums",
         "//services/client/helpers",
         "@npm//@angular/common",
@@ -30,14 +30,34 @@ ts_library(
 
 ts_library(
     name = "dev",
-    srcs = ["app-dev.store.module.ts"],
+    srcs = ["dev-store.module.ts"],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
-        ":store",
+        ":prod",
         "//services/client/environment",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@ngrx/store-devtools",
+    ],
+)
+
+ts_library(
+    name = "store",
+    srcs = [
+        "index.ts",
+        "store.selectors.ts",
+        "store.state.ts",
+        "store-keys.enum.ts",
+    ],
+    module_name = "@cic/store",
+    tsconfig = "//services/client:tsconfig.json",
+    # TODO is use_angular_plugin needed here?
+    use_angular_plugin = True,
+    deps = [
+        "//services/client/environment",
+        "@npm//@angular/compiler-cli",
+        "@npm//@angular/router",
+        "@npm//@ngrx/store",
     ],
 )
