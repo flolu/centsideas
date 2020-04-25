@@ -8,9 +8,9 @@ import { Store } from '@ngrx/store';
 import { switchMap, map, catchError, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 
+import { AuthSelectors } from '@cic/store';
 import { UserService } from './user.service';
 import { UserActions } from './user.actions';
-import { AuthSelectors } from '../auth/auth.selectors';
 
 @Injectable()
 export class UserEffects {

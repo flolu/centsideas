@@ -55,6 +55,7 @@ ts_library(
         "//services/client/app/auth:store",
         "//services/client/environment",
         "//services/client/shared",
+        "//services/client/store",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",

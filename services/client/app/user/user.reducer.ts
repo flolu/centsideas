@@ -1,8 +1,8 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
 import { SyncStatus } from '@cic/shared';
+import { AuthActions } from '@cic/store';
 import { UserActions } from './user.actions';
-import { AuthActions } from '../auth/auth.actions';
 import { IUserForm } from './user.state';
 
 export interface IUserReducerState {

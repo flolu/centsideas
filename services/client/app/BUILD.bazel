@@ -15,7 +15,7 @@ ts_library(
         "app-base.module.ts",
         "app-routing.module.ts",
         "auth-token.interceptor.ts",
-        "check-for-update.service.ts",
+        "service-worker.service.ts",
     ],
     angular_assets = [":app_styles"],
     tsconfig = "//services/client:tsconfig.json",
@@ -28,6 +28,7 @@ ts_library(
         "//services/client/app/user",
         "//services/client/environment",
         "//services/client/shared",
+        "//services/client/store",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
@@ -48,10 +49,12 @@ ts_library(
     deps = [
         ":base",
         "//services/client/environment",
-        "//services/client/store:dev",
+        "//services/client/store",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/service-worker",
+        "@npm//@ngrx/store",
+        "@npm//@ngrx/store-devtools",
     ],
 )
 
@@ -63,7 +66,7 @@ ts_library(
     deps = [
         ":base",
         "//services/client/environment",
-        "//services/client/store:prod",
+        "//services/client/store",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",

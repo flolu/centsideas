@@ -5,11 +5,7 @@ package(default_visibility = ["//:__subpackages__"])
 
 ts_library(
     name = "store",
-    srcs = glob(include = store_srcs_matcher) + [
-        "auth-store.module.ts",
-        "auth.service.ts",
-        "auth.guard.ts",
-    ],
+    srcs = glob(include = store_srcs_matcher),
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
@@ -41,6 +37,7 @@ ts_library(
     deps = [
         ":store",
         "//packages/enums",
+        "//services/client/store",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",

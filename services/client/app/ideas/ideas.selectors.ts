@@ -1,22 +1,25 @@
 import * as __ngrxStore from '@ngrx/store/store';
 import * as __entityTypes from '@ngrx/entity';
 
-import { createSelector } from '@ngrx/store';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
 
 import { IIdeaViewModel } from '@centsideas/models';
 
-import { AppSelectors } from '@cic/store';
+import { AuthSelectors } from '@cic/store';
+import { StoreKeys } from '@cic/shared';
 import { IIdeasFeatureReducerState } from './ideas.state';
 import * as fromIdeas from './ideas.reducer';
-import { AuthSelectors } from '../auth/auth.selectors';
 
+// TODO move the router selector to a common root store similar to @cic/store
+const selectRouterState = createFeatureSelector<any>(StoreKeys.Router);
+const selectIdeasFeatureState = createFeatureSelector<any>(StoreKeys.Ideas);
 const selectIdeasState = createSelector(
-  AppSelectors.selectIdeasFeatureState,
+  selectIdeasFeatureState,
   (state: IIdeasFeatureReducerState) => state.ideas,
 );
 const selectIdeas = createSelector(selectIdeasState, fromIdeas.selectAllIdeas);
 const selectIdeaEntities = createSelector(selectIdeasState, fromIdeas.selectIdeaEntities);
-const selectSelectedIdeaId = createSelector(AppSelectors.selectRouterState, router => {
+const selectSelectedIdeaId = createSelector(selectRouterState, router => {
   return router ? (router.state.params.id as string) : '';
 });
 const selectSelectedIdea = createSelector(
@@ -28,7 +31,7 @@ const selectSelectedIdea = createSelector(
 );
 
 const selectEditIdeaState = createSelector(
-  AppSelectors.selectIdeasFeatureState,
+  selectIdeasFeatureState,
   (state: IIdeasFeatureReducerState) => state.edit,
 );
 const selectIsCurrentUserOwner = createSelector(

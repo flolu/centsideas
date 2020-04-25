@@ -9,12 +9,14 @@ ts_library(
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
+        "//packages/enums",
         "//services/client/environment",
         "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/router",
         "@npm//@angular/service-worker",
+        "@npm//@ngrx/store",
         "@npm//rxjs",
     ],
 )

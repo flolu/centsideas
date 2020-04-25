@@ -5,10 +5,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 import { AppComponent } from './app.component';
 import { AppBaseModule } from './app-base.module';
-import { ProdStoreModule } from '../store/prod-store.module';
+import { RootStoreModule } from '../store/root-store.module';
 
 @NgModule({
-  imports: [ServiceWorkerModule.register('ngsw-worker.js'), AppBaseModule, ProdStoreModule],
+  imports: [ServiceWorkerModule.register('ngsw-worker.js'), AppBaseModule, RootStoreModule],
   bootstrap: [AppComponent],
 })
 export class AppProdModule {

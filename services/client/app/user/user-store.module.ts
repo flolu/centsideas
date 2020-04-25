@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { StoreKeys } from '@cic/store';
+import { StoreKeys } from '@cic/shared';
 import * as fromUser from './user.reducer';
 import * as fromNotifications from './notifications/notifications.reducer';
 import { UserService } from './user.service';

@@ -1,3 +1,5 @@
-export * from './store-keys.enum';
-export * from './store.selectors';
-export * from './store.state';
+export * from './auth';
+export * from './router';
+export * from './root-store.module';
+
+// TODO fix circular dependency warning from rollup (not sure what is the cause yet)

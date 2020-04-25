@@ -1,12 +1,13 @@
 import * as __ngrxStore from '@ngrx/store/store';
 
-import { createSelector } from '@ngrx/store';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
 
-import { AppSelectors } from '@cic/store';
 import { IUserFeatureReducerState } from './user.state';
+import { StoreKeys } from '@cic/shared';
 
+const selectUserFeatureState = createFeatureSelector<any>(StoreKeys.User);
 const selectUserState = createSelector(
-  AppSelectors.selectUserFeatureState,
+  selectUserFeatureState,
   (state: IUserFeatureReducerState) => state.user,
 );
 

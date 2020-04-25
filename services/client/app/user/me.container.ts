@@ -9,15 +9,14 @@ import { Router } from '@angular/router';
 
 import { QueryParamKeys } from '@centsideas/enums';
 import { IUserState } from '@centsideas/models';
+import { AuthActions, AuthSelectors } from '@cic/store';
 import { PushNotificationService } from '@cic/shared';
 import { UserSelectors } from './user.selectors';
 import { UserActions } from './user.actions';
-import { AuthActions } from '../auth/auth.actions';
 import { NotificationsSelectors } from './notifications/notifications.selectors';
 import { NotificationsActions } from './notifications/notifications.actions';
 import { INotificationSettingsForm } from './notifications/notifications.state';
 import { IUserForm } from './user.state';
-import { AuthSelectors } from '../auth/auth.selectors';
 
 const selectChangeEmailToken = createSelector(
   createFeatureSelector<any>('router'),

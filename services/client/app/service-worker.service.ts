@@ -23,11 +23,9 @@ export class ServiceWorkerService {
     const timeInterval$ = interval(checkIntervaSeconds * 1000);
     const everySixHoursOnceAppIsStable$ = concat(appIsStable$, timeInterval$);
     everySixHoursOnceAppIsStable$.subscribe(() => {
-      console.log('[ServiceWorkerService] Check for updates');
       this.swUpdate.checkForUpdate();
       const updateFoundAt = localStorage.getItem(this.updateDiscoveredAtKey);
       if (updateFoundAt && Date.now() - Number(updateFoundAt) > forceUpdateAfterSeconds * 1000) {
-        console.warn('[ServiceWorkerService] Force update');
         this.forceUpdateNow();
       }
     });
@@ -43,8 +41,7 @@ export class ServiceWorkerService {
 
   checkUpdateNow() {
     if (!this.isAvailable) return;
-    console.log('check update');
-    this.swUpdate.checkForUpdate().then(value => console.log('checked for update', value));
+    this.swUpdate.checkForUpdate();
   }
 
   forceUpdateNow() {

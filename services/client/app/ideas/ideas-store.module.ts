@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { StoreKeys } from '@cic/store';
+import { StoreKeys } from '@cic/shared';
 import * as fromIdeas from './ideas.reducer';
 import * as fromEditIdeas from './edit-idea.reducer';
 import { IdeasEffects } from './ideas.effects';

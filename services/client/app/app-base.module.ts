@@ -6,13 +6,12 @@ import { Store } from '@ngrx/store';
 
 import { ENVIRONMENT, environment } from '@cic/environment';
 import { LoadStatus } from '@cic/shared';
+import { AuthActions, AuthSelectors } from '@cic/store';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthActions } from './auth/auth.actions';
-import { AuthSelectors } from './auth/auth.selectors';
-import { ServiceWorkerService } from './check-for-update.service';
+import { ServiceWorkerService } from './service-worker.service';
 
 const initApplication = (store: Store) => {
   return () =>
@@ -21,10 +20,10 @@ const initApplication = (store: Store) => {
       store
         .select(AuthSelectors.selectAuthState)
         .pipe(
-          skipWhile(
-            authState =>
-              authState.status === LoadStatus.None || authState.status === LoadStatus.Loading,
-          ),
+          skipWhile(authState => {
+            if (!authState) return true;
+            return authState.status === LoadStatus.None || authState.status === LoadStatus.Loading;
+          }),
           take(1),
           tap(() => resolve()),
         )

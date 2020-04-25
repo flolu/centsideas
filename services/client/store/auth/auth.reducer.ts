@@ -1,17 +1,11 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
-import { IUserState } from '@centsideas/models';
 import { LoadStatus } from '@cic/shared';
 import { AuthActions } from './auth.actions';
-
-export interface IAuthReducerState {
-  persistedUser: IUserState | null;
-  error: string;
-  accessToken: string;
-  status: LoadStatus;
-}
+import { IAuthReducerState } from './auth.state';
 
 const initialState: IAuthReducerState = {
+  // TODO rename to just user
   persistedUser: null,
   error: '',
   status: LoadStatus.None,

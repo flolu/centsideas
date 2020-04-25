@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { Store, createSelector, createFeatureSelector } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { tap, take } from 'rxjs/operators';
 
 import { QueryParamKeys, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
-
-import { AuthActions } from './auth.actions';
-import { tap, take } from 'rxjs/operators';
+import { AuthActions } from '@cic/store';
 
 const selectLoginTokenFromUrl = createSelector(
   createFeatureSelector<any>('router'),

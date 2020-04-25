@@ -12,9 +12,7 @@ import { first, flatMap, catchError } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 
 import { HeaderKeys, HttpStatusCodes } from '@centsideas/enums';
-
-import { AuthSelectors } from './auth/auth.selectors';
-import { AuthActions } from './auth/auth.actions';
+import { AuthSelectors, AuthActions } from '@cic/store';
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {

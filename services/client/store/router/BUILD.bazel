@@ -3,25 +3,15 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 package(default_visibility = ["//services/client:__subpackages__"])
 
 ts_library(
-    name = "store",
+    name = "router",
     srcs = glob(["*.ts"]),
-    module_name = "@cic/store",
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
-        "//packages/enums",
         "//services/client/shared",
-        "//services/client/store/auth",
-        "//services/client/store/router",
-        "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
-        "@npm//@angular/core",
-        "@npm//@angular/platform-browser",
         "@npm//@angular/router",
-        "@npm//@ngrx/effects",
         "@npm//@ngrx/router-store",
         "@npm//@ngrx/store",
-        "@npm//@types/node",
-        "@npm//rxjs",
     ],
 )
