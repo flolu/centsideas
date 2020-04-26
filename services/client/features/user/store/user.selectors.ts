@@ -1,10 +1,16 @@
 import * as __ngrxStore from '@ngrx/store/store';
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { StoreKeys } from '@cic/shared';
 import { IUserFeatureReducerState } from './user.state';
 
-export const selectUserFeatureState = createFeatureSelector<IUserFeatureReducerState>(
-  StoreKeys.User,
-);
+const selectUserFeatureState = createFeatureSelector<IUserFeatureReducerState>(StoreKeys.User);
+
+const notificationsState = createSelector(selectUserFeatureState, state => state.notifications);
+const meState = createSelector(selectUserFeatureState, state => state.me);
+
+export const UserSelectors = {
+  notificationsState,
+  meState,
+};

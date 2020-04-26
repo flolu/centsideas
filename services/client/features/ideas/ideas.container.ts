@@ -42,8 +42,8 @@ import { IdeasSelectors, IdeasActions, CreateIdeaActions } from './store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdeasContainer {
-  ideas$ = this.store.select(IdeasSelectors.selectIdeas);
-  state$ = this.store.select(IdeasSelectors.selectIdeasState);
+  ideas$ = this.store.select(IdeasSelectors.ideas);
+  state$ = this.store.select(IdeasSelectors.ideasState);
 
   form = new FormGroup({
     title: new FormControl(''),

@@ -36,7 +36,7 @@ export class LoginContainer {
 
   handleConfirmLogin = () => {
     this.store
-      .select(RouterSelectors.selectQueryParam(QueryParamKeys.Token))
+      .select(RouterSelectors.queryParam(QueryParamKeys.Token))
       .pipe(
         tap(token => {
           if (token) this.store.dispatch(AuthActions.confirmLogin({ token }));
@@ -49,7 +49,7 @@ export class LoginContainer {
 
   handleGoogleSignIn = () => {
     this.store
-      .select(RouterSelectors.selectQueryParam(QueryParamKeys.GoogleSignInCode))
+      .select(RouterSelectors.queryParam(QueryParamKeys.GoogleSignInCode))
       .pipe(
         tap(code => {
           if (code) this.store.dispatch(AuthActions.googleLogin({ code }));

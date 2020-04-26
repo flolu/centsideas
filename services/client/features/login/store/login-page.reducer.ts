@@ -1,4 +1,6 @@
-import { createReducer, on, Action } from '@ngrx/store';
+import * as __ngrxStoreTypes from '@ngrx/store/src/models';
+
+import { createReducer, on } from '@ngrx/store';
 
 import { LoadStatus } from '@cic/shared';
 import { AuthActions } from '@cic/store';
@@ -13,7 +15,7 @@ const initialState: ILoginReducerState = {
   error: '',
 };
 
-const reducer = createReducer(
+export const loginPageReducer = createReducer(
   initialState,
   on(AuthActions.login, state => ({ ...state, status: LoadStatus.Loading })),
   on(AuthActions.loginDone, state => ({ ...state, status: LoadStatus.Loaded })),
@@ -43,7 +45,3 @@ const reducer = createReducer(
     error,
   })),
 );
-
-export function loginPageReducer(state: ILoginReducerState | undefined, action: Action) {
-  return reducer(state, action);
-}

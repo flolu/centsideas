@@ -26,7 +26,7 @@ export class MeEffects {
   updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MeActions.updateUser),
-      withLatestFrom(this.store.select(AuthSelectors.selectUser)),
+      withLatestFrom(this.store.select(AuthSelectors.user)),
       switchMap(([payload, user]) =>
         this.meService.updateUser(payload, user.id).pipe(
           switchMap(updated => [

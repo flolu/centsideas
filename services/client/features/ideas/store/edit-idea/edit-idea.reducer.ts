@@ -1,6 +1,7 @@
 import * as __entityTypes from '@ngrx/entity';
+import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
-import { createReducer, on, Action } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 
 import { LoadStatus } from '@cic/shared';
 import { EditIdeaActions } from './edit-idea.actions';
@@ -14,7 +15,7 @@ const initialState: IEditIdeaReducerState = {
   editing: false,
 };
 
-const reducer = createReducer(
+export const editIdeaReducer = createReducer(
   initialState,
   on(EditIdeaActions.editIdeaSetForm, (state, { idea }) => ({
     ...state,
@@ -49,7 +50,3 @@ const reducer = createReducer(
     ideaId: '',
   })),
 );
-
-export function editIdeaReducer(state: IEditIdeaReducerState | undefined, action: Action) {
-  return reducer(state, action);
-}

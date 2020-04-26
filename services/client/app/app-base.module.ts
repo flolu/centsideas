@@ -17,7 +17,7 @@ const initApplication = (store: Store) => {
     new Promise(resolve => {
       store.dispatch(AuthActions.fetchAccessToken());
       store
-        .select(AuthSelectors.selectAuthState)
+        .select(AuthSelectors.state)
         .pipe(
           skipWhile(authState => {
             if (!authState) return true;

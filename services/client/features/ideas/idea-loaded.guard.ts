@@ -13,17 +13,16 @@ export class IdeaLoadedGuard implements CanActivate {
   constructor(private store: Store, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    return this.store.select(IdeasSelectors.selectSelectedIdea).pipe(
-      withLatestFrom(this.store.select(IdeasSelectors.selectSelectedIdeaId)),
-      withLatestFrom(this.store.select(IdeasSelectors.selectIdeasState)),
+    return this.store.select(IdeasSelectors.selectedIdea).pipe(
+      withLatestFrom(this.store.select(IdeasSelectors.selectedIdeaId)),
+      withLatestFrom(this.store.select(IdeasSelectors.ideasState)),
       skipWhile(data => {
         const idea = data[0][0];
         const ideaId = data[0][1];
         const ideasState = data[1];
-        // if (!idea && ideasState.status === LoadStatus.None) {
-        // TODO if not already loaded?
-        this.store.dispatch(IdeasActions.getIdeaById({ id: ideaId }));
-        // }
+        if (!idea && ideasState.pageStatus === LoadStatus.None) {
+          this.store.dispatch(IdeasActions.getIdeaById({ id: ideaId }));
+        }
         if (ideasState.error) {
           this.router.navigate([TopLevelFrontendRoutes.Ideas]);
           return false;

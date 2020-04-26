@@ -1,4 +1,5 @@
 import { createReducer, Action, on } from '@ngrx/store';
+import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { SyncStatus } from '@cic/shared';
 import { NotificationsActions } from './notifications.actions';
@@ -11,7 +12,7 @@ const initialState: INotificationsReducerState = {
   error: '',
 };
 
-const reducer = createReducer(
+export const notificationsReducer = createReducer(
   initialState,
   on(NotificationsActions.getSettings, state => ({ ...state, status: SyncStatus.Loaded })),
   on(NotificationsActions.getSettingsDone, (state, { settings }) => ({
@@ -42,10 +43,3 @@ const reducer = createReducer(
     error,
   })),
 );
-
-export function notificationsReducer(
-  state: INotificationsReducerState | undefined,
-  action: Action,
-) {
-  return reducer(state, action);
-}

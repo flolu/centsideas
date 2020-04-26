@@ -19,7 +19,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
   constructor(private store: Store, private actions: Actions) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return this.store.select(AuthSelectors.selectAuthState).pipe(
+    return this.store.select(AuthSelectors.state).pipe(
       first(),
       flatMap(authState => {
         req = this.setRequestAuthHeader(req, authState.accessToken);
@@ -43,7 +43,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
       ofType(AuthActions.fetchAccessTokenDone, AuthActions.fetchAccessTokenFail),
       first(),
       flatMap(() => {
-        return this.store.select(AuthSelectors.selectAuthState).pipe(
+        return this.store.select(AuthSelectors.state).pipe(
           first(),
           flatMap(authState => {
             const request = this.setRequestAuthHeader(req, authState.accessToken);

@@ -12,43 +12,35 @@ import { IdeasReducerSelectors } from './ideas';
 
 const selectIdeasFeatureState = createFeatureSelector<IIdeasFeatureReducerState>(StoreKeys.Ideas);
 
-const selectIdeasState = createSelector(
+const ideasState = createSelector(
   selectIdeasFeatureState,
   (state: IIdeasFeatureReducerState) => state.ideas,
 );
 
-const selectIdeas = createSelector(selectIdeasState, IdeasReducerSelectors.selectAllIdeas);
-const selectIdeaEntities = createSelector(
-  selectIdeasState,
-  IdeasReducerSelectors.selectIdeaEntities,
-);
-// TODO create router util
-const selectSelectedIdeaId = createSelector(RouterSelectors.selectRouterState, router => {
-  return router ? (router.state.params.id as string) : '';
-});
-const selectSelectedIdea = createSelector(
-  selectSelectedIdeaId,
+const ideas = createSelector(ideasState, IdeasReducerSelectors.selectAllIdeas);
+const selectIdeaEntities = createSelector(ideasState, IdeasReducerSelectors.selectIdeaEntities);
+const selectedIdeaId = RouterSelectors.param('id');
+const selectedIdea = createSelector(
+  selectedIdeaId,
   selectIdeaEntities,
   (id: string, entities: Record<string, IIdeaViewModel>) => {
     return entities[id];
   },
 );
 
-const selectEditIdeaState = createSelector(
+const editIdeaState = createSelector(
   selectIdeasFeatureState,
   (state: IIdeasFeatureReducerState) => state.edit,
 );
-const selectIsCurrentUserOwner = createSelector(
-  AuthSelectors.selectUser,
-  selectSelectedIdea,
-  (user, idea) => (user && idea ? user.id === idea.userId : false),
+const isCurrentUserOwner = createSelector(AuthSelectors.user, selectedIdea, (user, idea) =>
+  user && idea ? user.id === idea.userId : false,
 );
 
 export const IdeasSelectors = {
-  selectIdeasState,
-  selectIdeas,
-  selectSelectedIdea,
-  selectSelectedIdeaId,
-  selectEditIdeaState,
-  selectIsCurrentUserOwner,
+  ideasState,
+  ideas,
+  selectedIdea,
+  selectedIdeaId,
+  editIdeaState,
+  isCurrentUserOwner,
 };

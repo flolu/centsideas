@@ -23,7 +23,7 @@ export class EditIdeaEffects {
   updateIdea$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EditIdeaActions.updateIdea),
-      withLatestFrom(this.store.select(IdeasSelectors.selectEditIdeaState)),
+      withLatestFrom(this.store.select(IdeasSelectors.editIdeaState)),
       switchMap(([_action, editState]) =>
         this.ideasService
           .updateIdea(editState.ideaId, editState.form.title, editState.form.description)
@@ -38,7 +38,7 @@ export class EditIdeaEffects {
   deleteIdea$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EditIdeaActions.deleteIdea),
-      withLatestFrom(this.store.select(IdeasSelectors.selectSelectedIdeaId)),
+      withLatestFrom(this.store.select(IdeasSelectors.selectedIdeaId)),
       switchMap(([_action, ideaId]) =>
         this.ideasService.deleteIdea(ideaId).pipe(
           map(deleted => EditIdeaActions.deleteIdeaDone({ deleted })),
@@ -51,7 +51,7 @@ export class EditIdeaEffects {
   editIdea$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EditIdeaActions.editIdea),
-      withLatestFrom(this.store.select(IdeasSelectors.selectSelectedIdea)),
+      withLatestFrom(this.store.select(IdeasSelectors.selectedIdea)),
       map(([_action, selectedIdea]) => EditIdeaActions.editIdeaSetForm({ idea: selectedIdea })),
     ),
   );

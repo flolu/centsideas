@@ -12,12 +12,11 @@ import { IUserState } from '@centsideas/models';
 import { AuthActions, AuthSelectors, RouterSelectors } from '@cic/store';
 import { PushNotificationService } from '@cic/shared';
 import {
-  NotificationsSelectors,
-  MeSelectors,
   NotificationsActions,
   INotificationSettingsForm,
   IMeForm,
   MeActions,
+  UserSelectors,
 } from './store';
 
 // FIXME live indicator of username and email availability
@@ -45,9 +44,9 @@ import {
   `,
 })
 export class UserContainer {
-  notificationsState$ = this.store.select(NotificationsSelectors.selectNotificationsState);
-  meState$ = this.store.select(MeSelectors.selectMeState);
-  user$ = this.store.select(AuthSelectors.selectUser);
+  notificationsState$ = this.store.select(UserSelectors.notificationsState);
+  meState$ = this.store.select(UserSelectors.meState);
+  user$ = this.store.select(AuthSelectors.user);
   user: IUserState;
   form = new FormGroup({
     username: new FormControl(''),
@@ -91,7 +90,7 @@ export class UserContainer {
 
   private handleConfirmEmailChange = () =>
     this.store
-      .select(RouterSelectors.selectQueryParam(QueryParamKeys.ConfirmEmailChangeToken))
+      .select(RouterSelectors.queryParam(QueryParamKeys.ConfirmEmailChangeToken))
       .pipe(
         tap(token => {
           if (token) {

@@ -1,6 +1,7 @@
 import * as __entityTypes from '@ngrx/entity';
+import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
-import { createReducer, on, Action } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 
 import { LoadStatus, SyncStatus } from '@cic/shared';
 import { ICreateIdeaReducerState } from './create-idea.state';
@@ -14,9 +15,5 @@ const initialState: ICreateIdeaReducerState = {
   persisted: null,
 };
 
-// TOOD
-const reducer = createReducer(initialState);
-
-export function createIdeaReducer(state: ICreateIdeaReducerState | undefined, action: Action) {
-  return reducer(state, action);
-}
+// TOOD implement
+export const createIdeaReducer = createReducer(initialState);

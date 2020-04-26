@@ -34,7 +34,7 @@ import { ServiceWorkerService } from './service-worker.service';
   styleUrls: ['app.component.sass'],
 })
 export class AppComponent implements OnDestroy {
-  authState$ = this.store.select(AuthSelectors.selectAuthState);
+  authState$ = this.store.select(AuthSelectors.state);
   offline$: Observable<boolean>;
 
   alive = true;

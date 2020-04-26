@@ -32,9 +32,9 @@ import { IdeasSelectors, IIdeaForm, EditIdeaActions } from './store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdeaContainer {
-  idea$ = this.store.select(IdeasSelectors.selectSelectedIdea);
-  editState$ = this.store.select(IdeasSelectors.selectEditIdeaState);
-  isOwner$ = this.store.select(IdeasSelectors.selectIsCurrentUserOwner);
+  idea$ = this.store.select(IdeasSelectors.selectedIdea);
+  editState$ = this.store.select(IdeasSelectors.editIdeaState);
+  isOwner$ = this.store.select(IdeasSelectors.isCurrentUserOwner);
 
   constructor(private store: Store) {}
 

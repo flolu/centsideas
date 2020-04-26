@@ -5,8 +5,10 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { StoreKeys } from '@cic/shared';
 import { IRouterState } from './router.state';
 
-const selectRouterState = createFeatureSelector<IRouterState>(StoreKeys.Router);
-const selectQueryParam = (param: string) =>
-  createSelector(selectRouterState, router => router.state.queryParams[param]);
+const state = createFeatureSelector<IRouterState>(StoreKeys.Router);
+const routerState = createSelector(state, router => router && router.state);
 
-export const RouterSelectors = { selectRouterState, selectQueryParam };
+const queryParam = (key: string) => createSelector(routerState, router => router?.queryParams[key]);
+const param = (key: string) => createSelector(routerState, router => router?.params[key]);
+
+export const RouterSelectors = { state, queryParam, param };

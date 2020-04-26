@@ -1,4 +1,5 @@
 import { createReducer, on, Action } from '@ngrx/store';
+import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { SyncStatus } from '@cic/shared';
 import { AuthActions } from '@cic/store';
@@ -11,7 +12,7 @@ const initialState: IMeReducerState = {
   error: '',
 };
 
-const reducer = createReducer(
+export const meReducer = createReducer(
   initialState,
   on(MeActions.formChanged, (state, { value }) => ({ ...state, formData: value })),
   on(MeActions.updateUser, state => ({
@@ -42,7 +43,3 @@ const reducer = createReducer(
 
   on(AuthActions.logoutDone, state => ({ ...state, persisted: null, status: SyncStatus.None })),
 );
-
-export function meReducer(state: IMeReducerState | undefined, action: Action) {
-  return reducer(state, action);
-}

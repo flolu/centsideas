@@ -1,8 +1,9 @@
 import { EntityState } from '@ngrx/entity';
 
 import { IIdeaViewModel } from '@centsideas/models';
+import { LoadStatus } from '@cic/shared';
 
 export interface IIdeasReducerState extends EntityState<IIdeaViewModel> {
-  // TODO not sure about status (maybe one for loading list and one for page?)
   error: string | null;
+  pageStatus: LoadStatus;
 }

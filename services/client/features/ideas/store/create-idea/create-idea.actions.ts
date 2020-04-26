@@ -8,8 +8,6 @@ import { appPrefix, failSuffix, doneSuffix } from '@cic/shared';
 const prefix = `${appPrefix}/ideas`;
 const createPrefix = prefix + '/create';
 
-// TODO sync draft actions
-
 const createIdea = createAction(createPrefix, props<Dtos.ICreateIdeaDto>());
 const createIdeaDone = createAction(createPrefix + doneSuffix, props<{ created: IIdeaState }>());
 const createIdeaFail = createAction(createPrefix + failSuffix, props<{ error: string }>());

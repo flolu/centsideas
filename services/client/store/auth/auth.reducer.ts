@@ -1,3 +1,5 @@
+import * as __ngrxStoreTypes from '@ngrx/store/src/models';
+
 import { createReducer, on, Action } from '@ngrx/store';
 
 import { LoadStatus } from '@cic/shared';
@@ -11,7 +13,7 @@ const initialState: IAuthReducerState = {
   accessToken: '',
 };
 
-const reducer = createReducer(
+export const authReducer = createReducer(
   initialState,
   on(AuthActions.fetchAccessToken, state => ({ ...state, status: LoadStatus.Loading })),
   on(AuthActions.fetchAccessTokenDone, (state, { accessToken, user }) => ({
@@ -42,7 +44,3 @@ const reducer = createReducer(
   })),
   on(AuthActions.overwriteUser, (state, { user }) => ({ ...state, user })),
 );
-
-export function authReducer(state: IAuthReducerState | undefined, action: Action) {
-  return reducer(state, action);
-}

@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
   constructor(private store: Store, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    return this.store.select(AuthSelectors.selectAuthState).pipe(
+    return this.store.select(AuthSelectors.state).pipe(
       // FIXME not sure if this skipWHile is needed anyore since we have an app initializer which already hanldes it
       skipWhile(state => {
         if (state.status === LoadStatus.None) {
