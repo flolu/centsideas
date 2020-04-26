@@ -1,20 +1,18 @@
-load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 
 package(default_visibility = ["//services/client:__subpackages__"])
 
-ts_library(
+ng_ts_library(
     name = "store",
     srcs = glob(["*.ts"]),
     module_name = "@cic/store",
     tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
     deps = [
         "//packages/enums",
         "//services/client/shared",
         "//services/client/store/auth",
         "//services/client/store/router",
         "@npm//@angular/common",
-        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",

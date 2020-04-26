@@ -1,4 +1,4 @@
-load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
+load("@npm_bazel_typescript//:index.bzl", "ts_devserver")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
@@ -6,6 +6,7 @@ load("@npm//history-server:index.bzl", "history_server")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -15,14 +16,12 @@ inserted_assets = ["@npm//:node_modules/zone.js/dist/zone.min.js"]
 
 static_assets = [":_index.html"] + inserted_assets
 
-ts_library(
+ng_ts_library(
     name = "dev_src",
     srcs = ["main.dev.ts"],
     tsconfig = "//services/admin-client:tsconfig.json",
-    use_angular_plugin = True,
     deps = [
         "//services/admin-client/app:dev",
-        "@npm//@angular/compiler-cli",
         "@npm//@angular/platform-browser",
     ],
 )
@@ -55,14 +54,12 @@ ts_devserver(
     deps = [":dev_src"],
 )
 
-ts_library(
+ng_ts_library(
     name = "prod_src",
     srcs = ["main.prod.ts"],
     tsconfig = "//services/admin-client:tsconfig.json",
-    use_angular_plugin = True,
     deps = [
         "//services/admin-client/app:prod",
-        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",

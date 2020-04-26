@@ -8,6 +8,7 @@ load("//packages/angular-bazel:ngsw_config.bzl", "ngsw_config")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -49,14 +50,12 @@ ts_library(
     ],
 )
 
-ts_library(
+ng_ts_library(
     name = "dev_src",
     srcs = ["main.dev.ts"],
     tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
     deps = [
         "//services/client/app:dev",
-        "@npm//@angular/compiler-cli",
         "@npm//@angular/platform-browser",
     ],
 )
@@ -92,14 +91,12 @@ ts_devserver(
     deps = [":dev_src"],
 )
 
-ts_library(
+ng_ts_library(
     name = "prod_src",
     srcs = ["main.prod.ts"],
     tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
     deps = [
         "//services/client/app:prod",
-        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
     ],

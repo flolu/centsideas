@@ -1,16 +1,16 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
+load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 
 package(default_visibility = ["//services/client:__subpackages__"])
 
-ts_library(
+ng_ts_library(
     name = "store",
     srcs = glob(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
     deps = [
         "//packages/enums",
         "//packages/models",
@@ -18,7 +18,6 @@ ts_library(
         "//services/client/shared",
         "//services/client/store",
         "@npm//@angular/common",
-        "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/router",
         "@npm//@angular/service-worker",

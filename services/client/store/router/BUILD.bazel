@@ -1,15 +1,13 @@
-load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 
 package(default_visibility = ["//services/client:__subpackages__"])
 
-ts_library(
+ng_ts_library(
     name = "router",
     srcs = glob(["*.ts"]),
     tsconfig = "//services/client:tsconfig.json",
-    use_angular_plugin = True,
     deps = [
         "//services/client/shared",
-        "@npm//@angular/compiler-cli",
         "@npm//@angular/router",
         "@npm//@ngrx/router-store",
         "@npm//@ngrx/store",
