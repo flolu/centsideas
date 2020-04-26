@@ -1,4 +1,4 @@
-package(default_visibility = ["//:__subpackages__"])
+package(default_visibility = ["//services/client:__subpackages__"])
 
 filegroup(
     name = "assets",

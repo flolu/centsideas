@@ -8,7 +8,7 @@ load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 
-package(default_visibility = ["//:__subpackages__"])
+package(default_visibility = ["//visibility:public"])
 
 exports_files(["tsconfig.json"])
 

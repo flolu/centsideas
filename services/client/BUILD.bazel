@@ -10,7 +10,7 @@ load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 
-package(default_visibility = ["//:__subpackages__"])
+package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "ngsw-config.json",
