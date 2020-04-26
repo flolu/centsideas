@@ -3,12 +3,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
 import { StoreKeys } from '@cic/shared';
-import { MeEffects, meReducer, MeService } from './me/store';
-import {
-  NotificationsEffects,
-  notificationsReducer,
-  NotificationsService,
-} from './notifications/store';
+import { MeEffects, meReducer, MeService } from './me';
+import { NotificationsEffects, notificationsReducer, NotificationsService } from './notifications';
 
 @NgModule({
   imports: [

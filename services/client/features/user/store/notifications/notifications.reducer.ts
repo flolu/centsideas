@@ -11,7 +11,7 @@ const initialState: INotificationsReducerState = {
   error: '',
 };
 
-const notificationsReducer = createReducer(
+const reducer = createReducer(
   initialState,
   on(NotificationsActions.getSettings, state => ({ ...state, status: SyncStatus.Loaded })),
   on(NotificationsActions.getSettingsDone, (state, { settings }) => ({
@@ -43,6 +43,9 @@ const notificationsReducer = createReducer(
   })),
 );
 
-export function reducer(state: INotificationsReducerState | undefined, action: Action) {
-  return notificationsReducer(state, action);
+export function notificationsReducer(
+  state: INotificationsReducerState | undefined,
+  action: Action,
+) {
+  return reducer(state, action);
 }

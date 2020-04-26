@@ -13,7 +13,7 @@ const initialState: ILoginReducerState = {
   error: '',
 };
 
-const loginPageReducer = createReducer(
+const reducer = createReducer(
   initialState,
   on(AuthActions.login, state => ({ ...state, status: LoadStatus.Loading })),
   on(AuthActions.loginDone, state => ({ ...state, status: LoadStatus.Loaded })),
@@ -44,6 +44,6 @@ const loginPageReducer = createReducer(
   })),
 );
 
-export function reducer(state: ILoginReducerState | undefined, action: Action) {
-  return loginPageReducer(state, action);
+export function loginPageReducer(state: ILoginReducerState | undefined, action: Action) {
+  return reducer(state, action);
 }

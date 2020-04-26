@@ -3,23 +3,15 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 package(default_visibility = ["//services/client:__subpackages__"])
 
 ts_library(
-    name = "login",
-    srcs = glob(
-        include = ["*.ts"],
-        exclude = ["*.spec.ts"],
-    ),
+    name = "store",
+    srcs = glob(["*.ts"]),
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
-        "//packages/enums",
-        "//services/client/features/login/store",
+        "//services/client/shared",
         "//services/client/store",
-        "@npm//@angular/common",
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
-        "@npm//@angular/forms",
-        "@npm//@angular/router",
         "@npm//@ngrx/store",
-        "@npm//rxjs",
     ],
 )
