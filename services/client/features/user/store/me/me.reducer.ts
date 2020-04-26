@@ -7,26 +7,12 @@ import { IMeReducerState } from './me.state';
 
 const initialState: IMeReducerState = {
   formData: null,
-  status: SyncStatus.Loading,
+  status: SyncStatus.Loaded,
   error: '',
 };
 
-const userReducer = createReducer(
+const reducer = createReducer(
   initialState,
-  on(AuthActions.fetchAccessTokenDone, state => ({
-    ...state,
-    status: SyncStatus.Loaded,
-  })),
-  on(AuthActions.confirmLoginDone, state => ({
-    ...state,
-    status: SyncStatus.Loaded,
-  })),
-  on(AuthActions.googleLoginDone, state => ({
-    ...state,
-    status: SyncStatus.Loaded,
-  })),
-  on(AuthActions.logoutDone, state => ({ ...state, persisted: null, status: SyncStatus.None })),
-
   on(MeActions.formChanged, (state, { value }) => ({ ...state, formData: value })),
   on(MeActions.updateUser, state => ({
     ...state,
@@ -53,8 +39,10 @@ const userReducer = createReducer(
     ...state,
     status: SyncStatus.Loaded,
   })),
+
+  on(AuthActions.logoutDone, state => ({ ...state, persisted: null, status: SyncStatus.None })),
 );
 
-export function reducer(state: IMeReducerState | undefined, action: Action) {
-  return userReducer(state, action);
+export function meReducer(state: IMeReducerState | undefined, action: Action) {
+  return reducer(state, action);
 }

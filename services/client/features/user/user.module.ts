@@ -4,10 +4,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AuthGuard } from '@cic/store';
-import { UserStoreModule } from './user-store.module';
+import { UserStoreModule } from './store/user-store.module';
 import { UserContainer } from './user.container';
-import { NotificationsFormComponent } from './notifications';
-import { MeFormComponent } from './me';
+import { NotificationsComponent } from './notifications.component';
+import { MeComponent } from './me.component';
 
 @NgModule({
   imports: [
@@ -17,6 +17,6 @@ import { MeFormComponent } from './me';
     RouterModule.forChild([{ path: '', component: UserContainer, canActivate: [AuthGuard] }]),
   ],
   providers: [AuthGuard],
-  declarations: [UserContainer, NotificationsFormComponent, MeFormComponent],
+  declarations: [UserContainer, NotificationsComponent, MeComponent],
 })
 export class UserModule {}

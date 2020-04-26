@@ -3,10 +3,10 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
 import { SyncStatus } from '@cic/shared';
-import { INotificationSettingsForm } from './notifications.state';
+import { INotificationSettingsForm } from './store';
 
 @Component({
-  selector: 'cic-notifications-form',
+  selector: 'cic-user-notifications',
   template: `
     <h2>Notification Settings</h2>
     <form [formGroup]="form">
@@ -24,7 +24,7 @@ import { INotificationSettingsForm } from './notifications.state';
     <p>{{ status }}</p>
   `,
 })
-export class NotificationsFormComponent implements OnDestroy, OnChanges {
+export class NotificationsComponent implements OnDestroy, OnChanges {
   @Input() status: number;
   @Input() formState: INotificationSettingsForm;
   @Output() updateForm = new EventEmitter<INotificationSettingsForm>();

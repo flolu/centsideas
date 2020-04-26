@@ -11,7 +11,7 @@ const initialState: IAuthReducerState = {
   accessToken: '',
 };
 
-const authReducer = createReducer(
+const reducer = createReducer(
   initialState,
   on(AuthActions.fetchAccessToken, state => ({ ...state, status: LoadStatus.Loading })),
   on(AuthActions.fetchAccessTokenDone, (state, { accessToken, user }) => ({
@@ -43,6 +43,6 @@ const authReducer = createReducer(
   on(AuthActions.overwriteUser, (state, { user }) => ({ ...state, user })),
 );
 
-export function reducer(state: IAuthReducerState | undefined, action: Action) {
-  return authReducer(state, action);
+export function authReducer(state: IAuthReducerState | undefined, action: Action) {
+  return reducer(state, action);
 }

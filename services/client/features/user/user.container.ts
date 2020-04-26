@@ -11,32 +11,34 @@ import { QueryParamKeys } from '@centsideas/enums';
 import { IUserState } from '@centsideas/models';
 import { AuthActions, AuthSelectors, RouterSelectors } from '@cic/store';
 import { PushNotificationService } from '@cic/shared';
-import { MeSelectors } from './me/me.selectors';
-import { MeActions } from './me/me.actions';
-import { NotificationsSelectors } from './notifications/notifications.selectors';
-import { NotificationsActions } from './notifications/notifications.actions';
-import { INotificationSettingsForm } from './notifications/notifications.state';
-import { IMeForm } from './me/me.state';
+import {
+  NotificationsSelectors,
+  MeSelectors,
+  NotificationsActions,
+  INotificationSettingsForm,
+  IMeForm,
+  MeActions,
+} from './store';
 
 // FIXME live indicator of username and email availability
 @Component({
   selector: 'cic-me',
   template: `
     <h1>Me</h1>
-    <cic-me-form
+    <cic-user-me
       *ngIf="user$ | async as user"
       [status]="(meState$ | async).status"
       [formState]="user"
       (updateForm)="onUpdateUserForm($event)"
-    ></cic-me-form>
+    ></cic-user-me>
     <button (click)="onLogout()">Logout</button>
 
-    <cic-notifications-form
+    <cic-user-notifications
       *ngIf="notificationsState$ | async as state"
       [status]="state.status"
       [formState]="state.persisted"
       (updateForm)="onUpdateNotificationSettingsForm($event)"
-    ></cic-notifications-form>
+    ></cic-user-notifications>
     <span *ngIf="!hasPushPermission">
       You need to allow notifications in your browser to receive push notifications!
     </span>
