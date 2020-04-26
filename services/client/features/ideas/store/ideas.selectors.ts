@@ -36,6 +36,8 @@ const isCurrentUserOwner = createSelector(AuthSelectors.user, selectedIdea, (use
   user && idea ? user.id === idea.userId : false,
 );
 
+export const createIdeaState = createSelector(selectIdeasFeatureState, state => state.create);
+
 export const IdeasSelectors = {
   ideasState,
   ideas,
@@ -43,4 +45,5 @@ export const IdeasSelectors = {
   selectedIdeaId,
   editIdeaState,
   isCurrentUserOwner,
+  createIdeaState,
 };

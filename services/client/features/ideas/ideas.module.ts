@@ -9,6 +9,7 @@ import { IdeaCardComponent } from './idea-card.component';
 import { IdeaLoadedGuard } from './idea-loaded.guard';
 import { EditIdeaComponent } from './edit-idea.component';
 import { IdeasStoreModule } from './store';
+import { CreateIdeaComponent } from './create-idea.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,13 @@ import { IdeasStoreModule } from './store';
       { path: ':id', component: IdeaContainer, canActivate: [IdeaLoadedGuard] },
     ]),
   ],
-  declarations: [IdeasContainer, IdeaContainer, IdeaCardComponent, EditIdeaComponent],
+  declarations: [
+    IdeasContainer,
+    IdeaContainer,
+    IdeaCardComponent,
+    EditIdeaComponent,
+    CreateIdeaComponent,
+  ],
   providers: [IdeaLoadedGuard],
 })
 export class IdeasModule {}

@@ -1,35 +1,25 @@
 import * as __rxjsTypes from 'rxjs';
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
 import { IIdeaViewModel } from '@centsideas/models';
 import { Router } from '@angular/router';
 import { TopLevelFrontendRoutes } from '@centsideas/enums';
-import { IdeasSelectors, IdeasActions, CreateIdeaActions } from './store';
+import { IdeasSelectors, IdeasActions, CreateIdeaActions, IIdeaForm } from './store';
 
 @Component({
   selector: 'cic-ideas',
   template: `
     <div class="container">
       <div *ngIf="(state$ | async)?.loading">Loading...</div>
-      <h1>Create an Idea</h1>
-      <form [formGroup]="form">
-        <label for="title">
-          Title
-        </label>
-        <br />
-        <input id="title" type="text" formControlName="title" />
-        <br />
-        <label for="description">
-          Description
-        </label>
-        <br />
-        <input id="description" type="text" formControlName="description" />
-        <br />
-        <button (click)="onCreate()">Create</button>
-      </form>
+      <cic-ideas-create
+        *ngIf="createIdeaState$ | async as state"
+        [status]="state.status"
+        [formState]="state.persisted"
+        (create)="onCreateIdea($event)"
+      ></cic-ideas-create>
       <h1>All Ideas</h1>
       <cic-ideas-card
         *ngFor="let i of ideas$ | async"
@@ -44,26 +34,17 @@ import { IdeasSelectors, IdeasActions, CreateIdeaActions } from './store';
 export class IdeasContainer {
   ideas$ = this.store.select(IdeasSelectors.ideas);
   state$ = this.store.select(IdeasSelectors.ideasState);
-
-  form = new FormGroup({
-    title: new FormControl(''),
-    description: new FormControl(''),
-  });
+  createIdeaState$ = this.store.select(IdeasSelectors.createIdeaState);
 
   constructor(private store: Store, private router: Router) {
     this.store.dispatch(IdeasActions.getIdeas());
   }
 
-  onCreate = () => {
-    this.store.dispatch(
-      CreateIdeaActions.createIdea({
-        title: this.form.value.title,
-        description: this.form.value.description,
-      }),
-    );
-  };
-
-  onIdeaTitleClicked = (idea: IIdeaViewModel) => {
+  onIdeaTitleClicked(idea: IIdeaViewModel) {
     this.router.navigate([TopLevelFrontendRoutes.Ideas, idea.id]);
-  };
+  }
+
+  onCreateIdea({ title, description }: IIdeaForm) {
+    this.store.dispatch(CreateIdeaActions.createIdea({ title, description }));
+  }
 }
