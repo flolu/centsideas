@@ -23,9 +23,9 @@ ts_library(
     deps = [
         "//packages/enums",
         "//services/client/app/ideas",
-        "//services/client/app/user",
         "//services/client/environment",
         "//services/client/features/login",
+        "//services/client/features/user",
         "//services/client/shared",
         "//services/client/store",
         "@npm//@angular/common",

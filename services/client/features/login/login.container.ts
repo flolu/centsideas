@@ -1,21 +1,11 @@
 import { Component } from '@angular/core';
-import { Store, createSelector, createFeatureSelector } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { tap, take } from 'rxjs/operators';
 
 import { QueryParamKeys, TopLevelFrontendRoutes } from '@centsideas/enums';
-import { AuthActions } from '@cic/store';
-
-const selectLoginTokenFromUrl = createSelector(
-  createFeatureSelector<any>('router'),
-  router => router && router.state.queryParams[QueryParamKeys.Token],
-);
-
-const selectGoogleCodeFromUrl = createSelector(
-  createFeatureSelector<any>('router'),
-  router => router && router.state.queryParams[QueryParamKeys.GoogleSignInCode],
-);
+import { AuthActions, RouterSelectors } from '@cic/store';
 
 @Component({
   selector: 'cic-login',
@@ -46,7 +36,7 @@ export class LoginContainer {
 
   handleConfirmLogin = () => {
     this.store
-      .select(selectLoginTokenFromUrl)
+      .select(RouterSelectors.selectQueryParam(QueryParamKeys.Token))
       .pipe(
         tap(token => {
           if (token) this.store.dispatch(AuthActions.confirmLogin({ token }));
@@ -59,7 +49,7 @@ export class LoginContainer {
 
   handleGoogleSignIn = () => {
     this.store
-      .select(selectGoogleCodeFromUrl)
+      .select(RouterSelectors.selectQueryParam(QueryParamKeys.GoogleSignInCode))
       .pipe(
         tap(code => {
           if (code) this.store.dispatch(AuthActions.googleLogin({ code }));

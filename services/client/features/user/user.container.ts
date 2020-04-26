@@ -2,26 +2,21 @@ import * as __rxjsTypes from 'rxjs';
 import * as __ngrxStore from '@ngrx/store/store';
 
 import { Component } from '@angular/core';
-import { Store, createSelector, createFeatureSelector } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';
 import { tap, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { QueryParamKeys } from '@centsideas/enums';
 import { IUserState } from '@centsideas/models';
-import { AuthActions, AuthSelectors } from '@cic/store';
+import { AuthActions, AuthSelectors, RouterSelectors } from '@cic/store';
 import { PushNotificationService } from '@cic/shared';
-import { UserSelectors } from './user.selectors';
-import { UserActions } from './user.actions';
+import { MeSelectors } from './me/me.selectors';
+import { MeActions } from './me/me.actions';
 import { NotificationsSelectors } from './notifications/notifications.selectors';
 import { NotificationsActions } from './notifications/notifications.actions';
 import { INotificationSettingsForm } from './notifications/notifications.state';
-import { IUserForm } from './user.state';
-
-const selectChangeEmailToken = createSelector(
-  createFeatureSelector<any>('router'),
-  router => router.state.queryParams[QueryParamKeys.ConfirmEmailChangeToken],
-);
+import { IMeForm } from './me/me.state';
 
 // FIXME live indicator of username and email availability
 @Component({
@@ -30,7 +25,7 @@ const selectChangeEmailToken = createSelector(
     <h1>Me</h1>
     <cic-me-form
       *ngIf="user$ | async as user"
-      [status]="(userState$ | async).status"
+      [status]="(meState$ | async).status"
       [formState]="user"
       (updateForm)="onUpdateUserForm($event)"
     ></cic-me-form>
@@ -46,11 +41,10 @@ const selectChangeEmailToken = createSelector(
       You need to allow notifications in your browser to receive push notifications!
     </span>
   `,
-  styleUrls: ['me.container.sass'],
 })
-export class MeContainer {
+export class UserContainer {
   notificationsState$ = this.store.select(NotificationsSelectors.selectNotificationsState);
-  userState$ = this.store.select(UserSelectors.selectUserState);
+  meState$ = this.store.select(MeSelectors.selectMeState);
   user$ = this.store.select(AuthSelectors.selectUser);
   user: IUserState;
   form = new FormGroup({
@@ -81,8 +75,8 @@ export class MeContainer {
     }
   }
 
-  onUpdateUserForm(event: IUserForm) {
-    this.store.dispatch(UserActions.formChanged({ value: event }));
+  onUpdateUserForm(event: IMeForm) {
+    this.store.dispatch(MeActions.formChanged({ value: event }));
   }
 
   onTestNotification = () => {
@@ -95,11 +89,11 @@ export class MeContainer {
 
   private handleConfirmEmailChange = () =>
     this.store
-      .select(selectChangeEmailToken)
+      .select(RouterSelectors.selectQueryParam(QueryParamKeys.ConfirmEmailChangeToken))
       .pipe(
         tap(token => {
           if (token) {
-            this.store.dispatch(UserActions.confirmEmailChange({ token }));
+            this.store.dispatch(MeActions.confirmEmailChange({ token }));
             this.router.navigate([], {
               queryParams: { [QueryParamKeys.ConfirmEmailChangeToken]: null },
               queryParamsHandling: 'merge',

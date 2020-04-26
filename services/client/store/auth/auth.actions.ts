@@ -2,7 +2,7 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
 
-import { Dtos } from '@centsideas/models';
+import { Dtos, IUserState } from '@centsideas/models';
 import { appPrefix, failSuffix, doneSuffix } from '@cic/shared';
 
 const prefix = `${appPrefix}/auth`;
@@ -55,6 +55,8 @@ const logout = createAction(logoutPrefix);
 const logoutDone = createAction(logoutPrefix + doneSuffix);
 const logoutFail = createAction(logoutPrefix + failSuffix, props<{ error: string }>());
 
+const overwriteUser = createAction(prefix + '/overwrite-user', props<{ user: IUserState }>());
+
 export const AuthActions = {
   login,
   loginDone,
@@ -74,4 +76,5 @@ export const AuthActions = {
   logout,
   logoutDone,
   logoutFail,
+  overwriteUser,
 };

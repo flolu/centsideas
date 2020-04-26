@@ -1,21 +1,29 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
-load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 load("@npm_bazel_karma//:index.bzl", "karma_web_test_suite")
-load("//packages/angular-bazel:defaults.bzl", "store_srcs_matcher")
 
-package(default_visibility = ["//:__subpackages__"])
+package(default_visibility = ["//services/client:__subpackages__"])
 
-sass_binary(
-    name = "me_container_styles",
-    src = "me.container.sass",
-)
-
+# NOW split / clean
 ts_library(
     name = "store",
-    srcs = glob(include = store_srcs_matcher) + [
+    srcs = [
+        "me/me.actions.ts",
+        "me/me.effects.ts",
+        "me/me.reducer.ts",
+        "me/me.selectors.ts",
+        "me/me.service.ts",
+        "me/me.state.ts",
+        "me/store.ts",
+        "notifications/notifications.actions.ts",
+        "notifications/notifications.effects.ts",
+        "notifications/notifications.reducer.ts",
+        "notifications/notifications.selectors.ts",
+        "notifications/notifications.service.ts",
+        "notifications/notifications.state.ts",
+        "notifications/store.ts",
+        "user.selectors.ts",
+        "user.state.ts",
         "user-store.module.ts",
-        "user.service.ts",
-        ":notifications/notifications.service.ts",
     ],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
@@ -39,12 +47,13 @@ ts_library(
 ts_library(
     name = "user",
     srcs = [
-        "me.container.ts",
-        "me-form.component.ts",
+        "me/index.ts",
+        "me/me-form.component.ts",
+        "notifications/index.ts",
+        "notifications/notifications-form.component.ts",
+        "user.container.ts",
         "user.module.ts",
-        ":notifications/notifications-form.component.ts",
     ],
-    angular_assets = [":me_container_styles"],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
@@ -68,7 +77,7 @@ ts_library(
 ts_library(
     name = "test_lib",
     testonly = 1,
-    srcs = glob(["*.spec.ts"]),
+    srcs = glob(["**/*.spec.ts"]),
     tsconfig = "//services/client:tsconfig.json",
     deps = [
         ":store",

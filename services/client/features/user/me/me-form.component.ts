@@ -4,7 +4,7 @@ import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
 import { IUserState } from '@centsideas/models';
 import { SyncStatus } from '@cic/shared';
-import { IUserForm } from './user.state';
+import { IMeForm } from './me.state';
 
 @Component({
   selector: 'cic-me-form',
@@ -34,7 +34,7 @@ import { IUserForm } from './user.state';
 export class MeFormComponent implements OnDestroy, OnChanges {
   @Input() status: number;
   @Input() formState: IUserState;
-  @Output() updateForm = new EventEmitter<IUserForm>();
+  @Output() updateForm = new EventEmitter<IMeForm>();
 
   form: FormGroup = new FormGroup({
     username: new FormControl(),

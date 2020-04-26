@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserTransferStateModule } from '@angular/platform-browser';
 
-import { UserService } from './user.service';
+import { MeService } from './me.service';
 import { ENVIRONMENT, environment } from '@cic/environment';
 
 describe('UserService', () => {
@@ -10,12 +10,12 @@ describe('UserService', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, BrowserTransferStateModule],
       // FIXME consider creating a dedicated "testing environment"
-      providers: [UserService, { provide: ENVIRONMENT, useValue: environment }],
+      providers: [MeService, { provide: ENVIRONMENT, useValue: environment }],
     });
   });
 
   it('should be created', () => {
-    const service = TestBed.inject(UserService);
+    const service = TestBed.inject(MeService);
     expect(service).toBeTruthy();
   });
 });

@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: TopLevelFrontendRoutes.User,
-    loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+    loadChildren: () => import('../features/user/user.module').then(m => m.UserModule),
   },
   { path: '**', redirectTo: TopLevelFrontendRoutes.Ideas, pathMatch: 'full' },
 ];

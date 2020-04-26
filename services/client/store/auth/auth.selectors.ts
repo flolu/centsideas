@@ -6,6 +6,6 @@ import { StoreKeys } from '@cic/shared';
 import { IAuthReducerState } from './auth.state';
 
 const selectAuthState = createFeatureSelector<IAuthReducerState>(StoreKeys.Auth);
-const selectUser = createSelector(selectAuthState, state => state.persistedUser);
+const selectUser = createSelector(selectAuthState, state => state.user);
 
 export const AuthSelectors = { selectAuthState, selectUser };

@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import * as sgMail from '@sendgrid/mail';
 
 import { IUserState } from '@centsideas/models';
-import { TopLevelFrontendRoutes, QueryParamKeys, UserFrontendRoutes } from '@centsideas/enums';
+import { TopLevelFrontendRoutes, QueryParamKeys } from '@centsideas/enums';
 
 import { NotificationEnvironment } from './notifications.environment';
 import {
@@ -28,7 +28,7 @@ export class EmailService {
   }
 
   sendRequestEmailChangeEmail(newEmail: string, token: string) {
-    const url = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.User}/${UserFrontendRoutes.Me}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
+    const url = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.User}?${QueryParamKeys.ConfirmEmailChangeToken}=${token}`;
     return this.sendMail(newEmail, getRequestEmailChangeEmail(url));
   }
 

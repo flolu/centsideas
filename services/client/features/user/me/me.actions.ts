@@ -4,7 +4,7 @@ import { createAction, props } from '@ngrx/store';
 
 import { IUserState, Dtos } from '@centsideas/models';
 import { appPrefix, doneSuffix, failSuffix } from '@cic/shared';
-import { IUserForm } from './user.state';
+import { IMeForm } from './me.state';
 
 const prefix = `${appPrefix}/user`;
 const updatePrefix = prefix + '/update';
@@ -25,9 +25,9 @@ const confirmEmailChangeFail = createAction(
   props<{ error: string }>(),
 );
 
-const formChanged = createAction(formChangedPrefx, props<{ value: IUserForm }>());
+const formChanged = createAction(formChangedPrefx, props<{ value: IMeForm }>());
 
-export const UserActions = {
+export const MeActions = {
   updateUser,
   updateUserDone,
   updateUserFail,

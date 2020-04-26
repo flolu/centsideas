@@ -2,15 +2,7 @@ import { createReducer, Action, on } from '@ngrx/store';
 
 import { SyncStatus } from '@cic/shared';
 import { NotificationsActions } from './notifications.actions';
-import { INotificationSettingsForm } from './notifications.state';
-
-export interface INotificationsReducerState {
-  // FIXME persisted state is inaccurate
-  persisted: INotificationSettingsForm | null;
-  formData: INotificationSettingsForm | null;
-  status: SyncStatus;
-  error: string;
-}
+import { INotificationsReducerState } from './notifications.state';
 
 const initialState: INotificationsReducerState = {
   persisted: null,

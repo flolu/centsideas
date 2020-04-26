@@ -9,7 +9,7 @@ import { IUserState, Dtos } from '@centsideas/models';
 import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
 
 @Injectable()
-export class UserService {
+export class MeService {
   private readonly baseUrl = `${this.environment.gatewayUrl}/${ApiEndpoints.Users}`;
 
   constructor(

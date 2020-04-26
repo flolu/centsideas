@@ -5,7 +5,3 @@ export enum TopLevelFrontendRoutes {
   Ideas = 'ideas',
   Login = 'login',
 }
-
-export enum UserFrontendRoutes {
-  Me = 'me',
-}

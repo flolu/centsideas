@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { LoginContainer } from './login.container';
-import { LoginStoreModule } from './store';
+import { LoginStoreModule } from './login-store.module';
 
 // FIXME more generic, that it also can be used as a popup?!
 @NgModule({

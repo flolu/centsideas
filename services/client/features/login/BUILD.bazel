@@ -4,7 +4,10 @@ package(default_visibility = ["//services/client:__subpackages__"])
 
 ts_library(
     name = "store",
-    srcs = glob(["store/*.ts"]),
+    srcs = [
+        "login-page.reducer.ts",
+        "login-store.module.ts",
+    ],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
@@ -26,10 +29,10 @@ ts_library(
 
 ts_library(
     name = "login",
-    srcs = glob(
-        include = ["*.ts"],
-        exclude = ["*.spec.ts"],
-    ),
+    srcs = [
+        "login.container.ts",
+        "login.module.ts",
+    ],
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
