@@ -3,10 +3,7 @@ import * as __ngrxStore from '@ngrx/store/store';
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
-
-import { IdeasSelectors } from './ideas.selectors';
-import { IdeasActions } from './ideas.actions';
-import { IIdeaForm } from './ideas.state';
+import { IdeasSelectors, IIdeaForm, EditIdeaActions } from './store';
 
 @Component({
   selector: 'cic-idea',
@@ -41,9 +38,10 @@ export class IdeaContainer {
 
   constructor(private store: Store) {}
 
-  onUpdateForm = (value: IIdeaForm) => this.store.dispatch(IdeasActions.ideaFormChanged({ value }));
-  onEdit = () => this.store.dispatch(IdeasActions.editIdea());
-  onSaveEdit = () => this.store.dispatch(IdeasActions.updateIdea());
-  onCancelEdit = () => this.store.dispatch(IdeasActions.cancelEditIdea());
-  onDelete = () => this.store.dispatch(IdeasActions.deleteIdea());
+  onUpdateForm = (value: IIdeaForm) =>
+    this.store.dispatch(EditIdeaActions.ideaFormChanged({ value }));
+  onEdit = () => this.store.dispatch(EditIdeaActions.editIdea());
+  onSaveEdit = () => this.store.dispatch(EditIdeaActions.updateIdea());
+  onCancelEdit = () => this.store.dispatch(EditIdeaActions.cancelEditIdea());
+  onDelete = () => this.store.dispatch(EditIdeaActions.deleteIdea());
 }

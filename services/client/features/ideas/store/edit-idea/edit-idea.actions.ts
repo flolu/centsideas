@@ -2,29 +2,14 @@ import * as __ngrxStoreTypes from '@ngrx/store/src/models';
 
 import { createAction, props } from '@ngrx/store';
 
-import { IIdeaViewModel, IIdeaState, Dtos } from '@centsideas/models';
+import { IIdeaViewModel, IIdeaState } from '@centsideas/models';
 import { appPrefix, failSuffix, doneSuffix } from '@cic/shared';
-import { IIdeaForm } from './ideas.state';
+import { IIdeaForm } from '../ideas.state';
 
-const prefix = `${appPrefix}/ideas`;
-const getPrefix = prefix + '/get';
-const getByIdPrefix = prefix + '/get-by-id';
-const createPrefix = prefix + '/create';
+const prefix = `${appPrefix}/edit-idea`;
 const updatePrefix = prefix + '/update';
 const deletePrefix = prefix + '/delete';
 const uiEditPrefix = prefix + '/ui/edit';
-
-const getIdeas = createAction(getPrefix);
-const getIdeasDone = createAction(getPrefix + doneSuffix, props<{ ideas: IIdeaViewModel[] }>());
-const getIdeasFail = createAction(getPrefix + failSuffix, props<{ error: string }>());
-
-const getIdeaById = createAction(getByIdPrefix, props<{ id: string }>());
-const getIdeaByIdDone = createAction(getByIdPrefix + doneSuffix, props<{ idea: IIdeaViewModel }>());
-const getIdeaByIdFail = createAction(getByIdPrefix + failSuffix, props<{ error: string }>());
-
-const createIdea = createAction(createPrefix, props<Dtos.ICreateIdeaDto>());
-const createIdeaDone = createAction(createPrefix + doneSuffix, props<{ created: IIdeaState }>());
-const createIdeaFail = createAction(createPrefix + failSuffix, props<{ error: string }>());
 
 const updateIdea = createAction(updatePrefix);
 const updateIdeaDone = createAction(updatePrefix + doneSuffix, props<{ updated: IIdeaState }>());
@@ -39,16 +24,7 @@ const editIdeaSetForm = createAction(uiEditPrefix + '/set-form', props<{ idea: I
 const ideaFormChanged = createAction(uiEditPrefix + '/form-changed', props<{ value: IIdeaForm }>());
 const cancelEditIdea = createAction(uiEditPrefix + '/cancel');
 
-export const IdeasActions = {
-  getIdeas,
-  getIdeasDone,
-  getIdeasFail,
-  getIdeaById,
-  getIdeaByIdDone,
-  getIdeaByIdFail,
-  createIdea,
-  createIdeaDone,
-  createIdeaFail,
+export const EditIdeaActions = {
   updateIdea,
   updateIdeaDone,
   updateIdeaFail,

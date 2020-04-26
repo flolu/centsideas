@@ -10,7 +10,7 @@ import {
 import { FormGroup, FormControl } from '@angular/forms';
 import { takeWhile, debounceTime, tap } from 'rxjs/operators';
 
-import { IIdeaForm } from './ideas.state';
+import { IIdeaForm } from './store/ideas.state';
 
 @Component({
   selector: 'cic-edit-idea',

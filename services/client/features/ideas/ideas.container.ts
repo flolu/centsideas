@@ -4,11 +4,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
-import { IdeasActions } from './ideas.actions';
-import { IdeasSelectors } from './ideas.selectors';
 import { IIdeaViewModel } from '@centsideas/models';
 import { Router } from '@angular/router';
 import { TopLevelFrontendRoutes } from '@centsideas/enums';
+import { IdeasSelectors, IdeasActions, CreateIdeaActions } from './store';
 
 @Component({
   selector: 'cic-ideas',
@@ -57,7 +56,7 @@ export class IdeasContainer {
 
   onCreate = () => {
     this.store.dispatch(
-      IdeasActions.createIdea({
+      CreateIdeaActions.createIdea({
         title: this.form.value.title,
         description: this.form.value.description,
       }),

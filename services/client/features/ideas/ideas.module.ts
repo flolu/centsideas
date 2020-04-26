@@ -5,10 +5,10 @@ import { RouterModule } from '@angular/router';
 
 import { IdeasContainer } from './ideas.container';
 import { IdeaContainer } from './idea.container';
-import { IdeasStoreModule } from './ideas-store.module';
 import { IdeaCardComponent } from './idea-card.component';
 import { IdeaLoadedGuard } from './idea-loaded.guard';
 import { EditIdeaComponent } from './edit-idea.component';
+import { IdeasStoreModule } from './store';
 
 @NgModule({
   imports: [

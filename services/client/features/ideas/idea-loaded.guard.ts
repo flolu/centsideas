@@ -5,9 +5,8 @@ import { Observable } from 'rxjs';
 import { map, skipWhile, withLatestFrom } from 'rxjs/operators';
 
 import { LoadStatus } from '@cic/shared';
-import { IdeasSelectors } from './ideas.selectors';
-import { IdeasActions } from './ideas.actions';
 import { TopLevelFrontendRoutes } from '@centsideas/enums';
+import { IdeasSelectors, IdeasActions } from './store';
 
 @Injectable()
 export class IdeaLoadedGuard implements CanActivate {
@@ -21,9 +20,10 @@ export class IdeaLoadedGuard implements CanActivate {
         const idea = data[0][0];
         const ideaId = data[0][1];
         const ideasState = data[1];
-        if (!idea && ideasState.status === LoadStatus.None) {
-          this.store.dispatch(IdeasActions.getIdeaById({ id: ideaId }));
-        }
+        // if (!idea && ideasState.status === LoadStatus.None) {
+        // TODO if not already loaded?
+        this.store.dispatch(IdeasActions.getIdeaById({ id: ideaId }));
+        // }
         if (ideasState.error) {
           this.router.navigate([TopLevelFrontendRoutes.Ideas]);
           return false;

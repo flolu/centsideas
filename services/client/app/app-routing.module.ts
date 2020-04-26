@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: TopLevelFrontendRoutes.Ideas,
-    loadChildren: () => import('./ideas/ideas.module').then(m => m.IdeasModule),
+    loadChildren: () => import('../features/ideas/ideas.module').then(m => m.IdeasModule),
   },
   {
     path: TopLevelFrontendRoutes.User,
