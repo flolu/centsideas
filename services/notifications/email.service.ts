@@ -2,12 +2,7 @@ import { injectable } from 'inversify';
 import * as sgMail from '@sendgrid/mail';
 
 import { IUserState } from '@centsideas/models';
-import {
-  TopLevelFrontendRoutes,
-  AuthFrontendRoutes,
-  QueryParamKeys,
-  UserFrontendRoutes,
-} from '@centsideas/enums';
+import { TopLevelFrontendRoutes, QueryParamKeys, UserFrontendRoutes } from '@centsideas/enums';
 
 import { NotificationEnvironment } from './notifications.environment';
 import {
@@ -28,7 +23,7 @@ export class EmailService {
   }
 
   sendLoginMail(email: string, token: string, firstLogin: boolean, user?: IUserState) {
-    const url = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
+    const url = `${this.env.frontendUrl}/${TopLevelFrontendRoutes.Login}?${QueryParamKeys.Token}=${token}`;
     return this.sendMail(email, firstLogin ? getFirstLoginEmail(url) : getLoginEmail(url));
   }
 

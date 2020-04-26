@@ -1,17 +1,15 @@
-load("//packages/angular-bazel:defaults.bzl", "store_srcs_matcher")
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
-package(default_visibility = ["//:__subpackages__"])
+package(default_visibility = ["//services/client:__subpackages__"])
 
 ts_library(
     name = "store",
-    srcs = glob(include = store_srcs_matcher),
+    srcs = glob(["store/*.ts"]),
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
         "//packages/enums",
         "//packages/models",
-        "//services/client/environment",
         "//services/client/shared",
         "//services/client/store",
         "@npm//@angular/common",
@@ -27,11 +25,11 @@ ts_library(
 )
 
 ts_library(
-    name = "auth",
-    srcs = [
-        "auth.module.ts",
-        "login.container.ts",
-    ],
+    name = "login",
+    srcs = glob(
+        include = ["*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
     tsconfig = "//services/client:tsconfig.json",
     use_angular_plugin = True,
     deps = [
@@ -42,9 +40,9 @@ ts_library(
         "@npm//@angular/compiler-cli",
         "@npm//@angular/core",
         "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
         "@npm//@angular/router",
         "@npm//@ngrx/store",
-        "@npm//@nguniversal/express-engine",
         "@npm//rxjs",
     ],
 )

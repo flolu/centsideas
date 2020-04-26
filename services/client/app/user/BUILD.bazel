@@ -22,7 +22,6 @@ ts_library(
     deps = [
         "//packages/enums",
         "//packages/models",
-        "//services/client/app/auth:store",
         "//services/client/environment",
         "//services/client/shared",
         "//services/client/store",
@@ -52,7 +51,6 @@ ts_library(
         ":store",
         "//packages/enums",
         "//packages/models",
-        "//services/client/app/auth:store",
         "//services/client/environment",
         "//services/client/shared",
         "//services/client/store",

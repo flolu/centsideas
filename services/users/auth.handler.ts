@@ -6,11 +6,7 @@ import * as queryString from 'query-string';
 
 import { decodeToken, TokenInvalidError, ThreadLogger, Identifier } from '@centsideas/utils';
 import { ILoginTokenPayload, IRefreshTokenPayload } from '@centsideas/models';
-import {
-  TopLevelFrontendRoutes,
-  AuthFrontendRoutes,
-  TokenExpirationTimes,
-} from '@centsideas/enums';
+import { TopLevelFrontendRoutes, TokenExpirationTimes } from '@centsideas/enums';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -274,6 +270,6 @@ export class AuthHandler {
   private getGoogleRedirectUri = (origin?: string) => {
     const frontendUrl =
       this.env.environment === 'dev' ? origin || this.env.frontendUrl : this.env.frontendUrl;
-    return `${frontendUrl}/${TopLevelFrontendRoutes.Auth}/${AuthFrontendRoutes.Login}`;
+    return `${frontendUrl}/${TopLevelFrontendRoutes.Login}`;
   };
 }

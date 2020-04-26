@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { map, skipWhile } from 'rxjs/operators';
 
-import { TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
+import { TopLevelFrontendRoutes } from '@centsideas/enums';
 import { LoadStatus } from '@cic/shared';
 import { AuthSelectors } from './auth.selectors';
 import { AuthActions } from './auth.actions';
@@ -24,8 +24,7 @@ export class AuthGuard implements CanActivate {
         return state.status !== LoadStatus.Loaded;
       }),
       map(state => {
-        if (!state.accessToken)
-          this.router.navigate([TopLevelFrontendRoutes.Auth, AuthFrontendRoutes.Login]);
+        if (!state.accessToken) this.router.navigate([TopLevelFrontendRoutes.Login]);
         return !!state.accessToken;
       }),
     );

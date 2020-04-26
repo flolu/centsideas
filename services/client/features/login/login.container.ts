@@ -4,7 +4,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { tap, take } from 'rxjs/operators';
 
-import { QueryParamKeys, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
+import { QueryParamKeys, TopLevelFrontendRoutes } from '@centsideas/enums';
 import { AuthActions } from '@cic/store';
 
 const selectLoginTokenFromUrl = createSelector(
@@ -50,7 +50,7 @@ export class LoginContainer {
       .pipe(
         tap(token => {
           if (token) this.store.dispatch(AuthActions.confirmLogin({ token }));
-          this.router.navigate([TopLevelFrontendRoutes.Auth, AuthFrontendRoutes.Login]);
+          this.router.navigate([TopLevelFrontendRoutes.Login]);
         }),
         take(1),
       )
@@ -63,7 +63,7 @@ export class LoginContainer {
       .pipe(
         tap(code => {
           if (code) this.store.dispatch(AuthActions.googleLogin({ code }));
-          this.router.navigate([TopLevelFrontendRoutes.Auth, AuthFrontendRoutes.Login]);
+          this.router.navigate([TopLevelFrontendRoutes.Login]);
         }),
         take(1),
       )

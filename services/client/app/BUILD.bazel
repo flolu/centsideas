@@ -22,11 +22,10 @@ ts_library(
     use_angular_plugin = True,
     deps = [
         "//packages/enums",
-        "//services/client/app/auth",
-        "//services/client/app/auth:store",
         "//services/client/app/ideas",
         "//services/client/app/user",
         "//services/client/environment",
+        "//services/client/features/login",
         "//services/client/shared",
         "//services/client/store",
         "@npm//@angular/common",

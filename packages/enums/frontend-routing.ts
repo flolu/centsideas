@@ -3,10 +3,6 @@
 export enum TopLevelFrontendRoutes {
   User = 'user',
   Ideas = 'ideas',
-  Auth = 'auth',
-}
-
-export enum AuthFrontendRoutes {
   Login = 'login',
 }
 

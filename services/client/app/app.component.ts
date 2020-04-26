@@ -5,7 +5,7 @@ import { Observable, fromEvent, merge, of } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 import { UpdateAvailableEvent } from '@angular/service-worker';
 
-import { CentsCommandments, TopLevelFrontendRoutes, AuthFrontendRoutes } from '@centsideas/enums';
+import { CentsCommandments, TopLevelFrontendRoutes } from '@centsideas/enums';
 import { PushNotificationService } from '@cic/shared';
 import { AuthSelectors } from '@cic/store';
 import { ServiceWorkerService } from './service-worker.service';
@@ -26,7 +26,7 @@ import { ServiceWorkerService } from './service-worker.service';
       <br />
       <a [routerLink]="[topLevelRoutes.User]">User</a>
       <br />
-      <a [routerLink]="[topLevelRoutes.Auth, authRoutes.Login]">Login</a>
+      <a [routerLink]="[topLevelRoutes.Login]">Login</a>
     </div>
     <p>CENTS: {{ cents }}</p>
     <router-outlet></router-outlet>
@@ -40,7 +40,6 @@ export class AppComponent implements OnDestroy {
   alive = true;
   cents = `${CentsCommandments.Control}, ${CentsCommandments.Entry}, ${CentsCommandments.Need}, ${CentsCommandments.Time}, ${CentsCommandments.Scale}`;
   topLevelRoutes = TopLevelFrontendRoutes;
-  authRoutes = AuthFrontendRoutes;
   availableSwUpdate: UpdateAvailableEvent;
 
   constructor(

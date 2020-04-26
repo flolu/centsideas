@@ -4,8 +4,8 @@ import { TopLevelFrontendRoutes } from '@centsideas/enums';
 
 const routes: Routes = [
   {
-    path: TopLevelFrontendRoutes.Auth,
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+    path: TopLevelFrontendRoutes.Login,
+    loadChildren: () => import('../features/login/login.module').then(m => m.LoginModule),
   },
   {
     path: TopLevelFrontendRoutes.Ideas,
