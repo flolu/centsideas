@@ -10,6 +10,8 @@ ng_ts_library(
     ],
     tsconfig = "//services/admin-client:tsconfig.json",
     deps = [
+        "//packages/enums",
+        "//packages/models",
         "//services/admin-client/environment",
         "@npm//@angular/common",
         "@npm//@angular/core",

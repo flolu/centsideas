@@ -14,6 +14,7 @@ import { UsersRoutes } from './users.routes';
 import { NotificationsRoutes } from './notifications.routes';
 import { GatewayEnvironment } from './gateway.environment';
 import { GatewayMiddlewares } from './gateway.middlewares';
+import { AdminRoutes } from './admin.routes';
 
 registerProviders(
   ExpressAdapter,
@@ -24,6 +25,7 @@ registerProviders(
   NotificationsRoutes,
   GatewayEnvironment,
   GatewayMiddlewares,
+  AdminRoutes,
 );
 
 getProvider(GatewayServer);

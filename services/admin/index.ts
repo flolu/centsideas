@@ -9,8 +9,9 @@ import { MessageBroker } from '@centsideas/event-sourcing';
 
 import { AdminServer } from './admin.server';
 import { AdminEnvironment } from './admin.environment';
+import { AdminDatabase } from './admin.database';
 
-registerProviders(AdminServer, AdminEnvironment, MessageBroker);
+registerProviders(AdminServer, AdminEnvironment, MessageBroker, AdminDatabase);
 
 getProvider(AdminServer);
 

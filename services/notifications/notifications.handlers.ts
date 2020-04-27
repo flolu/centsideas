@@ -46,8 +46,7 @@ export class NotificationsHandlers {
     );
 
     const ns = await this.notificationSettingsHandlers.getSettingsOfUser(userId);
-
-    if (!ns.persistedState.sendPushes) return false;
+    if (!ns.persistedState.sendPushes || !ns.persistedState.pushSubscriptions.length) return false;
 
     const notification = Notification.create(
       Identifier.makeLongId(),

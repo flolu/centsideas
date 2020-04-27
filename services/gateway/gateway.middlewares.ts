@@ -39,7 +39,7 @@ export class GatewayMiddlewares {
   cors: any = cors({ origin: this.checkOrigin, credentials: true });
 
   private get corsWhitelist() {
-    let whitelist = [this.env.frontendUrl];
+    let whitelist = [this.env.mainClientUrl, this.env.adminClientUrl];
     if (this.env.environment === 'dev')
       whitelist = [
         ...whitelist,

@@ -8,3 +8,7 @@ export const renameObjectProperty = (object: any, from: string, to: string): any
   }
   return { ...object };
 };
+
+// TODO use those in projection db instead of the one above
+export const renameIdWrite = (object: any) => renameObjectProperty(object, 'id', '_id');
+export const renameIdRead = (object: any) => renameObjectProperty(object, '_id', 'id');

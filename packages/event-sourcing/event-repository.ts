@@ -65,12 +65,11 @@ export abstract class EventRepository<Entity extends IEventEntity>
         this.topicName = topicName;
 
         this.client = await retry(async () => {
-          const connection = await MongoClient.connect(url, {
+          return MongoClient.connect(url, {
             w: 1,
             useNewUrlParser: true,
             useUnifiedTopology: true,
           });
-          return connection;
         });
         this.db = this.client.db(this.namespace);
 

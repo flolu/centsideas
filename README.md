@@ -40,6 +40,7 @@ This is a project with the purpose of learning the architecture of complex web a
 | Compute server                                 | non-nodejs server for high cpu tasks       | ❌     |
 | Payments                                       | payout, credit card, paypal                | ❌     |
 | Recommendation System                          | machine learning                           | ❌     |
+| Protobuf                                       | grpc                                       | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented

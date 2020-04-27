@@ -22,8 +22,8 @@ class LoggerClass {
       this.timestamp,
       chalk.red.bold(error.name),
       chalk.redBright.bold(error.message),
-      chalk.reset(info),
-      chalk.reset(`service: ${this.service}`),
+      chalk.reset(`with info: ${info}`),
+      chalk.reset(`from service: ${this.service}`),
     );
     console.log(chalk.red(error.stack));
     // TODO send to admin service

@@ -2,8 +2,6 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import { injectable } from 'inversify';
-import * as http from 'http';
-import * as socketIO from 'socket.io';
 
 import { Logger } from '@centsideas/utils';
 import { ApiEndpoints } from '@centsideas/enums';
@@ -14,12 +12,11 @@ import { UsersRoutes } from './users.routes';
 import { NotificationsRoutes } from './notifications.routes';
 import { GatewayMiddlewares } from './gateway.middlewares';
 import { GatewayEnvironment } from './gateway.environment';
+import { AdminRoutes } from './admin.routes';
 
 @injectable()
 export class GatewayServer {
   private app = express();
-  private httpServer = http.createServer(this.app);
-  private io = socketIO(this.httpServer);
 
   constructor(
     private ideasRoutes: IdeasRoutes,
@@ -28,6 +25,7 @@ export class GatewayServer {
     private notificationsRoutes: NotificationsRoutes,
     private middlewares: GatewayMiddlewares,
     private env: GatewayEnvironment,
+    private adminRoutes: AdminRoutes,
   ) {
     Logger.info('launch in', this.env.environment, 'mode');
 
@@ -38,12 +36,12 @@ export class GatewayServer {
     this.app.use(this.middlewares.auth);
 
     this.registerServiceRoutes();
-    this.setupSocketIO();
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => res.status(200).send('gateway alive'));
-    this.httpServer.listen(this.env.port);
+    this.app.listen(this.env.port);
   }
 
+  // TODO maybe just setup those routes direcly in this class? ... or at least don't inject them?
   private registerServiceRoutes() {
     this.app.use(
       `/${ApiEndpoints.Ideas}`,
@@ -61,20 +59,7 @@ export class GatewayServer {
       `/${ApiEndpoints.Notifications}`,
       this.notificationsRoutes.setup(this.env.notificationsHost),
     );
-  }
 
-  setupSocketIO() {
-    this.io.on('connection', socket => {
-      Logger.info('a user connected');
-
-      socket.on('disconnect', () => {
-        Logger.info('user disconnected');
-      });
-
-      socket.on('message', msg => {
-        Logger.info('message from frontend: ', msg);
-        this.io.emit('message', 'hello from backend');
-      });
-    });
+    this.app.use(`/${ApiEndpoints.Admin}`, this.adminRoutes.setup(this.env.adminHost));
   }
 }

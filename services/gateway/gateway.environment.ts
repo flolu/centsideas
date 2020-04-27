@@ -7,7 +7,8 @@ export class GatewayEnvironment {
   environment: Environments = process.env.ENV as Environments;
   port = 3000;
   accessTokenSecret = process.env.ACCESS_TOKEN_SECRET!;
-  frontendUrl = process.env.MAIN_CLIENT_URL!;
+  mainClientUrl = process.env.MAIN_CLIENT_URL!;
+  adminClientUrl = process.env.ADMIN_CLIENT_URL!;
   ideasHost = process.env.IDEAS_SERVICE_HOST!;
   consumerHost = process.env.CONSUMER_SERVICE_HOST!;
   reviewsHost = process.env.REVIEWS_SERVICE_HOST!;

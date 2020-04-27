@@ -138,6 +138,8 @@ services:
     command: yarn run ts-node-dev services/admin --colors
     depends_on:
       - "kafka"
+    ports:
+      - 3001:3000
   admin-database:
     image: mongo:4.2.6
     logging:

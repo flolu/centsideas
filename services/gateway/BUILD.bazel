@@ -1,6 +1,7 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
 load("@cents_ideas//packages/jest:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
@@ -25,8 +26,6 @@ lib_deps = [
     "@npm//@types/cookie-parser",
     "@npm//module-alias",
     "@npm//reflect-metadata",
-    "@npm//socket.io",
-    "@npm//@types/socket.io",
 ]
 
 ts_library(
@@ -47,6 +46,20 @@ nodejs_image(
 k8s_deploy(
     name = "k8s",
     images = {"gateway:placeholder_name": ":image"},
+    template = ":gateway.yaml",
+)
+
+k8s_object(
+    name = "k8s-local",
+    cluster = "_".join([
+        "gke",
+        "centsideas",
+        "europe-west3-b",
+        "centsideas",
+    ]),
+    image_chroot = "gcr.io/centsideas",
+    images = {"gateway:placeholder_name": ":image"},
+    kind = "deployment",
     template = ":gateway.yaml",
 )
 

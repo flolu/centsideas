@@ -14,6 +14,16 @@ lib_deps = [
     "@npm//@types/body-parser",
     "@npm//inversify",
     "@npm//reflect-metadata",
+    "@npm//socket.io",
+    "@npm//@types/socket.io",
+    "@npm//@types/node",
+    "@npm//async-retry",
+    "@npm//mongodb",
+    "@npm//express",
+    "@npm//@types/async-retry",
+    "@npm//@types/mongodb",
+    "@npm//@types/express",
+    "@npm//rxjs",
 ]
 
 ts_library(

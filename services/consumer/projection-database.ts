@@ -19,28 +19,18 @@ export class ProjectionDatabase {
     this.initialize();
   }
 
-  initialize = async () => {
+  initialize = () => {
     return new Promise(async (res, rej) => {
       try {
         this.client = await retry(async () => {
-          let connection: MongoClient;
-          try {
-            connection = await MongoClient.connect(this.env.database.url, {
-              w: 1,
-              useNewUrlParser: true,
-              useUnifiedTopology: true,
-            });
-          } catch (error) {
-            Logger.error(error, 'while connecting to projection database');
-            connection = await MongoClient.connect(this.env.database.url, {
-              w: 1,
-              useNewUrlParser: true,
-              useUnifiedTopology: true,
-            });
-          }
-          return connection;
+          return MongoClient.connect(this.env.database.url, {
+            w: 1,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+          });
         });
 
+        // TODO strings into env
         this.db = this.client.db('projection-database');
         this.ideasCollection = this.db.collection('ideas');
         this.reviewsCollection = this.db.collection('reviews');
@@ -48,6 +38,7 @@ export class ProjectionDatabase {
         this.hasInitialized = true;
         res();
       } catch (error) {
+        Logger.error(error, 'while connecting to projections database');
         rej(error);
       }
     });
@@ -70,9 +61,7 @@ export class ProjectionDatabase {
 
   private waitUntilInitialized = (): Promise<boolean> =>
     new Promise(async res => {
-      if (this.hasInitialized) {
-        return res(true);
-      }
+      if (this.hasInitialized) return res(true);
       // tslint:disable-next-line:no-return-await
       await retry(async () => await this.initialize);
       res(true);

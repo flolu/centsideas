@@ -4,6 +4,7 @@ export enum ApiEndpoints {
   Users = 'users',
   Alive = 'alive',
   Notifications = 'notifications',
+  Admin = 'admin',
 }
 
 export enum IdeasApiRoutes {
@@ -40,4 +41,10 @@ export enum UsersApiRoutes {
   RefreshToken = 'refresh-token',
   GoogleLogin = 'google-login',
   GoogleLoginRedirect = 'google-login-redirect',
+}
+
+export enum AdminApiRoutes {
+  // TODO better mapping of external routes and internal request / response
+  Events = 'events',
+  GetEvents = 'get-events',
 }
