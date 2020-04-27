@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 
 import { HttpStatusCodes } from '@centsideas/enums';
 import { HttpRequest, HttpResponse, IUserState, Dtos } from '@centsideas/models';
-import { handleHttpResponseError, Logger } from '@centsideas/utils';
+import { handleHttpResponseError } from '@centsideas/utils';
 
 import { UsersHandler } from './users.handler';
 
@@ -10,41 +10,37 @@ import { UsersHandler } from './users.handler';
 export class UsersService {
   constructor(private commandHandler: UsersHandler) {}
 
-  updateUser = (req: HttpRequest<Dtos.IUpdateUserDto>): Promise<HttpResponse<IUserState>> =>
-    Logger.thread('update user', async t => {
-      try {
-        const auid = req.locals.userId;
-        const userId = req.params.id;
-        const { username, email } = req.body;
+  updateUser = async (req: HttpRequest<Dtos.IUpdateUserDto>): Promise<HttpResponse<IUserState>> => {
+    try {
+      const auid = req.locals.userId;
+      const userId = req.params.id;
+      const { username, email } = req.body;
 
-        const updatedUser = await this.commandHandler.updateUser(auid, userId, username, email, t);
-        t.log('updated user');
+      const updatedUser = await this.commandHandler.updateUser(auid, userId, username, email);
 
-        return {
-          status: HttpStatusCodes.Accepted,
-          body: updatedUser.persistedState,
-        };
-      } catch (error) {
-        return handleHttpResponseError(error, t);
-      }
-    });
+      return {
+        status: HttpStatusCodes.Accepted,
+        body: updatedUser.persistedState,
+      };
+    } catch (error) {
+      return handleHttpResponseError(error);
+    }
+  };
 
-  confirmEmailChange = (
+  confirmEmailChange = async (
     req: HttpRequest<Dtos.IConfirmEmailChangeDto>,
-  ): Promise<HttpResponse<IUserState>> =>
-    Logger.thread('confirm email change', async t => {
-      try {
-        const { token } = req.body;
+  ): Promise<HttpResponse<IUserState>> => {
+    try {
+      const { token } = req.body;
 
-        const updatedUser = await this.commandHandler.confirmEmailChange(token, t);
-        t.log('confirmed email change');
+      const updatedUser = await this.commandHandler.confirmEmailChange(token);
 
-        return {
-          status: HttpStatusCodes.Accepted,
-          body: updatedUser.persistedState,
-        };
-      } catch (error) {
-        return handleHttpResponseError(error, t);
-      }
-    });
+      return {
+        status: HttpStatusCodes.Accepted,
+        body: updatedUser.persistedState,
+      };
+    } catch (error) {
+      return handleHttpResponseError(error);
+    }
+  };
 }

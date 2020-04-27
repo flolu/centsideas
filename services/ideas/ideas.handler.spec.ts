@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { getProvider, registerProviders, overrideProvider, Logger } from '@centsideas/utils';
+import { getProvider, registerProviders, overrideProvider } from '@centsideas/utils';
 
 import { IdeasHandler } from './ideas.handler';
 import { IdeaRepository } from './idea.repository';
@@ -14,17 +14,10 @@ describe('Idea Command Handler', () => {
   const commandHandler: IdeasHandler = getProvider(IdeasHandler);
 
   describe('create', () => {
-    it('should work', () => {
-      Logger.thread('create idea', async t => {
-        const created = await commandHandler.create(
-          fakeUserId,
-          fakeIdeaTitle,
-          fakeIdeaDescription,
-          t,
-        );
-        expect(created.persistedState.lastEventId).toBeDefined();
-        expect(created.persistedState.lastEventNumber).toBeDefined();
-      });
+    it('should work', async () => {
+      const created = await commandHandler.create(fakeUserId, fakeIdeaTitle, fakeIdeaDescription);
+      expect(created.persistedState.lastEventId).toBeDefined();
+      expect(created.persistedState.lastEventNumber).toBeDefined();
     });
   });
 });

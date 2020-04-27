@@ -4,7 +4,6 @@ import * as jwt from 'jsonwebtoken';
 import {
   sanitizeHtml,
   decodeToken,
-  ThreadLogger,
   NotAuthenticatedError,
   NoPermissionError,
 } from '@centsideas/utils';
@@ -25,41 +24,33 @@ export class UsersHandler {
     userId: string,
     username: string | null,
     email: string | null,
-    t: ThreadLogger,
   ): Promise<User> => {
     if (!auid) throw new NotAuthenticatedError();
     NoPermissionError.validate(auid, userId);
     UserErrors.UserIdRequiredError.validate(userId);
-    t.debug('update user with id', userId);
-    t.debug('username: ', username, ', email:', email);
 
     if (username) {
       username = sanitizeHtml(username);
       UserErrors.UsernameRequiredError.validate(username);
       UserErrors.UsernameInvalidError.validate(username);
-      t.debug('username', username, 'is valid');
     }
 
     if (email) {
       email = sanitizeHtml(email);
       UserErrors.EmailRequiredError.validate(email);
       UserErrors.EmailInvalidError.validate(email);
-      t.debug('email', email, 'is valid');
     }
 
     let user = await this.userRepository.findById(userId);
-    t.debug('found corresponding user');
 
     const isNewUsername = user && user.persistedState.username !== username;
     if (username && isNewUsername) {
       await this.userRepository.checkUsernameAvailibility(username);
-      t.debug(`username ${username} available`);
     }
 
     const isNewEmail = email && user.persistedState.email !== email;
     if (email && isNewEmail) {
       await this.userRepository.checkEmailAvailability(email);
-      t.debug('email is available');
       user = await this.requestEmailChange(userId, email);
     }
 
@@ -70,10 +61,9 @@ export class UsersHandler {
     return saved;
   };
 
-  confirmEmailChange = async (token: string, t: ThreadLogger): Promise<User> => {
+  confirmEmailChange = async (token: string): Promise<User> => {
     const data = decodeToken(token, this.env.tokenSecrets.changeEmailToken);
     const payload: IEmailChangeTokenPayload = data;
-    t.debug('confirming email change with token', token ? token.slice(0, 30) : token);
 
     await this.userRepository.checkEmailAvailability(payload.newEmail);
 

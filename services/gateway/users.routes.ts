@@ -12,57 +12,57 @@ export class UsersRoutes {
 
   // FIXME consider creating abstraction layer (maybe with decorators)
   setup = (host: string, consumerHost: string): express.Router => {
+    const url = `http://${host}`;
+    const consumerUrl = `http://${consumerHost}`;
+
     this.router.get(
       `/`,
       this.expressAdapter.makeJsonAdapter(
-        `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
+        `${consumerUrl}/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
       ),
     );
 
     this.router.post(
       `/${UsersApiRoutes.GoogleLogin}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.GoogleLogin}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${UsersApiRoutes.GoogleLogin}`),
     );
     this.router.get(
       `/${UsersApiRoutes.GoogleLoginRedirect}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.GoogleLoginRedirect}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${UsersApiRoutes.GoogleLoginRedirect}`),
     );
 
     this.router.get(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(
-        `${consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
+        `${consumerUrl}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
       ),
     );
 
     this.router.post(
       `/${UsersApiRoutes.RefreshToken}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.RefreshToken}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${UsersApiRoutes.RefreshToken}`),
     );
 
     this.router.post(
       `/${UsersApiRoutes.Login}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Login}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${UsersApiRoutes.Login}`),
     );
 
     this.router.post(
       `/${UsersApiRoutes.ConfirmLogin}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmLogin}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${UsersApiRoutes.ConfirmLogin}`),
     );
 
-    this.router.put(
-      `/:id`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Update}`),
-    );
+    this.router.put(`/:id`, this.expressAdapter.makeJsonAdapter(`${url}/${UsersApiRoutes.Update}`));
 
     this.router.post(
       `/${UsersApiRoutes.ConfirmEmailChange}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.ConfirmEmailChange}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${UsersApiRoutes.ConfirmEmailChange}`),
     );
 
     this.router.post(
       `/${UsersApiRoutes.Logout}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${UsersApiRoutes.Logout}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${UsersApiRoutes.Logout}`),
     );
 
     return this.router;

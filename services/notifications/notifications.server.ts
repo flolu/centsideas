@@ -35,7 +35,7 @@ export class NotificationsServer {
     this.messageBroker.events(EventTopics.Logins).subscribe(this.handleLoginEvents);
     this.messageBroker.events(EventTopics.Users).subscribe(this.handleUsersEvents);
 
-    Logger.log('launch', this.env.environment);
+    Logger.info('launch in', this.env.environment, 'mode');
     this.app.use(bodyParser.json());
 
     this.app.post(`/${this.routes.SubscribePush}`, ExpressAdapters.json(this.subscribePush));
@@ -46,67 +46,63 @@ export class NotificationsServer {
     this.app.listen(this.env.port);
   }
 
-  private subscribePush = (req: HttpRequest<Dtos.ISubscribePushDto>): Promise<HttpResponse> =>
-    Logger.thread('subscribe to push', async t => {
-      try {
-        const { subscription } = req.body;
-        const auid = req.locals.userId || '';
+  private subscribePush = async (
+    req: HttpRequest<Dtos.ISubscribePushDto>,
+  ): Promise<HttpResponse> => {
+    try {
+      const { subscription } = req.body;
+      const auid = req.locals.userId || '';
 
-        const upserted = await this.notificationSettingsHandlers.upsert(auid, t);
-        t.debug('upserted notification settings');
-        const ns = await this.notificationSettingsHandlers.addPushSubscription(
-          upserted.persistedState.id,
-          auid,
-          subscription,
-          t,
-        );
-        t.debug('fetched settings');
+      const upserted = await this.notificationSettingsHandlers.upsert(auid);
+      const ns = await this.notificationSettingsHandlers.addPushSubscription(
+        upserted.persistedState.id,
+        auid,
+        subscription,
+      );
 
-        return {
-          status: HttpStatusCodes.Accepted,
-          // FIXME maybe do not return push subscription array
-          body: ns.persistedState,
-        };
-      } catch (error) {
-        return handleHttpResponseError(error, t);
-      }
-    });
+      return {
+        status: HttpStatusCodes.Accepted,
+        // FIXME maybe do not return push subscription array
+        body: ns.persistedState,
+      };
+    } catch (error) {
+      return handleHttpResponseError(error);
+    }
+  };
 
-  private updateSettings = (
+  private updateSettings = async (
     req: HttpRequest<Dtos.INotificationSettingsDto>,
   ): Promise<HttpResponse<Dtos.INotificationSettingsDto>> => {
-    return Logger.thread('update settings', async t => {
+    {
       try {
         const auid = req.locals.userId || '';
         const settings = req.body;
 
-        const upserted = await this.notificationSettingsHandlers.upsert(auid, t);
+        const upserted = await this.notificationSettingsHandlers.upsert(auid);
         const updated = await this.notificationSettingsHandlers.updateSettings(
           upserted.persistedState.id,
           auid,
           settings,
-          t,
         );
-        t.debug(`updated settings`);
 
         return {
           status: HttpStatusCodes.Accepted,
           body: updated.persistedState,
         };
       } catch (error) {
-        return handleHttpResponseError(error, t);
+        return handleHttpResponseError(error);
       }
-    });
+    }
   };
 
-  private getSettings = (
+  private getSettings = async (
     req: HttpRequest,
   ): Promise<HttpResponse<Dtos.INotificationSettingsDto>> => {
-    return Logger.thread('get settings', async t => {
+    {
       try {
         const auid = req.locals.userId || '';
 
-        const settings = await this.notificationSettingsHandlers.upsert(auid, t);
+        const settings = await this.notificationSettingsHandlers.upsert(auid);
 
         return {
           status: HttpStatusCodes.Accepted,
@@ -114,52 +110,47 @@ export class NotificationsServer {
         };
       } catch (error) {
         if (error.status === HttpStatusCodes.NotFound)
-          return { status: HttpStatusCodes.Accepted, body: {} };
+          // TODO response type shouldn't be required when throwing error...
+          return { status: HttpStatusCodes.Accepted, body: {} as any };
 
-        return handleHttpResponseError(error, t);
+        return handleHttpResponseError(error);
       }
-    });
+    }
   };
 
-  private handleIdeasEvents = (event: IEvent<any>) => {
-    Logger.thread('handle incomming idea events', async t => {
-      try {
-        switch (event.name) {
-          case IdeaEvents.IdeaCreated:
-            return this.notificationsHandler.handleIdeaCreatedNotification(event, t);
-        }
-      } catch (error) {
-        t.error(error);
+  private handleIdeasEvents = async (event: IEvent<any>) => {
+    try {
+      switch (event.name) {
+        case IdeaEvents.IdeaCreated:
+          return this.notificationsHandler.handleIdeaCreatedNotification(event);
       }
-    });
+    } catch (error) {
+      Logger.error(error);
+    }
   };
 
-  private handleLoginEvents = (event: IEvent<any>) => {
-    Logger.thread('handle incomming login event', async t => {
-      try {
-        switch (event.name) {
-          case LoginEvents.LoginRequested:
-            return this.notificationsHandler.handleLoginNotification(event, t);
-        }
-      } catch (error) {
-        t.error(error);
+  private handleLoginEvents = async (event: IEvent<any>) => {
+    try {
+      switch (event.name) {
+        case LoginEvents.LoginRequested:
+          return this.notificationsHandler.handleLoginNotification(event);
       }
-    });
+    } catch (error) {
+      Logger.error(error);
+    }
   };
 
-  private handleUsersEvents = (event: IEvent<any>) => {
-    Logger.thread('handle incomming users event', async t => {
-      try {
-        switch (event.name) {
-          case UserEvents.EmailChangeRequested:
-            return this.notificationsHandler.handleEmailChangeRequestedNotification(event, t);
+  private handleUsersEvents = async (event: IEvent<any>) => {
+    try {
+      switch (event.name) {
+        case UserEvents.EmailChangeRequested:
+          return this.notificationsHandler.handleEmailChangeRequestedNotification(event);
 
-          case UserEvents.EmailChangeConfirmed:
-            return this.notificationsHandler.handleEmailChangedNotification(event, t);
-        }
-      } catch (error) {
-        t.error(error);
+        case UserEvents.EmailChangeConfirmed:
+          return this.notificationsHandler.handleEmailChangedNotification(event);
       }
-    });
+    } catch (error) {
+      Logger.error(error);
+    }
   };
 }

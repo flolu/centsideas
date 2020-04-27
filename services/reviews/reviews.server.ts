@@ -13,7 +13,7 @@ export class ReviewsServer {
   private app = express();
 
   constructor(private reviewsService: ReviewsService, private env: ReviewsEnvironment) {
-    Logger.log('launch', this.env.environment);
+    Logger.info('launch in', this.env.environment, 'mode');
     this.app.use(bodyParser.json());
 
     this.app.post(`/${ReviewsApiRoutes.Create}`, ExpressAdapters.json(this.reviewsService.create));

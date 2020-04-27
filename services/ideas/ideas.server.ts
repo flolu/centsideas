@@ -13,7 +13,7 @@ export class IdeasServer {
   private app = express();
 
   constructor(private ideasService: IdeasService, private env: IdeasEnvironment) {
-    Logger.log('launch', this.env.environment);
+    Logger.info('launch in', this.env.environment, 'mode');
     this.app.use(bodyParser.json());
 
     this.app.post(`/${IdeasApiRoutes.Create}`, ExpressAdapters.json(this.ideasService.create));

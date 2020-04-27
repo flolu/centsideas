@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
 import { injectable } from 'inversify';
 
-import { Logger, renameObjectProperty } from '@centsideas/utils';
+import { renameObjectProperty } from '@centsideas/utils';
 import { IEvent } from '@centsideas/event-sourcing';
 import { IdeaEvents } from '@centsideas/enums';
 import {
@@ -29,7 +29,6 @@ export class IdeasProjection {
     if (!this.ideasCollection) {
       await this.initialize();
     }
-    Logger.debug('handle incoming ideas event', event);
     switch (event.name) {
       case IdeaEvents.IdeaCreated:
         return this.ideaCreated(event);

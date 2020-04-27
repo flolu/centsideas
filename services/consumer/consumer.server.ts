@@ -24,7 +24,7 @@ export class ConsumerServer {
     private usersProjection: UsersProjection,
     private env: ConsumerEnvironment,
   ) {
-    Logger.log('launch', this.env.environment);
+    Logger.info('launch in', this.env.environment, 'mode');
 
     this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
     this.messageBroker.events(EventTopics.Ideas).subscribe(this.ideasProjection.handleEvent);

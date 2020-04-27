@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { IPushSubscription, Dtos } from '@centsideas/models';
-import { ThreadLogger, NotAuthenticatedError, Identifier } from '@centsideas/utils';
+import { NotAuthenticatedError, Identifier } from '@centsideas/utils';
 
 import { NotificationSettingsRepository } from './notification-settings.repository';
 import { NotificationSettings } from './notification-settings.entity';
@@ -11,16 +11,12 @@ import { NotificationSettingsErrors } from './errors';
 export class NotificationSettingsHandlers {
   constructor(private nsRepository: NotificationSettingsRepository) {}
 
-  async upsert(authenticatedUserId: string, t: ThreadLogger): Promise<NotificationSettings> {
+  async upsert(authenticatedUserId: string): Promise<NotificationSettings> {
     NotAuthenticatedError.validate(authenticatedUserId);
-    t.debug(`start creating notification settings for ${authenticatedUserId}`);
 
     const existingMapping = await this.nsRepository.userIdMapping.get(authenticatedUserId);
     if (existingMapping) {
       const existingNs = await this.nsRepository.findById(existingMapping.notificationSettingsId);
-      t.debug(
-        `found existing notification settings with it ${existingMapping.notificationSettingsId}`,
-      );
       return existingNs;
     }
 
@@ -28,7 +24,6 @@ export class NotificationSettingsHandlers {
     const ns = NotificationSettings.create(nsId, authenticatedUserId);
     await this.nsRepository.userIdMapping.insert(nsId, authenticatedUserId);
 
-    t.debug(`start creating seettings with id ${nsId}`);
     return this.nsRepository.save(ns);
   }
 
@@ -36,7 +31,6 @@ export class NotificationSettingsHandlers {
     nsId: string,
     auid: string,
     subscription: IPushSubscription,
-    t: ThreadLogger,
   ): Promise<NotificationSettings> {
     NotAuthenticatedError.validate(auid);
     NotificationSettingsErrors.PushSubscriptionInvalidError.validate(subscription);
@@ -45,14 +39,12 @@ export class NotificationSettingsHandlers {
 
     for (const sub of ns.persistedState.pushSubscriptions) {
       if (sub.endpoint === subscription.endpoint) {
-        t.debug('subscription is already saved');
         return ns;
       }
     }
 
     ns.addPushSubscription(subscription);
 
-    t.debug(`adding push subscription to settings`);
     return this.nsRepository.save(ns);
   }
 
@@ -60,17 +52,13 @@ export class NotificationSettingsHandlers {
     nsId: string,
     auid: string,
     settings: Dtos.INotificationSettingsDto,
-    t: ThreadLogger,
   ): Promise<NotificationSettings> {
     NotAuthenticatedError.validate(auid);
     NotificationSettingsErrors.NotificationSettingsPayloadInvalid.validate(settings);
-    t.debug('request is valid');
 
     const ns = await this.nsRepository.findById(nsId);
-    t.debug('found settings');
     ns.update(settings.sendEmails, settings.sendPushes);
 
-    t.debug('start saving updated settings');
     return this.nsRepository.save(ns);
   }
 

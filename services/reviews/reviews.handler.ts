@@ -1,11 +1,6 @@
 import { injectable } from 'inversify';
 
-import {
-  sanitizeHtml,
-  NotAuthenticatedError,
-  ThreadLogger,
-  NoPermissionError,
-} from '@centsideas/utils';
+import { sanitizeHtml, NotAuthenticatedError, NoPermissionError } from '@centsideas/utils';
 import { IReviewScores } from '@centsideas/models';
 
 import { ReviewErrors } from './errors';
@@ -21,7 +16,6 @@ export class ReviewsHandler {
     userId: string,
     content: string,
     scores: IReviewScores,
-    t: ThreadLogger,
   ): Promise<Review> => {
     NotAuthenticatedError.validate(userId);
     ReviewErrors.IdeaIdRequiredError.validate(ideaId);
@@ -29,11 +23,9 @@ export class ReviewsHandler {
     ReviewErrors.SaveReviewPayloadRequiredError.validate(content, scores);
     ReviewErrors.ReviewContentLengthError.validate(content);
     ReviewErrors.ReviewScoresRangeError.validate(scores);
-    t.debug('paylod is valid');
 
     const reviewId = await this.repository.generateUniqueId();
     const review = Review.create(reviewId, ideaId, userId, content, scores);
-    t.debug(`create review with id ${reviewId}`);
 
     return this.repository.save(review);
   };
@@ -43,7 +35,6 @@ export class ReviewsHandler {
     reviewId: string,
     content: string,
     scores: IReviewScores,
-    t: ThreadLogger,
   ): Promise<Review> => {
     NotAuthenticatedError.validate(userId);
     ReviewErrors.ReviewIdRequiredError.validate(reviewId);
@@ -51,28 +42,22 @@ export class ReviewsHandler {
     ReviewErrors.SaveReviewPayloadRequiredError.validate(content, scores);
     ReviewErrors.ReviewContentLengthError.validate(content);
     ReviewErrors.ReviewScoresRangeError.validate(scores);
-    t.debug('payload is valid');
 
     const review = await this.repository.findById(reviewId);
     NoPermissionError.validate(userId, review.persistedState.userId);
-    t.debug('user has permission');
 
     review.update(content, scores);
-    t.debug('start updating review');
     return this.repository.save(review);
   };
 
-  delete = async (userId: string, reviewId: string, t: ThreadLogger): Promise<Review> => {
+  delete = async (userId: string, reviewId: string): Promise<Review> => {
     NotAuthenticatedError.validate(userId);
     ReviewErrors.ReviewIdRequiredError.validate(reviewId);
-    t.debug('payload is valid');
 
     const review = await this.repository.findById(reviewId);
     NoPermissionError.validate(userId, review.persistedState.userId);
-    t.debug('user has permision');
 
     review.delete();
-    t.debug('start deleting review');
     return this.repository.save(review);
   };
 }

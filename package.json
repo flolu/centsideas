@@ -150,7 +150,8 @@
     "env:clean": "rm -f $npm_package_config_client_env && rm -f $npm_package_config_admin_env && rm -f $npm_package_config_k8s && rm -f $npm_package_config_k8s_secret",
     "env:setup": "ts-node misc/setup",
     "docker": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
-    "docker:clean": "docker stop $(docker ps -q) && docker system prune --volumes",
+    "docker:clean": "yarn docker:stop && docker system prune --volumes",
+    "docker:stop": "docker stop $(docker ps -q)",
     "vapid": "web-push generate-vapid-keys --json",
     "postinstall": "ngcc"
   },

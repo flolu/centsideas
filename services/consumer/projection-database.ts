@@ -30,8 +30,8 @@ export class ProjectionDatabase {
               useNewUrlParser: true,
               useUnifiedTopology: true,
             });
-          } catch (e) {
-            Logger.error('error while connecting to projection database', e);
+          } catch (error) {
+            Logger.error(error, 'while connecting to projection database');
             connection = await MongoClient.connect(this.env.database.url, {
               w: 1,
               useNewUrlParser: true,

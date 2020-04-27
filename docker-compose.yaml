@@ -1,9 +1,9 @@
-version: '3'
+version: "3"
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - '2181'
+      - "2181"
     hostname: zookeeper
     logging:
       driver: none
@@ -16,7 +16,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - 'zookeeper'
+      - "zookeeper"
     logging:
       driver: none
 
@@ -99,7 +99,7 @@ services:
     env_file: .env.dev
     command: yarn run ts-node-dev services/consumer --colors
     depends_on:
-      - 'kafka'
+      - "kafka"
   projection-database:
     image: mongo:4.2.6
     logging:
@@ -118,7 +118,7 @@ services:
     env_file: .env.dev
     command: yarn run ts-node-dev services/notifications --colors
     depends_on:
-      - 'kafka'
+      - "kafka"
   notifications-event-store:
     image: mongo:4.2.6
     logging:
@@ -137,9 +137,8 @@ services:
     env_file: .env.dev
     command: yarn run ts-node-dev services/admin --colors
     depends_on:
-      - 'kafka'
+      - "kafka"
   admin-database:
     image: mongo:4.2.6
     logging:
       driver: none
-# TOOD use global, reusable volumes

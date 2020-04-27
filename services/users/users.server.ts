@@ -19,7 +19,7 @@ export class UsersServer {
     private env: UsersEnvironment,
     private usersService: UsersService,
   ) {
-    Logger.log('launch', this.env.environment);
+    Logger.info('launch in', this.env.environment, 'mode');
     this.app.use(bodyParser.json());
 
     this.registerAuthRoutes();

@@ -4,6 +4,7 @@ import { injectable } from 'inversify';
 
 import { HttpRequest, HttpResponse } from '@centsideas/models';
 import { HttpStatusCodes } from '@centsideas/enums';
+import { Logger } from '@centsideas/utils';
 
 @injectable()
 export class ExpressAdapter {
@@ -15,6 +16,7 @@ export class ExpressAdapter {
         const httpResponse: HttpResponse = response.data;
         this.handleExpressHttpResponse(res, httpResponse);
       } catch (err) {
+        Logger.error(err);
         this.handleExpressHttpResponse(res, {
           status: HttpStatusCodes.InternalServerError,
           body: `Unexpected error occurred: ${err.message}`,

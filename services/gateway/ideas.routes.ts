@@ -12,27 +12,27 @@ export class IdeasRoutes {
   constructor(private expressAdapter: ExpressAdapter) {}
 
   setup = (host: string, consumerHost: string): express.Router => {
+    const url = `http://${host}`;
+    const consumerUrl = `http://${consumerHost}`;
+
     this.router.get(
       ``,
       this.expressAdapter.makeJsonAdapter(
-        `${consumerHost}/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetAll}`,
+        `${consumerUrl}/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetAll}`,
       ),
     );
     this.router.get(
       `/:id`,
       this.expressAdapter.makeJsonAdapter(
-        `${consumerHost}/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetById}`,
+        `${consumerUrl}/${ApiEndpoints.Ideas}/${IdeasApiRoutes.GetById}`,
       ),
     );
 
-    this.router.post(``, this.expressAdapter.makeJsonAdapter(`${host}/${IdeasApiRoutes.Create}`));
-    this.router.put(
-      `/:id`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${IdeasApiRoutes.Update}`),
-    );
+    this.router.post(``, this.expressAdapter.makeJsonAdapter(`${url}/${IdeasApiRoutes.Create}`));
+    this.router.put(`/:id`, this.expressAdapter.makeJsonAdapter(`${url}/${IdeasApiRoutes.Update}`));
     this.router.delete(
       `/:id`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${IdeasApiRoutes.Delete}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${IdeasApiRoutes.Delete}`),
     );
 
     return this.router;

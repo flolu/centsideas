@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { Collection } from 'mongodb';
 
-import { Logger, renameObjectProperty } from '@centsideas/utils';
+import { renameObjectProperty } from '@centsideas/utils';
 import { IEvent } from '@centsideas/event-sourcing';
 import { UserEvents } from '@centsideas/enums';
 import {
@@ -30,7 +30,6 @@ export class UsersProjection {
     if (!this.usersCollection) {
       await this.initialize();
     }
-    Logger.debug('handle incoming users event', event);
     switch (event.name) {
       case UserEvents.UserCreated:
         return this.userCreated(event);

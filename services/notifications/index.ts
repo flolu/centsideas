@@ -1,8 +1,9 @@
-import 'reflect-metadata';
 // tslint:disable-next-line:no-var-requires
 if (process.env.ENV === 'dev') require('../../register-aliases').registerAliases();
+import 'reflect-metadata';
 
-import { LoggerPrefixes } from '@centsideas/enums';
+import { Services } from '@centsideas/enums';
+process.env.SERVICE = Services.Notifications;
 import { registerProviders, getProvider } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 
@@ -13,8 +14,6 @@ import { NotificationsHandlers } from './notifications.handlers';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
 import { EmailService } from './email.service';
 import { NotificationsRepository } from './notifications.repository';
-
-process.env.LOGGER_PREFIX = LoggerPrefixes.Notifications;
 
 registerProviders(
   NotificationEnvironment,

@@ -29,7 +29,7 @@ export class GatewayServer {
     private middlewares: GatewayMiddlewares,
     private env: GatewayEnvironment,
   ) {
-    Logger.log('launch', this.env.environment);
+    Logger.info('launch in', this.env.environment, 'mode');
 
     this.app.use(this.middlewares.cors);
     this.app.use(bodyParser.json());
@@ -47,30 +47,32 @@ export class GatewayServer {
   private registerServiceRoutes() {
     this.app.use(
       `/${ApiEndpoints.Ideas}`,
-      this.ideasRoutes.setup(this.env.hosts.ideas, this.env.hosts.consumer),
+      this.ideasRoutes.setup(this.env.ideasHost, this.env.consumerHost),
     );
-    this.app.use(`/${ApiEndpoints.Reviews}`, this.reviewsRoutes.setup(this.env.hosts.reviews));
+
+    this.app.use(`/${ApiEndpoints.Reviews}`, this.reviewsRoutes.setup(this.env.reviewsHost));
+
     this.app.use(
       `/${ApiEndpoints.Users}`,
-      this.usersRoutes.setup(this.env.hosts.users, this.env.hosts.consumer),
+      this.usersRoutes.setup(this.env.usersHost, this.env.consumerHost),
     );
 
     this.app.use(
       `/${ApiEndpoints.Notifications}`,
-      this.notificationsRoutes.setup(this.env.hosts.notifications),
+      this.notificationsRoutes.setup(this.env.notificationsHost),
     );
   }
 
   setupSocketIO() {
     this.io.on('connection', socket => {
-      Logger.log('a user connected');
+      Logger.info('a user connected');
 
       socket.on('disconnect', () => {
-        Logger.log('user disconnected');
+        Logger.info('user disconnected');
       });
 
       socket.on('message', msg => {
-        Logger.log('message from frontend: ', msg);
+        Logger.info('message from frontend: ', msg);
         this.io.emit('message', 'hello from backend');
       });
     });

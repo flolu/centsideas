@@ -1,65 +1,71 @@
 /* tslint:disable:no-console */
 import * as chalk from 'chalk';
 
-import { LoggerPrefixes, LoggerStyles } from '@centsideas/enums';
-// FIXME production logger
+import { Services, Environments } from '@centsideas/enums';
+// TODO move IEvent to //packages/models
+// import { IEvent } from '@centsideas/event-sourcing';
 
-const prefixMinLength = LoggerPrefixes.Gateway.length;
+type LogStyle = (...text: unknown[]) => string;
 
-const getPrefixLog = () => {
-  const prefix = process.env.LOGGER_PREFIX || typeof process.env.LOGGER_PREFIX;
-  let style = chalk;
-  for (const s of LoggerStyles[prefix]) {
-    style = (style as any)[s];
+class LoggerClass {
+  private prefixStyle: LogStyle = chalk.bold.bgBlack.grey;
+  private service: Services | undefined = process.env.SERVICE as Services;
+  private env: Environments | undefined = process.env.ENV as Environments;
+  // private adminHost = process.env.ADMIN_SERVICE_HOST;
+
+  constructor() {
+    this.setupPrefixStyle();
   }
-  return style(prefix.padEnd(prefixMinLength));
-};
 
-export class Logger {
-  static log = (...parts: any[]) => console.log(getPrefixLog(), chalk.reset(...parts));
-  static debug = (...parts: any[]) => console.log(getPrefixLog(), chalk.dim(...parts));
-  static error = (...parts: any[]) => console.log(getPrefixLog(), chalk.red(...parts));
+  error(error: Error, info?: string) {
+    console.log(
+      this.prefix,
+      this.timestamp,
+      chalk.red.bold(error.name),
+      chalk.redBright.bold(error.message),
+      chalk.reset(info),
+      chalk.reset(`service: ${this.service}`),
+    );
+    console.log(chalk.red(error.stack));
+    // TODO send to admin service
+  }
 
-  // FIXME this implementation could be improved (currently _complete is public when it should be private)
-  static thread<T>(title: string, callback: (loggerThread: ThreadLogger) => T): T {
-    const loggerThread = new ThreadLogger(title);
-    const r = callback(loggerThread);
-    if (r instanceof Promise) {
-      // tslint:disable-next-line:ban-comma-operator
-      return (r.then(x => (loggerThread._complete(), x)) as any) as T;
-    } else {
-      loggerThread._complete();
-      return r;
+  info(...text: unknown[]) {
+    console.log(this.prefix, this.timestamp, ...text);
+  }
+
+  event(event: any) {
+    console.log(chalk.bold(event.name));
+    console.log(chalk.dim(JSON.stringify(event.data)));
+    console.log();
+  }
+
+  private get timestamp() {
+    return this.env === Environments.Prod ? Date.now().toLocaleString() : '';
+  }
+
+  private get prefix() {
+    return this.prefixStyle(this.service);
+  }
+
+  private setupPrefixStyle() {
+    switch (this.service) {
+      case Services.Admin:
+        return (this.prefixStyle = chalk.bold.red);
+      case Services.Consumer:
+        return (this.prefixStyle = chalk.bold.magenta);
+      case Services.Gateway:
+        return (this.prefixStyle = chalk.bold.inverse);
+      case Services.Ideas:
+        return (this.prefixStyle = chalk.bold.yellow);
+      case Services.Notifications:
+        return (this.prefixStyle = chalk.bold.gray);
+      case Services.Reviews:
+        return (this.prefixStyle = chalk.bold.blueBright);
+      case Services.Users:
+        return (this.prefixStyle = chalk.bold.greenBright);
     }
   }
 }
 
-export class ThreadLogger {
-  private startTime: number = Date.now();
-  private logs: string[] = [];
-
-  constructor(private title: string) {
-    const startTime = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
-    this.addLog(chalk.dim.italic, startTime);
-  }
-
-  log = (...parts: any[]) => this.addLog(chalk.reset, ...parts);
-  debug = (...parts: any[]) => this.addLog(chalk.dim, ...parts);
-  error = (...parts: any[]) => this.addLog(chalk.red, ...parts);
-
-  private addLog = (style: any, ...parts: any[]) => {
-    this.logs.push(style(...parts));
-    return this;
-  };
-
-  public _complete = () => {
-    // don't ever call this method!
-    console.log(chalk.bold(getPrefixLog()), chalk.reset(this.title));
-    for (const line of this.logs) {
-      console.log(' '.repeat(prefixMinLength), chalk.dim(`│`), line);
-    }
-    const ms = Date.now() - this.startTime;
-    console.log(' '.repeat(prefixMinLength), chalk.dim(`│`), chalk.dim.italic(`${ms}ms`));
-    console.log(' '.repeat(prefixMinLength), chalk.dim(`└──────────`));
-  };
-}
+export const Logger = new LoggerClass();

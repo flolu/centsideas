@@ -8,13 +8,13 @@ import { AdminEnvironment } from './admin.environment';
 @injectable()
 export class AdminServer {
   constructor(private env: AdminEnvironment, private messageBroker: MessageBroker) {
-    Logger.log('launch', this.env.environment);
+    Logger.info('launch in', this.env.environment, 'mode');
 
     this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
     this.messageBroker.events(/centsideas-.*/i).subscribe(this.handler);
   }
 
   private handler(event: IEvent) {
-    Logger.log('incomming event ', event.name);
+    //
   }
 }

@@ -11,19 +11,21 @@ export class NotificationsRoutes {
   constructor(private expressAdapter: ExpressAdapter) {}
 
   setup = (host: string): express.Router => {
+    const url = `http://${host}`;
+
     this.router.post(
       `/${NotificationsApiRoutes.SubscribePush}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${NotificationsApiRoutes.SubscribePush}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${NotificationsApiRoutes.SubscribePush}`),
     );
 
     this.router.post(
       `/${NotificationsApiRoutes.UpdateSettings}`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${NotificationsApiRoutes.UpdateSettings}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${NotificationsApiRoutes.UpdateSettings}`),
     );
 
     this.router.get(
       `/`,
-      this.expressAdapter.makeJsonAdapter(`${host}/${NotificationsApiRoutes.GetSettings}`),
+      this.expressAdapter.makeJsonAdapter(`${url}/${NotificationsApiRoutes.GetSettings}`),
     );
 
     return this.router;

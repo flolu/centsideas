@@ -32,18 +32,13 @@ export class EntityMapping<IEntityMapping> {
       });
       this.db = this.client.db(this.databaseName);
 
-      this.db.on('close', () => {
-        Logger.debug(`disconnected from ${this.databaseUrl} ${this.databaseName} database`);
-      });
-
       this.collection = this.db.collection(this.collectionName);
       await this.collection.createIndex({ [this.mappingEntityIdKey]: 1 }, { unique: true });
 
       this.hasInitialized = true;
-      Logger.log('has initialzied');
       return true;
     } catch (error) {
-      Logger.error(`error while initializing ${this.collectionName} collection`, error);
+      Logger.error(error, `while initializing ${this.collectionName} collection`);
       return false;
     }
   }
@@ -54,9 +49,6 @@ export class EntityMapping<IEntityMapping> {
       [this.entityIdKey]: entityId,
       [this.mappingEntityIdKey]: mappingPropery,
     });
-    Logger.debug(
-      `inserted ${this.mappingEntityIdKey} into ${this.collectionName} mapping collection ${entityId}: ${mappingPropery}`,
-    );
     return inserted.ops[0];
   }
 
@@ -65,9 +57,6 @@ export class EntityMapping<IEntityMapping> {
     const updated = await this.collection.findOneAndUpdate(
       { [this.entityIdKey]: entityId },
       { $set: { [this.mappingEntityIdKey]: newMappingPropery } },
-    );
-    Logger.debug(
-      `updated email in ${this.collectionName} collection ${entityId}: ${newMappingPropery}`,
     );
     return updated.value;
   }

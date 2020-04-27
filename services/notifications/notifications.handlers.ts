@@ -7,7 +7,7 @@ import {
   TopLevelFrontendRoutes,
   EventTopics,
 } from '@centsideas/enums';
-import { ThreadLogger, Identifier } from '@centsideas/utils';
+import { Identifier } from '@centsideas/utils';
 import {
   IPushSubscription,
   IIdeaCreatedEvent,
@@ -38,7 +38,6 @@ export class NotificationsHandlers {
     payload: IPushPayload,
     responseEvent: IEvent,
     eventTopic: string,
-    t: ThreadLogger,
   ) {
     webpush.setVapidDetails(
       `${this.env.frontendUrl}/contact`,
@@ -47,10 +46,8 @@ export class NotificationsHandlers {
     );
 
     const ns = await this.notificationSettingsHandlers.getSettingsOfUser(userId);
-    t.debug('found settings');
 
     if (!ns.persistedState.sendPushes) {
-      t.debug(`push notifications are disabled`);
       return false;
     }
 
@@ -65,7 +62,6 @@ export class NotificationsHandlers {
       NotificationMedium.PushNotification,
     );
 
-    t.debug(`start sending notification to ${ns.persistedState.pushSubscriptions.length} clients`);
     const invalidSubscriptions: IPushSubscription[] = [];
     await Promise.all(
       ns.persistedState.pushSubscriptions.map(sub =>
@@ -75,19 +71,15 @@ export class NotificationsHandlers {
         }),
       ),
     );
-    t.debug(
-      `sent ${
-        ns.persistedState.pushSubscriptions.length - invalidSubscriptions.length
-      } notificatios`,
-    );
 
     notification.sent();
     await this.notificationsRepository.save(notification);
-    await this.notificationSettingsHandlers.removeSubscriptions(ns, invalidSubscriptions);
+    if (invalidSubscriptions.length)
+      await this.notificationSettingsHandlers.removeSubscriptions(ns, invalidSubscriptions);
     return true;
   }
 
-  handleIdeaCreatedNotification(event: IEvent<IIdeaCreatedEvent>, t: ThreadLogger) {
+  handleIdeaCreatedNotification(event: IEvent<IIdeaCreatedEvent>) {
     const pushPayload: IPushPayload = {
       notification: {
         title: 'Your Idea has been Published',
@@ -103,13 +95,10 @@ export class NotificationsHandlers {
       pushPayload,
       event,
       EventTopics.Ideas,
-      t,
     );
   }
 
-  async handleLoginNotification(event: IEvent<ILoginRequestedEvent>, t: ThreadLogger) {
-    t.debug(`start sending login email to ${event.data.email}`);
-
+  async handleLoginNotification(event: IEvent<ILoginRequestedEvent>) {
     const notificationId = Identifier.makeLongId();
     const notification = Notification.create(
       notificationId,
@@ -126,15 +115,9 @@ export class NotificationsHandlers {
 
     notification.sent();
     await this.notificationsRepository.save(notification);
-    t.debug('sent login email');
   }
 
-  async handleEmailChangeRequestedNotification(
-    event: IEvent<IEmailChangeRequestedEvent>,
-    t: ThreadLogger,
-  ) {
-    t.debug(`start sending request email change email to ${event.data.email}`);
-
+  async handleEmailChangeRequestedNotification(event: IEvent<IEmailChangeRequestedEvent>) {
     const notificationId = Identifier.makeLongId();
     const notification = Notification.create(
       notificationId,
@@ -147,12 +130,9 @@ export class NotificationsHandlers {
 
     notification.sent();
     await this.notificationsRepository.save(notification);
-    t.debug('sent');
   }
 
-  async handleEmailChangedNotification(event: IEvent<IEmailChangeConfirmedEvent>, t: ThreadLogger) {
-    t.debug(`start sending email change confirmed email to ${event.data.oldEmail}`);
-
+  async handleEmailChangedNotification(event: IEvent<IEmailChangeConfirmedEvent>) {
     const notificationId = Identifier.makeLongId();
     const notification = Notification.create(
       notificationId,
@@ -165,6 +145,5 @@ export class NotificationsHandlers {
 
     notification.sent();
     await this.notificationsRepository.save(notification);
-    t.debug('sent');
   }
 }

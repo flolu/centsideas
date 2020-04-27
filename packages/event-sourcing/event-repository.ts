@@ -2,7 +2,7 @@ import * as retry from 'async-retry';
 import { injectable } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 
-import { Identifier, renameObjectProperty, Logger, EntityError } from '@centsideas/utils';
+import { Identifier, renameObjectProperty, EntityError, Logger } from '@centsideas/utils';
 import { HttpStatusCodes } from '@centsideas/enums';
 
 import { IEventEntity } from './event-entity';
@@ -72,10 +72,6 @@ export abstract class EventRepository<Entity extends IEventEntity>
           return connection;
         });
         this.db = this.client.db(this.namespace);
-
-        this.db.on('close', () => {
-          Logger.debug(`disconnected from ${this.namespace} database`);
-        });
 
         this.eventCollection = this.db.collection(`${this.namespace}_events`);
         this.snapshotCollection = this.db.collection(`${this.namespace}_snapshots`);
@@ -148,11 +144,6 @@ export abstract class EventRepository<Entity extends IEventEntity>
     });
 
     const appendedEvents = await Promise.all(eventsToInsert.map(event => this.appendEvent(event)));
-    Logger.debug(
-      `saved ${appendedEvents.length} ${appendedEvents.length === 1 ? 'event' : 'events'} into ${
-        this.namespace
-      } event store`,
-    );
 
     await Promise.all(
       appendedEvents.map(e =>
@@ -161,6 +152,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     );
 
     for (const event of appendedEvents) {
+      Logger.event(event);
       if (event.eventNumber % this.snapshotThreshold === 0) {
         await this.saveSnapshot(event.aggregateId);
       }
@@ -180,13 +172,13 @@ export abstract class EventRepository<Entity extends IEventEntity>
     const entity = new this._Entity(snapshot || undefined);
     entity.pushEvents(...events);
     if (!entity.currentState.id) {
+      // TODO do we really need a dedicated EntityError?
       throw new EntityError(
         `Event repository couldn't find entity with id: ${id}`,
         HttpStatusCodes.NotFound,
       );
     }
 
-    Logger.debug(`found entity with id: ${id}`);
     return entity.confirmEvents();
   };
 
@@ -288,7 +280,6 @@ export abstract class EventRepository<Entity extends IEventEntity>
       },
       { upsert: true },
     );
-    Logger.debug(`saved ${this.namespace} snapshot for stream: ${streamId}`);
     return true;
   };
 

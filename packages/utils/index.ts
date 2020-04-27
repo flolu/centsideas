@@ -9,3 +9,4 @@ export * from './http-error-response-handler';
 export * from './errors/entity.error';
 export * from './errors';
 export * from './token';
+export * from './logger';
