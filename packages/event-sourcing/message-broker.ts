@@ -3,8 +3,7 @@ import { Kafka, Producer, Consumer, KafkaConfig, Message, RecordMetadata, logLev
 import { Observable, Observer } from 'rxjs';
 
 import { Identifier, Logger } from '@centsideas/utils';
-
-import { IEvent } from './event';
+import { IEvent } from '@centsideas/models';
 
 @injectable()
 export class MessageBroker {

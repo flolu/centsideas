@@ -9,6 +9,7 @@ lib_deps = [
     "//:register-aliases.js",
     "//packages/utils",
     "//packages/enums",
+    "//packages/models",
     "//packages/event-sourcing",
     "@npm//@types/body-parser",
     "@npm//inversify",

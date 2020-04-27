@@ -2,13 +2,13 @@ import { Collection } from 'mongodb';
 import { injectable } from 'inversify';
 
 import { renameObjectProperty } from '@centsideas/utils';
-import { IEvent } from '@centsideas/event-sourcing';
 import { IdeaEvents } from '@centsideas/enums';
 import {
   IIdeaCreatedEvent,
   IIdeaDeletedEvent,
   IIdeaUpdatedEvent,
   IIdeaViewModel,
+  IEvent,
 } from '@centsideas/models';
 
 import { ProjectionDatabase } from './projection-database';

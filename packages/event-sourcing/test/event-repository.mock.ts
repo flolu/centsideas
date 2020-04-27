@@ -2,9 +2,11 @@ import { injectable } from 'inversify';
 
 import { Identifier, EntityError } from '@centsideas/utils';
 import { HttpStatusCodes } from '@centsideas/enums';
+import { IEvent } from '@centsideas/models';
 
 import { IEventRepository, IEntityConstructor } from '../event-repository';
-import { IEventEntity, IEvent, ISnapshot } from '..';
+import { IEventEntity } from '../event-entity';
+import { ISnapshot } from '../snapshot';
 
 @injectable()
 export class EventRepositoryMock<Entity extends IEventEntity> implements IEventRepository<Entity> {

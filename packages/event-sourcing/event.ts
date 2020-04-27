@@ -1,13 +1,5 @@
 import { Identifier } from '@centsideas/utils';
-
-export interface IEvent<IData = any> {
-  id: string;
-  aggregateId: string;
-  name: string;
-  data: IData;
-  timestamp: string;
-  eventNumber: number;
-}
+import { IEvent } from '@centsideas/models';
 
 export class Event<IData> implements IEvent<IData> {
   readonly id: string;

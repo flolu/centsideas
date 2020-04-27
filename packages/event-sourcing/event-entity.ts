@@ -1,7 +1,7 @@
-import { IEventEntityBase } from '@centsideas/models';
+import { IEventEntityBase, IEvent } from '@centsideas/models';
 
 import { Reducer } from './reducer';
-import { IEvent, Event } from './event';
+import { Event } from './event';
 
 export interface IEventEntity {
   persistedState: any;

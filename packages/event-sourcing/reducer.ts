@@ -1,4 +1,5 @@
-import { IEvent } from './event';
+import { IEvent } from '@centsideas/models';
+
 import { IEventCommitFunctions } from './event-entity';
 
 export class Reducer<IEntityState> {

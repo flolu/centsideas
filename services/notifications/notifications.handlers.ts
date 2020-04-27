@@ -14,12 +14,12 @@ import {
   ILoginRequestedEvent,
   IEmailChangeRequestedEvent,
   IEmailChangeConfirmedEvent,
+  IEvent,
 } from '@centsideas/models';
 
 import { NotificationEnvironment } from './notifications.environment';
 import { IPushPayload } from './models';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
-import { IEvent } from '@centsideas/event-sourcing';
 import { Notification } from './notification.entity';
 import { NotificationsRepository } from './notifications.repository';
 import { EmailService } from './email.service';

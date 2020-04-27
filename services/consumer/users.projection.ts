@@ -2,7 +2,6 @@ import { injectable } from 'inversify';
 import { Collection } from 'mongodb';
 
 import { renameObjectProperty } from '@centsideas/utils';
-import { IEvent } from '@centsideas/event-sourcing';
 import { UserEvents } from '@centsideas/enums';
 import {
   IEmailChangeConfirmedEvent,
@@ -10,6 +9,7 @@ import {
   IUserUpdatedEvent,
   IUserCreatedEvent,
   IUserViewModel,
+  IEvent,
 } from '@centsideas/models';
 
 import { ProjectionDatabase } from './projection-database';

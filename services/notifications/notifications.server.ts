@@ -12,8 +12,8 @@ import {
   LoginEvents,
   UserEvents,
 } from '@centsideas/enums';
-import { HttpRequest, HttpResponse, Dtos } from '@centsideas/models';
-import { MessageBroker, IEvent } from '@centsideas/event-sourcing';
+import { HttpRequest, HttpResponse, Dtos, IEvent } from '@centsideas/models';
+import { MessageBroker } from '@centsideas/event-sourcing';
 
 import { NotificationEnvironment } from './notifications.environment';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';

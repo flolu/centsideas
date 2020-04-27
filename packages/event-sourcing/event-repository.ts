@@ -2,12 +2,13 @@ import * as retry from 'async-retry';
 import { injectable } from 'inversify';
 import { MongoClient, Db, Collection } from 'mongodb';
 
+import { IEvent } from '@centsideas/models';
 import { Identifier, renameObjectProperty, EntityError, Logger } from '@centsideas/utils';
 import { HttpStatusCodes } from '@centsideas/enums';
 
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
-import { IEvent, MessageBroker } from '.';
+import { MessageBroker } from './message-broker';
 
 export type IEntityConstructor<Entity> = new (snapshot?: ISnapshot) => Entity;
 
