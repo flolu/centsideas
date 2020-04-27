@@ -161,7 +161,6 @@ export abstract class EventRepository<Entity extends IEventEntity>
     return entity.confirmEvents();
   };
 
-  // FIXME I think this should return promise of entity OR null?
   findById = async (id: string): Promise<Entity> => {
     await this.waitUntilInitialized();
     const snapshot = await this.getSnapshot(id);
@@ -172,13 +171,8 @@ export abstract class EventRepository<Entity extends IEventEntity>
 
     const entity = new this._Entity(snapshot || undefined);
     entity.pushEvents(...events);
-    if (!entity.currentState.id) {
-      // TODO do we really need a dedicated EntityError?
-      throw new EntityError(
-        `Event repository couldn't find entity with id: ${id}`,
-        HttpStatusCodes.NotFound,
-      );
-    }
+    if (!entity.currentState.id)
+      throw new EntityError(`Couldn't find entity with id: ${id}`, HttpStatusCodes.NotFound);
 
     return entity.confirmEvents();
   };
@@ -266,10 +260,11 @@ export abstract class EventRepository<Entity extends IEventEntity>
 
   private saveSnapshot = async (streamId: string): Promise<boolean> => {
     const entity = await this.findById(streamId);
+    if (!entity) return false;
+
     const lastEvent = await this.getLastEventOfStream(streamId);
-    if (!lastEvent) {
-      return false;
-    }
+    if (!lastEvent) return false;
+
     await this.snapshotCollection.updateOne(
       { aggregateId: streamId },
       {

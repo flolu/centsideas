@@ -2,8 +2,7 @@
 import * as chalk from 'chalk';
 
 import { Services, Environments } from '@centsideas/enums';
-// TODO move IEvent to //packages/models
-// import { IEvent } from '@centsideas/event-sourcing';
+import { IEvent } from '@centsideas/models';
 
 type LogStyle = (...text: unknown[]) => string;
 
@@ -34,7 +33,7 @@ class LoggerClass {
     console.log(this.prefix, this.timestamp, ...text);
   }
 
-  event(event: any) {
+  event(event: IEvent) {
     console.log(chalk.bold(event.name));
     console.log(chalk.dim(JSON.stringify(event.data)));
     console.log();

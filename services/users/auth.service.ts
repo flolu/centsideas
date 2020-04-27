@@ -12,72 +12,55 @@ export class AuthService {
   constructor(private commandHandler: AuthHandler, private env: UsersEnvironment) {}
 
   login = async (req: HttpRequest<Dtos.ILoginDto>) => {
-    try {
-      const { email } = req.body;
+    const { email } = req.body;
 
-      await this.commandHandler.login(email);
+    await this.commandHandler.login(email);
 
-      return { status: HttpStatusCodes.Accepted, body: {} };
-    } catch (error) {
-      // TODO move generic error handling on level up (if no special handling is required) ?
-      return handleHttpResponseError(error);
-    }
+    return { status: HttpStatusCodes.Accepted, body: {} };
   };
+
   confirmLogin = async (
     req: HttpRequest<Dtos.IConfirmLoginDto>,
   ): Promise<HttpResponse<Dtos.IConfirmedLoginDto>> => {
-    try {
-      const { loginToken } = req.body;
+    const { loginToken } = req.body;
 
-      const data = await this.commandHandler.confirmLogin(loginToken);
+    const data = await this.commandHandler.confirmLogin(loginToken);
+    const { user, accessToken, refreshToken } = data;
+    const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
 
-      const { user, accessToken, refreshToken } = data;
-      const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
-
-      return {
-        status: HttpStatusCodes.Accepted,
-        body: { user, accessToken },
-        cookies: [refreshTokenCookie],
-      };
-    } catch (error) {
-      return handleHttpResponseError(error);
-    }
+    return {
+      status: HttpStatusCodes.Accepted,
+      body: { user, accessToken },
+      cookies: [refreshTokenCookie],
+    };
   };
 
   googleLoginRedirect = async (
     req: HttpRequest,
   ): Promise<HttpResponse<Dtos.IGoogleLoginRedirectDto>> => {
-    try {
-      const origin = req.headers.origin;
+    const origin = req.headers.origin;
 
-      const url = this.commandHandler.googleLoginRedirect(origin);
+    const url = this.commandHandler.googleLoginRedirect(origin);
 
-      return { status: HttpStatusCodes.Accepted, body: { url } };
-    } catch (error) {
-      return handleHttpResponseError(error);
-    }
+    return { status: HttpStatusCodes.Accepted, body: { url } };
   };
 
   googleLogin = async (
     req: HttpRequest<Dtos.IGoogleLoginDto>,
   ): Promise<HttpResponse<Dtos.IGoogleLoggedInDto>> => {
-    try {
-      const { code } = req.body;
-      const origin = req.headers.origin;
+    const { code } = req.body;
+    const origin = req.headers.origin;
 
-      const data = await this.commandHandler.googleLogin(code, origin);
+    const data = await this.commandHandler.googleLogin(code, origin);
 
-      const { user, accessToken, refreshToken } = data;
-      const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
+    const { user, accessToken, refreshToken } = data;
+    const refreshTokenCookie = this.createRefreshTokenCookie(refreshToken);
 
-      return {
-        status: HttpStatusCodes.Accepted,
-        body: { user, accessToken },
-        cookies: [refreshTokenCookie],
-      };
-    } catch (error) {
-      return handleHttpResponseError(error);
-    }
+    return {
+      status: HttpStatusCodes.Accepted,
+      body: { user, accessToken },
+      cookies: [refreshTokenCookie],
+    };
   };
 
   refreshToken = async (req: HttpRequest): Promise<HttpResponse<Dtos.IRefreshedTokenDto>> => {
@@ -116,31 +99,25 @@ export class AuthService {
   };
 
   logout = async (_req: HttpRequest): Promise<HttpResponse<{}>> => {
-    try {
-      const clearRefreshTokenCookie = new Cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
+    const clearRefreshTokenCookie = new Cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
 
-      return {
-        status: HttpStatusCodes.Accepted,
-        body: {},
-        cookies: [clearRefreshTokenCookie],
-      };
-    } catch (error) {
-      return handleHttpResponseError(error);
-    }
+    return {
+      status: HttpStatusCodes.Accepted,
+      body: {},
+      cookies: [clearRefreshTokenCookie],
+    };
   };
 
   // FIXME implement such that access to this controller is only for admins
   revokeRefreshToken = async (req: HttpRequest): Promise<HttpResponse<{}>> => {
-    try {
-      const { userId, reason } = req.body;
-      await this.commandHandler.revokeRefreshToken(userId, reason);
-      return {
-        status: HttpStatusCodes.Accepted,
-        body: {},
-      };
-    } catch (error) {
-      return handleHttpResponseError(error);
-    }
+    const { userId, reason } = req.body;
+
+    await this.commandHandler.revokeRefreshToken(userId, reason);
+
+    return {
+      status: HttpStatusCodes.Accepted,
+      body: {},
+    };
   };
 
   private createRefreshTokenCookie = (refreshToken: string) =>

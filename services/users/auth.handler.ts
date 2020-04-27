@@ -46,7 +46,6 @@ export class AuthHandler {
 
     const payload: ILoginTokenPayload = data;
     const login = await this.loginRepository.findById(payload.loginId);
-    if (!login) throw new UserErrors.LoginNotFoundError(payload.loginId);
 
     if (login && login.persistedState.confirmedAt)
       throw new TokenInvalidError(token, `This login was already confirmed`);
@@ -60,7 +59,6 @@ export class AuthHandler {
     if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
 
     const user = await this.userRepository.findById(emailUserMapping.userId);
-    if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
     return this.handleConfirmedLogin(user, login);
   };
@@ -93,7 +91,6 @@ export class AuthHandler {
       const login = Login.createGoogleLogin(loginId, userInfo.email, false, userInfo.id);
 
       const user = await this.userRepository.findById(existing.userId);
-      if (!user) throw new UserErrors.UserNotFoundError(existing.userId);
 
       if (user.persistedState.email !== userInfo.email) {
         // FIXME consider asking the user to change email
@@ -114,11 +111,6 @@ export class AuthHandler {
         );
 
         const user = await this.userRepository.findById(emailUserMapping.userId);
-        if (!user)
-          throw new Error(
-            `user associated with email ${emailUserMapping.email} not found although it should exist`,
-          );
-
         await this.userRepository.googleIdMapping.insert(user.persistedState.id, userInfo.id);
 
         return this.handleConfirmedLogin(user, specialLogin);
@@ -138,7 +130,6 @@ export class AuthHandler {
     const data: IRefreshTokenPayload = decodeToken(token, this.env.tokenSecrets.refreshToken);
 
     const user = await this.userRepository.findById(data.userId);
-    if (!user) throw new TokenInvalidError(token, 'invalid userId');
 
     if (user.persistedState.refreshTokenId !== data.tokenId)
       throw new TokenInvalidError(token, 'token was invalidated');
@@ -153,7 +144,6 @@ export class AuthHandler {
     UserErrors.UserIdRequiredError.validate(userId);
 
     const user = await this.userRepository.findById(userId);
-    if (!user) throw new UserErrors.UserNotFoundError(userId);
 
     const refreshTokenId = Identifier.makeLongId();
     user.revokeRefreshToken(refreshTokenId, reason);

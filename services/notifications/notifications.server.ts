@@ -49,49 +49,41 @@ export class NotificationsServer {
   private subscribePush = async (
     req: HttpRequest<Dtos.ISubscribePushDto>,
   ): Promise<HttpResponse> => {
-    try {
-      const { subscription } = req.body;
-      const auid = req.locals.userId || '';
+    const { subscription } = req.body;
+    const auid = req.locals.userId || '';
 
-      const upserted = await this.notificationSettingsHandlers.upsert(auid);
-      const ns = await this.notificationSettingsHandlers.addPushSubscription(
-        upserted.persistedState.id,
-        auid,
-        subscription,
-      );
+    const upserted = await this.notificationSettingsHandlers.upsert(auid);
+    const ns = await this.notificationSettingsHandlers.addPushSubscription(
+      upserted.persistedState.id,
+      auid,
+      subscription,
+    );
 
-      return {
-        status: HttpStatusCodes.Accepted,
-        // FIXME maybe do not return push subscription array
-        body: ns.persistedState,
-      };
-    } catch (error) {
-      return handleHttpResponseError(error);
-    }
+    return {
+      status: HttpStatusCodes.Accepted,
+      // FIXME maybe do not return push subscription array
+      body: ns.persistedState,
+    };
   };
 
   private updateSettings = async (
     req: HttpRequest<Dtos.INotificationSettingsDto>,
   ): Promise<HttpResponse<Dtos.INotificationSettingsDto>> => {
     {
-      try {
-        const auid = req.locals.userId || '';
-        const settings = req.body;
+      const auid = req.locals.userId || '';
+      const settings = req.body;
 
-        const upserted = await this.notificationSettingsHandlers.upsert(auid);
-        const updated = await this.notificationSettingsHandlers.updateSettings(
-          upserted.persistedState.id,
-          auid,
-          settings,
-        );
+      const upserted = await this.notificationSettingsHandlers.upsert(auid);
+      const updated = await this.notificationSettingsHandlers.updateSettings(
+        upserted.persistedState.id,
+        auid,
+        settings,
+      );
 
-        return {
-          status: HttpStatusCodes.Accepted,
-          body: updated.persistedState,
-        };
-      } catch (error) {
-        return handleHttpResponseError(error);
-      }
+      return {
+        status: HttpStatusCodes.Accepted,
+        body: updated.persistedState,
+      };
     }
   };
 
@@ -110,8 +102,10 @@ export class NotificationsServer {
         };
       } catch (error) {
         if (error.status === HttpStatusCodes.NotFound)
-          // TODO response type shouldn't be required when throwing error...
-          return { status: HttpStatusCodes.Accepted, body: {} as any };
+          return {
+            status: HttpStatusCodes.Accepted,
+            body: { sendEmails: false, sendPushes: false },
+          };
 
         return handleHttpResponseError(error);
       }
