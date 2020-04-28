@@ -1,0 +1,163 @@
+# TODO consider moving the volumes to their corresponding services?
+# but then separation between prod and dev is harder!
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ideas-event-store-pvc
+spec:
+  storageClassName: ideas-event-store-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-ideas-event-store-pv-volume
+spec:
+  storageClassName: ideas-event-store-local-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/mnt/data/ideas-event-store'
+    type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: users-event-store-pvc
+spec:
+  storageClassName: users-event-store-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-users-event-store-pv-volume
+spec:
+  storageClassName: users-event-store-local-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/mnt/data/users-event-store'
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: reviews-event-store-pvc
+spec:
+  storageClassName: reviews-event-store-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-reviews-event-store-pv-volume
+spec:
+  storageClassName: reviews-event-store-local-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/mnt/data/reviews-event-store'
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: projection-database-pvc
+spec:
+  storageClassName: projection-database-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-projection-database-pv-volume
+spec:
+  storageClassName: projection-database-local-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/mnt/data/projection-database'
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: notifications-event-store-pvc
+spec:
+  storageClassName: notifications-event-store-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-notifications-event-store-pv-volume
+spec:
+  storageClassName: notifications-event-store-local-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/mnt/data/notifications-event-store'
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: amdin-database-pvc
+spec:
+  storageClassName: amdin-database-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-admin-database-pv-volume
+spec:
+  storageClassName: amdin-database-local-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/mnt/data/admin-database'
+    type: DirectoryOrCreate

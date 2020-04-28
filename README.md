@@ -12,7 +12,7 @@ This is a project with the purpose of learning the architecture of complex web a
 | Redux frontend                                 | reactive, actions, effects                 | ✔️     |
 | Monorepo                                       | all packages and services in one repo      | ✔️     |
 | Typescript                                     | types everywhere!                          | ✔️     |
-| Local development                              | hot reload, docker-compose, vscode         | ✔️     |
+| Local development                              | hot reload, docker-compose, vscode, ubuntu | ✔️     |
 | Git flow                                       | branching, releases, rebasing              | ✔️     |
 | Gateway                                        | discovery, entry point, auth               | ✔️     |
 | Authentication                                 | passwordless, google login                 | ✔️     |
@@ -20,12 +20,13 @@ This is a project with the purpose of learning the architecture of complex web a
 | Frontend                                       | code splitting, 100% lighthouse score      | ✔️     |
 | [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker     | ✅     |
 | Deployment                                     | ci, cd, build automation, bazel            | ✅     |
-| Testing                                        | unit Tests, integration Tests              | ✅     |
-| Kubernetes                                     | container orchestration, local k8s cluster | ✅     |
+| Testing                                        | unit tests, integration Tests              | ✅     |
+| Kubernetes                                     | container orchestration                    | ✅     |
 | Database(s)                                    | data storage, event store, backups         | ✅     |
 | Search Engine Optimization                     | server side rendering, marketing, google   | ✅     |
 | Security                                       | encryption, https                          | ✅     |
 | Push notifications                             | mobile and desktop                         | ✅     |
+| Local Kubernetes Cluster                       | microk8s                                   | ✅     |
 | Admin panel                                    | monitoring, event handling, logs           | ❌     |
 | Realtime                                       | some kind of realtime integration          | ❌     |
 | File storage                                   | blob storage, encrypted, access control    | ❌     |
@@ -46,7 +47,7 @@ This is a project with the purpose of learning the architecture of complex web a
 ✅ Partly implemented
 ❌ Not yet implemented
 
-# Development
+# Commands
 
 **Setup**
 
@@ -82,120 +83,18 @@ This is a project with the purpose of learning the architecture of complex web a
 
 `yarn up` upgrade npm dependencies
 
-## Develop on Ubuntu 20.04
+`yarn deploy:microk8s` deploy app to local kubernetes cluster
 
-**Required installs**
+# Documentation
 
-```bash
-sudo apt update && \
-sudo apt install curl git nodejs python gcc docker-compose -y
+[Setup your local development environment on Ubuntu](misc/docs/ubuntu.md)
 
-# vscode
-sudo snap install code --classic
+[Use MicroK8s to run the application on a local Kubernetes cluster](misc/docs/microk8s.md)
 
-# yarn
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
-sudo apt update && sudo apt install yarn
+[Deploy the application to a Kubernetes cluster running in the cloud](misc/docs/deployment.md)
 
-# bazel
-sudo yarn global add @bazel/buildifier --prefix /usr/local && \
-sudo yarn global add @bazel/bazelisk --prefix /usr/local
-```
+[User Git Flow to manage development of new features](misc/docs/gitflow.md)
 
-**Optional installs**
-
-```bash
-# install vscode, chromium, kubectl, helm
-sudo snap install chromium --classic && \
-sudo snap install kubectl --classic && \
-sudo snap install helm --classic
-
-# gcloud
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
-sudo apt-get update && sudo apt-get install google-cloud-sdk && \
-gcloud init && \
-gcloud auth configure-docker
-```
-
-## Git Flow
-
-**Creating a feature branch**
-
-```bash
-git checkout dev
-git checkout -b <name-of-feature-branch>
-```
-
-**Finishing a feature branch**
-
-```bash
-git checkout dev
-git merge <name-of-feature-branch>
-```
-
-**Release branches**
-
-```bash
-git checkout dev
-git checkout -b release/0.1.0
-# release work
-git checkout master
-git merge release/0.1.0
-```
-
-# Deployment
-
-### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster and connect to it
-
-```bash
-gcloud beta container --project "centsideas" clusters create "centsideas" --zone "europe-west3-b" --no-enable-basic-auth --machine-type "n1-standard-1" --disk-size "10" && \
-gcloud container clusters get-credentials centsideas --zone europe-west3-b --project centsideas
-```
-
-_# FIXME add instructions on how to add Application-layer Secrets Encryption_
-
-### 2. Setup [Helm](https://helm.sh/)
-
-```bash
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/ && \
-helm repo add jetstack https://charts.jetstack.io/ && \
-helm repo update
-```
-
-### 3. Create an [NGINX Ingress](https://github.com/kubernetes/ingress-nginx)
-
-```bash
-kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $(gcloud config get-value account) && \
-helm install nginx-ingress stable/nginx-ingress
-```
-
-### 4. Point Domain to IP
-
-Go to the created [Load Balancer](https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list) and point your domain to this IP address via an "A" record.
-
-| Record Type | Domain             | Value           |
-| ----------- | ------------------ | --------------- |
-| A           | centsideas.com     | your IP address |
-| A           | api.centsideas.com | your IP address |
-
-### 5. Setup [Cert Manager](https://github.com/helm/charts/tree/master/stable/cert-manager)
-
-```
-kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.0/deploy/manifests/00-crds.yaml && \
-kubectl create namespace cert-manager && \
-helm install cert-manager jetstack/cert-manager --namespace cert-manager
-```
-
-### 6. Deploy services
-
-```
-yarn deploy
-```
-
-Wait until all Workloads are up and running. Now you should be able to visit https://centsideas.com
-
-# Thank you!
+# Thanks to all people listed below for your help!
 
 [@rayman1104](https://github.com/rayman1104) [@marcus-sa](https://github.com/marcus-sa)

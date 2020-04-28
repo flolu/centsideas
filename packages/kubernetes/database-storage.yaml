@@ -64,15 +64,6 @@ spec:
       storage: 1Gi
 
 ---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: cloud-ssd
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-standard
-
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -84,3 +75,12 @@ spec:
   resources:
     requests:
       storage: 1Gi
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: cloud-ssd
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard

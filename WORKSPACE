@@ -97,12 +97,16 @@ k8s_go_deps()
 
 k8s_defaults(
     name = "k8s_deploy",
-    cluster = "_".join([
-        "gke",
-        "centsideas",
-        "europe-west3-b",
-        "centsideas",
-    ]),
+    cluster = "gke_centsideas_europe-west3-b_centsideas",
     image_chroot = "gcr.io/centsideas",
     kind = "deployment",
 )
+
+k8s_defaults(
+    name = "microk8s_deploy",
+    cluster = "microk8s-cluster",
+    image_chroot = "localhost:5000",
+    kind = "deployment",
+)
+
+# FIXME rename this file to `WORKSPACE.bazel` https://stackoverflow.com/questions/60874456

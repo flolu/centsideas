@@ -1,7 +1,7 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
-load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("@cents_ideas//packages/jest:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
@@ -49,17 +49,9 @@ k8s_deploy(
     template = ":gateway.yaml",
 )
 
-k8s_object(
-    name = "k8s-local",
-    cluster = "_".join([
-        "gke",
-        "centsideas",
-        "europe-west3-b",
-        "centsideas",
-    ]),
-    image_chroot = "gcr.io/centsideas",
+microk8s_deploy(
+    name = "microk8s",
     images = {"gateway:placeholder_name": ":image"},
-    kind = "deployment",
     template = ":gateway.yaml",
 )
 

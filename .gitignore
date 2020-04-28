@@ -2,6 +2,8 @@ node_modules
 
 .env.dev
 .env.prod
+.env.microk8s
+
 packages/kubernetes/config.yaml
 packages/kubernetes/secret.yaml
 services/client/environment/environment.ts

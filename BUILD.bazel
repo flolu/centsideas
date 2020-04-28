@@ -15,15 +15,11 @@ ts_library(
 )
 
 # FIXME fiure out how to deploy only changed (not update-to-date with cluster) objects for increased deployment speeds
+# https://stackoverflow.com/a/61321290/8586803
 k8s_objects(
     name = "k8s",
     objects = [
-        "//packages/kubernetes:config",
-        "//packages/kubernetes:secret",
-        "//packages/kubernetes:certificate_issuer",
-        "//packages/kubernetes:ingress",
-        "//packages/kubernetes:database_storage",
-        "//packages/kubernetes:kafka",
+        "//packages/kubernetes:defaults",
         "//services/gateway:k8s",
         "//services/consumer:k8s",
         "//services/ideas:k8s",
@@ -31,5 +27,21 @@ k8s_objects(
         "//services/users:k8s",
         "//services/client:k8s",
         "//services/notifications:k8s",
+        "//services/admin:k8s",
+    ],
+)
+
+k8s_objects(
+    name = "microk8s",
+    objects = [
+        "//packages/kubernetes:microk8s_defaults",
+        "//services/gateway:microk8s",
+        "//services/consumer:microk8s",
+        "//services/ideas:microk8s",
+        "//services/reviews:microk8s",
+        "//services/users:microk8s",
+        "//services/client:microk8s",
+        "//services/notifications:microk8s",
+        "//services/admin:microk8s",
     ],
 )

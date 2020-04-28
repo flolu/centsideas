@@ -1,4 +1,6 @@
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -30,4 +32,52 @@ k8s_deploy(
 k8s_deploy(
     name = "ingress",
     template = ":ingress.yaml",
+)
+
+k8s_objects(
+    name = "defaults",
+    objects = [
+        ":kafka",
+        ":certificate_issuer",
+        ":database_storage",
+        ":config",
+        ":secret",
+        ":ingress",
+    ],
+)
+
+microk8s_deploy(
+    name = "microk8s_kafka",
+    template = ":kafka.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_config",
+    template = ":config.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_secret",
+    template = ":secret.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_database_storage",
+    template = ":local-database-storage.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_ingress",
+    template = ":local-ingress.yaml",
+)
+
+k8s_objects(
+    name = "microk8s_defaults",
+    objects = [
+        ":microk8s_kafka",
+        ":microk8s_config",
+        ":microk8s_secret",
+        ":microk8s_database_storage",
+        ":microk8s_ingress",
+    ],
 )

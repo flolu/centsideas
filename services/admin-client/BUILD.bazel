@@ -6,6 +6,7 @@ load("@npm//history-server:index.bzl", "history_server")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 
 package(default_visibility = ["//visibility:public"])
@@ -124,6 +125,14 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
+    images = {
+        "admin-client:placeholder_name": ":nodejs_image",
+    },
+    template = ":admin-client.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s",
     images = {
         "admin-client:placeholder_name": ":nodejs_image",
     },

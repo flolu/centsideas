@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: centsideas-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+spec:
+  tls:
+    - hosts:
+        - localhost
+        - api.localhost
+  rules:
+    - host: api.localhost
+      http:
+        paths:
+          - backend:
+              serviceName: centsideas-gateway
+              servicePort: 3000
+    - host: localhost
+      http:
+        paths:
+          - backend:
+              serviceName: centsideas-client
+              servicePort: 8080

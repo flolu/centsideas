@@ -1,6 +1,7 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("@cents_ideas//packages/jest:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
@@ -37,6 +38,12 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
+    images = {"reviews:placeholder_name": ":image"},
+    template = ":reviews.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s",
     images = {"reviews:placeholder_name": ":image"},
     template = ":reviews.yaml",
 )

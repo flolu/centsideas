@@ -4,6 +4,7 @@ load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@npm//history-server:index.bzl", "history_server")
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("//packages/angular-bazel:ngsw_config.bzl", "ngsw_config")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
@@ -202,6 +203,12 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
+    images = {"client:placeholder_name": ":prod_server_image"},
+    template = ":client.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s",
     images = {"client:placeholder_name": ":prod_server_image"},
     template = ":client.yaml",
 )

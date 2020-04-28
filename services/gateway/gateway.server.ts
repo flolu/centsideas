@@ -41,7 +41,7 @@ export class GatewayServer {
     this.app.listen(this.env.port);
   }
 
-  // TODO maybe just setup those routes direcly in this class? ... or at least don't inject them?
+  // TODO maybe just setup those routes directly in this class? ... or at least don't inject them?
   private registerServiceRoutes() {
     this.app.use(
       `/${ApiEndpoints.Ideas}`,
