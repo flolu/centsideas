@@ -1,6 +1,4 @@
-import * as __ngrxStoreTypes from '@ngrx/store/src/models';
-
-import { createReducer, on, Action } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 
 import { LoadStatus } from '@cic/shared';
 import { AuthActions } from './auth.actions';

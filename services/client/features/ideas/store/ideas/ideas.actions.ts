@@ -1,5 +1,3 @@
-import * as __ngrxStoreTypes from '@ngrx/store/src/models';
-
 import { createAction, props } from '@ngrx/store';
 
 import { IIdeaViewModel } from '@centsideas/models';

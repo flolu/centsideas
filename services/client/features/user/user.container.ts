@@ -1,6 +1,3 @@
-import * as __rxjsTypes from 'rxjs';
-import * as __ngrxStore from '@ngrx/store/store';
-
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { FormGroup, FormControl } from '@angular/forms';

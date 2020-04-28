@@ -1,7 +1,3 @@
-import * as __ngrxEffectsTypes from '@ngrx/effects/src/models';
-import * as __ngrxStoreTypes from '@ngrx/store/src/models';
-import * as __rxjsTypes from 'rxjs';
-
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { createEffect, Actions, ofType } from '@ngrx/effects';

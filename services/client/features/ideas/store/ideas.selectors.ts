@@ -1,6 +1,3 @@
-import * as __ngrxStore from '@ngrx/store/store';
-import * as __entityTypes from '@ngrx/entity';
-
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
 import { IIdeaViewModel } from '@centsideas/models';

@@ -1,6 +1,3 @@
-import * as __entityTypes from '@ngrx/entity';
-import * as __ngrxStoreTypes from '@ngrx/store/src/models';
-
 import { createReducer, on } from '@ngrx/store';
 import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 

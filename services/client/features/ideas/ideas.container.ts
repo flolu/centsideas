@@ -1,7 +1,4 @@
-import * as __rxjsTypes from 'rxjs';
-
-import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { IIdeaViewModel } from '@centsideas/models';

@@ -1,5 +1,4 @@
-import { createReducer, Action, on } from '@ngrx/store';
-import * as __ngrxStoreTypes from '@ngrx/store/src/models';
+import { createReducer, on } from '@ngrx/store';
 
 import { SyncStatus } from '@cic/shared';
 import { NotificationsActions } from './notifications.actions';

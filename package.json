@@ -99,6 +99,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "lint-staged": "10.1.7",
     "npm-run-all": "4.1.5",
+    "patch-package": "^6.2.2",
     "prettier": "2.0.5",
     "protractor": "5.4.4",
     "requirejs": "2.3.6",
@@ -156,7 +157,7 @@
     "docker": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "docker:stop": "docker stop $(docker ps -q)",
     "vapid": "web-push generate-vapid-keys --json",
-    "postinstall": "ngcc"
+    "postinstall": "patch-package --patch-dir misc/patches && ngcc"
   },
   "config": {
     "client_env_template": "services/client/environment/environment.template.ts",

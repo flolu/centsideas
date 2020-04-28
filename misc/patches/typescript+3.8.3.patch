@@ -1,0 +1,12 @@
+diff --git a/node_modules/typescript/lib/typescript.js b/node_modules/typescript/lib/typescript.js
+index 583f65b..f247520 100644
+--- a/node_modules/typescript/lib/typescript.js
++++ b/node_modules/typescript/lib/typescript.js
+@@ -90563,6 +90563,7 @@ var ts;
+     }
+     ts.isInternalDeclaration = isInternalDeclaration;
+     var declarationEmitNodeBuilderFlags = 1024 /* MultilineObjectLiterals */ |
++        67108864 /* AllowNodeModulesRelativePaths */ |
+         2048 /* WriteClassExpressionAsTypeLiteral */ |
+         4096 /* UseTypeOfFunction */ |
+         8 /* UseStructuralFallback */ |

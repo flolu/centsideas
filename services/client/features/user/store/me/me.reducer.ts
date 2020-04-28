@@ -1,5 +1,3 @@
-import * as __ngrxStoreTypes from '@ngrx/store/src/models';
-
 import { createReducer, on } from '@ngrx/store';
 
 import { SyncStatus } from '@cic/shared';

@@ -1,5 +1,3 @@
-import * as __ngrxStore from '@ngrx/store/store';
-
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { StoreKeys } from '@cic/shared';

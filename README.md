@@ -1,8 +1,6 @@
-# [CENTS](https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090/) Ideas
+This is a project with the purpose of learning the architecture of complex applications. The main goals can be seen in the table below. CENTS Ideas is going to be an app to share, review and discover business ideas.
 
-# Description
-
-This is a project with the purpose of learning the architecture of complex web applications. The main goals can be seen in the table below. CENTS Ideas is going to be a website to share, review and discover business ideas. The concept of CENTS (⚙ Control 🔓 Entry 🙏 Need ⏳ Time 🌍 Scale) was initially introduced by [MJ DeMarco](http://www.mjdemarco.com/).
+> The concept of [CENTS](https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090) (**C**ontrol, **E**ntry, **N**eed, **T**ime, **S**cale) was initially introduced by [MJ DeMarco](http://www.mjdemarco.com/).
 
 # Goals
 
@@ -97,4 +95,4 @@ This is a project with the purpose of learning the architecture of complex web a
 
 # Thanks to all people listed below for your help!
 
-[@rayman1104](https://github.com/rayman1104) [@marcus-sa](https://github.com/marcus-sa)
+[@rayman1104](https://github.com/rayman1104) [@marcus-sa](https://github.com/marcus-sa) [@joeljeske](https://github.com/joeljeske)

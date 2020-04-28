@@ -1,5 +1,3 @@
-import * as __rxjsTypes from 'rxjs';
-
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 

@@ -1,6 +1,3 @@
-import * as __rxjsTypes from 'rxjs';
-import * as __ngrxStore from '@ngrx/store/store';
-
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 
