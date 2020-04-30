@@ -16,6 +16,9 @@
   sudo snap install code --classic
   ```
 
+  To get my VSCode settings you can install the [Settings Sync](https://marketplace.visualstudio.com/items?itemName=Shan.code-settings-sync) extension.
+  Then hit `CTRL + SHIFT + P` and enter `Sync: Download Settings`. Enter the following ID `6c4dfda01f083d7f104a2a8f51c8f452` and the settings will be installed. (The settings will be pull from [this](https://gist.github.com/flolu/6c4dfda01f083d7f104a2a8f51c8f452) Github Gist)
+
 - [Docker Compose](https://github.com/docker/compose) - run multiple docker containers simultaneously
 
   ```

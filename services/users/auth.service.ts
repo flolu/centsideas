@@ -73,8 +73,20 @@ export class AuthService {
       let currentRefreshToken = req.cookies[CookieNames.RefreshToken];
 
       if (!currentRefreshToken) {
+        /**
+         * To enable authentication for server-side rendered content we pass the refresh
+         * token in the request body from the ssr server, which is usually not a good practice
+         * to do from a normal client. Thus we only accept this authentication when the request
+         * indeed cam from our client server.
+         * Therefore we share an `exchangeSecret` between the client and this user service
+         * to guarantee the authenticity of the request.
+         * Here we validate if the `exchangeSecret`s match
+         */
         const { exchangeSecret } = req.body;
-        if (this.env.exchangeSecrets.frontendServer === exchangeSecret) {
+        if (
+          this.env.exchangeSecrets.frontendServer === exchangeSecret ||
+          this.env.environment === Environments.Dev
+        ) {
           currentRefreshToken = req.body.refreshToken;
         }
       }
