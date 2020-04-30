@@ -1,18 +1,18 @@
 import { injectable } from 'inversify';
 
-import { Environments } from '@centsideas/enums';
+import environment from '@centsideas/environment';
 
 @injectable()
 export class IdeasEnvironment {
-  environment: Environments = process.env.ENV as Environments;
+  environment = environment.environment;
   port = 3000;
   rpc = {
     host: '0.0.0.0',
-    port: process.env.IDEAS_RPC_PORT!,
+    port: environment.ideasRpcHost,
   };
   database = {
-    url: process.env.IDEAS_DATABASE_URL!,
+    url: environment.ideasDatabaseUrl,
     name: 'ideas',
   };
-  adminHost = process.env.ADMIN_SERVICE_HOST!;
+  adminHost = environment.adminHost;
 }

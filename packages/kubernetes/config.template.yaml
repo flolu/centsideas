@@ -3,32 +3,31 @@ kind: ConfigMap
 metadata:
   name: global-config
 data:
-  ENV: ${ENV}
+  environment: ${environment}
 
-  GATEWAY_URL: ${GATEWAY_URL}
-  MAIN_CLIENT_URL: ${MAIN_CLIENT_URL}
-  ADMIN_CLIENT_URL: ${ADMIN_CLIENT_URL}
-  ADMIN_SOCKET_URL: ${ADMIN_SOCKET_URL}
+  gatewayUrl: ${gatewayUrl}
+  mainClientUrl: ${mainClientUrl}
+  adminClientUrl: ${adminClientUrl}
 
-  IDEAS_RPC_HOST: ${IDEAS_RPC_HOST}
-  IDEAS_RPC_PORT: "${IDEAS_RPC_PORT}"
-  IDEAS_SERVICE_HOST: ${IDEAS_SERVICE_HOST}
-  CONSUMER_SERVICE_HOST: ${CONSUMER_SERVICE_HOST}
-  USERS_SERVICE_HOST: ${USERS_SERVICE_HOST}
-  REVIEWS_SERVICE_HOST: ${REVIEWS_SERVICE_HOST}
-  NOTIFICATIONS_SERVICE_HOST: ${NOTIFICATIONS_SERVICE_HOST}
-  ADMIN_SERVICE_HOST: ${ADMIN_SERVICE_HOST}
+  ideasRpcHost: ${ideasRpcHost}
+  ideasRpcPort: '${ideasRpcPort}'
+  ideasHost: ${ideasHost}
+  consumerHost: ${consumerHost}
+  usersHost: ${usersHost}
+  reviewsHost: ${reviewsHost}
+  notificationsHost: ${notificationsHost}
+  adminHost: ${adminHost}
 
-  IDEAS_DATABASE_URL: ${IDEAS_DATABASE_URL}
-  REVIEWS_DATABASE_URL: ${REVIEWS_DATABASE_URL}
-  PROJECTION_DATABASE_URL: ${PROJECTION_DATABASE_URL}
-  USERS_DATABASE_URL: ${USERS_DATABASE_URL}
-  NOTIFICATIONS_DATABASE_URL: ${NOTIFICATIONS_DATABASE_URL}
-  ADMIN_DATABASE_URL: ${ADMIN_DATABASE_URL}
+  ideasDatabaseUrl: ${ideasDatabaseUrl}
+  reviewsDatabaseUrl: ${reviewsDatabaseUrl}
+  projectionDatabaseUrl: ${projectionDatabaseUrl}
+  usersDatabaseUrl: ${usersDatabaseUrl}
+  notificationsDatabaseUrl: ${notificationsDatabaseUrl}
+  adminDatabaseUrl: ${adminDatabaseUrl}
 
-  KAFKA_ADVERTISED_HOST_NAME: ${KAFKA_ADVERTISED_HOST_NAME}
-  KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
-  KAFKA_ADVERTISED_PORT: "${KAFKA_ADVERTISED_PORT}"
-  KAFKA_BROKER_HOST: ${KAFKA_BROKER_HOST}
+  kafkaAdvertisedHostName: ${kafkaAdvertisedHostName}
+  kafkaZookeeperConnect: ${kafkaZookeeperConnect}
+  kafkaAdvertisedPort: '${kafkaAdvertisedPort}'
+  kafkaBrokerHost: ${kafkaBrokerHost}
 
-  VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+  vapidPublicKey: ${vapidPublicKey}

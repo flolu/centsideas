@@ -1,9 +1,9 @@
-version: "3"
+version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - "2181"
+      - '2181'
     hostname: zookeeper
     logging:
       driver: none
@@ -12,11 +12,15 @@ services:
     hostname: kafka
     ports:
       - 9092:9092
-    env_file: .env.dev
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_BROKER_HOST: kafka:9092
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - "zookeeper"
+      - 'zookeeper'
     logging:
       driver: none
 
@@ -30,7 +34,7 @@ services:
       - ./services/gateway:/services/gateway
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env.dev
+    env_file: .env
     command: yarn run ts-node-dev services/gateway --colors
     ports:
       - 3000:3000
@@ -45,7 +49,7 @@ services:
       - ./services/ideas:/services/ideas
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env.dev
+    env_file: .env
     command: yarn run ts-node-dev services/ideas --colors
   ideas-event-store:
     image: mongo:4.2.6
@@ -62,7 +66,7 @@ services:
       - ./services/reviews:/services/reviews
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env.dev
+    env_file: .env
     command: yarn run ts-node-dev services/reviews --colors
   reviews-event-store:
     image: mongo:4.2.6
@@ -79,7 +83,7 @@ services:
       - ./services/users:/services/users
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env.dev
+    env_file: .env
     command: yarn run ts-node-dev services/users --colors
   users-event-store:
     image: mongo:4.2.6
@@ -96,10 +100,10 @@ services:
       - ./services/consumer:/services/consumer
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env.dev
+    env_file: .env
     command: yarn run ts-node-dev services/consumer --colors
     depends_on:
-      - "kafka"
+      - 'kafka'
   projection-database:
     image: mongo:4.2.6
     logging:
@@ -115,10 +119,10 @@ services:
       - ./services/notifications:/services/notifications
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env.dev
+    env_file: .env
     command: yarn run ts-node-dev services/notifications --colors
     depends_on:
-      - "kafka"
+      - 'kafka'
   notifications-event-store:
     image: mongo:4.2.6
     logging:
@@ -134,10 +138,10 @@ services:
       - ./services/admin:/services/admin
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env.dev
+    env_file: .env
     command: yarn run ts-node-dev services/admin --colors
     depends_on:
-      - "kafka"
+      - 'kafka'
     ports:
       - 3001:3000
   admin-database:

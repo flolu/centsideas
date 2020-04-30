@@ -1,14 +1,16 @@
 import { injectable } from 'inversify';
 
+import environment from '@centsideas/environment';
+
 @injectable()
 export class AdminEnvironment {
-  environment = process.env.ENV!;
+  environment = environment.environment;
   port = 3000;
   kafka = {
-    brokers: [process.env.KAFKA_BROKER_HOST!],
+    brokers: [environment.kafkaBrokerHost],
   };
   database = {
-    url: process.env.ADMIN_DATABASE_URL!,
+    url: environment.adminDatabaseUrl,
     name: 'admin',
     eventsCollectionName: 'events',
   };

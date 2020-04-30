@@ -1,8 +1,7 @@
-/* tslint:disable no-invalid-template-strings */
-
-import { IClientEnvironment } from '.';
+import { IClientEnvironment } from './index';
 
 export const environment: IClientEnvironment = {
-  gatewayUrl: '${GATEWAY_URL}',
-  vapidPublicKey: '${VAPID_PUBLIC_KEY}',
+  environment: '${environment}',
+  gatewayUrl: '${gatewayUrl}',
+  vapidPublicKey: '${vapidPublicKey}',
 };

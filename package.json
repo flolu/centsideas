@@ -44,7 +44,8 @@
     "tslib": "1.11.1",
     "uuid": "8.0.0",
     "web-push": "^3.4.3",
-    "zone.js": "0.10.3"
+    "zone.js": "0.10.3",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.901.4",
@@ -130,31 +131,19 @@
     "url": "https://github.com/flolu/centsideas.git"
   },
   "scripts": {
-    "setup": "yarn install && yarn env:setup && yarn envsub:dev",
-    "dev": "yarn envsub:dev && yarn docker",
+    "todo": "# TODO organize scripts",
+    "setup": "yarn install && yarn env:setup",
+    "dev": "yarn env:setup && yarn docker",
     "client:dev": "yarn envsub:dev && ibazel run //services/client:dev_server",
     "admin:dev": "yarn envsub:dev && ibazel run //services/admin-client:live_server",
     "client": "yarn envsub:dev && bazelisk run //services/client",
     "admin": "yarn envsub:dev && bazelisk run //services/admin-client",
-    "test": "yarn envsub:dev && bazelisk test //...",
+    "test": "yarn env:setup && bazelisk test //...",
     "deploy": "yarn envsub:prod && bazelisk run :k8s.apply",
     "deploy:microk8s": "yarn envsub:microk8s && bazelisk run :microk8s.apply",
     "lint": "tslint --project .",
     "up": "yarn upgrade-interactive --latest",
-    "envsub:dev": "yarn env:setup && concurrently \"yarn:envsub:*:dev\" \"yarn:envsub:k8s:*\"",
-    "envsub:microk8s": "yarn env:setup && concurrently \"yarn:envsub:*:microk8s\"",
-    "envsub:prod": "yarn env:setup && concurrently \"yarn:envsub:*:prod\" \"yarn:envsub:k8s:*\"",
-    "envsub:k8s:config": "envsub --env-file .env.prod $npm_package_config_k8s_template $npm_package_config_k8s",
-    "envsub:k8s:secret": "envsub --env-file .env.prod $npm_package_config_k8s_secret_template $npm_package_config_k8s_secret",
-    "envsub:client:prod": "envsub --env-file .env.prod $npm_package_config_client_env_template $npm_package_config_client_env",
-    "envsub:admin:prod": "envsub --env-file .env.prod $npm_package_config_admin_env_template $npm_package_config_admin_env",
-    "envsub:client:dev": "envsub --env-file .env.dev $npm_package_config_client_env_template $npm_package_config_client_env",
-    "envsub:admin:dev": "envsub --env-file .env.dev $npm_package_config_admin_env_template $npm_package_config_admin_env",
-    "envsub:k8s:config:microk8s": "envsub --env-file .env.microk8s $npm_package_config_k8s_template $npm_package_config_k8s",
-    "envsub:k8s:secret:microk8s": "envsub --env-file .env.microk8s $npm_package_config_k8s_secret_template $npm_package_config_k8s_secret",
-    "envsub:client:microk8s": "envsub --env-file .env.microk8s $npm_package_config_client_env_template $npm_package_config_client_env",
-    "envsub:admin:microk8s": "envsub --env-file .env.microk8s $npm_package_config_admin_env_template $npm_package_config_admin_env",
-    "env:setup": "ts-node misc/env/setup",
+    "env:setup": "ts-node packages/environment/setup-environments",
     "docker": "docker-compose up --build --no-color",
     "docker:no-prefixes": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "docker:stop": "docker stop $(docker ps -q)",
@@ -162,18 +151,7 @@
     "postinstall": "patch-package --patch-dir misc/patches && ngcc"
   },
   "scriptsComments": {
-    "envsub": "# TODO remove all those envsub scripts and outsource them to a proper place",
     "docker": "# FIXME disable logger prefixes https://github.com/docker/compose/issues/7416"
-  },
-  "config": {
-    "client_env_template": "services/client/environment/environment.template.ts",
-    "client_env": "services/client/environment/environment.ts",
-    "admin_env_template": "services/admin-client/environment/environment.template.ts",
-    "admin_env": "services/admin-client/environment/environment.ts",
-    "k8s_template": "packages/kubernetes/config.template.yaml",
-    "k8s": "packages/kubernetes/config.yaml",
-    "k8s_secret_template": "packages/kubernetes/secret.template.yaml",
-    "k8s_secret": "packages/kubernetes/secret.yaml"
   },
   "husky": {
     "hooks": {

@@ -1,24 +1,26 @@
 import { injectable } from 'inversify';
 
+import environment from '@centsideas/environment';
+
 @injectable()
 export class UsersEnvironment {
-  environment = process.env.ENV!;
+  environment = environment.environment;
   port = 3000;
-  databaseUrl = process.env.USERS_DATABASE_URL!;
+  databaseUrl = environment.usersDatabaseUrl;
   userDatabaseName = 'users';
   loginDatabaseName = 'logins';
-  frontendUrl = process.env.MAIN_CLIENT_URL!;
+  frontendUrl = environment.mainClientUrl;
   tokenSecrets = {
-    accessToken: process.env.ACCESS_TOKEN_SECRET!,
-    refreshToken: process.env.REFRESH_TOKEN_SECRET!,
-    loginToken: process.env.LOGIN_TOKEN_SECRET!,
-    changeEmailToken: process.env.CHANGE_EMAIL_TOKEN_SECRET!,
+    accessToken: environment.accessTokenSecret,
+    refreshToken: environment.refreshTokenSecret,
+    loginToken: environment.loginTokenSecret,
+    changeEmailToken: environment.changeEmailTokenSecret,
   };
   google = {
-    clientId: process.env.GOOGLE_CLIENT_ID!,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    clientId: environment.googleClientId,
+    clientSecret: environment.googleClientSecret,
   };
   exchangeSecrets = {
-    frontendServer: process.env.FRONTEND_SERVER_EXCHANGE_SECRET!,
+    frontendServer: environment.frontendServerExchangeSecret,
   };
 }

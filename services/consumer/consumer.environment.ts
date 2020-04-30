@@ -1,13 +1,15 @@
 import { injectable } from 'inversify';
 
+import environment from '@centsideas/environment';
+
 @injectable()
 export class ConsumerEnvironment {
-  environment = process.env.ENV!;
+  environment = environment.environment;
   port = 3000;
   kafka = {
-    brokers: [process.env.KAFKA_BROKER_HOST!],
+    brokers: [environment.kafkaBrokerHost],
   };
   database = {
-    url: process.env.PROJECTION_DATABASE_URL!,
+    url: environment.projectionDatabaseUrl,
   };
 }

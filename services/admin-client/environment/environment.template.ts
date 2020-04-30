@@ -2,6 +2,6 @@
 import { IAdminClientEnvironment } from '.';
 
 export const environment: IAdminClientEnvironment = {
-  gatewayUrl: '${GATEWAY_URL}',
-  adminSocketUrl: '${ADMIN_SOCKET_URL}',
+  gatewayUrl: '${gatewayUrl}',
+  adminSocketUrl: '${adminSocketUrl}',
 };

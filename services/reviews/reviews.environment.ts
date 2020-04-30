@@ -1,11 +1,13 @@
 import { injectable } from 'inversify';
 
+import environment from '@centsideas/environment';
+
 @injectable()
 export class ReviewsEnvironment {
-  environment = process.env.ENV!;
+  environment = environment.environment;
   port = 3000;
   database = {
-    url: process.env.IDEAS_DATABASE_URL!,
+    url: environment.reviewsDatabaseUrl,
     name: 'reviews',
   };
 }

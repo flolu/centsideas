@@ -9,6 +9,7 @@ package(default_visibility = ["//visibility:public"])
 lib_deps = [
     # TODO we don't use register aliases in prod mode... why import?
     "//:register-aliases.js",
+    "//packages/environment",
     "//packages/enums",
     "//packages/models",
     "//packages/utils",

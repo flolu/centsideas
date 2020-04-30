@@ -27,7 +27,7 @@ export class GatewayServer {
     private env: GatewayEnvironment,
     private adminRoutes: AdminRoutes,
   ) {
-    Logger.info('launch in', this.env.environment, 'mode');
+    Logger.info('launch in', this.env.environment, 'mode', this.env);
 
     this.app.use(this.middlewares.cors);
     this.app.use(bodyParser.json());

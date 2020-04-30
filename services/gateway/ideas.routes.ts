@@ -7,7 +7,7 @@ import * as path from 'path';
 import { IdeasApiRoutes, ApiEndpoints } from '@centsideas/enums';
 
 import { ExpressAdapter } from './express-adapter';
-import { Logger, getProvider } from '@centsideas/utils';
+import { Logger } from '@centsideas/utils';
 import { GatewayEnvironment } from './gateway.environment';
 
 @injectable()

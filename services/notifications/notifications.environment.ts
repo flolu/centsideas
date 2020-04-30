@@ -1,20 +1,22 @@
 import { injectable } from 'inversify';
 
+import environment from '@centsideas/environment';
+
 @injectable()
 export class NotificationEnvironment {
-  environment = process.env.ENV!;
+  environment = environment.environment;
   port = 3000;
   notificationSettingsDatabaseName = 'notification_settings';
   notificationsDatabaseName = 'notifications';
-  databaseUrl = process.env.NOTIFICATIONS_DATABASE_URL!;
-  frontendUrl = process.env.MAIN_CLIENT_URL!;
-  vapidPrivateKey = process.env.VAPID_PRIVATE_KEY!;
-  vapidPublicKey = process.env.VAPID_PUBLIC_KEY!;
+  databaseUrl = environment.notificationsDatabaseUrl;
+  frontendUrl = environment.mainClientUrl;
+  vapidPrivateKey = environment.vapidPrivateKey;
+  vapidPublicKey = environment.vapidPublicKey;
   kafka = {
-    brokers: [process.env.KAFKA_BROKER_HOST!],
+    brokers: [environment.kafkaBrokerHost],
   };
   mailing = {
-    apiKey: process.env.SEND_GRID_API_KEY!,
+    apiKey: environment.sendgridApiKey,
     fromAddress: 'CENTS Ideas <noreply@centsideas.com>',
   };
 }

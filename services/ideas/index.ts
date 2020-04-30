@@ -1,10 +1,10 @@
 // tslint:disable-next-line:no-var-requires
-if (process.env.ENV === 'dev') require('../../register-aliases').registerAliases();
+if (process.env.environment === 'dev') require('../../register-aliases').registerAliases();
 import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.SERVICE = Services.Ideas;
-import { registerProviders, getProvider, Logger } from '@centsideas/utils';
+import { registerProviders, getProvider } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 
 import { IdeasServer } from './ideas.server';

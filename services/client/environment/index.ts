@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
 export interface IClientEnvironment {
+  environment: string;
   gatewayUrl: string;
   vapidPublicKey: string;
 }

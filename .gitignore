@@ -1,8 +1,6 @@
 node_modules
 
-.env.dev
-.env.prod
-.env.microk8s
+.env*
 
 packages/kubernetes/config.yaml
 packages/kubernetes/secret.yaml
@@ -20,5 +18,3 @@ bazel-*
 dist
 
 __ngcc_entry_points__.json
-
-.VSCodeCounter

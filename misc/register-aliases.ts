@@ -1,12 +1,11 @@
 // tslint:disable-next-line:no-var-requires
 const moduleAlias = require('module-alias');
 import * as fs from 'fs';
+import * as path from 'path';
 
-export const registerAliases = () => {
-  const paths: string[] = fs.readdirSync('./packages');
-  paths.forEach(addPackageAlias);
-};
-
-const addPackageAlias = (name: string) => {
-  moduleAlias.addAlias(`@centsideas/${name}`, `${__dirname}../../../packages/${name}`);
+export const registerAliases = (rootDir: string = '') => {
+  const paths: string[] = fs.readdirSync(path.join('packages'));
+  paths.forEach(name =>
+    moduleAlias.addAlias(`@centsideas/${name}`, path.join(__dirname, rootDir, 'packages', name)),
+  );
 };
