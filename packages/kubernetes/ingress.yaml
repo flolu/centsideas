@@ -3,9 +3,9 @@ kind: Ingress
 metadata:
   name: centsideas-ingress
   annotations:
-    kubernetes.io/tls-acme: 'true'
-    kubernetes.io/ingress.class: 'nginx'
-    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
     - hosts:
@@ -25,3 +25,13 @@ spec:
           - backend:
               serviceName: centsideas-client
               servicePort: 8080
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: centsideas-ingress
+  namespace: ingress-nginx
+data:
+  # FIXME I am not sure if this actually works, because it makes no differnce even when turned off
+  use-gzip: "true"

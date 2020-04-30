@@ -3,7 +3,7 @@ import { injectable } from 'inversify';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 
-import { HeaderKeys } from '@centsideas/enums';
+import { HeaderKeys, Environments } from '@centsideas/enums';
 import { IAccessTokenPayload } from '@centsideas/models';
 
 import { GatewayEnvironment } from './gateway.environment';
@@ -40,7 +40,7 @@ export class GatewayMiddlewares {
 
   private get corsWhitelist() {
     let whitelist = [this.env.mainClientUrl, this.env.adminClientUrl];
-    if (this.env.environment === 'dev')
+    if (this.env.environment === Environments.Dev)
       whitelist = [
         ...whitelist,
         'http://localhost:4000',

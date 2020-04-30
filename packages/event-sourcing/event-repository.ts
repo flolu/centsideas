@@ -48,6 +48,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     });
   }
 
+  // TODO add init config logs again (would have found the issue much faster today)
   initialize = (
     entity: IEntityConstructor<Entity>,
     url: string,
@@ -176,6 +177,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
     return entity.confirmEvents();
   };
 
+  // TODO try catch!!
   generateUniqueId = (longId: boolean = true): Promise<string> => {
     const checkAvailability = async (resolve: (id: string) => any) => {
       await this.waitUntilInitialized();

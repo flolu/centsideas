@@ -1,6 +1,11 @@
 import { injectable } from 'inversify';
 
-import { HttpStatusCodes, CookieNames, TokenExpirationTimes } from '@centsideas/enums';
+import {
+  HttpStatusCodes,
+  CookieNames,
+  TokenExpirationTimes,
+  Environments,
+} from '@centsideas/enums';
 import { HttpRequest, HttpResponse, Cookie, Dtos } from '@centsideas/models';
 import { handleHttpResponseError } from '@centsideas/utils';
 
@@ -123,8 +128,8 @@ export class AuthService {
   private createRefreshTokenCookie = (refreshToken: string) =>
     new Cookie(CookieNames.RefreshToken, refreshToken, {
       httpOnly: true,
-      sameSite: this.env.environment === 'dev' ? 'none' : 'strict',
-      secure: this.env.environment === 'dev' ? false : true,
+      sameSite: this.env.environment === Environments.Prod ? 'strict' : 'none',
+      secure: this.env.environment === Environments.Prod ? true : false,
       maxAge: TokenExpirationTimes.RefreshToken * 1000,
     });
 }

@@ -13,7 +13,7 @@ import { AdminDatabase } from './admin.database';
 import { HttpResponse } from '@centsideas/models';
 
 // TODO secure the connection to admin
-// TODO delete events older than a month (otherwise the admin db would become bigger than all other dbs together)
+// FIXME delete events older than a month (otherwise the admin db would become bigger than all other dbs together)
 @injectable()
 export class AdminServer {
   private app = express();

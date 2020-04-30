@@ -35,12 +35,14 @@ sudo yarn global add @bazel/bazelisk --prefix /usr/local
 sudo snap install chromium && \
 sudo snap install firefox
 
-# kubectl
-sudo snap install kubectl --classic
-
-# microk8s
+# microk8s and kubectl and helm
 sudo snap install microk8s --classic && \
-sudo snap alias microk8s.kubectl kubectl
+sudo snap alias microk8s.kubectl kubectl && \
+# echo "alias kubectl='microk8s kubectl'" >> ~/.bash_aliases && \
+sudo microk8s enable helm3 && \
+sudo snap alias microk8s.helm3 helm && \
+sudo usermod -a -G microk8s $USER && \
+sudo chown -f -R $USER ~/.kube
 
 # helm
 sudo snap install helm --classic
@@ -51,5 +53,8 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyr
 sudo apt-get update && sudo apt-get install google-cloud-sdk && \
 gcloud init && \
 gcloud auth configure-docker
+
+# reenter password to activate sudo access to microk8s for current user
+su - $USER
 
 return 0

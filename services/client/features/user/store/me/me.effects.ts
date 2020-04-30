@@ -24,13 +24,15 @@ export class MeEffects {
       ofType(MeActions.updateUser),
       withLatestFrom(this.store.select(AuthSelectors.user)),
       switchMap(([payload, user]) =>
-        this.meService.updateUser(payload, user.id).pipe(
-          switchMap(updated => [
-            MeActions.updateUserDone({ updated }),
-            AuthActions.overwriteUser({ user: updated }),
-          ]),
-          catchError(error => of(MeActions.updateUserFail({ error }))),
-        ),
+        this.meService
+          .updateUser({ username: payload.username, email: payload.email }, user.id)
+          .pipe(
+            switchMap(updated => [
+              MeActions.updateUserDone({ updated }),
+              AuthActions.overwriteUser({ user: updated }),
+            ]),
+            catchError(error => of(MeActions.updateUserFail({ error }))),
+          ),
       ),
     ),
   );

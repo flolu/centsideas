@@ -9,7 +9,7 @@ import { IdeasHandler } from './ideas.handler';
 export class IdeasService {
   constructor(private commandHandler: IdeasHandler) {}
 
-  // TODO this is undefined when using `async create() {}`
+  // FIXME this is undefined when using `async create() {}`
   create = async (req: HttpRequest<Dtos.ICreateIdeaDto>): Promise<HttpResponse<IIdeaState>> => {
     const { title, description } = req.body;
     const auid = req.locals.userId;

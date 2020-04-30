@@ -105,7 +105,9 @@ k8s_defaults(
 k8s_defaults(
     name = "microk8s_deploy",
     cluster = "microk8s-cluster",
-    image_chroot = "localhost:5000",
+    # localhost:32000 is the local docker container registry of microk8s
+    # more details here: https://microk8s.io/docs/registry-built-in
+    image_chroot = "localhost:32000",
     kind = "deployment",
 )
 

@@ -54,24 +54,19 @@
   sudo snap install firefox
   ```
 
-- [kubectl](https://github.com/kubernetes/kubectl) - cli for kubernetes
+- [MicroK8s](https://github.com/ubuntu/microk8s) and [kubectl](https://github.com/kubernetes/kubectl) and [Helm](https://github.com/helm/helm)- lightweight kubernetes for development
 
-  ```bash
-  sudo snap install kubectl --classic
-  ```
+# TODO try `alias kubectl='microk8s kubectl'` instead (https://microk8s.io/docs/)
 
-- [MicroK8s](https://github.com/ubuntu/microk8s) - lightweight kubernetes for development
-
-  ```bash
-  sudo snap install microk8s --classic && \
-  sudo snap alias microk8s.kubectl kubectl
-  ```
-
-- [Helm](https://github.com/helm/helm) - package manager for kubernetes
-
-  ```bash
-  sudo snap install helm --classic
-  ```
+```bash
+sudo snap install microk8s --classic && \
+echo "alias kubectl='microk8s kubectl'" >> ~/.bash_aliases && \
+microk8s enable helm3 && \
+sudo snap alias microk8s.helm3 helm && \
+sudo usermod -a -G microk8s $USER && \
+sudo chown -f -R $USER ~/.kube && \
+su - $USER
+```
 
 - [Google Cloud SDK](https://cloud.google.com/sdk/) - cli for google cloud
 
