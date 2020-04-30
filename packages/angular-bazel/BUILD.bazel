@@ -5,6 +5,10 @@ package(default_visibility = ["//:__subpackages__"])
 exports_files([
     "rollup.config.js",
     "terser.config.json",
+    "tsconfig.e2e.json",
+    "dev-server.on-prepare.js",
+    "local-server.on-prepare.js",
+    "pwa-server.on-prepare.js",
 ])
 
 filegroup(

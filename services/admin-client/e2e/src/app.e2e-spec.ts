@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('main client home page', () => {
+describe('admin client main page', () => {
   let page: AppPage;
 
   beforeEach(() => {
@@ -9,6 +9,6 @@ describe('main client home page', () => {
 
   it('should display title', async () => {
     await page.navigateTo();
-    expect(await page.getTitleText()).toContain(`CENTS`);
+    expect(await page.getTitleText()).toContain(`Admin Panel`);
   });
 });
