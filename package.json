@@ -11,6 +11,8 @@
     "@angular/platform-server": "9.1.4",
     "@angular/router": "9.1.4",
     "@angular/service-worker": "^9.1.4",
+    "@grpc/grpc-js": "^1.0.3",
+    "@grpc/proto-loader": "^0.5.4",
     "@ngrx/effects": "9.1.0",
     "@ngrx/entity": "^9.1.0",
     "@ngrx/router-store": "^9.1.0",
@@ -26,6 +28,7 @@
     "express": "4.17.1",
     "faker": "4.1.0",
     "inversify": "5.0.1",
+    "inversify-express-utils": "^6.3.2",
     "jsonwebtoken": "8.5.1",
     "kafkajs": "1.12.0",
     "module-alias": "2.2.2",
@@ -152,10 +155,15 @@
     "envsub:client:microk8s": "envsub --env-file .env.microk8s $npm_package_config_client_env_template $npm_package_config_client_env",
     "envsub:admin:microk8s": "envsub --env-file .env.microk8s $npm_package_config_admin_env_template $npm_package_config_admin_env",
     "env:setup": "ts-node misc/env/setup",
-    "docker": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "docker": "docker-compose up --build --no-color",
+    "docker:no-prefixes": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "docker:stop": "docker stop $(docker ps -q)",
     "vapid": "web-push generate-vapid-keys --json",
     "postinstall": "patch-package --patch-dir misc/patches && ngcc"
+  },
+  "scriptsComments": {
+    "envsub": "# TODO remove all those envsub scripts and outsource them to a proper place",
+    "docker": "# FIXME disable logger prefixes https://github.com/docker/compose/issues/7416"
   },
   "config": {
     "client_env_template": "services/client/environment/environment.template.ts",

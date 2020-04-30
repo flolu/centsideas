@@ -16,6 +16,7 @@ ts_library(
 
 # FIXME fiure out how to deploy only changed (not update-to-date with cluster) objects for increased deployment speeds
 # https://stackoverflow.com/a/61321290/8586803
+# https://github.com/bazelbuild/rules_k8s/issues/553
 k8s_objects(
     name = "k8s",
     objects = [

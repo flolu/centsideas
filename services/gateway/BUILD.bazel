@@ -26,6 +26,8 @@ lib_deps = [
     "@npm//@types/cookie-parser",
     "@npm//module-alias",
     "@npm//reflect-metadata",
+    "@npm//@grpc/grpc-js",
+    "@npm//@grpc/proto-loader",
 ]
 
 ts_library(
@@ -39,7 +41,10 @@ ts_library(
 
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [
+        ":lib",
+        "//packages/protobuf",
+    ],
     entry_point = ":index.ts",
 )
 

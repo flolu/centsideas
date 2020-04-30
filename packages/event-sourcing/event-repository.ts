@@ -148,7 +148,7 @@ export abstract class EventRepository<Entity extends IEventEntity>
 
     await Promise.all(
       appendedEvents.map(e =>
-        this.messageBroker.send(this.topicName, [{ value: JSON.stringify(e) }]),
+        this.messageBroker.dispatch(this.topicName, [{ value: JSON.stringify(e) }]),
       ),
     );
 

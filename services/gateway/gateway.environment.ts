@@ -6,6 +6,8 @@ import { Environments } from '@centsideas/enums';
 export class GatewayEnvironment {
   environment: Environments = process.env.ENV as Environments;
   port = 3000;
+  ideasRpcPort = process.env.IDEAS_RPC_PORT!;
+  ideasRpcHost = process.env.IDEAS_RPC_HOST!;
   accessTokenSecret = process.env.ACCESS_TOKEN_SECRET!;
   mainClientUrl = process.env.MAIN_CLIENT_URL!;
   adminClientUrl = process.env.ADMIN_CLIENT_URL!;

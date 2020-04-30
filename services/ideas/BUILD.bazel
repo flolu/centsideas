@@ -7,6 +7,7 @@ load("@cents_ideas//packages/jest:jest.bzl", "jest_test")
 package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
+    # TODO we don't use register aliases in prod mode... why import?
     "//:register-aliases.js",
     "//packages/enums",
     "//packages/models",
@@ -21,6 +22,9 @@ lib_deps = [
     "@npm//@types/body-parser",
     "@npm//@types/express",
     "@npm//@types/jest",
+    "@npm//@types/node",
+    "@npm//@grpc/grpc-js",
+    "@npm//@grpc/proto-loader",
 ]
 
 ts_library(
@@ -34,7 +38,10 @@ ts_library(
 
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [
+        ":lib",
+        "//packages/protobuf",
+    ],
     entry_point = ":index.ts",
 )
 

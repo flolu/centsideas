@@ -14,7 +14,7 @@ export class MessageBroker {
     this.kafka = new Kafka({ ...config, logLevel: logLevel.WARN });
   };
 
-  send = async (topic: string, messages: Message[] = []): Promise<RecordMetadata[]> => {
+  dispatch = async (topic: string, messages: Message[] = []): Promise<RecordMetadata[]> => {
     if (!this.producer) {
       if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
       this.producer = this.kafka.producer();

@@ -20,3 +20,5 @@ bazel-*
 dist
 
 __ngcc_entry_points__.json
+
+.VSCodeCounter
