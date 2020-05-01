@@ -27,6 +27,7 @@ services:
   gateway:
     image: node:lts-alpine
     working_dir: /
+    # TODO simplify volumes if possible https://stackoverflow.com/questions/61547472
     volumes:
       - ./package.json:/package.json
       - ./tsconfig.json:/tsconfig.json
@@ -51,10 +52,6 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/ideas --colors
-  ideas-event-store:
-    image: mongo:4.2.6
-    logging:
-      driver: none
 
   reviews:
     image: node:lts-alpine
@@ -68,10 +65,6 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/reviews --colors
-  reviews-event-store:
-    image: mongo:4.2.6
-    logging:
-      driver: none
 
   users:
     image: node:lts-alpine
@@ -85,10 +78,6 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/users --colors
-  users-event-store:
-    image: mongo:4.2.6
-    logging:
-      driver: none
 
   consumer:
     image: node:lts-alpine
@@ -104,10 +93,6 @@ services:
     command: yarn run ts-node-dev services/consumer --colors
     depends_on:
       - 'kafka'
-  projection-database:
-    image: mongo:4.2.6
-    logging:
-      driver: none
 
   notifications:
     image: node:lts-alpine
@@ -123,10 +108,6 @@ services:
     command: yarn run ts-node-dev services/notifications --colors
     depends_on:
       - 'kafka'
-  notifications-event-store:
-    image: mongo:4.2.6
-    logging:
-      driver: none
 
   admin:
     image: node:lts-alpine
@@ -144,7 +125,8 @@ services:
       - 'kafka'
     ports:
       - 3001:3000
-  admin-database:
+
+  mongo-database:
     image: mongo:4.2.6
     logging:
       driver: none
