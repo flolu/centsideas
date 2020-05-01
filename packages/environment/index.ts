@@ -1,36 +1,12 @@
-// seperate private and public env vars
-// all public envs will automatically be placed into a k8s config map and all private into a secret
-// all non-k8s stuff will consume envs from typescript libs
+import { Environments } from '@centsideas/enums';
+import { generateEnv } from './utils';
+import { defaultProdEnv, defaultStagingEnv, defaultDevEnv } from './defaults';
 
-import { IEnvironment } from './environment.model';
-import { defaultDevEnv } from './default-dev.environment';
+export * from './global.environment';
 
-const env: IEnvironment = { ...defaultDevEnv };
+let defaults = defaultDevEnv;
+if (process.env.environment === Environments.Staging) defaults = defaultStagingEnv;
+if (process.env.environment === Environments.Prod) defaults = defaultProdEnv;
 
-for (const key in defaultDevEnv) {
-  // @ts-ignore
-  if (typeof process === 'undefined') break;
-
-  // @ts-ignore
-  const envVar = process.env[key];
-  if (envVar) (env as any)[key] = envVar;
-}
-
-export default env;
-
-export const generatableKeyList: (keyof IEnvironment)[] = [
-  'refreshTokenSecret',
-  'accessTokenSecret',
-  'loginTokenSecret',
-  'changeEmailTokenSecret',
-  'frontendServerExchangeSecret',
-];
-
-export const dynamicKeysList: (keyof IEnvironment)[] = [
-  ...generatableKeyList,
-  'vapidPublicKey',
-  'vapidPrivateKey',
-  'sendgridApiKey',
-  'googleClientId',
-  'googleClientSecret',
-];
+const environment = generateEnv(defaults);
+export default environment;

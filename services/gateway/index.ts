@@ -1,11 +1,12 @@
 // tslint:disable-next-line:no-var-requires
-if (process.env.environment === 'dev') require('../../register-aliases').registerAliases();
+if (!process.env.environment) require('../../register-aliases').registerAliases();
 
 import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
-process.env.SERVICE = Services.Gateway;
+process.env.service = Services.Gateway;
 import { registerProviders, getProvider } from '@centsideas/utils';
+import { GlobalEnvironment } from '@centsideas/environment';
 
 import { GatewayServer } from './gateway.server';
 import { ExpressAdapter } from './express-adapter';
@@ -27,6 +28,7 @@ registerProviders(
   GatewayEnvironment,
   GatewayMiddlewares,
   AdminRoutes,
+  GlobalEnvironment,
 );
 
 getProvider(GatewayServer);

@@ -31,6 +31,8 @@ export class IdeasServer {
       `${this.env.rpc.host}:${this.env.rpc.port}`,
       grpc.ServerCredentials.createInsecure(),
       (err, port) => {
+        if (err) Logger.error(err, 'while binding server');
+        else Logger.info('proto server running ', port);
         server.addService((ideaPackage as any).Idea.service, {
           createIdea: async (call: any, callback: any) => {
             Logger.info('got request', call.request);

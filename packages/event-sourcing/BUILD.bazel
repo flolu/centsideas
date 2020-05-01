@@ -4,6 +4,7 @@ load("@cents_ideas//packages/jest:jest.bzl", "jest_test")
 package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
+    "//packages/environment",
     "//packages/enums",
     "//packages/models",
     "//packages/utils",

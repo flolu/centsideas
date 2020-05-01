@@ -29,7 +29,6 @@ export class AdminServer {
 
     this.setupSocketIO();
 
-    this.messageBroker.initialize({ brokers: this.env.kafka.brokers });
     this.messageBroker.events(/centsideas-.*/i).subscribe(this.adminDatabase.insertEvent);
 
     this.app.post(`/${AdminApiRoutes.GetEvents}`, async (_req, res) => {

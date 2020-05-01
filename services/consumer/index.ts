@@ -1,11 +1,13 @@
 // tslint:disable-next-line:no-var-requires
-if (process.env.environment === 'dev') require('../../register-aliases').registerAliases();
+if (!process.env.environment) require('../../register-aliases').registerAliases();
+
 import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
-process.env.SERVICE = Services.Consumer;
+process.env.service = Services.Consumer;
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { getProvider, registerProviders } from '@centsideas/utils';
+import { GlobalEnvironment } from '@centsideas/environment';
 
 import { ConsumerServer } from './consumer.server';
 import { ProjectionDatabase } from './projection-database';
@@ -24,6 +26,7 @@ registerProviders(
   ReviewsProjection,
   UsersProjection,
   ConsumerEnvironment,
+  GlobalEnvironment,
 );
 
 getProvider(ConsumerServer);

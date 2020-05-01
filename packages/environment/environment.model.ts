@@ -1,5 +1,7 @@
+import { Environments } from '@centsideas/enums';
+
 export interface IEnvironment {
-  environment: string;
+  environment: Environments;
   refreshTokenSecret: string;
   accessTokenSecret: string;
   loginTokenSecret: string;

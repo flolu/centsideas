@@ -32,6 +32,7 @@ export class UserRepository extends EventRepository<User> {
 
   constructor(private _messageBroker: MessageBroker, private env: UsersEnvironment) {
     super(_messageBroker);
+    // TODO those things into super
     this.initialize(User, this.env.databaseUrl, this.env.userDatabaseName, EventTopics.Users);
   }
 

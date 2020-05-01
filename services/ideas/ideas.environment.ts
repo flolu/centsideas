@@ -8,7 +8,7 @@ export class IdeasEnvironment {
   port = 3000;
   rpc = {
     host: '0.0.0.0',
-    port: environment.ideasRpcHost,
+    port: environment.ideasRpcPort,
   };
   database = {
     url: environment.ideasDatabaseUrl,

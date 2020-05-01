@@ -4,7 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 ts_library(
     name = "environment",
-    srcs = glob(["*.ts"]),
+    srcs = glob(["**/*.ts"]),
     module_name = "@centsideas/environment",
     deps = [
         "//packages/enums",
@@ -12,6 +12,7 @@ ts_library(
         "@npm//@types/web-push",
         "@npm//chalk",
         "@npm//dotenv",
+        "@npm//inversify",
         "@npm//web-push",
     ],
 )

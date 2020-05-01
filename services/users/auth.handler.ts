@@ -7,14 +7,15 @@ import * as queryString from 'query-string';
 import { decodeToken, TokenInvalidError, Identifier } from '@centsideas/utils';
 import { ILoginTokenPayload, IRefreshTokenPayload } from '@centsideas/models';
 import { TopLevelFrontendRoutes, TokenExpirationTimes } from '@centsideas/enums';
+import { GlobalEnvironment } from '@centsideas/environment';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
 import { UserErrors } from './errors';
 import { UsersEnvironment } from './users.environment';
 import { Login } from './login.entity';
-import { LoginRepository } from './login.repository';
 import { IGoogleUserinfo } from './models';
+import { LoginRepository } from './login.repository';
 
 @injectable()
 export class AuthHandler {
@@ -22,6 +23,7 @@ export class AuthHandler {
     private userRepository: UserRepository,
     private loginRepository: LoginRepository,
     private env: UsersEnvironment,
+    private globalEnv: GlobalEnvironment,
   ) {}
 
   login = async (email: string): Promise<Login> => {
@@ -231,7 +233,9 @@ export class AuthHandler {
 
   private getGoogleRedirectUri = (origin?: string) => {
     const frontendUrl =
-      this.env.environment === 'dev' ? origin || this.env.frontendUrl : this.env.frontendUrl;
+      this.globalEnv.environment === 'dev'
+        ? origin || this.globalEnv.mainClientUrl
+        : this.globalEnv.mainClientUrl;
     return `${frontendUrl}/${TopLevelFrontendRoutes.Login}`;
   };
 }

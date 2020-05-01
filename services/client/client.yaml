@@ -19,11 +19,11 @@ spec:
             - configMapRef:
                 name: global-config
           env:
-            - name: FRONTEND_SERVER_EXCHANGE_SECRET
+            - name: frontendServerExchangeSecret
               valueFrom:
                 secretKeyRef:
                   name: centsideas-secret
-                  key: FRONTEND_SERVER_EXCHANGE_SECRET
+                  key: frontendServerExchangeSecret
           readinessProbe:
             httpGet:
               path: /alive
@@ -38,8 +38,8 @@ spec:
             periodSeconds: 20
           resources:
             requests:
-              memory: 100Mi
-              cpu: 50m
+              memory: 10Mi
+              cpu: 10m
             limits:
               memory: 500Mi
               cpu: 500m

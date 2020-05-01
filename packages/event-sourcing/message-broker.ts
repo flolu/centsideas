@@ -1,22 +1,22 @@
 import { injectable } from 'inversify';
-import { Kafka, Producer, Consumer, KafkaConfig, Message, RecordMetadata, logLevel } from 'kafkajs';
+import { Kafka, Producer, Consumer, Message, RecordMetadata, logLevel } from 'kafkajs';
 import { Observable, Observer } from 'rxjs';
 
 import { Identifier, Logger } from '@centsideas/utils';
 import { IEvent } from '@centsideas/models';
+import { GlobalEnvironment } from '@centsideas/environment';
+
+// TODO it will probably make more sense to split message broker into a producer and consumer class
 
 @injectable()
 export class MessageBroker {
-  private kafka: Kafka | undefined;
+  private kafka = new Kafka({ brokers: [this.globalEnv.kafkaBrokerHost], logLevel: logLevel.WARN });
   private producer: Producer | undefined;
 
-  initialize = (config: KafkaConfig) => {
-    this.kafka = new Kafka({ ...config, logLevel: logLevel.WARN });
-  };
+  constructor(private globalEnv: GlobalEnvironment) {}
 
   dispatch = async (topic: string, messages: Message[] = []): Promise<RecordMetadata[]> => {
     if (!this.producer) {
-      if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
       this.producer = this.kafka.producer();
     }
     await this.producer.connect();
@@ -24,7 +24,6 @@ export class MessageBroker {
   };
 
   events = (topic: string | RegExp): Observable<IEvent> => {
-    if (!this.kafka) throw new Error('You need to initialize kafka (messageBroker.initialize())');
     const consumer: Consumer = this.kafka.consumer({
       groupId: `centsideas-consumer-${Identifier.makeLongId()}`,
       rebalanceTimeout: 1000,

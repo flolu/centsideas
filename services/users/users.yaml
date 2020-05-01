@@ -20,41 +20,41 @@ spec:
             - configMapRef:
                 name: global-config
           env:
-            - name: REFRESH_TOKEN_SECRET
+            - name: refreshTokenSecret
               valueFrom:
                 secretKeyRef:
                   name: centsideas-secret
-                  key: REFRESH_TOKEN_SECRET
-            - name: ACCESS_TOKEN_SECRET
+                  key: refreshTokenSecret
+            - name: accessTokenSecret
               valueFrom:
                 secretKeyRef:
                   name: centsideas-secret
-                  key: ACCESS_TOKEN_SECRET
-            - name: LOGIN_TOKEN_SECRET
+                  key: accessTokenSecret
+            - name: loginTokenSecret
               valueFrom:
                 secretKeyRef:
                   name: centsideas-secret
-                  key: LOGIN_TOKEN_SECRET
-            - name: CHANGE_EMAIL_TOKEN_SECRET
+                  key: loginTokenSecret
+            - name: changeEmailTokenSecret
               valueFrom:
                 secretKeyRef:
                   name: centsideas-secret
-                  key: CHANGE_EMAIL_TOKEN_SECRET
-            - name: GOOGLE_CLIENT_ID
+                  key: changeEmailTokenSecret
+            - name: googleClientId
               valueFrom:
                 secretKeyRef:
                   name: centsideas-secret
-                  key: GOOGLE_CLIENT_ID
-            - name: GOOGLE_CLIENT_SECRET
+                  key: googleClientId
+            - name: googleClientSecret
               valueFrom:
                 secretKeyRef:
                   name: centsideas-secret
-                  key: GOOGLE_CLIENT_SECRET
-            - name: FRONTEND_SERVER_EXCHANGE_SECRET
+                  key: googleClientSecret
+            - name: frontendServerExchangeSecret
               valueFrom:
                 secretKeyRef:
                   name: centsideas-secret
-                  key: FRONTEND_SERVER_EXCHANGE_SECRET
+                  key: frontendServerExchangeSecret
           readinessProbe:
             httpGet:
               path: /alive
@@ -67,13 +67,13 @@ spec:
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
-          # resources:
-          #   requests:
-          #     memory: 100Mi
-          #     cpu: 50m
-          #   limits:
-          #     memory: 500Mi
-          #     cpu: 500m
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 10m
+            limits:
+              memory: 500Mi
+              cpu: 500m
 ---
 apiVersion: v1
 kind: Service

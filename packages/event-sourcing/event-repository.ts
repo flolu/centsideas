@@ -42,13 +42,10 @@ export abstract class EventRepository<Entity extends IEventEntity>
   private hasInitializedBeenCalled: boolean = false;
   private hasInitialized: boolean = false;
 
-  constructor(private messageBroker: MessageBroker) {
-    this.messageBroker.initialize({
-      brokers: [process.env.KAFKA_BROKER_HOST || 'localhost:9092'],
-    });
-  }
+  constructor(private messageBroker: MessageBroker) {}
 
   // TODO add init config logs again (would have found the issue much faster today)
+  // TODO this is ugly (maybe tagged injection will help https://github.com/inversify/inversify-inject-decorators#tagged-property-injection-with-lazyinjecttagged)
   initialize = (
     entity: IEntityConstructor<Entity>,
     url: string,

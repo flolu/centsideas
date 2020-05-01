@@ -31,13 +31,13 @@ spec:
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
-          # resources:
-          #   requests:
-          #     memory: 100Mi
-          #     cpu: 50m
-          #   limits:
-          #     memory: 500Mi
-          #     cpu: 500m
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 10m
+            limits:
+              memory: 500Mi
+              cpu: 500m
 ---
 apiVersion: v1
 kind: Service
@@ -49,6 +49,8 @@ spec:
   ports:
     - name: http
       port: 3000
+    - name: grpc
+      port: 40000
   type: ClusterIP
 ---
 apiVersion: apps/v1

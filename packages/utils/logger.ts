@@ -8,9 +8,8 @@ type LogStyle = (...text: unknown[]) => string;
 
 class LoggerClass {
   private prefixStyle: LogStyle = chalk.bold.bgBlack.grey;
-  private service: Services | undefined = process.env.SERVICE as Services;
-  private env: Environments | undefined = process.env.ENV as Environments;
-  // private adminHost = process.env.ADMIN_SERVICE_HOST;
+  private service: Services | undefined = process.env.service as Services;
+  private env: Environments | undefined = process.env.environment as Environments;
 
   constructor() {
     this.setupPrefixStyle();

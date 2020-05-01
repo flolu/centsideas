@@ -8,13 +8,18 @@ import {
 } from '@centsideas/enums';
 import { HttpRequest, HttpResponse, Cookie, Dtos } from '@centsideas/models';
 import { handleHttpResponseError } from '@centsideas/utils';
+import { GlobalEnvironment } from '@centsideas/environment';
 
 import { UsersEnvironment } from './users.environment';
 import { AuthHandler } from './auth.handler';
 
 @injectable()
 export class AuthService {
-  constructor(private commandHandler: AuthHandler, private env: UsersEnvironment) {}
+  constructor(
+    private commandHandler: AuthHandler,
+    private env: UsersEnvironment,
+    private globalEnv: GlobalEnvironment,
+  ) {}
 
   login = async (req: HttpRequest<Dtos.ILoginDto>) => {
     const { email } = req.body;
@@ -85,7 +90,7 @@ export class AuthService {
         const { exchangeSecret } = req.body;
         if (
           this.env.exchangeSecrets.frontendServer === exchangeSecret ||
-          this.env.environment === Environments.Dev
+          this.globalEnv.environment === Environments.Dev
         ) {
           currentRefreshToken = req.body.refreshToken;
         }
@@ -140,8 +145,8 @@ export class AuthService {
   private createRefreshTokenCookie = (refreshToken: string) =>
     new Cookie(CookieNames.RefreshToken, refreshToken, {
       httpOnly: true,
-      sameSite: this.env.environment === Environments.Prod ? 'strict' : 'none',
-      secure: this.env.environment === Environments.Prod ? true : false,
+      sameSite: this.globalEnv.environment === Environments.Prod ? 'strict' : 'none',
+      secure: this.globalEnv.environment === Environments.Prod ? true : false,
       maxAge: TokenExpirationTimes.RefreshToken * 1000,
     });
 }

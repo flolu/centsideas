@@ -30,7 +30,6 @@ export class NotificationsServer {
     private messageBroker: MessageBroker,
     private notificationsHandler: NotificationsHandlers,
   ) {
-    this.messageBroker.initialize({ brokers: env.kafka.brokers });
     this.messageBroker.events(EventTopics.Ideas).subscribe(this.handleIdeasEvents);
     this.messageBroker.events(EventTopics.Logins).subscribe(this.handleLoginEvents);
     this.messageBroker.events(EventTopics.Users).subscribe(this.handleUsersEvents);

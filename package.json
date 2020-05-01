@@ -131,24 +131,23 @@
     "url": "https://github.com/flolu/centsideas.git"
   },
   "scripts": {
-    "todo": "# TODO organize scripts",
-    "setup": "yarn install && yarn env:setup",
     "dev": "yarn env:setup && yarn docker",
-    "client:dev": "yarn envsub:dev && ibazel run //services/client:dev_server",
-    "admin:dev": "yarn envsub:dev && ibazel run //services/admin-client:live_server",
-    "client": "yarn envsub:dev && bazelisk run //services/client",
-    "admin": "yarn envsub:dev && bazelisk run //services/admin-client",
-    "test": "yarn env:setup && bazelisk test //...",
-    "deploy": "yarn envsub:prod && bazelisk run :k8s.apply",
-    "deploy:microk8s": "yarn envsub:microk8s && bazelisk run :microk8s.apply",
+    "client:dev": "yarn env:setup && ibazel run //services/client:dev_server",
+    "admin:dev": "yarn env:setup && && ibazel run //services/admin-client:live_server",
+    "client": "yarn env:setup bazelisk run //services/client",
+    "admin": "yarn env:setup bazelisk run //services/admin-client",
+    "test": "yarn env:setup:staging && bazelisk test //...",
+    "deploy": "yarn env:setup:prod && bazelisk run :k8s.apply",
+    "deploy:microk8s": "yarn env:setup:staging && bazelisk run :microk8s.apply",
     "lint": "tslint --project .",
     "up": "yarn upgrade-interactive --latest",
-    "env:setup": "ts-node packages/environment/setup-environments",
     "docker": "docker-compose up --build --no-color",
-    "docker:no-prefixes": "docker-compose up --build --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
-    "docker:stop": "docker stop $(docker ps -q)",
-    "vapid": "web-push generate-vapid-keys --json",
-    "postinstall": "patch-package --patch-dir misc/patches && ngcc"
+    "clean": "rm -rf node_modules && bazelisk clean && env:clean",
+    "env:clean": "ts-node packages/environment/clean",
+    "env:setup": "ts-node packages/environment/setups/dev",
+    "env:setup:staging": "ts-node packages/environment/setups/staging",
+    "env:setup:prod": "ts-node packages/environment/setups/prod",
+    "postinstall": "patch-package --patch-dir misc/patches && ngcc && yarn env:setup"
   },
   "scriptsComments": {
     "docker": "# FIXME disable logger prefixes https://github.com/docker/compose/issues/7416"

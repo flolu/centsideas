@@ -4,6 +4,7 @@ import * as bodyParser from 'body-parser';
 
 import { Logger, ExpressAdapters } from '@centsideas/utils';
 import { UsersApiRoutes } from '@centsideas/enums';
+import { GlobalEnvironment } from '@centsideas/environment';
 
 import { UsersEnvironment } from './users.environment';
 import { AuthService } from './auth.service';
@@ -17,9 +18,10 @@ export class UsersServer {
   constructor(
     private authService: AuthService,
     private env: UsersEnvironment,
+    private globalEnv: GlobalEnvironment,
     private usersService: UsersService,
   ) {
-    Logger.info('launch in', this.env.environment, 'mode');
+    Logger.info('launch in', this.globalEnv.environment, 'mode');
     this.app.use(bodyParser.json());
 
     this.registerAuthRoutes();
