@@ -60,7 +60,10 @@ microk8s_deploy(
 
 ts_library(
     name = "test_lib",
-    srcs = glob(include = ["**/*.spec.ts"]),
+    srcs = glob(
+        include = ["**/*.spec.ts"],
+        exclude = ["ideas.handler.spec.ts"],
+    ),
     tsconfig = "//:tsconfig.json",
     deps = [":lib"] + lib_deps,
 )

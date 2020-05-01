@@ -80,8 +80,6 @@ export class NotificationSettingsHandlers {
     if (!mapping)
       throw new NotificationSettingsErrors.NoNotificationSettingsWithUserIdFoundError(userId);
 
-    const notificationSettings = await this.nsRepository.findById(mapping.notificationSettingsId);
-
-    return notificationSettings;
+    return this.nsRepository.findById(mapping.notificationSettingsId);
   }
 }

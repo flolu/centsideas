@@ -24,7 +24,7 @@ export class ReviewsHandler {
     ReviewErrors.ReviewContentLengthError.validate(content);
     ReviewErrors.ReviewScoresRangeError.validate(scores);
 
-    const reviewId = await this.repository.generateUniqueId();
+    const reviewId = await this.repository.generateAggregateId();
     const review = Review.create(reviewId, ideaId, userId, content, scores);
 
     return this.repository.save(review);

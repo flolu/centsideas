@@ -8,12 +8,12 @@ import { NotificationEnvironment } from './notifications.environment';
 
 @injectable()
 export class NotificationsRepository extends EventRepository<Notification> {
-  constructor(private _messageBroker: MessageBroker, private env: NotificationEnvironment) {
-    super(_messageBroker);
-    this.initialize(
+  constructor(private messageBroker: MessageBroker, private env: NotificationEnvironment) {
+    super(
+      messageBroker.dispatchEvents,
       Notification,
-      this.env.databaseUrl,
-      this.env.notificationsDatabaseName,
+      env.databaseUrl,
+      env.notificationsDatabaseName,
       EventTopics.Notifications,
     );
   }

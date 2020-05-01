@@ -11,5 +11,6 @@ export class ConsumerEnvironment {
   };
   database = {
     url: environment.projectionDatabaseUrl,
+    name: 'projections',
   };
 }

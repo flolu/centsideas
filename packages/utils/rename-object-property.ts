@@ -1,3 +1,5 @@
+// TODO remove this file and instead just ignore the _id field
+
 export const renameObjectProperty = (object: any, from: string, to: string): any => {
   if (from === to) {
     return object;

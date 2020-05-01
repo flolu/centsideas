@@ -4,8 +4,8 @@ import { getProvider, registerProviders, overrideProvider } from '@centsideas/ut
 
 import { IdeasHandler } from './ideas.handler';
 import { IdeaRepository } from './idea.repository';
-import { IdeaRepositoryMock } from './test/idea.repository.mock';
 import { fakeUserId, fakeIdeaTitle, fakeIdeaDescription } from './test';
+import { IdeaRepositoryMock } from './test/idea.repository.mock';
 
 describe('Idea Command Handler', () => {
   registerProviders(IdeasHandler, IdeaRepository);

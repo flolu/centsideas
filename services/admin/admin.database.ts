@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
-import * as retry from 'async-retry';
-import { MongoClient, Db, Collection } from 'mongodb';
+import * as asyncRetry from 'async-retry';
+import { MongoClient } from 'mongodb';
 
 import { renameIdWrite, renameIdRead } from '@centsideas/utils';
 
@@ -28,15 +28,13 @@ export class AdminDatabase {
     return events.map(renameIdRead).toArray();
   };
 
-  private events = async (): Promise<Collection> => {
+  private events = async () => {
     const db = await this.database();
-    return db.collection(this.env.database.eventsCollectionName);
+    return db.collection<IEvent>(this.env.database.eventsCollectionName);
   };
 
-  // TODO refactor all dbs to this simpler init
-  private database = async (): Promise<Db> => {
-    // FIXME catch error and log it ?
-    if (!this.client.isConnected()) await retry(() => this.client.connect());
+  private database = async () => {
+    if (!this.client.isConnected()) await asyncRetry(() => this.client.connect());
     return this.client.db(this.env.database.name);
   };
 }

@@ -59,8 +59,6 @@
 
 - [MicroK8s](https://github.com/ubuntu/microk8s) and [kubectl](https://github.com/kubernetes/kubectl) and [Helm](https://github.com/helm/helm)- lightweight kubernetes for development
 
-# TODO try `alias kubectl='microk8s kubectl'` instead (https://microk8s.io/docs/)
-
 ```bash
 sudo snap install microk8s --classic && \
 #echo "alias kubectl='microk8s kubectl'" >> ~/.bash_aliases && \

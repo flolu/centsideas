@@ -43,4 +43,11 @@ export class MessageBroker {
       });
     });
   };
+
+  dispatchEvents = async (topic: string, events: IEvent[]) => {
+    return this.dispatch(
+      topic,
+      events.map(e => ({ value: JSON.stringify(e) })),
+    );
+  };
 }

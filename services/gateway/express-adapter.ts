@@ -12,7 +12,6 @@ export class ExpressAdapter {
     return async (req: express.Request, res: express.Response) => {
       try {
         const httpRequest: HttpRequest = this.makeHttpRequestFromExpressRequest(req, res);
-        Logger.info(url, httpRequest);
 
         // TODO try to throw error in a service... i think the respoonse will time out... when it should return an error
         const response = await axios.post(url, httpRequest);

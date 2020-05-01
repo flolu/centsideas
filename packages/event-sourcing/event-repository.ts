@@ -1,293 +1,193 @@
-import * as retry from 'async-retry';
-import { injectable } from 'inversify';
-import { MongoClient, Db, Collection } from 'mongodb';
+import { injectable, unmanaged } from 'inversify';
+import { MongoClient } from 'mongodb';
+import * as asyncRetry from 'async-retry';
 
 import { IEvent } from '@centsideas/models';
-import { Identifier, renameObjectProperty, EntityError, Logger } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
-
+import { Logger, Identifier } from '@centsideas/utils';
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
-import { MessageBroker } from './message-broker';
 
-export type IEntityConstructor<Entity> = new (snapshot?: ISnapshot) => Entity;
-
-export interface IEventRepository<Entity> {
-  initialize: (
-    entity: IEntityConstructor<Entity>,
-    url: string,
-    name: string,
-    topicName: string,
-    initFunctions: any[],
-    minNumberOfEventsToCreateSnapshot: number,
-  ) => void;
-  save: (entity: Entity) => Promise<Entity>;
-  findById: (id: string) => Promise<Entity>;
-  generateUniqueId: () => Promise<string>;
+interface ICounter {
+  name: string;
+  count: number;
 }
 
+interface IDatabaseEvent extends IEvent {
+  position: number;
+}
+
+// FIXME create indexes to increase read performance
+
 @injectable()
-export abstract class EventRepository<Entity extends IEventEntity>
-  implements IEventRepository<Entity> {
-  protected _Entity!: IEntityConstructor<Entity>;
+export abstract class EventRepository<Entity extends IEventEntity> {
+  private client = new MongoClient(this.databaseUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
-  private client!: MongoClient;
-  private db!: Db;
-  private eventCollection!: Collection;
-  private snapshotCollection!: Collection;
-  private counterCollection!: Collection;
-  private namespace!: string;
-  private topicName!: string;
-  private snapshotThreshold!: number;
-  private hasInitializedBeenCalled: boolean = false;
-  private hasInitialized: boolean = false;
+  private readonly eventCounterName = 'events';
+  private readonly eventsCollectionSuffix = 'events';
+  private readonly snapshotsCollectionSuffix = 'snapshots';
+  private readonly counterCollectionSuffix = 'counters';
 
-  constructor(private messageBroker: MessageBroker) {}
+  constructor(
+    private dispatchEvents: (topic: string, events: IEvent[]) => void,
+    private entity: new (snapshot?: ISnapshot) => Entity,
+    private databaseUrl: string,
+    private databaseName: string,
+    private topicName: string,
+    private snapshotThreshold = 100,
+  ) {
+    this.initialize();
+  }
 
-  // TODO add init config logs again (would have found the issue much faster today)
-  // TODO this is ugly (maybe tagged injection will help https://github.com/inversify/inversify-inject-decorators#tagged-property-injection-with-lazyinjecttagged)
-  initialize = (
-    entity: IEntityConstructor<Entity>,
-    url: string,
-    name: string,
-    topicName: string,
-    initFunctions: any[] = [],
-    minNumberOfEventsToCreateSnapshot: number = 100,
-  ): Promise<any> => {
-    return new Promise(async (res, rej) => {
-      try {
-        this.hasInitializedBeenCalled = true;
-        this.snapshotThreshold = minNumberOfEventsToCreateSnapshot;
-        this._Entity = entity;
-        this.namespace = name;
-        this.topicName = topicName;
-
-        this.client = await retry(async () => {
-          return MongoClient.connect(url, {
-            w: 1,
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-          });
-        });
-        this.db = this.client.db(this.namespace);
-
-        this.eventCollection = this.db.collection(`${this.namespace}_events`);
-        this.snapshotCollection = this.db.collection(`${this.namespace}_snapshots`);
-        this.counterCollection = this.db.collection(`${this.namespace}_counters`);
-
-        await this.eventCollection.createIndexes([
-          {
-            key: { aggregateId: 1 },
-            name: `${this.namespace}_aggregateId`,
-          },
-          {
-            key: { aggregateId: 1, eventNumber: 1 },
-            name: `${this.namespace}_aggregateId_eventNumber`,
-            unique: true,
-          },
-        ]);
-
-        await this.snapshotCollection.createIndexes([
-          {
-            key: { aggregateId: 1 },
-            unique: true,
-          },
-        ]);
-
-        try {
-          await this.counterCollection.insertOne({ _id: 'events', seq: 0 });
-        } catch (error) {
-          if (!(error.code === 11000 && error.message.includes('index: _id_ dup key:'))) {
-            throw error;
-          }
-        }
-
-        await Promise.all(initFunctions.map(f => f()));
-
-        this.hasInitialized = true;
-        res();
-      } catch (error) {
-        rej(error);
-      }
-    });
-  };
-
-  getDatabase = async (): Promise<Db> => {
-    await this.waitUntilInitialized();
-    return this.client.db(this.namespace);
-  };
-
-  save = async (entity: Entity) => {
-    await this.waitUntilInitialized();
-
-    const streamId: string = entity.currentState.id;
-    const lastPersistedEvent = await this.getLastEventOfStream(streamId);
+  save = async (entity: Entity): Promise<Entity> => {
+    const lastPersistedEvent = await this.getLastEvent(entity.currentState.id);
 
     // optimistic concurrency control https://youtu.be/GzrZworHpIk?t=1028
     if (lastPersistedEvent) {
       const streamNumber = lastPersistedEvent.eventNumber;
       const entityNumber = entity.persistedState.lastEventNumber;
-      if (streamNumber !== entityNumber) {
+      if (streamNumber !== entityNumber)
         throw new Error(
-          `optimistic concurrency control issue! (${streamNumber} !== ${entityNumber})`,
+          `optimistic concurrency control issue (${streamNumber} !== ${entityNumber})`,
         );
-      }
     }
 
     let eventNumber = lastPersistedEvent?.eventNumber || 0;
-
     const eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
-      eventNumber = eventNumber + 1;
+      eventNumber += 1;
       return { ...event, eventNumber };
     });
 
-    const appendedEvents = await Promise.all(eventsToInsert.map(event => this.appendEvent(event)));
-
-    await Promise.all(
-      appendedEvents.map(e =>
-        this.messageBroker.dispatch(this.topicName, [{ value: JSON.stringify(e) }]),
-      ),
+    const appendedEvents = await Promise.all(eventsToInsert.map(this.appendEvent));
+    const events = await Promise.all(
+      appendedEvents.map(async event => {
+        Logger.event(event);
+        if (event.eventNumber % this.snapshotThreshold === 0)
+          await this.saveSnapshot(event.aggregateId);
+        return event;
+      }),
     );
 
-    for (const event of appendedEvents) {
-      Logger.event(event);
-      if (event.eventNumber % this.snapshotThreshold === 0) {
-        await this.saveSnapshot(event.aggregateId);
-      }
-    }
+    this.dispatchEvents(this.topicName, events);
     return entity.confirmEvents();
   };
 
-  findById = async (id: string): Promise<Entity> => {
-    await this.waitUntilInitialized();
-    const snapshot = await this.getSnapshot(id);
+  findById = async (aggregateId: string): Promise<Entity> => {
+    const collection = await this.snapshotsCollection();
+    const snapshot = await collection.findOne({ aggregateId });
 
-    const events: IEvent[] = await (snapshot
+    const events = await (snapshot
       ? this.getEventsAfterSnapshot(snapshot)
-      : this.getEventStream(id));
+      : this.getEvents(aggregateId));
 
-    const entity = new this._Entity(snapshot || undefined);
+    const entity = new this.entity(snapshot || undefined);
     entity.pushEvents(...events);
-    if (!entity.currentState.id)
-      throw new EntityError(`Couldn't find entity with id: ${id}`, HttpStatusCodes.NotFound);
+    if (!entity.currentState.id) throw new Error(`Entity with id ${aggregateId} not found`);
 
     return entity.confirmEvents();
   };
 
-  // TODO try catch!!
-  generateUniqueId = (longId: boolean = true): Promise<string> => {
-    const checkAvailability = async (resolve: (id: string) => any) => {
-      await this.waitUntilInitialized();
-      const id = longId ? Identifier.makeLongId() : Identifier.makeShortId();
-      const result = await this.eventCollection.findOne({ aggregateId: id });
-      result ? await checkAvailability(resolve) : resolve(id);
+  generateAggregateId = async (long = true, maxRetries = 5) => {
+    const collection = await this.eventsCollection();
+    let count = 0;
+
+    const check = async (resolve: (id: string) => void) => {
+      count++;
+      if (count > maxRetries)
+        throw new Error(`Unique aggregate id could not be generated after ${count} retries`);
+
+      const id = long ? Identifier.makeLongId() : Identifier.makeShortId();
+      const result = await collection.findOne({ aggregateId: id });
+      result ? await check(resolve) : resolve(id);
     };
-    return new Promise(resolve => checkAvailability(resolve));
+
+    return new Promise(check);
   };
 
-  private getNextSequence = async () => {
-    const counter = await this.counterCollection.findOneAndUpdate(
-      { _id: 'events' },
-      {
-        $inc: { seq: 1 },
-      },
-      { returnOriginal: false },
+  private getEventsAfterSnapshot = async (snapshot: ISnapshot) => {
+    const collection = await this.eventsCollection();
+    const lastEvent = await collection.findOne({ id: snapshot.lastEventId });
+    if (!lastEvent) throw new Error(`Last event with id ${snapshot.lastEventId} not found`);
+    return this.getEvents(snapshot.state.id, lastEvent.eventNumber);
+  };
+
+  private getEvents = async (aggregateId: string, from = 0) => {
+    const collection = await this.eventsCollection();
+    const result = await collection.find(
+      { $and: [{ aggregateId }, { eventNumber: { $gte: from } }] },
+      { sort: { eventNumber: 1 } },
     );
-
-    return counter.value.seq;
+    return result.toArray();
   };
 
-  private getLastEventOfStream = async (streamId: string): Promise<IEvent | null> => {
-    const result = await this.eventCollection.find(
-      {
-        aggregateId: streamId,
-      },
+  private getLastEvent = async (aggregateId: string): Promise<IDatabaseEvent | null> => {
+    const collection = await this.eventsCollection();
+
+    const result = await collection.find(
+      { aggregateId },
       {
         sort: { eventNumber: -1 },
         limit: 1,
       },
     );
-    const event = (await result.toArray())[0];
-    return event ? renameObjectProperty(event, '_id', 'id') : null;
+    return (await result.toArray())[0];
   };
 
   private appendEvent = async (event: IEvent): Promise<IEvent> => {
-    const seq = await this.getNextSequence();
-
-    const payload = renameObjectProperty(event, 'id', '_id');
-    const result = await this.eventCollection.insertOne({
-      ...payload,
-      position: seq,
-    });
-    return renameObjectProperty(result.ops[0], '_id', 'id');
-  };
-
-  private getSnapshot = async (streamId: string): Promise<ISnapshot | null> => {
-    return this.snapshotCollection.findOne({ aggregateId: streamId });
-  };
-
-  private getEventStream = async (streamId: string, from: number = 1, to: number = 2 ** 31 - 1) => {
-    const result = await this.eventCollection.find(
-      {
-        $and: [
-          { aggregateId: streamId },
-          { eventNumber: { $gte: from } },
-          { eventNumber: { $lte: to } },
-        ],
-      },
-      { sort: { eventNumber: 1 } },
+    const counterCollection = await this.counterCollection();
+    const counter = await counterCollection.findOneAndUpdate(
+      { name: this.eventCounterName },
+      { $inc: { count: 1 } },
+      { returnOriginal: false },
     );
-    const events = await result.toArray();
-    return events.map(e => renameObjectProperty(e, '_id', 'id'));
+    if (!counter.value) throw new Error('Events counter not found');
+    const position = counter.value.count;
+
+    const collection = await this.eventsCollection();
+    const result = await collection.insertOne({ ...event, position });
+    return result.ops[0];
   };
 
-  private getEventsAfterSnapshot = async (snapshot: ISnapshot): Promise<IEvent[]> => {
-    const streamId = snapshot.state.id;
-    const lastEventId = snapshot.lastEventId;
+  private saveSnapshot = async (aggregateId: string) => {
+    const entity = await this.findById(aggregateId);
+    if (!entity) throw new Error(`Entity with id ${aggregateId} not found`);
 
-    const lastEvent: IEvent | null = await this.eventCollection.findOne({
-      _id: lastEventId,
-    });
-    if (!lastEvent) {
-      return [];
-    }
-    const lastEventNumber = lastEvent.eventNumber;
+    const lastEvent = await this.getLastEvent(aggregateId);
+    if (!lastEvent) throw new Error(`Last event for ${aggregateId} not found`);
 
-    return this.getEventStream(streamId, lastEventNumber);
-  };
-
-  private saveSnapshot = async (streamId: string): Promise<boolean> => {
-    const entity = await this.findById(streamId);
-    if (!entity) return false;
-
-    const lastEvent = await this.getLastEventOfStream(streamId);
-    if (!lastEvent) return false;
-
-    await this.snapshotCollection.updateOne(
-      { aggregateId: streamId },
-      {
-        $set: {
-          aggregateId: streamId,
-          lastEventId: lastEvent.id,
-          state: entity.persistedState,
-        },
-      },
+    const collection = await this.snapshotsCollection();
+    return collection.updateOne(
+      { aggregateId },
+      { $set: { aggregateId, lastEventId: lastEvent.id, state: entity.persistedState } },
       { upsert: true },
     );
-    return true;
   };
 
-  private waitUntilInitialized = (): Promise<boolean> => {
-    return new Promise(async res => {
-      if (!this.hasInitializedBeenCalled)
-        throw new Error(
-          `You need to call ${this.initialize.name} in the constructor of the EventRepository`,
-        );
+  private initialize = async () => {
+    const counters = await this.counterCollection();
+    const existing = await counters.findOne({ name: this.eventCounterName });
+    if (!existing) await counters.insertOne({ name: this.eventCounterName, count: 0 });
+  };
 
-      if (this.hasInitialized) return res(true);
-      // tslint:disable-next-line:no-return-await
-      await retry(async () => await this.initialize);
-      res(true);
-    });
+  private snapshotsCollection = async () => {
+    const db = await this.database();
+    return db.collection<ISnapshot>(`${this.databaseName}_${this.snapshotsCollectionSuffix}`);
+  };
+
+  private counterCollection = async () => {
+    const db = await this.database();
+    return db.collection<ICounter>(`${this.databaseName}_${this.counterCollectionSuffix}`);
+  };
+
+  private eventsCollection = async () => {
+    const db = await this.database();
+    return db.collection<IDatabaseEvent>(`${this.databaseName}_${this.eventsCollectionSuffix}`);
+  };
+
+  private database = async () => {
+    if (!this.client.isConnected()) await asyncRetry(() => this.client.connect());
+    return this.client.db(this.databaseName);
   };
 }

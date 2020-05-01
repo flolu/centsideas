@@ -8,8 +8,13 @@ import { ReviewsEnvironment } from './reviews.environment';
 
 @injectable()
 export class ReviewRepository extends EventRepository<Review> {
-  constructor(private _messageBroker: MessageBroker, private env: ReviewsEnvironment) {
-    super(_messageBroker);
-    this.initialize(Review, this.env.database.url, this.env.database.name, EventTopics.Reviews);
+  constructor(private env: ReviewsEnvironment, private messageBroker: MessageBroker) {
+    super(
+      messageBroker.dispatchEvents,
+      Review,
+      env.database.url,
+      env.database.name,
+      EventTopics.Reviews,
+    );
   }
 }

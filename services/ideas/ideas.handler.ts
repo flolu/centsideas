@@ -20,7 +20,7 @@ export class IdeasHandler {
     IdeaErrors.IdeaTitleLengthError.validate(title);
     IdeaErrors.IdeaDescriptionLengthError.validate(description);
 
-    const ideaId = await this.repository.generateUniqueId();
+    const ideaId = await this.repository.generateAggregateId();
     const idea = Idea.create(ideaId, userId, title, description);
 
     return this.repository.save(idea);

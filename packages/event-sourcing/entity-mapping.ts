@@ -1,15 +1,15 @@
-import { Db, MongoClient, Collection } from 'mongodb';
-import * as retry from 'async-retry';
+import { MongoClient } from 'mongodb';
+import * as asyncRetry from 'async-retry';
 
-import { Logger } from '@centsideas/utils';
+// FIXME it might be worth to create indexes to increase read performance
 
 export class EntityMapping<IEntityMapping> {
   private readonly databaseName = 'mappings';
-  private client!: MongoClient;
-  private db!: Db;
-  private collection!: Collection;
-  private hasInitializedBeenCalled: boolean = false;
-  private hasInitialized: boolean = false;
+
+  private client = new MongoClient(this.databaseUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
   constructor(
     private databaseUrl: string,
@@ -18,34 +18,9 @@ export class EntityMapping<IEntityMapping> {
     private mappingEntityIdKey: string,
   ) {}
 
-  private async initialize(): Promise<boolean> {
-    try {
-      this.hasInitializedBeenCalled = true;
-
-      this.client = await retry(async () => {
-        const connection = await MongoClient.connect(this.databaseUrl, {
-          w: 1,
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        });
-        return connection;
-      });
-      this.db = this.client.db(this.databaseName);
-
-      this.collection = this.db.collection(this.collectionName);
-      await this.collection.createIndex({ [this.mappingEntityIdKey]: 1 }, { unique: true });
-
-      this.hasInitialized = true;
-      return true;
-    } catch (error) {
-      Logger.error(error, `while initializing ${this.collectionName} collection`);
-      return false;
-    }
-  }
-
   async insert(entityId: string, mappingPropery: string): Promise<IEntityMapping> {
-    await this.waitUntilInitialized();
-    const inserted = await this.collection.insertOne({
+    const collection = await this.collection();
+    const inserted = await collection.insertOne({
       [this.entityIdKey]: entityId,
       [this.mappingEntityIdKey]: mappingPropery,
     });
@@ -53,8 +28,8 @@ export class EntityMapping<IEntityMapping> {
   }
 
   async update(entityId: string, newMappingPropery: string): Promise<IEntityMapping> {
-    await this.waitUntilInitialized();
-    const updated = await this.collection.findOneAndUpdate(
+    const collection = await this.collection();
+    const updated = await collection.findOneAndUpdate(
       { [this.entityIdKey]: entityId },
       { $set: { [this.mappingEntityIdKey]: newMappingPropery } },
     );
@@ -62,19 +37,19 @@ export class EntityMapping<IEntityMapping> {
   }
 
   async get(mappingPropery: string): Promise<IEntityMapping | null> {
-    await this.waitUntilInitialized();
-    return this.collection.findOne({
+    const collection = await this.collection();
+    return collection.findOne({
       [this.mappingEntityIdKey]: mappingPropery,
     });
   }
 
-  private waitUntilInitialized = (): Promise<boolean> => {
-    return new Promise(async res => {
-      if (!this.hasInitializedBeenCalled) await this.initialize();
-      if (this.hasInitialized) return res(true);
-      // tslint:disable-next-line:no-return-await
-      await retry(async () => await this.initialize);
-      res(true);
-    });
+  private collection = async () => {
+    const db = await this.database();
+    return db.collection(this.collectionName);
+  };
+
+  private database = async () => {
+    if (!this.client.isConnected()) await asyncRetry(() => this.client.connect());
+    return this.client.db(this.databaseName);
   };
 }

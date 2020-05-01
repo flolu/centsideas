@@ -32,7 +32,7 @@ export class AuthHandler {
 
     const emailUserMapping = await this.userRepository.emailMapping.get(email);
     const firstLogin = !emailUserMapping;
-    const loginId = await this.loginRepository.generateUniqueId();
+    const loginId = await this.loginRepository.generateAggregateId();
 
     const tokenData: ILoginTokenPayload = { loginId, email, firstLogin };
     const token = jwt.sign(tokenData, this.env.tokenSecrets.loginToken, {
@@ -163,7 +163,7 @@ export class AuthHandler {
     const username: string = faker.internet.userName().toLowerCase().toString();
     await this.userRepository.checkUsernameAvailibility(username);
 
-    const userId = await this.userRepository.generateUniqueId();
+    const userId = await this.userRepository.generateAggregateId();
     const refreshTokenId = Identifier.makeLongId();
     const user = User.create(userId, email, username, refreshTokenId);
 

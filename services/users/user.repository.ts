@@ -10,42 +10,49 @@ import { IUserIdEmailMapping, IGoogleUserIdMapping, IUserIdUsernameMapping } fro
 
 @injectable()
 export class UserRepository extends EventRepository<User> {
-  private entityKeyId = 'userId';
   emailMapping = new EntityMapping<IUserIdEmailMapping>(
     this.env.databaseUrl,
     'emails',
-    this.entityKeyId,
+    'userId',
     'email',
   );
+
   usernameMapping = new EntityMapping<IUserIdUsernameMapping>(
     this.env.databaseUrl,
     'usernames',
-    this.entityKeyId,
+    'userId',
     'username',
   );
+
   googleIdMapping = new EntityMapping<IGoogleUserIdMapping>(
     this.env.databaseUrl,
     'googleUserIds',
-    this.entityKeyId,
+    'userId',
     'googleId',
   );
 
-  constructor(private _messageBroker: MessageBroker, private env: UsersEnvironment) {
-    super(_messageBroker);
-    // TODO those things into super
-    this.initialize(User, this.env.databaseUrl, this.env.userDatabaseName, EventTopics.Users);
+  constructor(private env: UsersEnvironment, private messageBroker: MessageBroker) {
+    // TODO more fine-grain control over topics ... maybe each entity has its own topic?
+    super(
+      messageBroker.dispatchEvents,
+      User,
+      env.databaseUrl,
+      env.userDatabaseName,
+      EventTopics.Users,
+      100,
+    );
   }
 
-  checkUsernameAvailibility = async (username: string): Promise<boolean> => {
+  async checkUsernameAvailibility(username: string) {
     const existingUsername = await this.usernameMapping.get(username);
     if (existingUsername && existingUsername.userId)
       throw new UserErrors.UsernameUnavailableError(username);
     return true;
-  };
+  }
 
-  checkEmailAvailability = async (email: string): Promise<boolean> => {
+  async checkEmailAvailability(email: string) {
     const existingEmail = await this.emailMapping.get(email);
     if (existingEmail && existingEmail.userId) throw new UserErrors.EmailNotAvailableError(email);
     return true;
-  };
+  }
 }

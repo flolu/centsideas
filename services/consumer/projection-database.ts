@@ -1,69 +1,42 @@
 import { injectable } from 'inversify';
-import * as retry from 'async-retry';
-import { MongoClient, Db, Collection } from 'mongodb';
-
-import { Logger } from '@centsideas/utils';
+import * as asyncRetry from 'async-retry';
+import { MongoClient } from 'mongodb';
 
 import { ConsumerEnvironment } from './consumer.environment';
+import { IIdeaViewModel } from '@centsideas/models';
 
 @injectable()
 export class ProjectionDatabase {
-  private client!: MongoClient;
-  private db!: Db;
-  private ideasCollection!: Collection;
-  private reviewsCollection!: Collection;
-  private usersCollection!: Collection;
-  private hasInitialized = false;
+  private client = new MongoClient(this.env.database.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
-  constructor(private env: ConsumerEnvironment) {
-    this.initialize();
-  }
+  private readonly usersCollectionName = 'users';
+  private readonly ideasCollectionName = 'ideas';
+  private readonly reviewsCollectionName = 'reviews';
 
-  initialize = () => {
-    return new Promise(async (res, rej) => {
-      try {
-        this.client = await retry(async () => {
-          return MongoClient.connect(this.env.database.url, {
-            w: 1,
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-          });
-        });
+  constructor(private env: ConsumerEnvironment) {}
 
-        // TODO strings into env
-        this.db = this.client.db('projection-database');
-        this.ideasCollection = this.db.collection('ideas');
-        this.reviewsCollection = this.db.collection('reviews');
-        this.usersCollection = this.db.collection('users');
-        this.hasInitialized = true;
-        res();
-      } catch (error) {
-        Logger.error(error, 'while connecting to projections database');
-        rej(error);
-      }
-    });
+  ideas = async () => {
+    const db = await this.database();
+    return db.collection<IIdeaViewModel>(this.ideasCollectionName);
   };
 
-  ideas = async (): Promise<Collection> => {
-    await this.waitUntilInitialized();
-    return this.ideasCollection;
+  reviews = async () => {
+    const db = await this.database();
+    // TODOt type
+    return db.collection(this.reviewsCollectionName);
   };
 
-  reviews = async (): Promise<Collection> => {
-    await this.waitUntilInitialized();
-    return this.reviewsCollection;
+  users = async () => {
+    const db = await this.database();
+    // TODOt type
+    return db.collection(this.usersCollectionName);
   };
 
-  users = async (): Promise<Collection> => {
-    await this.waitUntilInitialized();
-    return this.usersCollection;
+  private database = async () => {
+    if (!this.client.isConnected()) await asyncRetry(() => this.client.connect());
+    return this.client.db(this.env.database.name);
   };
-
-  private waitUntilInitialized = (): Promise<boolean> =>
-    new Promise(async res => {
-      if (this.hasInitialized) return res(true);
-      // tslint:disable-next-line:no-return-await
-      await retry(async () => await this.initialize);
-      res(true);
-    });
 }
