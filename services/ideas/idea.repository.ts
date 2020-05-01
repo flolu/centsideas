@@ -8,12 +8,12 @@ import { IdeasEnvironment } from './ideas.environment';
 
 @injectable()
 export class IdeaRepository extends EventRepository<Idea> {
-  constructor(private messageBroker: MessageBroker, private env: IdeasEnvironment) {
+  constructor(private _messageBroker: MessageBroker, private _env: IdeasEnvironment) {
     super(
-      messageBroker.dispatchEvents,
+      _messageBroker.dispatchEvents,
       Idea,
-      env.database.url,
-      env.database.name,
+      _env.database.url,
+      _env.database.name,
       EventTopics.Ideas,
     );
   }

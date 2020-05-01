@@ -15,9 +15,9 @@ export class NotificationSettingsRepository extends EventRepository<Notification
     'userId',
   );
 
-  constructor(private messageBroker: MessageBroker, private env: NotificationEnvironment) {
+  constructor(private _messageBroker: MessageBroker, private env: NotificationEnvironment) {
     super(
-      messageBroker.dispatchEvents,
+      _messageBroker.dispatchEvents,
       NotificationSettings,
       env.databaseUrl,
       env.notificationSettingsDatabaseName,

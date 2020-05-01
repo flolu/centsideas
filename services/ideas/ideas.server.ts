@@ -50,7 +50,6 @@ export class IdeasServer {
               locals: { userId: call.request.userId },
             };
             const response = await this.ideasService.create(httpRequest);
-            Logger.info('created idea', response);
 
             callback(null, response.body);
           },
@@ -58,8 +57,6 @@ export class IdeasServer {
         server.start();
       },
     );
-
-    Logger.info('start ideas server', env);
 
     Logger.info('launch in', this.env.environment, 'mode');
     this.app.use(bodyParser.json());

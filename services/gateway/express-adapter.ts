@@ -6,6 +6,8 @@ import { HttpRequest, HttpResponse } from '@centsideas/models';
 import { HttpStatusCodes } from '@centsideas/enums';
 import { Logger } from '@centsideas/utils';
 
+// TODO remove eventually
+
 @injectable()
 export class ExpressAdapter {
   public makeJsonAdapter(url: string): express.RequestHandler {
@@ -33,7 +35,7 @@ export class ExpressAdapter {
     }
     if (httpResponse.cookies) {
       for (const cookie of httpResponse.cookies) {
-        res.cookie(cookie.name, cookie.val, cookie.options);
+        if (cookie) res.cookie(cookie.name, cookie.val, cookie.options);
       }
     }
     res.status(httpResponse.status || HttpStatusCodes.InternalServerError).send(httpResponse.body);

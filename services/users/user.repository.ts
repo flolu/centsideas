@@ -31,10 +31,9 @@ export class UserRepository extends EventRepository<User> {
     'googleId',
   );
 
-  constructor(private env: UsersEnvironment, private messageBroker: MessageBroker) {
-    // TODO more fine-grain control over topics ... maybe each entity has its own topic?
+  constructor(private env: UsersEnvironment, private _messageBroker: MessageBroker) {
     super(
-      messageBroker.dispatchEvents,
+      _messageBroker.dispatchEvents,
       User,
       env.databaseUrl,
       env.userDatabaseName,

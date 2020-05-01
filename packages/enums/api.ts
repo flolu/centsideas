@@ -1,3 +1,5 @@
+// TODO split into commands and queries
+
 export enum ApiEndpoints {
   Ideas = 'ideas',
   Reviews = 'reviews',

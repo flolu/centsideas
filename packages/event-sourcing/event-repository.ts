@@ -1,4 +1,4 @@
-import { injectable, unmanaged } from 'inversify';
+import { injectable } from 'inversify';
 import { MongoClient } from 'mongodb';
 import * as asyncRetry from 'async-retry';
 

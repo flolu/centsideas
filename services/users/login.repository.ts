@@ -8,12 +8,12 @@ import { UsersEnvironment } from './users.environment';
 
 @injectable()
 export class LoginRepository extends EventRepository<Login> {
-  constructor(private messageBroker: MessageBroker, private env: UsersEnvironment) {
+  constructor(private _messageBroker: MessageBroker, private _env: UsersEnvironment) {
     super(
-      messageBroker.dispatchEvents,
+      _messageBroker.dispatchEvents,
       Login,
-      env.databaseUrl,
-      env.loginDatabaseName,
+      _env.databaseUrl,
+      _env.loginDatabaseName,
       EventTopics.Logins,
     );
   }

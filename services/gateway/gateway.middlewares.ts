@@ -8,6 +8,8 @@ import { IAccessTokenPayload } from '@centsideas/models';
 
 import { GatewayEnvironment } from './gateway.environment';
 
+// TODO use inversify to inject into the express server
+
 @injectable()
 export class GatewayMiddlewares {
   constructor(private env: GatewayEnvironment) {}

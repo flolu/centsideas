@@ -10,25 +10,19 @@ import { GlobalEnvironment } from '@centsideas/environment';
 
 import { GatewayServer } from './gateway.server';
 import { ExpressAdapter } from './express-adapter';
-import { IdeasRoutes } from './ideas.routes';
-import { ReviewsRoutes } from './reviews.routes';
-import { UsersRoutes } from './users.routes';
-import { NotificationsRoutes } from './notifications.routes';
 import { GatewayEnvironment } from './gateway.environment';
 import { GatewayMiddlewares } from './gateway.middlewares';
-import { AdminRoutes } from './admin.routes';
+import { QueryController } from './query.controller';
+import { CommandController } from './command.controller';
 
 registerProviders(
   ExpressAdapter,
   GatewayServer,
-  IdeasRoutes,
-  ReviewsRoutes,
-  UsersRoutes,
-  NotificationsRoutes,
   GatewayEnvironment,
   GatewayMiddlewares,
-  AdminRoutes,
   GlobalEnvironment,
+  QueryController,
+  CommandController,
 );
 
 getProvider(GatewayServer);

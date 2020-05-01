@@ -7,7 +7,6 @@ load("@cents_ideas//packages/jest:jest.bzl", "jest_test")
 package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
-    "//:register-aliases.js",
     "//packages/environment",
     "//packages/enums",
     "//packages/event-sourcing",

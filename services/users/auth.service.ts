@@ -12,6 +12,7 @@ import { GlobalEnvironment } from '@centsideas/environment';
 
 import { UsersEnvironment } from './users.environment';
 import { AuthHandler } from './auth.handler';
+import { CookieOptions } from 'express';
 
 @injectable()
 export class AuthService {
@@ -142,11 +143,15 @@ export class AuthService {
     };
   };
 
-  private createRefreshTokenCookie = (refreshToken: string) =>
-    new Cookie(CookieNames.RefreshToken, refreshToken, {
+  private createRefreshTokenCookie = (refreshToken: string) => {
+    const options: CookieOptions = {
       httpOnly: true,
-      sameSite: this.globalEnv.environment === Environments.Prod ? 'strict' : 'none',
-      secure: this.globalEnv.environment === Environments.Prod ? true : false,
       maxAge: TokenExpirationTimes.RefreshToken * 1000,
-    });
+    };
+    if (this.globalEnv.environment === Environments.Prod) {
+      options.sameSite = 'strict';
+      options.secure = true;
+    }
+    return new Cookie(CookieNames.RefreshToken, refreshToken, options);
+  };
 }
