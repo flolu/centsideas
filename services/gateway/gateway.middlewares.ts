@@ -23,7 +23,7 @@ export class GatewayMiddlewares {
       const accessToken = (authHeader as string).split(' ')[1];
       const decoded = jwt.verify(accessToken, this.env.accessTokenSecret);
       const data: IAccessTokenPayload = decoded as any;
-      // TODO find better place to store userId
+      // TODO find better place to store userId (probably with inversify-express-utils)
       res.locals.userId = data.userId;
       // tslint:disable-next-line:no-empty
     } catch (error) {}
@@ -35,23 +35,16 @@ export class GatewayMiddlewares {
     origin: string | undefined,
     callback: (err: Error | null, allow?: boolean) => void,
   ) => {
-    if (!origin || this.corsWhitelist.includes(origin)) return callback(null, true);
+    if (this.env.environment === Environments.Dev) return callback(null, true);
+
+    // TODO is this save? why can origin be undefined?
+    if (!origin) return callback(null, true);
+
+    const whitelist = [this.env.mainClientUrl, this.env.adminClientUrl];
+    if (whitelist.includes(origin)) return callback(null, true);
+
     callback(new Error('Not allowed by CORS'), false);
   };
 
   cors: any = cors({ origin: this.checkOrigin, credentials: true });
-
-  private get corsWhitelist() {
-    let whitelist = [this.env.mainClientUrl, this.env.adminClientUrl];
-    if (this.env.environment === Environments.Dev)
-      // TODO allow all localhost:** in dev mode
-      whitelist = [
-        ...whitelist,
-        'http://localhost:4000',
-        'http://localhost:4200',
-        'http://localhost:4201',
-        'http://localhost:8080',
-      ];
-    return whitelist;
-  }
 }
