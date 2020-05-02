@@ -19,4 +19,5 @@ export class GatewayEnvironment {
   usersHost = environment.usersHost;
   notificationsHost = environment.notificationsHost;
   adminHost = environment.adminHost;
+  corsWhitelist = [environment.mainClientUrl, environment.adminClientUrl];
 }

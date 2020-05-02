@@ -19,8 +19,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
-          # TODO new liveness and rediness probes (because we dont have an express server anymore)
-          # https://kubernetes.io/blog/2018/10/01/health-checking-grpc-servers-on-kubernetes/
           readinessProbe:
             httpGet:
               path: /

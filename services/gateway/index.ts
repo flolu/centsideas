@@ -11,18 +11,18 @@ import { GlobalEnvironment } from '@centsideas/environment';
 import { GatewayServer } from './gateway.server';
 import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
-import { GatewayMiddlewares } from './gateway.middlewares';
 import { QueryController } from './query.controller';
 import { CommandController } from './command.controller';
+import { AuthMiddleware } from './middlewares';
 
 registerProviders(
   ExpressAdapter,
   GatewayServer,
   GatewayEnvironment,
-  GatewayMiddlewares,
   GlobalEnvironment,
   QueryController,
   CommandController,
+  AuthMiddleware,
 );
 
 getProvider(GatewayServer);
