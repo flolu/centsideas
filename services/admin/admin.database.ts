@@ -2,8 +2,6 @@ import { injectable } from 'inversify';
 import * as asyncRetry from 'async-retry';
 import { MongoClient } from 'mongodb';
 
-import { renameIdWrite, renameIdRead } from '@centsideas/utils';
-
 import { AdminEnvironment } from './admin.environment';
 import { IEvent } from '@centsideas/models';
 
@@ -18,14 +16,14 @@ export class AdminDatabase {
 
   insertEvent = async (event: IEvent): Promise<any> => {
     const collection = await this.events();
-    return collection.insertOne(renameIdWrite(event));
+    return collection.insertOne(event);
   };
 
   // TODO "pagination" or better: endless scroll
   getEvents = async (): Promise<IEvent[]> => {
     const collection = await this.events();
     const events = await collection.find().sort({ timestamp: -1 });
-    return events.map(renameIdRead).toArray();
+    return events.toArray();
   };
 
   private events = async () => {

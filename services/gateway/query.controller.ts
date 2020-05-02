@@ -33,7 +33,8 @@ export class QueryController implements interfaces.Controller {
     return new Promise(resolve => {
       this.ideasClient.getAll(undefined, (err, response) => {
         if (err) throw err;
-        resolve(response?.ideas);
+        if (!response) return resolve([]);
+        resolve(response.ideas || []);
       });
     });
   }

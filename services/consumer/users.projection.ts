@@ -1,7 +1,6 @@
 import { injectable } from 'inversify';
 import { Collection } from 'mongodb';
 
-import { renameObjectProperty } from '@centsideas/utils';
 import { UserEvents } from '@centsideas/enums';
 import {
   IEmailChangeConfirmedEvent,
@@ -53,20 +52,19 @@ export class UsersProjection {
         pendingEmail: null,
       },
     };
-    const renamed = renameObjectProperty(user, 'id', '_id');
-    await this.usersCollection.insertOne(renamed);
+    await this.usersCollection.insertOne(user);
   };
 
   private emailChangeRequested = async (event: IEvent<IEmailChangeRequestedEvent>) => {
     await this.usersCollection.findOneAndUpdate(
-      { _id: event.aggregateId },
+      { id: event.aggregateId },
       { $set: { 'private.pendingEmail': event.data.email } },
     );
   };
 
   private emailChangeConfirmed = async (event: IEvent<IEmailChangeConfirmedEvent>) => {
     await this.usersCollection.findOneAndUpdate(
-      { _id: event.aggregateId },
+      { id: event.aggregateId },
       {
         $set: {
           'private.email': event.data.newEmail,
@@ -78,7 +76,7 @@ export class UsersProjection {
 
   private userUpdated = async (event: IEvent<IUserUpdatedEvent>) => {
     await this.usersCollection.findOneAndUpdate(
-      { _id: event.aggregateId },
+      { id: event.aggregateId },
       { $set: { username: event.data.username } },
     );
   };

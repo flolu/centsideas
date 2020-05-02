@@ -3,7 +3,6 @@ export * from './identifier';
 export * from './express-adapter';
 export * from './dependency-injection';
 export * from './sanitize-html';
-export * from './rename-object-property';
 export * from './test';
 export * from './http-error-response-handler';
 export * from './errors/entity.error';

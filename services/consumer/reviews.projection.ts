@@ -1,7 +1,6 @@
 import { injectable } from 'inversify';
 import { Collection } from 'mongodb';
 
-import { renameObjectProperty } from '@centsideas/utils';
 import { ReviewEvents } from '@centsideas/enums';
 import {
   IReviewViewModel,
@@ -61,17 +60,17 @@ export class ReviewsProjection {
       draft: null,
       lastEventId: '',
     };
-    await this.reviewsCollection.insertOne(renameObjectProperty(review, 'id', '_id'));
+    await this.reviewsCollection.insertOne(review);
   };
 
   private reviewUpdated = async (event: IEvent<any>) => {
     const currentReview: IReviewViewModel | null = await this.reviewsCollection.findOne({
-      _id: event.aggregateId,
+      id: event.aggregateId,
     });
     if (!currentReview) return;
     const newReviewScores: IReviewScores = event.data.scores || currentReview.scores;
     await this.reviewsCollection.findOneAndUpdate(
-      { _id: event.aggregateId },
+      { id: event.aggregateId },
       {
         $set: {
           content: event.data.content || currentReview.content,
@@ -82,7 +81,7 @@ export class ReviewsProjection {
       },
     );
     const idea: IIdeaViewModel | null = await this.ideasCollection.findOne({
-      _id: currentReview.ideaId,
+      id: currentReview.ideaId,
     });
     if (!idea) throw new Error(`didn't ind idea, although it must exist!`);
 
@@ -112,7 +111,7 @@ export class ReviewsProjection {
           idea.reviewCount,
       };
       await this.ideasCollection.findOneAndUpdate(
-        { _id: currentReview.ideaId },
+        { id: currentReview.ideaId },
         {
           $set: {
             scores: updatedScores,
@@ -123,9 +122,9 @@ export class ReviewsProjection {
   };
 
   private reviewPublished = async (event: IEvent<any>) => {
-    // FIXME transactional update
+    // FIXME transactional update?!
     await this.reviewsCollection.findOneAndUpdate(
-      { _id: event.aggregateId },
+      { id: event.aggregateId },
       {
         $set: {
           published: true,
@@ -135,11 +134,11 @@ export class ReviewsProjection {
       },
     );
     const review: IReviewViewModel | null = await this.reviewsCollection.findOne({
-      _id: event.aggregateId,
+      id: event.aggregateId,
     });
     if (!review) throw new Error(`didn't find review, although it must exist!`);
     const idea: IIdeaViewModel | null = await this.ideasCollection.findOne({
-      _id: review.ideaId,
+      id: review.ideaId,
     });
     if (!idea) throw new Error(`didn't ind idea, although it must exist!`);
 
@@ -151,7 +150,7 @@ export class ReviewsProjection {
       scale: idea.scores.scale * idea.reviewCount,
     };
     await this.ideasCollection.findOneAndUpdate(
-      { _id: review.ideaId },
+      { id: review.ideaId },
       {
         $inc: {
           reviewCount: 1,

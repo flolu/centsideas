@@ -3,7 +3,7 @@ import * as asyncRetry from 'async-retry';
 import { MongoClient } from 'mongodb';
 
 import { ConsumerEnvironment } from './consumer.environment';
-import { IIdeaViewModel } from '@centsideas/models';
+import { IIdeaViewModel, IUserViewModel, IReviewViewModel } from '@centsideas/models';
 
 @injectable()
 export class ProjectionDatabase {
@@ -25,14 +25,12 @@ export class ProjectionDatabase {
 
   reviews = async () => {
     const db = await this.database();
-    // TODOt type
-    return db.collection(this.reviewsCollectionName);
+    return db.collection<IReviewViewModel>(this.reviewsCollectionName);
   };
 
   users = async () => {
     const db = await this.database();
-    // TODOt type
-    return db.collection(this.usersCollectionName);
+    return db.collection<IUserViewModel>(this.usersCollectionName);
   };
 
   private database = async () => {
