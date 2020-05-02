@@ -28,6 +28,8 @@ lib_deps = [
     "@npm//@grpc/grpc-js",
     "@npm//@grpc/proto-loader",
     "@npm//inversify-express-utils",
+    "@npm//helmet",
+    "@npm//@types/helmet",
 ]
 
 ts_library(

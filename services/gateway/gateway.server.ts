@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
+import * as helmet from 'helmet';
 import { injectable } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
 
@@ -18,6 +19,7 @@ export class GatewayServer {
       Logger.info('launch in', this.env.environment, 'mode');
 
       app.use(this.middlewares.cors);
+      app.use(helmet());
       app.use(bodyParser.json());
       app.use(cookieParser());
       // FIXME does this middleware hurt performance? if it has a big impact we could just use the middleware on the routes where it is really necessary
