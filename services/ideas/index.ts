@@ -12,14 +12,12 @@ import { GlobalEnvironment } from '@centsideas/environment';
 import { IdeasServer } from './ideas.server';
 import { IdeasHandler } from './ideas.handler';
 import { IdeaRepository } from './idea.repository';
-import { IdeasService } from './ideas.service';
 import { IdeasEnvironment } from './ideas.environment';
 
 registerProviders(
   IdeasServer,
   IdeasHandler,
   IdeaRepository,
-  IdeasService,
   MessageBroker,
   IdeasEnvironment,
   GlobalEnvironment,

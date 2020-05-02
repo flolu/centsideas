@@ -1,72 +1,62 @@
+import * as path from 'path';
 import { injectable } from 'inversify';
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
-import { IdeasApiRoutes } from '@centsideas/enums';
-
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import * as path from 'path';
 
-import { Logger, ExpressAdapters } from '@centsideas/utils';
-import { HttpRequest } from '@centsideas/models';
-import { IdeasService } from './ideas.service';
+import { Logger } from '@centsideas/utils';
+import { Dtos, IIdeaState } from '@centsideas/models';
 import { IdeasEnvironment } from './ideas.environment';
+import { IdeasHandler } from './ideas.handler';
 
 @injectable()
 export class IdeasServer {
-  private app = express();
+  constructor(private env: IdeasEnvironment, private handler: IdeasHandler) {
+    Logger.info('launch in', this.env.environment, 'mode');
 
-  constructor(private ideasService: IdeasService, private env: IdeasEnvironment) {
-    // TODO implement nicely
-    const server = new grpc.Server();
-    const packageDef = protoLoader.loadSync(
-      path.join(__dirname, '../../packages/protobuf', 'idea.proto'),
-      {},
-    );
-
+    const filename = path.join(__dirname, '../../packages/protobuf/idea', 'idea.proto');
+    const packageDef = protoLoader.loadSync(filename);
     const grpcObject = grpc.loadPackageDefinition(packageDef);
-    const ideaPackage = grpcObject.ideaPackage;
+    const ideaPackage = grpcObject.idea;
 
+    const server = new grpc.Server();
+    server.addService((ideaPackage as any).IdeaServiceDefinition.service, {
+      create: this.create,
+      update: this.update,
+      delete: this.delete,
+    });
+
+    // TODO rpc package as abstraction
     server.bindAsync(
       `${this.env.rpc.host}:${this.env.rpc.port}`,
       grpc.ServerCredentials.createInsecure(),
       (err, port) => {
         if (err) Logger.error(err, 'while binding server');
         else Logger.info('proto server running ', port);
-        server.addService((ideaPackage as any).Idea.service, {
-          createIdea: async (call: any, callback: any) => {
-            Logger.info('got request', call.request);
 
-            const httpRequest: HttpRequest = {
-              body: { title: call.request.title, description: call.request.description },
-              ip: '',
-              method: '',
-              path: '',
-              url: '',
-              cookies: null,
-              params: null,
-              query: null,
-              headers: null,
-              locals: { userId: call.request.userId },
-            };
-            const response = await this.ideasService.create(httpRequest);
-
-            callback(null, response.body);
-          },
-        });
         server.start();
       },
     );
-
-    Logger.info('launch in', this.env.environment, 'mode');
-    this.app.use(bodyParser.json());
-
-    this.app.post(`/${IdeasApiRoutes.Create}`, ExpressAdapters.json(this.ideasService.create));
-    this.app.post(`/${IdeasApiRoutes.Update}`, ExpressAdapters.json(this.ideasService.update));
-    this.app.post(`/${IdeasApiRoutes.Delete}`, ExpressAdapters.json(this.ideasService.delete));
-
-    this.app.get(`/${IdeasApiRoutes.Alive}`, (_req, res) => res.status(200).send());
-
-    this.app.listen(this.env.port);
   }
+
+  // TODO error handling
+  create: grpc.handleUnaryCall<Dtos.ICreateIdeaDto, IIdeaState> = async (call, callback) => {
+    if (!call.request) return callback(Error('no payload sent'), null);
+    const { userId, title, description } = call.request;
+    const created = await this.handler.create(userId, title, description);
+    callback(null, created.persistedState);
+  };
+
+  update: grpc.handleUnaryCall<Dtos.IUpdateIdeaDto, IIdeaState> = async (call, callback) => {
+    if (!call.request) return callback(Error('no payload sent'), null);
+    const { userId, title, description, ideaId } = call.request;
+    const updated = await this.handler.update(userId, ideaId, title, description);
+    callback(null, updated.persistedState);
+  };
+
+  delete: grpc.handleUnaryCall<Dtos.IDeleteIdeaDto, IIdeaState> = async (call, callback) => {
+    if (!call.request) return callback(Error('no payload sent'), null);
+    const { userId, ideaId } = call.request;
+    const deleted = await this.handler.delete(userId, ideaId);
+    callback(null, deleted.persistedState);
+  };
 }

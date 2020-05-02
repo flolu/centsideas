@@ -13,51 +13,66 @@ import * as path from 'path';
 
 import {
   ApiEndpoints,
-  IdeasApiRoutes,
   UsersApiRoutes,
   NotificationsApiRoutes,
   AdminApiRoutes,
 } from '@centsideas/enums';
 import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
-import { Logger } from '@centsideas/utils';
+import { Dtos, IIdeaState } from '@centsideas/models';
 
 // TODO input and return types
 
 @controller('')
 export class CommandController implements interfaces.Controller {
-  private ideaClient: any;
+  private ideasClient: any;
 
   constructor(private expressAdapter: ExpressAdapter, private env: GatewayEnvironment) {
     this.protoIdeaClient();
   }
 
+  // TODO error handling
   @httpPost(`/${ApiEndpoints.Ideas}`)
-  createIdea(req: express.Request, res: express.Response) {
+  createIdea(req: express.Request, res: express.Response): Promise<IIdeaState> {
     return new Promise(resolve => {
-      this.ideaClient.createIdea(
-        { title: req.body.title, description: req.body.description, userId: res.locals.userId },
-        (err: any, response: any) => {
-          if (err) Logger.error(err, 'while creating idea proto client request');
-          Logger.info('create idea proto');
-          resolve(response);
-        },
-      );
+      const { title, description } = req.body;
+      const { userId } = res.locals;
+      const payload: Dtos.ICreateIdeaDto = { userId, title, description };
+
+      this.ideasClient.create(payload, (err: Error, response: IIdeaState) => {
+        if (err) throw err;
+        resolve(response);
+      });
     });
   }
 
   @httpPut(`/${ApiEndpoints.Ideas}/:id`)
-  updateIdea(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.ideasHost}/${IdeasApiRoutes.Update}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  updateIdea(req: express.Request, res: express.Response) {
+    return new Promise(resolve => {
+      const ideaId = req.params.id;
+      const { title, description } = req.body;
+      const { userId } = res.locals;
+      const payload: Dtos.IUpdateIdeaDto = { userId, title, description, ideaId };
+
+      this.ideasClient.update(payload, (err: Error, response: IIdeaState) => {
+        if (err) throw err;
+        resolve(response);
+      });
+    });
   }
 
   @httpDelete(`/${ApiEndpoints.Ideas}/:id`)
-  deleteIdea(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.ideasHost}/${IdeasApiRoutes.Delete}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  deleteIdea(req: express.Request, res: express.Response) {
+    return new Promise(resolve => {
+      const ideaId = req.params.id;
+      const { userId } = res.locals;
+      const payload: Dtos.IDeleteIdeaDto = { userId, ideaId };
+
+      this.ideasClient.delete(payload, (err: Error, response: IIdeaState) => {
+        if (err) throw err;
+        resolve(response);
+      });
+    });
   }
 
   @httpPut(`/${ApiEndpoints.Users}/:id`)
@@ -148,37 +163,13 @@ export class CommandController implements interfaces.Controller {
     return adapter(req, res, next);
   }
 
-  /* sampleCommand(req: express.Request, res: express.Response, next: express.NextFunction) {
-    // TODO goal:
-
-    // 1. collect necessary data from request
-    // maybe this type is always any... because validation is done in service
-    const payload: any = { ...req.body ...other stuff };
-
-    // 2. send request to service(s) with unvalidated payload
-    const response = await this.messageBroker.request(`ideas/commands/create`, payload);
-
-    // 3. handle http response stuff with response from service(s)
-    if (response.ok) {
-      // handle success response
-
-      res.json(response.data);
-    } else {
-      // handle error response
-
-      res.status(400).send('error');
-    }
-  } */
-
   private protoIdeaClient() {
-    const packageDef = protoLoader.loadSync(
-      path.join(__dirname, '../../packages/protobuf', 'idea.proto'),
-      {},
-    );
+    const filename = path.join(__dirname, '../../packages/protobuf/idea', 'idea.proto');
+    const packageDef = protoLoader.loadSync(filename);
     const grpcObject = grpc.loadPackageDefinition(packageDef);
-    const ideaPackage = grpcObject.ideaPackage;
+    const ideasPackage = grpcObject.idea;
 
-    this.ideaClient = new (ideaPackage as any).Idea(
+    this.ideasClient = new (ideasPackage as any).IdeaServiceDefinition(
       `${this.env.ideasRpcHost}:${this.env.ideasRpcPort}`,
       grpc.credentials.createInsecure(),
     );

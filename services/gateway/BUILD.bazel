@@ -24,7 +24,6 @@ lib_deps = [
     "@npm//jsonwebtoken",
     "@npm//cookie-parser",
     "@npm//@types/cookie-parser",
-    "@npm//module-alias",
     "@npm//reflect-metadata",
     "@npm//@grpc/grpc-js",
     "@npm//@grpc/proto-loader",

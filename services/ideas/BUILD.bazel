@@ -12,15 +12,8 @@ lib_deps = [
     "//packages/models",
     "//packages/utils",
     "//packages/event-sourcing",
-    "@npm//body-parser",
-    "@npm//express",
     "@npm//inversify",
     "@npm//reflect-metadata",
-    "@npm//shortid",
-    "@npm//module-alias",
-    "@npm//@types/body-parser",
-    "@npm//@types/express",
-    "@npm//@types/jest",
     "@npm//@types/node",
     "@npm//@grpc/grpc-js",
     "@npm//@grpc/proto-loader",
@@ -63,7 +56,10 @@ ts_library(
         exclude = ["ideas.handler.spec.ts"],
     ),
     tsconfig = "//:tsconfig.json",
-    deps = [":lib"] + lib_deps,
+    deps = [
+        ":lib",
+        "@npm//@types/jest",
+    ] + lib_deps,
 )
 
 filegroup(
