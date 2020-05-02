@@ -44,6 +44,7 @@ export class GatewayMiddlewares {
   private get corsWhitelist() {
     let whitelist = [this.env.mainClientUrl, this.env.adminClientUrl];
     if (this.env.environment === Environments.Dev)
+      // TODO allow all localhost:** in dev mode
       whitelist = [
         ...whitelist,
         'http://localhost:4000',

@@ -1,6 +1,5 @@
 workspace(
-    # NOW rename @cents_ideas to @centsideas
-    name = "cents_ideas",
+    name = "centsideas",
     managed_directories = {"@npm": ["node_modules"]},
 )
 

@@ -1,5 +1,5 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
-load("@cents_ideas//packages/jest:jest.bzl", "jest_test")
+load("@centsideas//packages/jest:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
 

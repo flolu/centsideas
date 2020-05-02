@@ -75,7 +75,7 @@ html_insert_assets(
 
 ts_devserver(
     name = "dev_server",
-    entry_module = "cents_ideas/services/client/main.dev",
+    entry_module = "centsideas/services/client/main.dev",
     port = 4200,
     scripts = [
         "@npm//:node_modules/tslib/tslib.js",
