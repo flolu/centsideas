@@ -10,10 +10,10 @@ export class Idea extends EventEntity<IIdeaState> {
     userId: '',
     title: '',
     description: '',
-    createdAt: null,
-    updatedAt: null,
+    createdAt: '',
+    updatedAt: '',
     deleted: false,
-    deletedAt: null,
+    deletedAt: '',
   };
 
   constructor(snapshot?: ISnapshot<IIdeaState>) {

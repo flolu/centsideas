@@ -9,6 +9,8 @@ export class GatewayEnvironment {
   accessTokenSecret = environment.accessTokenSecret;
   ideasRpcPort = environment.ideasRpcPort;
   ideasRpcHost = environment.ideasRpcHost;
+  consumerRpcPort = environment.consumerRpcPort;
+  consumerRpcHost = environment.consumerRpcHost;
   mainClientUrl = environment.mainClientUrl;
   adminClientUrl = environment.adminClientUrl;
   ideasHost = environment.ideasHost;

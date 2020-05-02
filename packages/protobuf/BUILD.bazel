@@ -1,6 +1,18 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+
 package(default_visibility = ["//visibility:public"])
 
 filegroup(
-    name = "protobuf",
+    name = "proto_files",
     srcs = glob(["**/*.proto"]),
+)
+
+ts_library(
+    name = "protobuf",
+    srcs = glob(["**/*.ts"]),
+    module_name = "@centsideas/protobuf",
+    deps = [
+        "//packages/models",
+        "@npm//@grpc/grpc-js",
+    ],
 )

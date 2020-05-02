@@ -7,7 +7,6 @@ import { HeaderKeys, Environments } from '@centsideas/enums';
 import { IAccessTokenPayload } from '@centsideas/models';
 
 import { GatewayEnvironment } from './gateway.environment';
-import { Logger } from '@centsideas/utils';
 
 // TODO use inversify to inject into the express server
 
@@ -37,7 +36,7 @@ export class GatewayMiddlewares {
     callback: (err: Error | null, allow?: boolean) => void,
   ) => {
     if (!origin || this.corsWhitelist.includes(origin)) return callback(null, true);
-    callback(new Error('Not allowed by CORS'));
+    callback(new Error('Not allowed by CORS'), false);
   };
 
   cors: any = cors({ origin: this.checkOrigin, credentials: true });

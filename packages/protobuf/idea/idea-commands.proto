@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package idea;
+package ideaCommands;
 
-service IdeaServiceDefinition {
+service IdeaCommands {
     rpc create(CreateIdeaCommand) returns (IdeaEntityState);
     rpc update(UpdateIdeaCommand) returns (IdeaEntityState);
     rpc delete(DeleteIdeaCommand) returns (IdeaEntityState);

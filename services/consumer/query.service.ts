@@ -12,28 +12,26 @@ import { HttpStatusCodes } from '@centsideas/enums';
 
 import { ProjectionDatabase } from './projection-database';
 
+// TODO get wrid of `renameObjectProperty` stuff
+
 @injectable()
 export class QueryService {
   constructor(private projectionDatabase: ProjectionDatabase) {}
 
-  getAllIdeas = async (_req: HttpRequest): Promise<HttpResponse> => {
+  getAllIdeas = async () => {
     const ideasCollection = await this.projectionDatabase.ideas();
-    // const reviewsCollection = await this.projectionDatabase.reviews();
 
     const ideas = await ideasCollection.find({ deleted: false }).toArray();
     const renamed: IIdeaViewModel[] = ideas.map(i => renameObjectProperty(i, '_id', 'id'));
-    return {
-      status: HttpStatusCodes.Ok,
-      body: renamed,
-    };
+    return renamed;
   };
 
-  getIdeaById = async (req: HttpRequest): Promise<HttpResponse> => {
+  getIdeaById = async (id: string) => {
     const ideasCollection = await this.projectionDatabase.ideas();
     const reviewsCollection = await this.projectionDatabase.reviews();
 
-    const idea = await ideasCollection.findOne({ _id: req.params.id });
-    const reviews = await reviewsCollection.find({ ideaId: req.params.id }).toArray();
+    const idea = await ideasCollection.findOne({ _id: id });
+    const reviews = await reviewsCollection.find({ ideaId: id }).toArray();
     const renamedReviews: IReviewViewModel[] = reviews.map(r =>
       renameObjectProperty(r, '_id', 'id'),
     );
@@ -42,10 +40,7 @@ export class QueryService {
       '_id',
       'id',
     );
-    return {
-      status: HttpStatusCodes.Ok,
-      body: renamedIdea,
-    };
+    return renamedIdea;
   };
 
   getUserById = async (req: HttpRequest): Promise<HttpResponse> => {

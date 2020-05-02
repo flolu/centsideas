@@ -11,19 +11,21 @@ import { IdeasHandler } from './ideas.handler';
 
 @injectable()
 export class IdeasServer {
+  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'protobuf');
+  private readonly ideaCommandsProto = path.join(this.protoRootPath, 'idea', 'idea-commands.proto');
   private isServerRunning = false;
 
   constructor(private env: IdeasEnvironment, private handler: IdeasHandler) {
     Logger.info('launch in', this.env.environment, 'mode');
     this.handleHealthchecks();
 
-    const filename = path.join(__dirname, '../../packages/protobuf/idea', 'idea.proto');
-    const packageDef = protoLoader.loadSync(filename);
+    const packageDef = protoLoader.loadSync(this.ideaCommandsProto);
     const grpcObject = grpc.loadPackageDefinition(packageDef);
-    const ideaPackage = grpcObject.idea;
-
+    const ideaCommands = grpcObject.ideaCommands;
     const server = new grpc.Server();
-    server.addService((ideaPackage as any).IdeaServiceDefinition.service, {
+
+    // TODO types for service implementation
+    server.addService((ideaCommands as any).IdeaCommands.service, {
       create: this.create,
       update: this.update,
       delete: this.delete,

@@ -15,7 +15,9 @@ export interface IEnvironment {
 
   gatewayUrl: string;
   ideasRpcPort: number;
+  consumerRpcPort: number;
   ideasRpcHost: string;
+  consumerRpcHost: string;
   mainClientUrl: string;
   adminClientUrl: string;
   adminSocketUrl: string;

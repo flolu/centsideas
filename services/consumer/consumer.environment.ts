@@ -13,4 +13,8 @@ export class ConsumerEnvironment {
     url: environment.projectionDatabaseUrl,
     name: 'projections',
   };
+  rpc = {
+    host: '0.0.0.0',
+    port: environment.consumerRpcPort,
+  };
 }

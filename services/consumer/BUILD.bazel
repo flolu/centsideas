@@ -12,6 +12,7 @@ lib_deps = [
     "//packages/event-sourcing",
     "//packages/models",
     "//packages/utils",
+    "//packages/protobuf",
     "@npm//@types/async-retry",
     "@npm//@types/body-parser",
     "@npm//@types/express",
@@ -23,6 +24,9 @@ lib_deps = [
     "@npm//mongodb",
     "@npm//rxjs",
     "@npm//reflect-metadata",
+    "@npm//@grpc/grpc-js",
+    "@npm//@grpc/proto-loader",
+    "@npm//@types/node",
 ]
 
 ts_library(
@@ -36,7 +40,10 @@ ts_library(
 
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [
+        ":lib",
+        "//packages/protobuf:proto_files",
+    ],
     entry_point = ":index.ts",
 )
 

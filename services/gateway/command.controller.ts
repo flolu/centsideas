@@ -17,18 +17,25 @@ import {
   NotificationsApiRoutes,
   AdminApiRoutes,
 } from '@centsideas/enums';
+import { IIdeaState } from '@centsideas/models';
+import { IIdeaCommands } from '@centsideas/protobuf';
 import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
-import { Dtos, IIdeaState } from '@centsideas/models';
-
-// TODO input and return types
 
 @controller('')
 export class CommandController implements interfaces.Controller {
-  private ideasClient: any;
+  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'protobuf');
+  private readonly ideaCommandsProto = path.join(this.protoRootPath, 'idea', 'idea-commands.proto');
+  private ideasClient: IIdeaCommands;
 
   constructor(private expressAdapter: ExpressAdapter, private env: GatewayEnvironment) {
-    this.protoIdeaClient();
+    const packageDef = protoLoader.loadSync(this.ideaCommandsProto);
+    const grpcObject = grpc.loadPackageDefinition(packageDef);
+    const ideasPackage = grpcObject.ideaCommands;
+    this.ideasClient = new (ideasPackage as any).IdeaCommands(
+      `${this.env.ideasRpcHost}:${this.env.ideasRpcPort}`,
+      grpc.credentials.createInsecure(),
+    );
   }
 
   // TODO error handling
@@ -37,9 +44,8 @@ export class CommandController implements interfaces.Controller {
     return new Promise(resolve => {
       const { title, description } = req.body;
       const { userId } = res.locals;
-      const payload: Dtos.ICreateIdeaDto = { userId, title, description };
 
-      this.ideasClient.create(payload, (err: Error, response: IIdeaState) => {
+      this.ideasClient.create({ userId, title, description }, (err, response) => {
         if (err) throw err;
         resolve(response);
       });
@@ -52,9 +58,8 @@ export class CommandController implements interfaces.Controller {
       const ideaId = req.params.id;
       const { title, description } = req.body;
       const { userId } = res.locals;
-      const payload: Dtos.IUpdateIdeaDto = { userId, title, description, ideaId };
 
-      this.ideasClient.update(payload, (err: Error, response: IIdeaState) => {
+      this.ideasClient.update({ userId, title, description, ideaId }, (err, response) => {
         if (err) throw err;
         resolve(response);
       });
@@ -66,9 +71,8 @@ export class CommandController implements interfaces.Controller {
     return new Promise(resolve => {
       const ideaId = req.params.id;
       const { userId } = res.locals;
-      const payload: Dtos.IDeleteIdeaDto = { userId, ideaId };
 
-      this.ideasClient.delete(payload, (err: Error, response: IIdeaState) => {
+      this.ideasClient.delete({ userId, ideaId }, (err, response) => {
         if (err) throw err;
         resolve(response);
       });
@@ -161,17 +165,5 @@ export class CommandController implements interfaces.Controller {
     const url = `http://${this.env.adminHost}/${AdminApiRoutes.GetEvents}`;
     const adapter = this.expressAdapter.makeJsonAdapter(url);
     return adapter(req, res, next);
-  }
-
-  private protoIdeaClient() {
-    const filename = path.join(__dirname, '../../packages/protobuf/idea', 'idea.proto');
-    const packageDef = protoLoader.loadSync(filename);
-    const grpcObject = grpc.loadPackageDefinition(packageDef);
-    const ideasPackage = grpcObject.idea;
-
-    this.ideasClient = new (ideasPackage as any).IdeaServiceDefinition(
-      `${this.env.ideasRpcHost}:${this.env.ideasRpcPort}`,
-      grpc.credentials.createInsecure(),
-    );
   }
 }

@@ -4,8 +4,8 @@ export interface IIdeaState extends IEventEntityBase {
   userId: string;
   title: string;
   description: string;
-  createdAt: string | null;
-  updatedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
   deleted: boolean;
-  deletedAt: string | null;
+  deletedAt: string;
 }
