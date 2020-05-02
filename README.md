@@ -25,6 +25,7 @@ This is a project with the purpose of learning the architecture of complex appli
 | Security                                       | encryption, https                          | ✅     |
 | Push notifications                             | mobile and desktop                         | ✅     |
 | Local Kubernetes Cluster                       | microk8s                                   | ✅     |
+| Remote Procedure Calls                         | grpc, protobuf                             | ✅     |
 | Admin panel                                    | monitoring, event handling, logs           | ❌     |
 | Realtime                                       | some kind of realtime integration          | ❌     |
 | File storage                                   | blob storage, encrypted, access control    | ❌     |
@@ -39,7 +40,6 @@ This is a project with the purpose of learning the architecture of complex appli
 | Compute server                                 | non-nodejs server for high cpu tasks       | ❌     |
 | Payments                                       | payout, credit card, paypal                | ❌     |
 | Recommendation System                          | machine learning                           | ❌     |
-| Protobuf                                       | grpc                                       | ❌     |
 
 ✔️ Completely implemented
 ✅ Partly implemented

@@ -12,7 +12,7 @@ lib_deps = [
     "//packages/event-sourcing",
     "//packages/models",
     "//packages/utils",
-    "//packages/protobuf",
+    "//packages/rpc",
     "@npm//@types/async-retry",
     "@npm//@types/body-parser",
     "@npm//@types/express",
@@ -42,7 +42,7 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
-        "//packages/protobuf:proto_files",
+        "//packages/rpc:proto_files",
     ],
     entry_point = ":index.ts",
 )

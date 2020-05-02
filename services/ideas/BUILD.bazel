@@ -11,6 +11,7 @@ lib_deps = [
     "//packages/enums",
     "//packages/models",
     "//packages/utils",
+    "//packages/rpc",
     "//packages/event-sourcing",
     "@npm//inversify",
     "@npm//reflect-metadata",
@@ -32,7 +33,7 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
-        "//packages/protobuf",
+        "//packages/rpc",
     ],
     entry_point = ":index.ts",
 )

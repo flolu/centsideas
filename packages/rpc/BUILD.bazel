@@ -8,9 +8,9 @@ filegroup(
 )
 
 ts_library(
-    name = "protobuf",
+    name = "rpc",
     srcs = glob(["**/*.ts"]),
-    module_name = "@centsideas/protobuf",
+    module_name = "@centsideas/rpc",
     deps = [
         "//packages/models",
         "@npm//@grpc/grpc-js",

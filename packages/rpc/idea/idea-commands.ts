@@ -25,3 +25,9 @@ export interface IIdeaCommands {
   update: (payload: IUpdateIdeaCommand, callback: grpc.requestCallback<IIdeaState>) => void;
   delete: (payload: IDeleteIdeaCommand, callback: grpc.requestCallback<IIdeaState>) => void;
 }
+
+export interface IIdeaCommandsImplementation {
+  create: grpc.handleUnaryCall<ICreateIdeaCommand, IIdeaState>;
+  update: grpc.handleUnaryCall<IUpdateIdeaCommand, IIdeaState>;
+  delete: grpc.handleUnaryCall<IDeleteIdeaCommand, IIdeaState>;
+}

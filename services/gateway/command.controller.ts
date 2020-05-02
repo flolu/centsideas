@@ -18,13 +18,13 @@ import {
   AdminApiRoutes,
 } from '@centsideas/enums';
 import { IIdeaState } from '@centsideas/models';
-import { IIdeaCommands } from '@centsideas/protobuf';
+import { IIdeaCommands } from '@centsideas/rpc';
 import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
 
 @controller('')
 export class CommandController implements interfaces.Controller {
-  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'protobuf');
+  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'rpc');
   private readonly ideaCommandsProto = path.join(this.protoRootPath, 'idea', 'idea-commands.proto');
   private ideasClient: IIdeaCommands;
 

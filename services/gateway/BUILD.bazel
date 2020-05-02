@@ -11,7 +11,7 @@ lib_deps = [
     "//packages/models",
     "//packages/environment",
     "//packages/utils",
-    "//packages/protobuf",
+    "//packages/rpc",
     "@npm//@types/body-parser",
     "@npm//@types/cors",
     "@npm//@types/node",
@@ -46,7 +46,7 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
-        "//packages/protobuf:proto_files",
+        "//packages/rpc:proto_files",
     ],
     entry_point = ":index.ts",
 )

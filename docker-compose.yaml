@@ -27,7 +27,7 @@ services:
   gateway:
     image: node:lts-alpine
     working_dir: /
-    # TODO simplify volumes if possible https://stackoverflow.com/questions/61547472
+    # FIXME simplify volumes if possible https://stackoverflow.com/questions/61547472
     volumes:
       - ./package.json:/package.json
       - ./tsconfig.json:/tsconfig.json

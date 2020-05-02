@@ -9,15 +9,7 @@ export enum ApiEndpoints {
   Admin = 'admin',
 }
 
-export enum IdeasApiRoutes {
-  Create = 'create',
-  Update = 'update',
-  Delete = 'delete',
-  GetAll = 'get-all',
-  GetById = 'get-by-id',
-  Alive = 'alive',
-}
-
+// TODO remove most of those eventually
 export enum NotificationsApiRoutes {
   SubscribePush = 'sub-push',
   UpdateSettings = 'update-settings',

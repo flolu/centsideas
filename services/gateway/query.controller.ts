@@ -7,14 +7,14 @@ import * as protoLoader from '@grpc/proto-loader';
 import { ApiEndpoints, UsersApiRoutes } from '@centsideas/enums';
 import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
-import { IIdeaQueries } from '@centsideas/protobuf';
+import { IIdeaQueries } from '@centsideas/rpc';
 
 // TODO input and return types
 // TODO use grpc to communicate with other services
 
 @controller('')
 export class QueryController implements interfaces.Controller {
-  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'protobuf');
+  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'rpc');
   private readonly ideaQueriesProto = path.join(this.protoRootPath, 'idea', 'idea-queries.proto');
   private ideasClient: IIdeaQueries;
 

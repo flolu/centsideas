@@ -14,11 +14,11 @@ import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
 import { ConsumerEnvironment } from './consumer.environment';
 import { UsersProjection } from './users.projection';
-import { IIdeaQueriesImplementation } from '@centsideas/protobuf';
+import { IIdeaQueriesImplementation } from '@centsideas/rpc';
 
 @injectable()
 export class ConsumerServer {
-  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'protobuf');
+  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'rpc');
   private readonly ideaQueriesProto = path.join(this.protoRootPath, 'idea', 'idea-queries.proto');
 
   // TODO remove
