@@ -1,3 +1,4 @@
+import * as http from 'http';
 import * as path from 'path';
 import { injectable } from 'inversify';
 import * as grpc from '@grpc/grpc-js';
@@ -10,8 +11,11 @@ import { IdeasHandler } from './ideas.handler';
 
 @injectable()
 export class IdeasServer {
+  private isServerRunning = false;
+
   constructor(private env: IdeasEnvironment, private handler: IdeasHandler) {
     Logger.info('launch in', this.env.environment, 'mode');
+    this.handleHealthchecks();
 
     const filename = path.join(__dirname, '../../packages/protobuf/idea', 'idea.proto');
     const packageDef = protoLoader.loadSync(filename);
@@ -32,6 +36,7 @@ export class IdeasServer {
       (err, port) => {
         if (err) Logger.error(err, 'while binding server');
         else Logger.info('proto server running ', port);
+        this.isServerRunning = true;
 
         server.start();
       },
@@ -59,4 +64,10 @@ export class IdeasServer {
     const deleted = await this.handler.delete(userId, ideaId);
     callback(null, deleted.persistedState);
   };
+
+  private handleHealthchecks() {
+    http
+      .createServer((_req, res) => res.writeHead(this.isServerRunning ? 200 : 500).end())
+      .listen(3000);
+  }
 }

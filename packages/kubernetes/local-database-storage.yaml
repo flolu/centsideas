@@ -134,18 +134,6 @@ spec:
   hostPath:
     path: '/mnt/data/notifications-event-store'
     type: DirectoryOrCreate
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: amdin-database-pvc
-spec:
-  storageClassName: amdin-database-local-storage
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
 
 ---
 apiVersion: v1
@@ -161,3 +149,16 @@ spec:
   hostPath:
     path: '/mnt/data/admin-database'
     type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: amdin-database-pvc
+spec:
+  storageClassName: amdin-database-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

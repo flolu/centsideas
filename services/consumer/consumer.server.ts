@@ -34,6 +34,7 @@ export class ConsumerServer {
 
     this.registerQueryRoutes();
 
+    // TODO should only be healthy if connected to kafka
     this.app.get('/alive', (_req, res) => res.status(200).send());
     this.app.listen(this.env.port);
   }
