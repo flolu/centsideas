@@ -11,10 +11,10 @@ export class Review extends EventEntity<IReviewState> {
     userId: '',
     content: '',
     scores: { control: 0, entry: 0, need: 0, time: 0, scale: 0 },
-    createdAt: null,
-    updatedAt: null,
+    createdAt: '',
+    updatedAt: '',
+    deletedAt: '',
     deleted: false,
-    deletedAt: null,
   };
 
   constructor(snapshot?: ISnapshot<IReviewState>) {

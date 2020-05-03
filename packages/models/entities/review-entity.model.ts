@@ -6,9 +6,9 @@ export interface IReviewState extends IEventEntityBase {
   content: string;
   scores: IReviewScores;
   deleted: boolean;
-  createdAt: string | null;
-  updatedAt: string | null;
-  deletedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 }
 
 export interface IReviewScores {

@@ -10,4 +10,8 @@ export class ReviewsEnvironment {
     url: environment.reviewsDatabaseUrl,
     name: 'reviews',
   };
+  rpc = {
+    host: '0.0.0.0',
+    port: environment.reviewsRpcPort,
+  };
 }

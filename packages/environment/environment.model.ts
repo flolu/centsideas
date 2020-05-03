@@ -47,6 +47,8 @@ export interface IEnvironment {
 
   reviewsHost: string;
   reviewsDatabaseUrl: string;
+  reviewsRpcPort: number;
+  reviewsRpcHost: string;
 
   kafkaAdvertisedHostName: string;
   kafkaZookeeperConnect: string;

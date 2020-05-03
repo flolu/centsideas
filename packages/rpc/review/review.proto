@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package review;
+
+service ReviewCommands {
+  rpc create(CreateReviewCommand) returns (ReviewEntityState);
+  rpc update(UpdateReviewCommand) returns (ReviewEntityState);
+  rpc delete(DeleteReviewCommand) returns (ReviewEntityState);
+}
+
+message CreateReviewCommand {
+  string ideaId = 1;
+  string content = 2;
+  ReviewScores scores = 3;
+  string userId = 4;
+}
+
+message UpdateReviewCommand {
+  string reviewId = 1;
+  string content = 2;
+  ReviewScores scores = 3;
+  string userId = 4;
+}
+
+message DeleteReviewCommand {
+  string reviewId = 1;
+  string userId = 2;
+}
+
+message ReviewEntityState {
+  string id = 1;
+  int32 lastEventNumber = 2;
+  string lastEventId = 3;
+  string ideaId = 4;
+  string userId = 5;
+  string content = 6;
+  ReviewScores scores = 7;
+  bool deleted = 8;
+  string createdAt = 9;
+  string updatedAt = 10;
+  string deletdAt = 11;
+}
+
+message ReviewScores {
+  int32 control = 1;
+  int32 entry = 2;
+  int32 need = 3;
+  int32 time = 4;
+  int32 scale = 5;
+}

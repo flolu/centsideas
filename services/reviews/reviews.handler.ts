@@ -11,6 +11,7 @@ import { ReviewRepository } from './review.repository';
 export class ReviewsHandler {
   constructor(private repository: ReviewRepository) {}
 
+  // TODO how to ensure that userId and ideaId are valid?
   create = async (
     ideaId: string,
     userId: string,

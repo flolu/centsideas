@@ -1,7 +1,6 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
-# TODO make only visible for backend services
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//services:__subpackages__"])
 
 filegroup(
     name = "proto_files",

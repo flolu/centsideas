@@ -4,6 +4,7 @@ export const defaultCommonEnv = {
   usersRpcPort: 40000,
   notificationsRpcPort: 40000,
   adminRpcPort: 40000,
+  reviewsRpcPort: 40000,
 };
 
 export const defaultKubernetesEnv = {
@@ -25,6 +26,7 @@ export const defaultKubernetesEnv = {
 
   reviewsHost: 'centsideas-reviews:3000',
   reviewsDatabaseUrl: 'mongodb://centsideas-reviews-event-store:27017',
+  reviewsRpcHost: 'centsideas-reviews',
 
   adminHost: 'centsideas-admin:3000',
   adminDatabaseUrl: 'mongodb://centsideas-admin-database:27017',
