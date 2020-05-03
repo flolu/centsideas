@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package user;
+
+service UserCommands {
+    rpc update(UpdateUserCommand) returns (UserEntityState);
+    rpc confirmEmailChange(ConfirmEmailChangeCommand) returns (UserEntityState);
+}
+
+message UpdateUserCommand {
+    string username = 1;
+    string email = 2;
+    string userId = 3;
+}
+
+message ConfirmEmailChangeCommand {
+    string token = 1;
+    string userId = 2;
+}
+
+message UserEntityState {
+  string id = 1;
+  int32 lastEventNumber = 2;
+  string lastEventId = 3;
+  string username = 4;
+  string email = 5;
+  string pendingEmail = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+  string refreshTokenId = 9;
+}

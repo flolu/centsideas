@@ -1,15 +1,17 @@
 export const defaultCommonEnv = {
   ideasRpcPort: 40000,
   consumerRpcPort: 40000,
+  usersRpcPort: 40000,
 };
 
 export const defaultKubernetesEnv = {
   ideasRpcHost: 'centsideas-ideas',
-  consumerRpcHost: 'centsideas-consumer',
   ideasHost: 'centsideas-ideas:3000',
+  usersRpcHost: 'centsideas-users',
+  usersHost: 'centsideas-users:3000',
+  consumerRpcHost: 'centsideas-consumer',
   consumerHost: 'centsideas-consumer:3000',
   reviewsHost: 'centsideas-reviews:3000',
-  usersHost: 'centsideas-users:3000',
   notificationsHost: 'centsideas-notifications:3000',
   adminHost: 'centsideas-admin:3000',
   ideasDatabaseUrl: 'mongodb://centsideas-ideas-event-store:27017',

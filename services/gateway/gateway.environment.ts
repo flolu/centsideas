@@ -20,4 +20,7 @@ export class GatewayEnvironment {
   notificationsHost = environment.notificationsHost;
   adminHost = environment.adminHost;
   corsWhitelist = [environment.mainClientUrl, environment.adminClientUrl];
+  usersRpcPort = environment.usersRpcPort;
+  usersRpcHost = environment.usersRpcHost;
+  frontendServerExchangeSecret = environment.frontendServerExchangeSecret;
 }

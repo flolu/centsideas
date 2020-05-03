@@ -28,6 +28,7 @@ registerProviders(
 );
 
 const env: GatewayEnvironment = getProvider(GatewayEnvironment);
+
 registerConstant(
   TYPES.IDEAS_QUERY_RPC_CLIENT,
   new RpcClient(env.consumerRpcHost, env.consumerRpcPort, 'idea', 'IdeaQueries'),
@@ -35,6 +36,16 @@ registerConstant(
 registerConstant(
   TYPES.IDEAS_COMMAND_RPC_CLIENT,
   new RpcClient(env.ideasRpcHost, env.ideasRpcPort, 'idea', 'IdeaCommands'),
+);
+
+registerConstant(
+  TYPES.USERS_COMMAND_RPC_CLIENT,
+  new RpcClient(env.usersRpcHost, env.usersRpcPort, 'user', 'UserCommands'),
+);
+
+registerConstant(
+  TYPES.AUTH_COMMAND_RPC_CLIENT,
+  new RpcClient(env.usersRpcHost, env.usersRpcPort, 'auth', 'AuthCommands'),
 );
 
 getProvider(GatewayServer);

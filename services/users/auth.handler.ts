@@ -65,10 +65,10 @@ export class AuthHandler {
     return this.handleConfirmedLogin(user, login);
   };
 
-  googleLoginRedirect = (origin?: string) => {
+  googleLoginRedirect = () => {
     const params = queryString.stringify({
       client_id: this.env.google.clientId,
-      redirect_uri: this.getGoogleRedirectUri(origin),
+      redirect_uri: this.getGoogleRedirectUri(),
       scope: [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
@@ -80,8 +80,8 @@ export class AuthHandler {
     return `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
   };
 
-  googleLogin = async (code: string, origin?: string) => {
-    const userInfo = await this.fetchGoogleUserInfo(code, origin);
+  googleLogin = async (code: string) => {
+    const userInfo = await this.fetchGoogleUserInfo(code);
 
     // FIXME send verification email manually
     if (!userInfo.verified_email)
@@ -139,10 +139,11 @@ export class AuthHandler {
     const accessToken = this.generateAccessToken(user);
     const refreshToken = this.generateRefreshToken(user);
 
-    return { accessToken, refreshToken, user };
+    return { accessToken, refreshToken, user: user.persistedState };
   };
 
-  revokeRefreshToken = async (userId: string, reason: string): Promise<User> => {
+  // FIXME implement such that access to this controller is only for admins
+  revokeRefreshToken = async (userId: string, reason: string) => {
     UserErrors.UserIdRequiredError.validate(userId);
 
     const user = await this.userRepository.findById(userId);
@@ -152,6 +153,12 @@ export class AuthHandler {
 
     // FIXME maybe send email to user
     return this.userRepository.save(user);
+  };
+
+  logout = async (userId: string) => {
+    UserErrors.UserIdRequiredError.validate(userId);
+    // FIXME save logout event?
+    return true;
   };
 
   private handleUserCreation = async (email: string): Promise<User> => {
@@ -200,7 +207,7 @@ export class AuthHandler {
     );
   };
 
-  private fetchGoogleUserInfo = async (code: string, origin?: string): Promise<IGoogleUserinfo> => {
+  private fetchGoogleUserInfo = async (code: string): Promise<IGoogleUserinfo> => {
     UserErrors.GoogleLoginCodeRequiredError.validate(code);
 
     const tokensResponse = await axios({
@@ -209,7 +216,7 @@ export class AuthHandler {
       data: {
         client_id: this.env.google.clientId,
         client_secret: this.env.google.clientSecret,
-        redirect_uri: this.getGoogleRedirectUri(origin),
+        redirect_uri: this.getGoogleRedirectUri(),
         grant_type: 'authorization_code',
         code,
       },
@@ -231,11 +238,8 @@ export class AuthHandler {
     return userInfo;
   };
 
-  private getGoogleRedirectUri = (origin?: string) => {
-    const frontendUrl =
-      this.globalEnv.environment === 'dev'
-        ? origin || this.globalEnv.mainClientUrl
-        : this.globalEnv.mainClientUrl;
+  private getGoogleRedirectUri = () => {
+    const frontendUrl = this.globalEnv.mainClientUrl;
     return `${frontendUrl}/${TopLevelFrontendRoutes.Login}`;
   };
 }

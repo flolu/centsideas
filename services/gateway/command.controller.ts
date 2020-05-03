@@ -14,8 +14,12 @@ import {
   UsersApiRoutes,
   NotificationsApiRoutes,
   AdminApiRoutes,
+  CookieNames,
+  TokenExpirationTimes,
+  Environments,
 } from '@centsideas/enums';
-import { IIdeaCommands, RpcClient } from '@centsideas/rpc';
+import { IIdeaCommands, RpcClient, IUserCommands, IAuthCommands } from '@centsideas/rpc';
+import { GlobalEnvironment } from '@centsideas/environment';
 
 import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
@@ -25,12 +29,16 @@ import TYPES from './types';
 @controller('')
 export class CommandController implements interfaces.Controller {
   constructor(
+    // TODO remove
     private expressAdapter: ExpressAdapter,
     private env: GatewayEnvironment,
+    private globalEnv: GlobalEnvironment,
     @inject(TYPES.IDEAS_COMMAND_RPC_CLIENT) private ideasRpc: RpcClient<IIdeaCommands>,
+    @inject(TYPES.USERS_COMMAND_RPC_CLIENT) private usersRpc: RpcClient<IUserCommands>,
+    @inject(TYPES.AUTH_COMMAND_RPC_CLIENT) private authRpc: RpcClient<IAuthCommands>,
   ) {}
 
-  // TODO error handling
+  // TODO error handling https://stackoverflow.com/questions/48748745 https://grpc.io/docs/guides/error/ https://github.com/avinassh/grpc-errors/tree/master/node
   @httpPost(`/${ApiEndpoints.Ideas}`, AuthMiddleware)
   async createIdea(req: express.Request, res: express.Response) {
     const { title, description } = req.body;
@@ -55,59 +63,93 @@ export class CommandController implements interfaces.Controller {
   }
 
   @httpPut(`/${ApiEndpoints.Users}/:id`, AuthMiddleware)
-  updateUser(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.usersHost}/${UsersApiRoutes.Update}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  updateUser(req: express.Request, res: express.Response) {
+    const { username, email } = req.body;
+    const { userId } = res.locals;
+    return this.usersRpc.client.update({ username, email, userId });
   }
 
+  // TODO rename auth routes to /auth
   @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.GoogleLogin}`)
-  googleLogin(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.usersHost}/${UsersApiRoutes.GoogleLogin}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  async googleLogin(req: express.Request, res: express.Response) {
+    const { code } = req.body;
+    const { user, refreshToken, accessToken } = await this.authRpc.client.googleLogin({ code });
+    res.cookie(CookieNames.RefreshToken, refreshToken, this.getRefreshTokenCookieOptions());
+    return { user, accessToken };
   }
 
   @httpGet(`/${ApiEndpoints.Users}/${UsersApiRoutes.GoogleLoginRedirect}`)
-  googleLoginRedirectUrl(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.usersHost}/${UsersApiRoutes.GoogleLoginRedirect}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  async googleLoginRedirectUrl() {
+    const { url } = await this.authRpc.client.googleLoginRedirect(undefined);
+    return { url };
   }
 
   @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`, AuthMiddleware)
-  refreshToken(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.usersHost}/${UsersApiRoutes.RefreshToken}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  async refreshToken(req: express.Request, res: express.Response) {
+    try {
+      let currentRefreshToken = req.cookies[CookieNames.RefreshToken];
+
+      if (!currentRefreshToken) {
+        /**
+         * To enable authentication for server-side rendered content we pass the refresh
+         * token in the request body from the ssr server, which is usually not a good practice
+         * to do from a normal client. Thus we only accept this authentication when the request
+         * indeed cam from our client server.
+         * Therefore we share an `exchangeSecret` between the client and this user service
+         * to guarantee the authenticity of the request.
+         * Here we validate if the `exchangeSecret`s match
+         */
+        const { exchangeSecret } = req.body;
+        if (
+          this.env.frontendServerExchangeSecret === exchangeSecret ||
+          this.globalEnv.environment === Environments.Dev
+        ) {
+          currentRefreshToken = req.body.refreshToken;
+        }
+      }
+      if (!currentRefreshToken) {
+        res.cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
+        return { ok: false };
+      }
+
+      const data = await this.authRpc.client.refreshToken({ refreshToken: currentRefreshToken });
+      const { user, accessToken, refreshToken } = data;
+
+      res.cookie(CookieNames.RefreshToken, refreshToken, this.getRefreshTokenCookieOptions());
+      return { user, accessToken };
+    } catch (error) {
+      res.cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
+      return { ok: false };
+    }
   }
 
   @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.Login}`)
-  login(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.usersHost}/${UsersApiRoutes.Login}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  login(req: express.Request) {
+    const { email } = req.body;
+    return this.authRpc.client.login({ email });
   }
 
   @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.ConfirmLogin}`)
-  confirmLogin(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.usersHost}/${UsersApiRoutes.ConfirmLogin}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  async confirmLogin(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const { loginToken } = req.body;
+    const data = await this.authRpc.client.confirmLogin({ token: loginToken });
+    const { user, accessToken, refreshToken } = data;
+    res.cookie(CookieNames.RefreshToken, refreshToken, this.getRefreshTokenCookieOptions());
+    return { user, accessToken };
   }
 
   @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.ConfirmEmailChange}`, AuthMiddleware)
-  confirmEmailChange(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.usersHost}/${UsersApiRoutes.ConfirmEmailChange}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  confirmEmailChange(req: express.Request, res: express.Response) {
+    const { token } = req.body;
+    const { userId } = res.locals;
+    return this.usersRpc.client.confirmEmailChange({ token, userId });
   }
 
   @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.Logout}`, AuthMiddleware)
-  logout(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.usersHost}/${UsersApiRoutes.Logout}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  async logout(_req: express.Request, res: express.Response) {
+    const { userId } = res.locals;
+    await this.authRpc.client.logout({ userId });
+    res.cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
   }
 
   @httpPost(
@@ -147,4 +189,16 @@ export class CommandController implements interfaces.Controller {
     const adapter = this.expressAdapter.makeJsonAdapter(url);
     return adapter(req, res, next);
   }
+
+  private getRefreshTokenCookieOptions = () => {
+    const options: express.CookieOptions = {
+      httpOnly: true,
+      maxAge: TokenExpirationTimes.RefreshToken * 1000,
+    };
+    if (this.globalEnv.environment === Environments.Prod) {
+      options.sameSite = 'strict';
+      options.secure = true;
+    }
+    return options;
+  };
 }

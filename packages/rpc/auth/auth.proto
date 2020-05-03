@@ -1,0 +1,45 @@
+import "google/protobuf/empty.proto";
+import "../user/user.proto";
+
+syntax = "proto3";
+
+package auth;
+
+service AuthCommands {
+    rpc login(LoginCommand) returns (google.protobuf.Empty);
+    rpc confirmLogin(ConfirmLoginCommand) returns (AuthSuccessCredentials);
+    rpc googleLogin(GoogleLoginCommand) returns (AuthSuccessCredentials);
+    rpc googleLoginRedirect(google.protobuf.Empty) returns (GoogleLoginUrl);
+    rpc logout(LogoutCommand) returns (google.protobuf.Empty);
+    rpc refreshToken(RefreshTokenCommand) returns (AuthSuccessCredentials);
+}
+
+message LoginCommand {
+  string email = 1;
+}
+
+message ConfirmLoginCommand {
+  string token = 1;
+}
+
+message GoogleLoginCommand {
+  string code = 1;
+}
+
+message LogoutCommand {
+  string userId = 1;
+}
+
+message RefreshTokenCommand {
+  string refreshToken = 1;
+}
+
+message AuthSuccessCredentials {
+  UserEntityState user = 1;
+  string accessToken = 2;
+  string refreshToken = 3;
+}
+
+message GoogleLoginUrl {
+    string url = 1;
+}

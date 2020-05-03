@@ -24,6 +24,11 @@ spec:
                 secretKeyRef:
                   name: centsideas-secret
                   key: accessTokenSecret
+            - name: frontendServerExchangeSecret
+              valueFrom:
+                secretKeyRef:
+                  name: centsideas-secret
+                  key: frontendServerExchangeSecret
           readinessProbe:
             httpGet:
               path: /alive

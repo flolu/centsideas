@@ -11,7 +11,7 @@ export class EmailChangeConfirmedEvent extends Event<IEmailChangeConfirmedEvent>
 
   static commit(state: IUserState, event: EmailChangeConfirmedEvent): IUserState {
     state.email = event.data.newEmail;
-    state.pendingEmail = null;
+    state.pendingEmail = '';
     state.updatedAt = event.timestamp;
     return state;
   }

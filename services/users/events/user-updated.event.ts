@@ -11,7 +11,7 @@ export class UserUpdatedEvent extends Event<IUserUpdatedEvent> {
 
   static commit(state: IUserState, event: UserUpdatedEvent): IUserState {
     state.username = event.data.username || state.username;
-    state.pendingEmail = event.data.pendingEmail;
+    state.pendingEmail = event.data.pendingEmail || '';
     return state;
   }
 }

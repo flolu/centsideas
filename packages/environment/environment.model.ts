@@ -13,18 +13,24 @@ export interface IEnvironment {
   vapidPublicKey: string;
   vapidPrivateKey: string;
 
-  gatewayUrl: string;
+  // TODO rename to `ideasHost` etc...
   ideasRpcPort: number;
-  consumerRpcPort: number;
   ideasRpcHost: string;
+  // TODO remove etc...
+  ideasHost: string;
+
+  usersRpcPort: number;
+  usersRpcHost: string;
+  usersHost: string;
+
+  gatewayUrl: string;
+  consumerRpcPort: number;
   consumerRpcHost: string;
   mainClientUrl: string;
   adminClientUrl: string;
   adminSocketUrl: string;
-  ideasHost: string;
   consumerHost: string;
   reviewsHost: string;
-  usersHost: string;
   notificationsHost: string;
   adminHost: string;
   ideasDatabaseUrl: string;

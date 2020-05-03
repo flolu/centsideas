@@ -1,62 +1,83 @@
 import { injectable } from 'inversify';
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
 
-import { Logger, ExpressAdapters } from '@centsideas/utils';
-import { UsersApiRoutes } from '@centsideas/enums';
+import { Logger } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
+import {
+  RpcServer,
+  IUserCommands,
+  UpdateUser,
+  ConfirmEmailChange,
+  IAuthCommands,
+  Login,
+  ConfirmLogin,
+  GoogleLogin,
+  GoogleLoginRedicrect,
+  Logout,
+  RefreshToken,
+} from '@centsideas/rpc';
 
-import { UsersEnvironment } from './users.environment';
-import { AuthService } from './auth.service';
-import { UsersService } from './users.service';
+import { UsersHandler } from './users.handler';
+import { AuthHandler } from './auth.handler';
 
 @injectable()
 export class UsersServer {
-  private app = express();
-  private routes = UsersApiRoutes;
-
   constructor(
-    private authService: AuthService,
-    private env: UsersEnvironment,
     private globalEnv: GlobalEnvironment,
-    private usersService: UsersService,
+    private rpcServer: RpcServer,
+    private usersHandler: UsersHandler,
+    private authHandler: AuthHandler,
   ) {
     Logger.info('launch in', this.globalEnv.environment, 'mode');
-    this.app.use(bodyParser.json());
 
-    this.registerAuthRoutes();
-    this.registerUserRoutes();
+    const userService = this.rpcServer.loadService('user', 'UserCommands');
+    this.rpcServer.addService<IUserCommands>(userService, {
+      update: this.update,
+      confirmEmailChange: this.confirmEmailChange,
+    });
 
-    this.app.get(`/${this.routes.Alive}`, (_req, res) => res.status(200).send());
-    this.app.listen(this.env.port);
+    const authService = this.rpcServer.loadService('auth', 'AuthCommands');
+    this.rpcServer.addService<IAuthCommands>(authService, {
+      login: this.login,
+      confirmLogin: this.confirmLogin,
+      googleLogin: this.googleLogin,
+      googleLoginRedirect: this.googleLoginRedirect,
+      logout: this.logout,
+      refreshToken: this.refreshToken,
+    });
   }
 
-  private registerAuthRoutes() {
-    this.app.post(`/${this.routes.Login}`, ExpressAdapters.json(this.authService.login));
-    this.app.post(
-      `/${this.routes.ConfirmLogin}`,
-      ExpressAdapters.json(this.authService.confirmLogin),
-    );
-    this.app.post(
-      `/${this.routes.GoogleLogin}`,
-      ExpressAdapters.json(this.authService.googleLogin),
-    );
-    this.app.post(
-      `/${this.routes.GoogleLoginRedirect}`,
-      ExpressAdapters.json(this.authService.googleLoginRedirect),
-    );
-    this.app.post(`/${this.routes.Logout}`, ExpressAdapters.json(this.authService.logout));
-    this.app.post(
-      `/${this.routes.RefreshToken}`,
-      ExpressAdapters.json(this.authService.refreshToken),
-    );
-  }
+  login: Login = async ({ email }) => {
+    await this.authHandler.login(email);
+  };
 
-  private registerUserRoutes() {
-    this.app.post(`/${this.routes.Update}`, ExpressAdapters.json(this.usersService.updateUser));
-    this.app.post(
-      `/${this.routes.ConfirmEmailChange}`,
-      ExpressAdapters.json(this.usersService.confirmEmailChange),
-    );
-  }
+  confirmLogin: ConfirmLogin = ({ token }) => {
+    return this.authHandler.confirmLogin(token);
+  };
+
+  googleLogin: GoogleLogin = ({ code }) => {
+    return this.authHandler.googleLogin(code);
+  };
+
+  googleLoginRedirect: GoogleLoginRedicrect = async () => {
+    const url = await this.authHandler.googleLoginRedirect();
+    return { url };
+  };
+
+  logout: Logout = async ({ userId }) => {
+    return this.authHandler.logout(userId);
+  };
+
+  refreshToken: RefreshToken = async ({ refreshToken }) => {
+    return this.authHandler.refreshToken(refreshToken);
+  };
+
+  update: UpdateUser = async ({ userId, username, email }) => {
+    const updated = await this.usersHandler.updateUser(userId, username, email);
+    return updated.persistedState;
+  };
+
+  confirmEmailChange: ConfirmEmailChange = async ({ token, userId }) => {
+    const updated = await this.usersHandler.confirmEmailChange(token, userId);
+    return updated.persistedState;
+  };
 }

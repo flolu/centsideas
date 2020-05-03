@@ -11,6 +11,7 @@ export const defaultDevEnv: IEnvironment = {
   environment: Environments.Dev,
   gatewayUrl: 'http://localhost:3000',
   ideasRpcHost: 'ideas',
+  usersRpcHost: 'users',
   consumerRpcHost: 'consumer',
   mainClientUrl: 'http://localhost:4200',
   adminClientUrl: 'http://localhost:8080',

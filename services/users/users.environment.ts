@@ -21,4 +21,8 @@ export class UsersEnvironment {
   exchangeSecrets = {
     frontendServer: environment.frontendServerExchangeSecret,
   };
+  rpc = {
+    host: '0.0.0.0',
+    port: environment.usersRpcPort,
+  };
 }

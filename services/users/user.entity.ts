@@ -8,9 +8,9 @@ export class User extends EventEntity<IUserState> {
     ...initialEntityBaseState,
     username: '',
     email: '',
-    pendingEmail: null,
-    createdAt: null,
-    updatedAt: null,
+    pendingEmail: '',
+    createdAt: '',
+    updatedAt: '',
     refreshTokenId: '',
   };
 

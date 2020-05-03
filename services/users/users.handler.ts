@@ -21,13 +21,11 @@ export class UsersHandler {
 
   updateUser = async (
     auid: string | null,
-    userId: string,
     username: string | null,
     email: string | null,
   ): Promise<User> => {
     if (!auid) throw new NotAuthenticatedError();
-    NoPermissionError.validate(auid, userId);
-    UserErrors.UserIdRequiredError.validate(userId);
+    UserErrors.UserIdRequiredError.validate(auid);
 
     if (username) {
       username = sanitizeHtml(username);
@@ -41,7 +39,7 @@ export class UsersHandler {
       UserErrors.EmailInvalidError.validate(email);
     }
 
-    let user = await this.userRepository.findById(userId);
+    let user = await this.userRepository.findById(auid);
 
     const isNewUsername = user && user.persistedState.username !== username;
     if (username && isNewUsername) {
@@ -51,19 +49,23 @@ export class UsersHandler {
     const isNewEmail = email && user.persistedState.email !== email;
     if (email && isNewEmail) {
       await this.userRepository.checkEmailAvailability(email);
-      user = await this.requestEmailChange(userId, email);
+      user = await this.requestEmailChange(auid, email);
     }
 
     user.update(username, isNewEmail ? email : null);
 
-    if (username) await this.userRepository.usernameMapping.update(userId, username);
+    if (username) await this.userRepository.usernameMapping.update(auid, username);
     const saved: User = await this.userRepository.save(user);
     return saved;
   };
 
-  confirmEmailChange = async (token: string): Promise<User> => {
+  confirmEmailChange = async (token: string, auid: string): Promise<User> => {
+    if (!auid) throw new NotAuthenticatedError();
+
     const data = decodeToken(token, this.env.tokenSecrets.changeEmailToken);
     const payload: IEmailChangeTokenPayload = data;
+
+    NoPermissionError.validate(auid, payload.userId);
 
     await this.userRepository.checkEmailAvailability(payload.newEmail);
 
