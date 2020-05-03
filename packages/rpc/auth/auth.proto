@@ -6,12 +6,12 @@ syntax = "proto3";
 package auth;
 
 service AuthCommands {
-    rpc login(LoginCommand) returns (google.protobuf.Empty);
-    rpc confirmLogin(ConfirmLoginCommand) returns (AuthSuccessCredentials);
-    rpc googleLogin(GoogleLoginCommand) returns (AuthSuccessCredentials);
-    rpc googleLoginRedirect(google.protobuf.Empty) returns (GoogleLoginUrl);
-    rpc logout(LogoutCommand) returns (google.protobuf.Empty);
-    rpc refreshToken(RefreshTokenCommand) returns (AuthSuccessCredentials);
+  rpc login(LoginCommand) returns (google.protobuf.Empty);
+  rpc confirmLogin(ConfirmLoginCommand) returns (AuthSuccessCredentials);
+  rpc googleLogin(GoogleLoginCommand) returns (AuthSuccessCredentials);
+  rpc googleLoginRedirect(google.protobuf.Empty) returns (GoogleLoginUrl);
+  rpc logout(LogoutCommand) returns (google.protobuf.Empty);
+  rpc refreshToken(RefreshTokenCommand) returns (AuthSuccessCredentials);
 }
 
 message LoginCommand {

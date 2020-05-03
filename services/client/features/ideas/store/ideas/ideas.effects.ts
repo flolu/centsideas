@@ -15,7 +15,7 @@ export class IdeasEffects {
       ofType(IdeasActions.getIdeas),
       switchMap(() =>
         this.ideasService.getIdeas().pipe(
-          map(found => IdeasActions.getIdeasDone({ ideas: found })),
+          map(found => IdeasActions.getIdeasDone({ ideas: found || [] })),
           catchError(error => of(IdeasActions.getIdeasFail({ error }))),
         ),
       ),

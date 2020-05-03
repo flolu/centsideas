@@ -5,15 +5,19 @@ import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Admin;
-import { registerProviders, getProvider } from '@centsideas/utils';
+import { registerProviders, getProvider, registerConstant } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { AdminServer } from './admin.server';
 import { AdminEnvironment } from './admin.environment';
 import { AdminDatabase } from './admin.database';
+import { RpcServer } from '@centsideas/rpc';
 
 registerProviders(AdminServer, AdminEnvironment, MessageBroker, AdminDatabase, GlobalEnvironment);
+
+const env: AdminEnvironment = getProvider(AdminEnvironment);
+registerConstant(RpcServer, new RpcServer(env.rpc.host, env.rpc.port));
 
 getProvider(AdminServer);
 

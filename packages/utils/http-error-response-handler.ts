@@ -3,6 +3,7 @@ import { HttpStatusCodes } from '@centsideas/enums';
 
 import { Logger } from './logger';
 
+// TODO remove or move to gateway
 export const handleHttpResponseError = (
   error: any,
   overrides?: Partial<HttpResponse>,

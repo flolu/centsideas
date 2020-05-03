@@ -1,10 +1,8 @@
 import { injectable } from 'inversify';
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
 
 import { MessageBroker } from '@centsideas/event-sourcing';
-import { Logger, ExpressAdapters } from '@centsideas/utils';
-import { ApiEndpoints, EventTopics, UsersApiRoutes } from '@centsideas/enums';
+import { Logger } from '@centsideas/utils';
+import { EventTopics } from '@centsideas/enums';
 
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
@@ -15,9 +13,6 @@ import { RpcServer, IIdeaQueries, GetAllIdeas, GetIdeaById } from '@centsideas/r
 
 @injectable()
 export class ConsumerServer {
-  // TODO remove
-  private app = express();
-
   constructor(
     private messageBroker: MessageBroker,
     private queryService: QueryService,
@@ -38,14 +33,6 @@ export class ConsumerServer {
       getAll: this.getAll,
       getById: this.getById,
     });
-
-    this.app.use(bodyParser.json());
-
-    this.registerQueryRoutes();
-
-    // TODO should only be healthy if connected to kafka and proto servers are running
-    this.app.get('/alive', (_req, res) => res.status(200).send());
-    this.app.listen(this.env.port);
   }
 
   getAll: GetAllIdeas = async () => {
@@ -56,15 +43,4 @@ export class ConsumerServer {
   getById: GetIdeaById = async ({ id }) => {
     return this.queryService.getIdeaById(id);
   };
-
-  private registerQueryRoutes() {
-    this.app.post(
-      `/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`,
-      ExpressAdapters.json(this.queryService.getUserById),
-    );
-    this.app.post(
-      `/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`,
-      ExpressAdapters.json(this.queryService.getAllUsers),
-    );
-  }
 }

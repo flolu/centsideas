@@ -13,15 +13,19 @@ import {
   ApiEndpoints,
   UsersApiRoutes,
   NotificationsApiRoutes,
-  AdminApiRoutes,
   CookieNames,
   TokenExpirationTimes,
   Environments,
 } from '@centsideas/enums';
-import { IIdeaCommands, RpcClient, IUserCommands, IAuthCommands } from '@centsideas/rpc';
+import {
+  IIdeaCommands,
+  RpcClient,
+  IUserCommands,
+  IAuthCommands,
+  INotificationCommands,
+} from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 
-import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
 import { AuthMiddleware } from './middlewares';
 import TYPES from './types';
@@ -29,13 +33,13 @@ import TYPES from './types';
 @controller('')
 export class CommandController implements interfaces.Controller {
   constructor(
-    // TODO remove
-    private expressAdapter: ExpressAdapter,
     private env: GatewayEnvironment,
     private globalEnv: GlobalEnvironment,
     @inject(TYPES.IDEAS_COMMAND_RPC_CLIENT) private ideasRpc: RpcClient<IIdeaCommands>,
     @inject(TYPES.USERS_COMMAND_RPC_CLIENT) private usersRpc: RpcClient<IUserCommands>,
     @inject(TYPES.AUTH_COMMAND_RPC_CLIENT) private authRpc: RpcClient<IAuthCommands>,
+    @inject(TYPES.NOTIFICATIONS_COMMAND_RPC_CLIENT)
+    private notificationsRpc: RpcClient<INotificationCommands>,
   ) {}
 
   // TODO error handling https://stackoverflow.com/questions/48748745 https://grpc.io/docs/guides/error/ https://github.com/avinassh/grpc-errors/tree/master/node
@@ -84,7 +88,7 @@ export class CommandController implements interfaces.Controller {
     return { url };
   }
 
-  @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`, AuthMiddleware)
+  @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`)
   async refreshToken(req: express.Request, res: express.Response) {
     try {
       let currentRefreshToken = req.cookies[CookieNames.RefreshToken];
@@ -156,38 +160,26 @@ export class CommandController implements interfaces.Controller {
     `/${ApiEndpoints.Notifications}/${NotificationsApiRoutes.SubscribePush}`,
     AuthMiddleware,
   )
-  subscribePush(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.notificationsHost}/${NotificationsApiRoutes.SubscribePush}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  subscribePush(req: express.Request, res: express.Response) {
+    const { subscription } = req.body;
+    const { userId } = res.locals;
+    return this.notificationsRpc.client.subscribePush({ subscription, userId });
   }
 
   @httpPost(
     `/${ApiEndpoints.Notifications}/${NotificationsApiRoutes.UpdateSettings}`,
     AuthMiddleware,
   )
-  updateNotificationSettings(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
-  ) {
-    const url = `http://${this.env.notificationsHost}/${NotificationsApiRoutes.UpdateSettings}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  updateNotificationSettings(req: express.Request, res: express.Response) {
+    const { sendPushes, sendEmails } = req.body;
+    const { userId } = res.locals;
+    return this.notificationsRpc.client.updateSettings({ sendPushes, sendEmails, userId });
   }
 
   @httpGet(`/${ApiEndpoints.Notifications}`, AuthMiddleware)
-  getNotificationSettings(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.notificationsHost}/${NotificationsApiRoutes.GetSettings}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
-  }
-
-  @httpGet(`/${ApiEndpoints.Admin}`)
-  getAdminEvents(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.adminHost}/${AdminApiRoutes.GetEvents}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  getNotificationSettings(_req: express.Request, res: express.Response) {
+    const { userId } = res.locals;
+    return this.notificationsRpc.client.getSettings({ userId });
   }
 
   private getRefreshTokenCookieOptions = () => {

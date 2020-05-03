@@ -13,32 +13,41 @@ export interface IEnvironment {
   vapidPublicKey: string;
   vapidPrivateKey: string;
 
+  gatewayUrl: string;
+  mainClientUrl: string;
+
   // TODO rename to `ideasHost` etc...
   ideasRpcPort: number;
   ideasRpcHost: string;
   // TODO remove etc...
   ideasHost: string;
+  ideasDatabaseUrl: string;
 
   usersRpcPort: number;
   usersRpcHost: string;
   usersHost: string;
+  usersDatabaseUrl: string;
 
-  gatewayUrl: string;
+  notificationsRpcPort: number;
+  notificationsRpcHost: string;
+  notificationsHost: string;
+  notificationsDatabaseUrl: string;
+
   consumerRpcPort: number;
   consumerRpcHost: string;
-  mainClientUrl: string;
+  consumerHost: string;
+  projectionDatabaseUrl: string;
+
   adminClientUrl: string;
   adminSocketUrl: string;
-  consumerHost: string;
-  reviewsHost: string;
-  notificationsHost: string;
-  adminHost: string;
-  ideasDatabaseUrl: string;
-  reviewsDatabaseUrl: string;
-  projectionDatabaseUrl: string;
-  usersDatabaseUrl: string;
-  notificationsDatabaseUrl: string;
   adminDatabaseUrl: string;
+  adminHost: string;
+  adminRpcPort: number;
+  adminRpcHost: string;
+
+  reviewsHost: string;
+  reviewsDatabaseUrl: string;
+
   kafkaAdvertisedHostName: string;
   kafkaZookeeperConnect: string;
   kafkaAdvertisedPort: number;

@@ -13,6 +13,8 @@ export const defaultDevEnv: IEnvironment = {
   ideasRpcHost: 'ideas',
   usersRpcHost: 'users',
   consumerRpcHost: 'consumer',
+  adminRpcHost: 'admin',
+  notificationsRpcHost: 'notifications',
   mainClientUrl: 'http://localhost:4200',
   adminClientUrl: 'http://localhost:8080',
   adminSocketUrl: 'http://localhost:3001',

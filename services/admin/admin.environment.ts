@@ -14,4 +14,8 @@ export class AdminEnvironment {
     name: 'admin',
     eventsCollectionName: 'events',
   };
+  rpc = {
+    host: '0.0.0.0',
+    port: environment.adminRpcPort,
+  };
 }

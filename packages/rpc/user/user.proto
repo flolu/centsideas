@@ -3,19 +3,19 @@ syntax = "proto3";
 package user;
 
 service UserCommands {
-    rpc update(UpdateUserCommand) returns (UserEntityState);
-    rpc confirmEmailChange(ConfirmEmailChangeCommand) returns (UserEntityState);
+  rpc update(UpdateUserCommand) returns (UserEntityState);
+  rpc confirmEmailChange(ConfirmEmailChangeCommand) returns (UserEntityState);
 }
 
 message UpdateUserCommand {
-    string username = 1;
-    string email = 2;
-    string userId = 3;
+  string username = 1;
+  string email = 2;
+  string userId = 3;
 }
 
 message ConfirmEmailChangeCommand {
-    string token = 1;
-    string userId = 2;
+  string token = 1;
+  string userId = 2;
 }
 
 message UserEntityState {

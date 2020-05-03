@@ -9,7 +9,6 @@ import { registerProviders, getProvider, registerConstant } from '@centsideas/ut
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { GatewayServer } from './gateway.server';
-import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
 import { QueryController } from './query.controller';
 import { CommandController } from './command.controller';
@@ -18,7 +17,6 @@ import { RpcClient } from '@centsideas/rpc/rpc.client';
 import TYPES from './types';
 
 registerProviders(
-  ExpressAdapter,
   GatewayServer,
   GatewayEnvironment,
   GlobalEnvironment,
@@ -33,6 +31,12 @@ registerConstant(
   TYPES.IDEAS_QUERY_RPC_CLIENT,
   new RpcClient(env.consumerRpcHost, env.consumerRpcPort, 'idea', 'IdeaQueries'),
 );
+
+registerConstant(
+  TYPES.ADMIN_QUERY_RPC_CLIENT,
+  new RpcClient(env.adminRpcHost, env.adminRpcPort, 'admin', 'AdminQueries'),
+);
+
 registerConstant(
   TYPES.IDEAS_COMMAND_RPC_CLIENT,
   new RpcClient(env.ideasRpcHost, env.ideasRpcPort, 'idea', 'IdeaCommands'),
@@ -46,6 +50,16 @@ registerConstant(
 registerConstant(
   TYPES.AUTH_COMMAND_RPC_CLIENT,
   new RpcClient(env.usersRpcHost, env.usersRpcPort, 'auth', 'AuthCommands'),
+);
+
+registerConstant(
+  TYPES.NOTIFICATIONS_COMMAND_RPC_CLIENT,
+  new RpcClient(
+    env.notificationsRpcHost,
+    env.notificationsRpcPort,
+    'notification',
+    'NotificationCommands',
+  ),
 );
 
 getProvider(GatewayServer);

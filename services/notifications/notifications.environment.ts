@@ -19,4 +19,8 @@ export class NotificationEnvironment {
     apiKey: environment.sendgridApiKey,
     fromAddress: 'CENTS Ideas <noreply@centsideas.com>',
   };
+  rpc = {
+    host: '0.0.0.0',
+    port: environment.notificationsRpcPort,
+  };
 }

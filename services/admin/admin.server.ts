@@ -6,11 +6,11 @@ import { takeWhile, tap } from 'rxjs/operators';
 
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { Logger } from '@centsideas/utils';
+import { RpcServer, IAdminQueries, GetAdminEvents } from '@centsideas/rpc';
 
 import { AdminEnvironment } from './admin.environment';
-import { ApiEndpoints, AdminApiRoutes, HttpStatusCodes } from '@centsideas/enums';
+import { ApiEndpoints } from '@centsideas/enums';
 import { AdminDatabase } from './admin.database';
-import { HttpResponse } from '@centsideas/models';
 
 // TODO secure the connection to admin
 // FIXME delete events older than a month (otherwise the admin db would become bigger than all other dbs together)
@@ -24,6 +24,7 @@ export class AdminServer {
     private env: AdminEnvironment,
     private messageBroker: MessageBroker,
     private adminDatabase: AdminDatabase,
+    private rpcServer: RpcServer,
   ) {
     Logger.info('launch in', this.env.environment, 'mode');
 
@@ -31,10 +32,9 @@ export class AdminServer {
 
     this.messageBroker.events(/centsideas-.*/i).subscribe(this.adminDatabase.insertEvent);
 
-    this.app.post(`/${AdminApiRoutes.GetEvents}`, async (_req, res) => {
-      const events = await this.adminDatabase.getEvents();
-      const response: HttpResponse = { body: events, status: HttpStatusCodes.Accepted };
-      res.json(response);
+    const adminQueries = this.rpcServer.loadService('admin', 'AdminQueries');
+    this.rpcServer.addService<IAdminQueries>(adminQueries, {
+      getEvents: this.getEvents,
     });
 
     this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) =>
@@ -42,6 +42,11 @@ export class AdminServer {
     );
     this.httpServer.listen(this.env.port);
   }
+
+  getEvents: GetAdminEvents = async () => {
+    const events = await this.adminDatabase.getEvents();
+    return { events };
+  };
 
   private setupSocketIO() {
     this.io.on('connection', socket => {

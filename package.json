@@ -3,9 +3,9 @@
   "scripts": {
     "dev": "yarn env:setup && yarn docker",
     "client:dev": "yarn env:setup && ibazel run //services/client:dev_server",
-    "admin:dev": "yarn env:setup && && ibazel run //services/admin-client:live_server",
+    "admin:dev": "yarn env:setup && ibazel run //services/admin-client:live_server",
     "client": "yarn env:setup bazelisk run //services/client",
-    "admin": "yarn env:setup bazelisk run //services/admin-client",
+    "admin": "yarn env:setup && bazelisk run //services/admin-client",
     "test": "yarn env:setup && bazelisk test //...",
     "deploy": "yarn env:setup:prod && bazelisk run :k8s.apply",
     "deploy:microk8s": "yarn env:setup:staging && bazelisk run :microk8s.apply",

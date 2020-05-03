@@ -6,6 +6,7 @@ import { handleHttpResponseError } from './http-error-response-handler';
 
 export type JsonController = (request: HttpRequest) => Promise<HttpResponse>;
 
+// TODO remove
 type JsonExpressAdapter = (controller: JsonController) => any;
 export const json: JsonExpressAdapter = controller => {
   return async (req: Request, res: Response) => {

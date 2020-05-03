@@ -2,21 +2,17 @@ import * as express from 'express';
 import { inject } from 'inversify';
 import { interfaces, controller, httpGet } from 'inversify-express-utils';
 
-import { ApiEndpoints, UsersApiRoutes } from '@centsideas/enums';
-import { IIdeaQueries, RpcClient } from '@centsideas/rpc';
-import { ExpressAdapter } from './express-adapter';
-import { GatewayEnvironment } from './gateway.environment';
+import { ApiEndpoints, AdminApiRoutes } from '@centsideas/enums';
+import { IIdeaQueries, RpcClient, IAdminQueries } from '@centsideas/rpc';
 import TYPES from './types';
 
 // TODO input and return types
-// TODO use only grpc to communicate with other services
 
 @controller('')
 export class QueryController implements interfaces.Controller {
   constructor(
-    private expressAdapter: ExpressAdapter,
-    private env: GatewayEnvironment,
     @inject(TYPES.IDEAS_QUERY_RPC_CLIENT) private ideasRpc: RpcClient<IIdeaQueries>,
+    @inject(TYPES.ADMIN_QUERY_RPC_CLIENT) private adminRpc: RpcClient<IAdminQueries>,
   ) {}
 
   @httpGet(`/${ApiEndpoints.Ideas}`)
@@ -30,18 +26,10 @@ export class QueryController implements interfaces.Controller {
     return this.ideasRpc.client.getById({ id: req.params.id });
   }
 
-  @httpGet(`/${ApiEndpoints.Users}`)
-  getUsers(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetAll}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
-  }
-
-  @httpGet(`/${ApiEndpoints.Users}/:id`)
-  getUserById(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const url = `http://${this.env.consumerHost}/${ApiEndpoints.Users}/${UsersApiRoutes.GetById}`;
-    const adapter = this.expressAdapter.makeJsonAdapter(url);
-    return adapter(req, res, next);
+  @httpGet(`/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)
+  async getAdminEvents() {
+    const { events } = await this.adminRpc.client.getEvents(undefined);
+    return events;
   }
 
   @httpGet(`/${ApiEndpoints.Alive}`)

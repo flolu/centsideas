@@ -5,14 +5,14 @@ syntax = "proto3";
 package idea;
 
 service IdeaCommands {
-    rpc create(CreateIdeaCommand) returns (IdeaEntityState);
-    rpc update(UpdateIdeaCommand) returns (IdeaEntityState);
-    rpc delete(DeleteIdeaCommand) returns (IdeaEntityState);
+  rpc create(CreateIdeaCommand) returns (IdeaEntityState);
+  rpc update(UpdateIdeaCommand) returns (IdeaEntityState);
+  rpc delete(DeleteIdeaCommand) returns (IdeaEntityState);
 }
 
 service IdeaQueries {
-    rpc getAll(google.protobuf.Empty) returns (IdeaViewList);
-    rpc getById(IdeaByIdQuery) returns (IdeaView);
+  rpc getAll(google.protobuf.Empty) returns (IdeaViewList);
+  rpc getById(IdeaByIdQuery) returns (IdeaView);
 }
 
 message CreateIdeaCommand {
