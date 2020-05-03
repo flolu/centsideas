@@ -16,8 +16,6 @@ lib_deps = [
     "@npm//inversify",
     "@npm//reflect-metadata",
     "@npm//@types/node",
-    "@npm//@grpc/grpc-js",
-    "@npm//@grpc/proto-loader",
 ]
 
 ts_library(

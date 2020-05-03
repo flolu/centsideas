@@ -7,9 +7,7 @@ import {
   httpDelete,
   httpGet,
 } from 'inversify-express-utils';
-import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
-import * as path from 'path';
+import { inject } from 'inversify';
 
 import {
   ApiEndpoints,
@@ -18,26 +16,20 @@ import {
   AdminApiRoutes,
 } from '@centsideas/enums';
 import { IIdeaState } from '@centsideas/models';
-import { IIdeaCommands } from '@centsideas/rpc';
+import { IIdeaCommands, RpcClient } from '@centsideas/rpc';
+
 import { ExpressAdapter } from './express-adapter';
 import { GatewayEnvironment } from './gateway.environment';
 import { AuthMiddleware } from './middlewares';
+import TYPES from './types';
 
 @controller('')
 export class CommandController implements interfaces.Controller {
-  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'rpc');
-  private readonly ideaCommandsProto = path.join(this.protoRootPath, 'idea', 'idea-commands.proto');
-  private ideasClient: IIdeaCommands;
-
-  constructor(private expressAdapter: ExpressAdapter, private env: GatewayEnvironment) {
-    const packageDef = protoLoader.loadSync(this.ideaCommandsProto);
-    const grpcObject = grpc.loadPackageDefinition(packageDef);
-    const ideasPackage = grpcObject.ideaCommands;
-    this.ideasClient = new (ideasPackage as any).IdeaCommands(
-      `${this.env.ideasRpcHost}:${this.env.ideasRpcPort}`,
-      grpc.credentials.createInsecure(),
-    );
-  }
+  constructor(
+    private expressAdapter: ExpressAdapter,
+    private env: GatewayEnvironment,
+    @inject(TYPES.IDEAS_COMMAND_RPC_CLIENT) private ideasRpc: RpcClient<IIdeaCommands>,
+  ) {}
 
   // TODO error handling
   @httpPost(`/${ApiEndpoints.Ideas}`, AuthMiddleware)
@@ -46,7 +38,7 @@ export class CommandController implements interfaces.Controller {
       const { title, description } = req.body;
       const { userId } = res.locals;
 
-      this.ideasClient.create({ userId, title, description }, (err, response) => {
+      this.ideasRpc.client.create({ userId, title, description }, (err, response) => {
         if (err) throw err;
         resolve(response);
       });
@@ -60,7 +52,7 @@ export class CommandController implements interfaces.Controller {
       const { title, description } = req.body;
       const { userId } = res.locals;
 
-      this.ideasClient.update({ userId, title, description, ideaId }, (err, response) => {
+      this.ideasRpc.client.update({ userId, title, description, ideaId }, (err, response) => {
         if (err) throw err;
         resolve(response);
       });
@@ -73,7 +65,7 @@ export class CommandController implements interfaces.Controller {
       const ideaId = req.params.id;
       const { userId } = res.locals;
 
-      this.ideasClient.delete({ userId, ideaId }, (err, response) => {
+      this.ideasRpc.client.delete({ userId, ideaId }, (err, response) => {
         if (err) throw err;
         resolve(response);
       });

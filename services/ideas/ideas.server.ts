@@ -1,46 +1,26 @@
 import * as http from 'http';
-import * as path from 'path';
 import { injectable } from 'inversify';
-import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
 
 import { Logger } from '@centsideas/utils';
-import { IIdeaCommandsImplementation } from '@centsideas/rpc';
+import { IIdeaCommandsImplementation, RpcServer } from '@centsideas/rpc';
+
 import { IdeasEnvironment } from './ideas.environment';
 import { IdeasHandler } from './ideas.handler';
 
 @injectable()
 export class IdeasServer {
-  private readonly protoRootPath = path.resolve(__dirname, '../../', 'packages', 'rpc');
-  private readonly ideaCommandsProto = path.join(this.protoRootPath, 'idea', 'idea-commands.proto');
   private isServerRunning = false;
 
-  constructor(private env: IdeasEnvironment, private handler: IdeasHandler) {
+  constructor(
+    private env: IdeasEnvironment,
+    private handler: IdeasHandler,
+    private rpcServer: RpcServer,
+  ) {
     Logger.info('launch in', this.env.environment, 'mode');
     this.handleHealthchecks();
 
-    const packageDef = protoLoader.loadSync(this.ideaCommandsProto);
-    const grpcObject = grpc.loadPackageDefinition(packageDef);
-    const ideaCommands = grpcObject.ideaCommands;
-    const server = new grpc.Server();
-
-    server.addService(
-      (ideaCommands as any).IdeaCommands.service,
-      this.commandsImplementation as any,
-    );
-
-    // TODO rpc package as abstraction
-    server.bindAsync(
-      `${this.env.rpc.host}:${this.env.rpc.port}`,
-      grpc.ServerCredentials.createInsecure(),
-      (err, port) => {
-        if (err) Logger.error(err, 'while binding server');
-        else Logger.info('proto server running ', port);
-        this.isServerRunning = true;
-
-        server.start();
-      },
-    );
+    const commandsService = this.rpcServer.loadService('idea', 'IdeaCommands');
+    this.rpcServer.addService(commandsService, this.commandsImplementation);
   }
 
   // TODO error handling

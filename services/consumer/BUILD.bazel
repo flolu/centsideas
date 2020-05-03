@@ -24,8 +24,6 @@ lib_deps = [
     "@npm//mongodb",
     "@npm//rxjs",
     "@npm//reflect-metadata",
-    "@npm//@grpc/grpc-js",
-    "@npm//@grpc/proto-loader",
     "@npm//@types/node",
 ]
 

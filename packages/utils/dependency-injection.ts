@@ -10,6 +10,9 @@ const container = new Container({ skipBaseClassChecks: true });
 export const registerProviders = (...providers: any[]) =>
   providers.forEach(p => container.bind(p).toSelf());
 
+export const registerConstant = (identifier: any, constant: any) =>
+  container.bind(identifier).toConstantValue(constant);
+
 export const getProvider = (provider: any): any => container.get(provider);
 
 export const overrideProvider = (provider: any, newProvider: any) => {

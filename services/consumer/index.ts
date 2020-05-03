@@ -6,8 +6,9 @@ import 'reflect-metadata';
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Consumer;
 import { MessageBroker } from '@centsideas/event-sourcing';
-import { getProvider, registerProviders } from '@centsideas/utils';
+import { getProvider, registerProviders, registerConstant } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
+import { RpcServer } from '@centsideas/rpc';
 
 import { ConsumerServer } from './consumer.server';
 import { ProjectionDatabase } from './projection-database';
@@ -28,5 +29,8 @@ registerProviders(
   ConsumerEnvironment,
   GlobalEnvironment,
 );
+
+const env: ConsumerEnvironment = getProvider(ConsumerEnvironment);
+registerConstant(RpcServer, new RpcServer(env.rpc.host, env.rpc.port));
 
 getProvider(ConsumerServer);

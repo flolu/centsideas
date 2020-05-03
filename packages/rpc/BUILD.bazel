@@ -13,6 +13,10 @@ ts_library(
     module_name = "@centsideas/rpc",
     deps = [
         "//packages/models",
+        "//packages/utils",
         "@npm//@grpc/grpc-js",
+        "@npm//@grpc/proto-loader",
+        "@npm//@types/node",
+        "@npm//inversify",
     ],
 )

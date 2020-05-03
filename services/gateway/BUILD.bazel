@@ -26,8 +26,6 @@ lib_deps = [
     "@npm//cookie-parser",
     "@npm//@types/cookie-parser",
     "@npm//reflect-metadata",
-    "@npm//@grpc/grpc-js",
-    "@npm//@grpc/proto-loader",
     "@npm//inversify-express-utils",
     "@npm//helmet",
     "@npm//@types/helmet",
