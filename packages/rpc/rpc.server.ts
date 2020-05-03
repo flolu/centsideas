@@ -12,9 +12,12 @@ export class RpcServer {
     this.startServer();
   }
 
-  // FIXME better type experience for `implementation`
-  addService(service: grpc.ServiceDefinition, implementation: any) {
-    this.server.addService(service, implementation);
+  addService<IServiceImplementation>(
+    service: grpc.ServiceDefinition,
+    implementation: IServiceImplementation,
+  ) {
+    const grpcImpl = this.convertToGrpcImplementation(implementation);
+    this.server.addService(service, grpcImpl);
   }
 
   loadService(packageName: string, serviceName: string): grpc.ServiceDefinition {
@@ -35,5 +38,27 @@ export class RpcServer {
         this.server.start();
       },
     );
+  }
+
+  /**
+   * Converts promise based implementation methods into the grpc callback
+   * based implementation methods
+   */
+  private convertToGrpcImplementation(implementation: any): grpc.UntypedServiceImplementation {
+    const grpcImpl: grpc.UntypedServiceImplementation = {};
+    Object.keys(implementation).forEach(key => {
+      const handler = implementation[key];
+      (grpcImpl as any)[key] = this.convertPromiseToCallback(handler as any);
+    });
+    return grpcImpl;
+  }
+
+  private convertPromiseToCallback(
+    handler: (payload: any) => Promise<any>,
+  ): grpc.handleUnaryCall<any, any> {
+    return async (call, callback) => {
+      const response = await handler(call.request).catch(err => callback(err, null));
+      callback(null, response);
+    };
   }
 }

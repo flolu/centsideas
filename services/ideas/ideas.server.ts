@@ -2,7 +2,7 @@ import * as http from 'http';
 import { injectable } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
-import { IIdeaCommandsImplementation, RpcServer } from '@centsideas/rpc';
+import { IIdeaCommands, RpcServer, CreateIdea, DeleteIdea, UpdateIdea } from '@centsideas/rpc';
 
 import { IdeasEnvironment } from './ideas.environment';
 import { IdeasHandler } from './ideas.handler';
@@ -20,29 +20,26 @@ export class IdeasServer {
     this.handleHealthchecks();
 
     const commandsService = this.rpcServer.loadService('idea', 'IdeaCommands');
-    this.rpcServer.addService(commandsService, this.commandsImplementation);
+    this.rpcServer.addService<IIdeaCommands>(commandsService, {
+      create: this.create,
+      update: this.update,
+      delete: this.delete,
+    });
   }
 
-  // TODO error handling
-  commandsImplementation: IIdeaCommandsImplementation = {
-    create: async (call, callback) => {
-      if (!call.request) return callback(Error('no payload sent'), null);
-      const { userId, title, description } = call.request;
-      const created = await this.handler.create(userId, title, description);
-      callback(null, created.persistedState);
-    },
-    update: async (call, callback) => {
-      if (!call.request) return callback(Error('no payload sent'), null);
-      const { userId, title, description, ideaId } = call.request;
-      const updated = await this.handler.update(userId, ideaId, title, description);
-      callback(null, updated.persistedState);
-    },
-    delete: async (call, callback) => {
-      if (!call.request) return callback(Error('no payload sent'), null);
-      const { userId, ideaId } = call.request;
-      const deleted = await this.handler.delete(userId, ideaId);
-      callback(null, deleted.persistedState);
-    },
+  create: CreateIdea = async ({ userId, title, description }) => {
+    const created = await this.handler.create(userId, title, description);
+    return created.persistedState;
+  };
+
+  update: UpdateIdea = async ({ userId, title, description, ideaId }) => {
+    const updated = await this.handler.update(userId, ideaId, title, description);
+    return updated.persistedState;
+  };
+
+  delete: DeleteIdea = async ({ userId, ideaId }) => {
+    const deleted = await this.handler.delete(userId, ideaId);
+    return deleted.persistedState;
   };
 
   private handleHealthchecks() {

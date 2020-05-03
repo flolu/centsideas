@@ -1,5 +1,3 @@
-import * as grpc from '@grpc/grpc-js';
-
 import { IIdeaState } from '@centsideas/models';
 
 interface ICreateIdeaCommand {
@@ -20,14 +18,12 @@ interface IDeleteIdeaCommand {
   ideaId: string;
 }
 
-export interface IIdeaCommands {
-  create: (payload: ICreateIdeaCommand, callback: grpc.requestCallback<IIdeaState>) => void;
-  update: (payload: IUpdateIdeaCommand, callback: grpc.requestCallback<IIdeaState>) => void;
-  delete: (payload: IDeleteIdeaCommand, callback: grpc.requestCallback<IIdeaState>) => void;
-}
+export type CreateIdea = (payload: ICreateIdeaCommand) => Promise<IIdeaState>;
+export type UpdateIdea = (payload: IUpdateIdeaCommand) => Promise<IIdeaState>;
+export type DeleteIdea = (payload: IDeleteIdeaCommand) => Promise<IIdeaState>;
 
-export interface IIdeaCommandsImplementation {
-  create: grpc.handleUnaryCall<ICreateIdeaCommand, IIdeaState>;
-  update: grpc.handleUnaryCall<IUpdateIdeaCommand, IIdeaState>;
-  delete: grpc.handleUnaryCall<IDeleteIdeaCommand, IIdeaState>;
+export interface IIdeaCommands {
+  create: CreateIdea;
+  update: UpdateIdea;
+  delete: DeleteIdea;
 }

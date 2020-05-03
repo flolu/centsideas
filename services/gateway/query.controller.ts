@@ -20,24 +20,14 @@ export class QueryController implements interfaces.Controller {
   ) {}
 
   @httpGet(`/${ApiEndpoints.Ideas}`)
-  getIdeas() {
-    return new Promise(resolve => {
-      this.ideasRpc.client.getAll(undefined, (err, response) => {
-        if (err) throw err;
-        if (!response) return resolve([]);
-        resolve(response.ideas || []);
-      });
-    });
+  async getIdeas() {
+    const { ideas } = await this.ideasRpc.client.getAll(undefined);
+    return ideas;
   }
 
   @httpGet(`/${ApiEndpoints.Ideas}/:id`)
   getIdeaById(req: express.Request) {
-    return new Promise(resolve => {
-      this.ideasRpc.client.getById({ id: req.params.id }, (err, response) => {
-        if (err) throw err;
-        resolve(response);
-      });
-    });
+    return this.ideasRpc.client.getById({ id: req.params.id });
   }
 
   @httpGet(`/${ApiEndpoints.Users}`)

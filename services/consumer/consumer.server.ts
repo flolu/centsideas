@@ -11,7 +11,7 @@ import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
 import { ConsumerEnvironment } from './consumer.environment';
 import { UsersProjection } from './users.projection';
-import { IIdeaQueriesImplementation, RpcServer } from '@centsideas/rpc';
+import { RpcServer, IIdeaQueries, GetAllIdeas, GetIdeaById } from '@centsideas/rpc';
 
 @injectable()
 export class ConsumerServer {
@@ -34,7 +34,10 @@ export class ConsumerServer {
     this.messageBroker.events(EventTopics.Users).subscribe(this.usersProjection.handleEvent);
 
     const ideaService = this.rpcServer.loadService('idea', 'IdeaQueries');
-    this.rpcServer.addService(ideaService, this.ideasImplementation);
+    this.rpcServer.addService<IIdeaQueries>(ideaService, {
+      getAll: this.getAll,
+      getById: this.getById,
+    });
 
     this.app.use(bodyParser.json());
 
@@ -44,6 +47,15 @@ export class ConsumerServer {
     this.app.get('/alive', (_req, res) => res.status(200).send());
     this.app.listen(this.env.port);
   }
+
+  getAll: GetAllIdeas = async () => {
+    const ideas = await this.queryService.getAllIdeas();
+    return { ideas };
+  };
+
+  getById: GetIdeaById = async ({ id }) => {
+    return this.queryService.getIdeaById(id);
+  };
 
   private registerQueryRoutes() {
     this.app.post(
@@ -55,16 +67,4 @@ export class ConsumerServer {
       ExpressAdapters.json(this.queryService.getAllUsers),
     );
   }
-
-  private ideasImplementation: IIdeaQueriesImplementation = {
-    getAll: async (_call, callback) => {
-      const ideas = await this.queryService.getAllIdeas();
-      callback(null, { ideas });
-    },
-    getById: async (call, callback) => {
-      if (!call.request) return callback(Error('no payload sent'), null);
-      const idea = await this.queryService.getIdeaById(call.request?.id);
-      callback(null, idea);
-    },
-  };
 }

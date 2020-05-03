@@ -15,7 +15,6 @@ import {
   NotificationsApiRoutes,
   AdminApiRoutes,
 } from '@centsideas/enums';
-import { IIdeaState } from '@centsideas/models';
 import { IIdeaCommands, RpcClient } from '@centsideas/rpc';
 
 import { ExpressAdapter } from './express-adapter';
@@ -33,43 +32,26 @@ export class CommandController implements interfaces.Controller {
 
   // TODO error handling
   @httpPost(`/${ApiEndpoints.Ideas}`, AuthMiddleware)
-  createIdea(req: express.Request, res: express.Response): Promise<IIdeaState> {
-    return new Promise(resolve => {
-      const { title, description } = req.body;
-      const { userId } = res.locals;
-
-      this.ideasRpc.client.create({ userId, title, description }, (err, response) => {
-        if (err) throw err;
-        resolve(response);
-      });
-    });
+  async createIdea(req: express.Request, res: express.Response) {
+    const { title, description } = req.body;
+    const { userId } = res.locals;
+    // TODO would be cool to just have `this.ideasRpc.create(...)` (maybe i can inject the client! or i add methods to rpc class at runtime?)
+    return this.ideasRpc.client.create({ userId, title, description });
   }
 
   @httpPut(`/${ApiEndpoints.Ideas}/:id`, AuthMiddleware)
   updateIdea(req: express.Request, res: express.Response) {
-    return new Promise(resolve => {
-      const ideaId = req.params.id;
-      const { title, description } = req.body;
-      const { userId } = res.locals;
-
-      this.ideasRpc.client.update({ userId, title, description, ideaId }, (err, response) => {
-        if (err) throw err;
-        resolve(response);
-      });
-    });
+    const ideaId = req.params.id;
+    const { title, description } = req.body;
+    const { userId } = res.locals;
+    return this.ideasRpc.client.update({ userId, title, description, ideaId });
   }
 
   @httpDelete(`/${ApiEndpoints.Ideas}/:id`, AuthMiddleware)
   deleteIdea(req: express.Request, res: express.Response) {
-    return new Promise(resolve => {
-      const ideaId = req.params.id;
-      const { userId } = res.locals;
-
-      this.ideasRpc.client.delete({ userId, ideaId }, (err, response) => {
-        if (err) throw err;
-        resolve(response);
-      });
-    });
+    const ideaId = req.params.id;
+    const { userId } = res.locals;
+    return this.ideasRpc.client.delete({ userId, ideaId });
   }
 
   @httpPut(`/${ApiEndpoints.Users}/:id`, AuthMiddleware)
