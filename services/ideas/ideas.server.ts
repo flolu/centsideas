@@ -9,15 +9,15 @@ import { IdeasHandler } from './ideas.handler';
 
 @injectable()
 export class IdeasServer {
-  private isServerRunning = false;
-
   constructor(
     private env: IdeasEnvironment,
     private handler: IdeasHandler,
     private rpcServer: RpcServer,
   ) {
     Logger.info('launch in', this.env.environment, 'mode');
-    this.handleHealthchecks();
+    http
+      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
+      .listen(3000);
 
     const commandsService = this.rpcServer.loadService('idea', 'IdeaCommands');
     this.rpcServer.addService<IIdeaCommands>(commandsService, {
@@ -41,10 +41,4 @@ export class IdeasServer {
     const deleted = await this.handler.delete(userId, ideaId);
     return deleted.persistedState;
   };
-
-  private handleHealthchecks() {
-    http
-      .createServer((_req, res) => res.writeHead(this.isServerRunning ? 200 : 500).end())
-      .listen(3000);
-  }
 }

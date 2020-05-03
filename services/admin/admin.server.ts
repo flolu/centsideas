@@ -37,9 +37,10 @@ export class AdminServer {
       getEvents: this.getEvents,
     });
 
-    this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) =>
-      res.status(200).send('admin server alive'),
-    );
+    this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
+      if (this.rpcServer.isRunning) return res.status(200);
+      return res.status(500);
+    });
     this.httpServer.listen(this.env.port);
   }
 

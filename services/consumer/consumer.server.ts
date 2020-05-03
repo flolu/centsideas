@@ -1,3 +1,4 @@
+import * as http from 'http';
 import { injectable } from 'inversify';
 
 import { MessageBroker } from '@centsideas/event-sourcing';
@@ -23,6 +24,10 @@ export class ConsumerServer {
     private rpcServer: RpcServer,
   ) {
     Logger.info('launch in', this.env.environment, 'mode');
+    // TODO also consider kafka connection in health checks
+    http
+      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
+      .listen(3000);
 
     this.messageBroker.events(EventTopics.Ideas).subscribe(this.ideasProjection.handleEvent);
     this.messageBroker.events(EventTopics.Reviews).subscribe(this.reviewsProjection.handleEvent);

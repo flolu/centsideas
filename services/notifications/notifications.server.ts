@@ -1,3 +1,4 @@
+import * as http from 'http';
 import { injectable } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
@@ -16,8 +17,6 @@ import { NotificationEnvironment } from './notifications.environment';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
 import { NotificationsHandlers } from './notifications.handlers';
 
-// TODO implement new health checks for all backend services
-
 @injectable()
 export class NotificationsServer {
   constructor(
@@ -27,6 +26,11 @@ export class NotificationsServer {
     private notificationsHandler: NotificationsHandlers,
     private rpcServer: RpcServer,
   ) {
+    // TODO also consider kafka connection in health checks
+    http
+      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
+      .listen(3000);
+
     this.messageBroker.events(EventTopics.Ideas).subscribe(this.handleIdeasEvents);
     this.messageBroker.events(EventTopics.Logins).subscribe(this.handleLoginEvents);
     this.messageBroker.events(EventTopics.Users).subscribe(this.handleUsersEvents);

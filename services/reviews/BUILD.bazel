@@ -12,13 +12,10 @@ lib_deps = [
     "//packages/event-sourcing",
     "//packages/models",
     "//packages/utils",
-    "@npm//@types/body-parser",
-    "@npm//@types/express",
-    "@npm//body-parser",
-    "@npm//express",
     "@npm//inversify",
     "@npm//reflect-metadata",
     "@npm//shortid",
+    "@npm//@types/node",
 ]
 
 ts_library(

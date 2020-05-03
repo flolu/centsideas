@@ -19,6 +19,7 @@ lib_deps = [
     "@npm//@types/web-push",
     "@npm//@sendgrid/mail",
     "@npm//rxjs",
+    "@npm//@types/node",
 ]
 
 ts_library(

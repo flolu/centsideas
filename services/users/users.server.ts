@@ -1,3 +1,4 @@
+import * as http from 'http';
 import { injectable } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
@@ -28,6 +29,9 @@ export class UsersServer {
     private authHandler: AuthHandler,
   ) {
     Logger.info('launch in', this.globalEnv.environment, 'mode');
+    http
+      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
+      .listen(3000);
 
     const userService = this.rpcServer.loadService('user', 'UserCommands');
     this.rpcServer.addService<IUserCommands>(userService, {

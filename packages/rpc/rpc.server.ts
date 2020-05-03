@@ -6,6 +6,8 @@ import { loadProtoPackage } from './util';
 
 @injectable()
 export class RpcServer {
+  isRunning = false;
+
   private server = new grpc.Server();
 
   constructor(private host: string, private port: number) {
@@ -36,6 +38,7 @@ export class RpcServer {
         }
         Logger.info(`rpc server running on ${port}`);
         this.server.start();
+        this.isRunning = true;
       },
     );
   }

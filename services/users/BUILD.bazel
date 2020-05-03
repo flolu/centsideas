@@ -25,6 +25,7 @@ lib_deps = [
     "@npm//shortid",
     "@npm//query-string",
     "@npm//axios",
+    "@npm//@types/node",
 ]
 
 ts_library(

@@ -20,13 +20,13 @@ spec:
                 name: global-config
           readinessProbe:
             httpGet:
-              path: /alive
+              path: /
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /alive
+              path: /
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
