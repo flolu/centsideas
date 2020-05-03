@@ -1,4 +1,3 @@
-export * from './cents-commandments.enum';
 export * from './http-status-codes.enum';
 export * from './api';
 export * from './events';

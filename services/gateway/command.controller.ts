@@ -16,6 +16,7 @@ import {
   CookieNames,
   TokenExpirationTimes,
   Environments,
+  AuthApiRoutes,
 } from '@centsideas/enums';
 import {
   IIdeaCommands,
@@ -73,8 +74,7 @@ export class CommandController implements interfaces.Controller {
     return this.usersRpc.client.update({ username, email, userId });
   }
 
-  // TODO rename auth routes to /auth
-  @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.GoogleLogin}`)
+  @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.GoogleLogin}`)
   async googleLogin(req: express.Request, res: express.Response) {
     const { code } = req.body;
     const { user, refreshToken, accessToken } = await this.authRpc.client.googleLogin({ code });
@@ -82,13 +82,13 @@ export class CommandController implements interfaces.Controller {
     return { user, accessToken };
   }
 
-  @httpGet(`/${ApiEndpoints.Users}/${UsersApiRoutes.GoogleLoginRedirect}`)
+  @httpGet(`/${ApiEndpoints.Auth}/${AuthApiRoutes.GoogleLoginRedirect}`)
   async googleLoginRedirectUrl() {
     const { url } = await this.authRpc.client.googleLoginRedirect(undefined);
     return { url };
   }
 
-  @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.RefreshToken}`)
+  @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.RefreshToken}`)
   async refreshToken(req: express.Request, res: express.Response) {
     try {
       let currentRefreshToken = req.cookies[CookieNames.RefreshToken];
@@ -127,13 +127,13 @@ export class CommandController implements interfaces.Controller {
     }
   }
 
-  @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.Login}`)
+  @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.Login}`)
   login(req: express.Request) {
     const { email } = req.body;
     return this.authRpc.client.login({ email });
   }
 
-  @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.ConfirmLogin}`)
+  @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.ConfirmLogin}`)
   async confirmLogin(req: express.Request, res: express.Response, next: express.NextFunction) {
     const { loginToken } = req.body;
     const data = await this.authRpc.client.confirmLogin({ token: loginToken });
@@ -149,7 +149,7 @@ export class CommandController implements interfaces.Controller {
     return this.usersRpc.client.confirmEmailChange({ token, userId });
   }
 
-  @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.Logout}`, AuthMiddleware)
+  @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.Logout}`, AuthMiddleware)
   async logout(_req: express.Request, res: express.Response) {
     const { userId } = res.locals;
     await this.authRpc.client.logout({ userId });

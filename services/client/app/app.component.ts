@@ -5,7 +5,7 @@ import { Observable, fromEvent, merge, of } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 import { UpdateAvailableEvent } from '@angular/service-worker';
 
-import { CentsCommandments, TopLevelFrontendRoutes } from '@centsideas/enums';
+import { TopLevelFrontendRoutes } from '@centsideas/enums';
 import { PushNotificationService } from '@cic/shared';
 import { AuthSelectors } from '@cic/store';
 import { ServiceWorkerService } from './service-worker.service';
@@ -13,6 +13,7 @@ import { ServiceWorkerService } from './service-worker.service';
 @Component({
   selector: 'cic-root',
   template: `
+    <h1>CENTS Ideas</h1>
     <div *ngIf="availableSwUpdate" (click)="onUpdateServiceWorker()" id="update_banner">
       Click to update the app
     </div>
@@ -28,7 +29,6 @@ import { ServiceWorkerService } from './service-worker.service';
       <br />
       <a [routerLink]="[topLevelRoutes.Login]">Login</a>
     </div>
-    <p>CENTS: {{ cents }}</p>
     <router-outlet></router-outlet>
   `,
   styleUrls: ['app.component.sass'],
@@ -38,7 +38,6 @@ export class AppComponent implements OnDestroy {
   offline$: Observable<boolean>;
 
   alive = true;
-  cents = `${CentsCommandments.Control}, ${CentsCommandments.Entry}, ${CentsCommandments.Need}, ${CentsCommandments.Time}, ${CentsCommandments.Scale}`;
   topLevelRoutes = TopLevelFrontendRoutes;
   availableSwUpdate: UpdateAvailableEvent;
 

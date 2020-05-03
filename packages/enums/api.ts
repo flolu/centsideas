@@ -1,36 +1,26 @@
-// TODO split into commands and queries
-
 export enum ApiEndpoints {
   Ideas = 'ideas',
   Reviews = 'reviews',
   Users = 'users',
+  Auth = 'auth',
   Alive = 'alive',
   Notifications = 'notifications',
   Admin = 'admin',
 }
 
-// TODO remove most of those eventually
 export enum NotificationsApiRoutes {
   SubscribePush = 'sub-push',
   UpdateSettings = 'update-settings',
   GetSettings = 'get-settings',
 }
 
-export enum ReviewsApiRoutes {
-  Create = 'create',
-  Update = 'update',
-  Delete = 'delete',
+export enum UsersApiRoutes {
+  ConfirmEmailChange = 'confirm-email-change',
 }
 
-// FIXME spliting the api into /users and /auth (but still handled by same service)
-export enum UsersApiRoutes {
+export enum AuthApiRoutes {
   Login = 'login',
   ConfirmLogin = 'confirm-login',
-  Update = 'update',
-  ConfirmEmailChange = 'confirm-email-change',
-  GetById = 'get-by-id',
-  GetAll = 'get-all',
-  Alive = 'alive',
   Logout = 'logout',
   RefreshToken = 'refresh-token',
   GoogleLogin = 'google-login',
@@ -38,7 +28,5 @@ export enum UsersApiRoutes {
 }
 
 export enum AdminApiRoutes {
-  // TODO better mapping of external routes and internal request / response
   Events = 'events',
-  GetEvents = 'get-events',
 }

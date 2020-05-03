@@ -11,7 +11,7 @@ import { ReviewRepository } from './review.repository';
 export class ReviewsHandler {
   constructor(private repository: ReviewRepository) {}
 
-  // TODO how to ensure that userId and ideaId are valid?
+  // TODO how to ensure that userId and ideaId are valid? (probably need to do check in gateway before sending it to here)
   create = async (
     ideaId: string,
     userId: string,

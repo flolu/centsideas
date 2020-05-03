@@ -9,6 +9,6 @@ describe('main client home page', () => {
 
   it('should display title', async () => {
     await page.navigateTo();
-    expect(await page.getTitleText()).toContain(`CENTS`);
+    expect(await page.getTitleText()).toContain(`CENTS Ideas`);
   });
 });
