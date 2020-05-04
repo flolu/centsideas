@@ -1,5 +1,3 @@
-# TODO consider moving the volumes to their corresponding services?
-# but then separation between prod and dev is harder!
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -24,7 +22,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/ideas-event-store'
+    path: "/mnt/data/ideas-event-store"
     type: DirectoryOrCreate
 
 ---
@@ -51,7 +49,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/users-event-store'
+    path: "/mnt/data/users-event-store"
     type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -78,7 +76,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/reviews-event-store'
+    path: "/mnt/data/reviews-event-store"
     type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -105,7 +103,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/projection-database'
+    path: "/mnt/data/projection-database"
     type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -132,7 +130,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/notifications-event-store'
+    path: "/mnt/data/notifications-event-store"
     type: DirectoryOrCreate
 
 ---
@@ -147,7 +145,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/admin-database'
+    path: "/mnt/data/admin-database"
     type: DirectoryOrCreate
 
 ---

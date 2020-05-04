@@ -1,4 +1,4 @@
-# TODO each service should get its own config map with "local envs" and here are only "global envs"
+# FIXME consider splitting this into multiple configs when it gets too messy
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,34 +7,45 @@ data:
   environment: ${environment}
 
   gatewayUrl: ${gatewayUrl}
-  mainClientUrl: ${mainClientUrl}
-  adminClientUrl: ${adminClientUrl}
-
-  ideasRpcHost: ${ideasRpcHost}
-  ideasRpcPort: '${ideasRpcPort}'
   ideasHost: ${ideasHost}
-  consumerHost: ${consumerHost}
   usersHost: ${usersHost}
   reviewsHost: ${reviewsHost}
-  notificationsHost: ${notificationsHost}
   adminHost: ${adminHost}
+  consumerHost: ${consumerHost}
+  notificationsHost: ${notificationsHost}
 
-  ideasDatabaseUrl: ${ideasDatabaseUrl}
-  reviewsDatabaseUrl: ${reviewsDatabaseUrl}
-  projectionDatabaseUrl: ${projectionDatabaseUrl}
+  mainClientUrl: ${mainClientUrl}
+  frontendServerExchangeSecret: ${frontendServerExchangeSecret}
+
+  usersRpcPort: "${usersRpcPort}"
   usersDatabaseUrl: ${usersDatabaseUrl}
+  googleClientId: ${googleClientId}
+
+  notificationsRpcPort: "${notificationsRpcPort}"
   notificationsDatabaseUrl: ${notificationsDatabaseUrl}
+  vapidPublicKey: ${vapidPublicKey}
+
+  ideasRpcPort: "${ideasRpcPort}"
+  ideasDatabaseUrl: ${ideasDatabaseUrl}
+
+  consumerRpcPort: "${consumerRpcPort}"
+  projectionDatabaseUrl: ${projectionDatabaseUrl}
+
+  adminClientUrl: ${adminClientUrl}
+  adminSocketUrl: ${adminSocketUrl}
   adminDatabaseUrl: ${adminDatabaseUrl}
+  adminRpcPort: "${adminRpcPort}"
+
+  reviewsDatabaseUrl: ${reviewsDatabaseUrl}
+  reviewsRpcPort: "${reviewsRpcPort}"
 
   kafkaAdvertisedHostName: ${kafkaAdvertisedHostName}
   kafkaZookeeperConnect: ${kafkaZookeeperConnect}
-  kafkaAdvertisedPort: '${kafkaAdvertisedPort}'
+  kafkaAdvertisedPort: "${kafkaAdvertisedPort}"
   kafkaBrokerHost: ${kafkaBrokerHost}
 
   # TODO deduplicate
   KAFKA_ADVERTISED_HOST_NAME: ${kafkaAdvertisedHostName}
   KAFKA_ZOOKEEPER_CONNECT: ${kafkaZookeeperConnect}
-  KAFKA_ADVERTISED_PORT: '${kafkaAdvertisedPort}'
+  KAFKA_ADVERTISED_PORT: "${kafkaAdvertisedPort}"
   KAFKA_BROKER_HOST: ${kafkaBrokerHost}
-
-  vapidPublicKey: ${vapidPublicKey}
