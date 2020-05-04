@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-client-deployment
+spec:
+  selector:
+    matchLabels:
+      app: admin-client
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: admin-client
+    spec:
+      containers:
+        - name: admin-client
+          image: admin-client:placeholder_name
+          envFrom:
+            - configMapRef:
+                name: global-config
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 10m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: centsideas-admin-client
+spec:
+  selector:
+    app: admin-client
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: NodePort

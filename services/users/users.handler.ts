@@ -62,7 +62,7 @@ export class UsersHandler {
   confirmEmailChange = async (token: string, auid: string): Promise<User> => {
     if (!auid) throw new NotAuthenticatedError();
 
-    const data = decodeToken(token, this.env.tokenSecrets.changeEmailToken);
+    const data = decodeToken(token, this.env.changeEmailTokenSecret);
     const payload: IEmailChangeTokenPayload = data;
 
     NoPermissionError.validate(auid, payload.userId);
@@ -92,7 +92,7 @@ export class UsersHandler {
       newEmail,
       userId,
     };
-    const token = jwt.sign(tokenPayload, this.env.tokenSecrets.changeEmailToken, {
+    const token = jwt.sign(tokenPayload, this.env.changeEmailTokenSecret, {
       expiresIn: TokenExpirationTimes.EmailChangeToken,
     });
 

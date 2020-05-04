@@ -4,27 +4,20 @@ import environment from '@centsideas/environment';
 
 @injectable()
 export class GatewayEnvironment {
-  environment = environment.environment;
-  port = 3000;
   accessTokenSecret = environment.accessTokenSecret;
   ideasRpcPort = environment.ideasRpcPort;
-  ideasRpcHost = environment.ideasRpcHost;
+  ideasHost = environment.ideasHost;
   consumerRpcPort = environment.consumerRpcPort;
-  consumerRpcHost = environment.consumerRpcHost;
+  consumerRpcHost = environment.consumerHost;
   mainClientUrl = environment.mainClientUrl;
   adminClientUrl = environment.adminClientUrl;
-  ideasHost = environment.ideasHost;
-  consumerHost = environment.consumerHost;
-  reviewsHost = environment.reviewsHost;
-  usersHost = environment.usersHost;
-  notificationsHost = environment.notificationsHost;
-  adminHost = environment.adminHost;
-  corsWhitelist = [environment.mainClientUrl, environment.adminClientUrl];
   usersRpcPort = environment.usersRpcPort;
-  usersRpcHost = environment.usersRpcHost;
-  notificationsRpcHost = environment.notificationsRpcHost;
+  usersHost = environment.usersHost;
+  notificationsRpcHost = environment.notificationsHost;
   notificationsRpcPort = environment.notificationsRpcPort;
-  adminRpcHost = environment.adminRpcHost;
+  adminRpcHost = environment.adminHost;
   adminRpcPort = environment.adminRpcPort;
   frontendServerExchangeSecret = environment.frontendServerExchangeSecret;
+  port = 3000;
+  corsWhitelist = [environment.mainClientUrl, environment.adminClientUrl];
 }

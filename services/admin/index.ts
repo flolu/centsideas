@@ -17,7 +17,7 @@ import { RpcServer } from '@centsideas/rpc';
 registerProviders(AdminServer, AdminEnvironment, MessageBroker, AdminDatabase, GlobalEnvironment);
 
 const env: AdminEnvironment = getProvider(AdminEnvironment);
-registerConstant(RpcServer, new RpcServer(env.rpc.host, env.rpc.port));
+registerConstant(RpcServer, new RpcServer(env.rpcPort));
 
 getProvider(AdminServer);
 

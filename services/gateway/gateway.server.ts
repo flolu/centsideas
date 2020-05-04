@@ -10,11 +10,12 @@ import { Logger, getContainer } from '@centsideas/utils';
 import { Environments } from '@centsideas/enums';
 
 import { GatewayEnvironment } from './gateway.environment';
+import { GlobalEnvironment } from '@centsideas/environment';
 
 @injectable()
 export class GatewayServer {
-  constructor(private env: GatewayEnvironment) {
-    Logger.info('launch in', this.env.environment, 'mode');
+  constructor(private globalEnv: GlobalEnvironment, private env: GatewayEnvironment) {
+    Logger.info('launch in', this.globalEnv.environment, 'mode');
 
     const server = new InversifyExpressServer(getContainer());
     server.setConfig((app: express.Application) => {
@@ -37,9 +38,10 @@ export class GatewayServer {
   }
 
   private isOriginAllowed = (origin: string | undefined) => {
-    if (!origin) return false;
+    // TODO why is origin undefined sometimes? should it be blocked?
+    if (origin === undefined) return true;
 
-    if (this.env.environment === Environments.Dev) return true;
+    if (this.globalEnv.environment === Environments.Dev) return true;
     if (this.env.corsWhitelist.includes(origin)) return true;
 
     return false;

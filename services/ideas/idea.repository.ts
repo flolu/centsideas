@@ -12,8 +12,8 @@ export class IdeaRepository extends EventRepository<Idea> {
     super(
       _messageBroker.dispatchEvents,
       Idea,
-      _env.database.url,
-      _env.database.name,
+      _env.ideasDatabaseUrl,
+      _env.ideasDatabaseName,
       EventTopics.Ideas,
     );
   }

@@ -10,7 +10,7 @@ export class RpcServer {
 
   private server = new grpc.Server();
 
-  constructor(private host: string, private port: number) {
+  constructor(private port: number, private host = '0.0.0.0') {
     this.startServer();
   }
 

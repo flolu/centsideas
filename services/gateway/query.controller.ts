@@ -15,6 +15,11 @@ export class QueryController implements interfaces.Controller {
     @inject(TYPES.ADMIN_QUERY_RPC_CLIENT) private adminRpc: RpcClient<IAdminQueries>,
   ) {}
 
+  @httpGet(`/${ApiEndpoints.Alive}`)
+  alive(_req: express.Request, res: express.Response) {
+    res.status(200);
+  }
+
   @httpGet(`/${ApiEndpoints.Ideas}`)
   async getIdeas() {
     const { ideas } = await this.ideasRpc.client.getAll(undefined);
@@ -30,10 +35,5 @@ export class QueryController implements interfaces.Controller {
   async getAdminEvents() {
     const { events } = await this.adminRpc.client.getEvents(undefined);
     return events;
-  }
-
-  @httpGet(`/${ApiEndpoints.Alive}`)
-  alive() {
-    return 'gateway is alive';
   }
 }

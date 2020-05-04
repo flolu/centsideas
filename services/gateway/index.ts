@@ -39,17 +39,17 @@ registerConstant(
 
 registerConstant(
   TYPES.IDEAS_COMMAND_RPC_CLIENT,
-  new RpcClient(env.ideasRpcHost, env.ideasRpcPort, 'idea', 'IdeaCommands'),
+  new RpcClient(env.ideasHost, env.ideasRpcPort, 'idea', 'IdeaCommands'),
 );
 
 registerConstant(
   TYPES.USERS_COMMAND_RPC_CLIENT,
-  new RpcClient(env.usersRpcHost, env.usersRpcPort, 'user', 'UserCommands'),
+  new RpcClient(env.usersHost, env.usersRpcPort, 'user', 'UserCommands'),
 );
 
 registerConstant(
   TYPES.AUTH_COMMAND_RPC_CLIENT,
-  new RpcClient(env.usersRpcHost, env.usersRpcPort, 'auth', 'AuthCommands'),
+  new RpcClient(env.usersHost, env.usersRpcPort, 'auth', 'AuthCommands'),
 );
 
 registerConstant(

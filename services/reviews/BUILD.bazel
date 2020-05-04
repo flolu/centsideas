@@ -30,7 +30,10 @@ ts_library(
 
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [
+        ":lib",
+        "//packages/rpc:proto_files",
+    ],
     entry_point = ":index.ts",
 )
 

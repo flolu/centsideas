@@ -25,7 +25,18 @@ spec:
           - backend:
               serviceName: centsideas-client
               servicePort: 8080
-
+    - host: admin.centsideas.com
+      http:
+        paths:
+          - backend:
+              serviceName: centsideas-admin-client
+              servicePort: 8080
+    - host: socket.admin.centsideas.com
+      http:
+        paths:
+          - backend:
+              serviceName: centsideas-admin
+              servicePort: 3000
 ---
 kind: ConfigMap
 apiVersion: v1

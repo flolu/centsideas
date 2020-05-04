@@ -35,7 +35,7 @@ export class AuthHandler {
     const loginId = await this.loginRepository.generateAggregateId();
 
     const tokenData: ILoginTokenPayload = { loginId, email, firstLogin };
-    const token = jwt.sign(tokenData, this.env.tokenSecrets.loginToken, {
+    const token = jwt.sign(tokenData, this.env.loginTokenSecret, {
       expiresIn: TokenExpirationTimes.LoginToken,
     });
 
@@ -44,7 +44,7 @@ export class AuthHandler {
   };
 
   confirmLogin = async (token: string) => {
-    const data = decodeToken(token, this.env.tokenSecrets.loginToken);
+    const data = decodeToken(token, this.env.loginTokenSecret);
 
     const payload: ILoginTokenPayload = data;
     const login = await this.loginRepository.findById(payload.loginId);
@@ -67,7 +67,7 @@ export class AuthHandler {
 
   googleLoginRedirect = () => {
     const params = queryString.stringify({
-      client_id: this.env.google.clientId,
+      client_id: this.env.googleClientId,
       redirect_uri: this.getGoogleRedirectUri(),
       scope: [
         'https://www.googleapis.com/auth/userinfo.email',
@@ -129,7 +129,7 @@ export class AuthHandler {
   };
 
   refreshToken = async (token: string) => {
-    const data: IRefreshTokenPayload = decodeToken(token, this.env.tokenSecrets.refreshToken);
+    const data: IRefreshTokenPayload = decodeToken(token, this.env.refreshTokenSecret);
 
     const user = await this.userRepository.findById(data.userId);
 
@@ -191,7 +191,7 @@ export class AuthHandler {
   };
 
   private generateAccessToken = (user: User) => {
-    return jwt.sign({ userId: user.persistedState.id }, this.env.tokenSecrets.accessToken, {
+    return jwt.sign({ userId: user.persistedState.id }, this.env.accessTokenSecret, {
       expiresIn: TokenExpirationTimes.AccessToken,
     });
   };
@@ -202,7 +202,7 @@ export class AuthHandler {
         userId: user.persistedState.id,
         tokenId: user.persistedState.refreshTokenId,
       },
-      this.env.tokenSecrets.refreshToken,
+      this.env.refreshTokenSecret,
       { expiresIn: TokenExpirationTimes.RefreshToken },
     );
   };
@@ -214,8 +214,8 @@ export class AuthHandler {
       url: `https://oauth2.googleapis.com/token`,
       method: 'post',
       data: {
-        client_id: this.env.google.clientId,
-        client_secret: this.env.google.clientSecret,
+        client_id: this.env.googleClientId,
+        client_secret: this.env.googleClientSecret,
         redirect_uri: this.getGoogleRedirectUri(),
         grant_type: 'authorization_code',
         code,

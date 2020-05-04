@@ -25,6 +25,6 @@ registerProviders(
 );
 
 const env: ReviewsEnvironment = getProvider(ReviewsEnvironment);
-registerConstant(RpcServer, new RpcServer(env.rpc.host, env.rpc.port));
+registerConstant(RpcServer, new RpcServer(env.rpcPort));
 
 getProvider(ReviewsServer);

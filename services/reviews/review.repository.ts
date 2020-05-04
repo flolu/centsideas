@@ -12,8 +12,8 @@ export class ReviewRepository extends EventRepository<Review> {
     super(
       _messageBroker.dispatchEvents,
       Review,
-      _env.database.url,
-      _env.database.name,
+      _env.reviewsDatabaseUrl,
+      _env.reviewsDatabaseName,
       EventTopics.Reviews,
     );
   }

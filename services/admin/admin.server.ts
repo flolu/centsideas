@@ -7,10 +7,10 @@ import { takeWhile, tap } from 'rxjs/operators';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { Logger } from '@centsideas/utils';
 import { RpcServer, IAdminQueries, GetAdminEvents } from '@centsideas/rpc';
+import { GlobalEnvironment } from '@centsideas/environment';
 
-import { AdminEnvironment } from './admin.environment';
-import { ApiEndpoints } from '@centsideas/enums';
 import { AdminDatabase } from './admin.database';
+import { AdminEnvironment } from './admin.environment';
 
 // TODO secure the connection to admin
 // FIXME delete events older than a month (otherwise the admin db would become bigger than all other dbs together)
@@ -22,11 +22,15 @@ export class AdminServer {
 
   constructor(
     private env: AdminEnvironment,
+    private globalEnv: GlobalEnvironment,
     private messageBroker: MessageBroker,
     private adminDatabase: AdminDatabase,
     private rpcServer: RpcServer,
   ) {
-    Logger.info('launch in', this.env.environment, 'mode');
+    Logger.info('launch in', this.globalEnv.environment, 'mode');
+    http
+      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
+      .listen(4000);
 
     this.setupSocketIO();
 
@@ -37,10 +41,6 @@ export class AdminServer {
       getEvents: this.getEvents,
     });
 
-    this.app.get(`/${ApiEndpoints.Alive}`, (_req, res) => {
-      if (this.rpcServer.isRunning) return res.status(200);
-      return res.status(500);
-    });
     this.httpServer.listen(this.env.port);
   }
 
@@ -57,11 +57,15 @@ export class AdminServer {
         .events(/centsideas-.*/i)
         .pipe(
           takeWhile(() => connected),
-          tap(event => this.io.emit('event', JSON.stringify(event))),
+          tap(event => {
+            this.io.emit('event', JSON.stringify(event));
+          }),
         )
         .subscribe();
 
-      socket.on('disconnect', () => (connected = false));
+      socket.on('disconnect', () => {
+        connected = false;
+      });
     });
   }
 }

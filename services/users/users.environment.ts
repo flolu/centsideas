@@ -4,25 +4,15 @@ import environment from '@centsideas/environment';
 
 @injectable()
 export class UsersEnvironment {
-  port = 3000;
-  databaseUrl = environment.usersDatabaseUrl;
   userDatabaseName = 'users';
   loginDatabaseName = 'logins';
-  tokenSecrets = {
-    accessToken: environment.accessTokenSecret,
-    refreshToken: environment.refreshTokenSecret,
-    loginToken: environment.loginTokenSecret,
-    changeEmailToken: environment.changeEmailTokenSecret,
-  };
-  google = {
-    clientId: environment.googleClientId,
-    clientSecret: environment.googleClientSecret,
-  };
-  exchangeSecrets = {
-    frontendServer: environment.frontendServerExchangeSecret,
-  };
-  rpc = {
-    host: '0.0.0.0',
-    port: environment.usersRpcPort,
-  };
+
+  databaseUrl = environment.usersDatabaseUrl;
+  accessTokenSecret = environment.accessTokenSecret;
+  refreshTokenSecret = environment.refreshTokenSecret;
+  loginTokenSecret = environment.loginTokenSecret;
+  changeEmailTokenSecret = environment.changeEmailTokenSecret;
+  googleClientId = environment.googleClientId;
+  googleClientSecret = environment.googleClientSecret;
+  rpcPort = environment.usersRpcPort;
 }

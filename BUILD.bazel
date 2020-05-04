@@ -27,6 +27,7 @@ k8s_objects(
     objects = [
         "//packages/kubernetes:microk8s_defaults",
         "//services/gateway:microk8s",
+        "//services/admin-client:microk8s",
         "//services/consumer:microk8s",
         "//services/ideas:microk8s",
         "//services/reviews:microk8s",

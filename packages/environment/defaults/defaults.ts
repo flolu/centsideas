@@ -8,29 +8,23 @@ export const defaultCommonEnv = {
 };
 
 export const defaultKubernetesEnv = {
-  ideasRpcHost: 'centsideas-ideas',
-  ideasHost: 'centsideas-ideas:3000',
+  ideasHost: 'centsideas-ideas',
   ideasDatabaseUrl: 'mongodb://centsideas-ideas-event-store:27017',
 
-  usersRpcHost: 'centsideas-users',
-  usersHost: 'centsideas-users:3000',
+  usersHost: 'centsideas-users',
   usersDatabaseUrl: 'mongodb://centsideas-users-event-store:27017',
 
-  consumerRpcHost: 'centsideas-consumer',
-  consumerHost: 'centsideas-consumer:3000',
+  consumerHost: 'centsideas-consumer',
   projectionDatabaseUrl: 'mongodb://centsideas-projection-database:27017',
 
-  notificationsHost: 'centsideas-notifications:3000',
-  notificationsRpcHost: 'centsideas-notifications',
+  notificationsHost: 'centsideas-notifications',
   notificationsDatabaseUrl: 'mongodb://centsideas-notifications-event-store:27017',
 
-  reviewsHost: 'centsideas-reviews:3000',
   reviewsDatabaseUrl: 'mongodb://centsideas-reviews-event-store:27017',
-  reviewsRpcHost: 'centsideas-reviews',
+  reviewsHost: 'centsideas-reviews',
 
-  adminHost: 'centsideas-admin:3000',
   adminDatabaseUrl: 'mongodb://centsideas-admin-database:27017',
-  adminRpcHost: 'centsideas-admin',
+  adminHost: 'centsideas-admin',
 
   kafkaAdvertisedHostName: '172.31.25.198',
   kafkaZookeeperConnect: 'zookeeper-service:2181',
@@ -39,18 +33,24 @@ export const defaultKubernetesEnv = {
 };
 
 export const defaultDockerComposeEnv = {
-  ideasHost: 'ideas:3000',
-  consumerHost: 'consumer:3000',
-  reviewsHost: 'reviews:3000',
-  usersHost: 'users:3000',
-  notificationsHost: 'notifications:3000',
-  adminHost: 'admin:3000',
+  ideasHost: 'ideas',
   ideasDatabaseUrl: 'mongodb://mongo-database:27017',
-  reviewsDatabaseUrl: 'mongodb://mongo-database:27017',
+
+  consumerHost: 'consumer',
   projectionDatabaseUrl: 'mongodb://mongo-database:27017',
+
+  reviewsHost: 'reviews',
+  reviewsDatabaseUrl: 'mongodb://mongo-database:27017',
+
+  usersHost: 'users',
   usersDatabaseUrl: 'mongodb://mongo-database:27017',
+
+  notificationsHost: 'notifications',
   notificationsDatabaseUrl: 'mongodb://mongo-database:27017',
+
+  adminHost: 'admin',
   adminDatabaseUrl: 'mongodb://mongo-database:27017',
+
   kafkaAdvertisedHostName: 'kafka',
   kafkaZookeeperConnect: 'zookeeper:2181',
   kafkaAdvertisedPort: 9092,

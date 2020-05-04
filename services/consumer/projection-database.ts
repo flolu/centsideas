@@ -7,7 +7,7 @@ import { IIdeaViewModel, IUserViewModel, IReviewViewModel } from '@centsideas/mo
 
 @injectable()
 export class ProjectionDatabase {
-  private client = new MongoClient(this.env.database.url, {
+  private client = new MongoClient(this.env.projectionDatabaseUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
@@ -35,6 +35,6 @@ export class ProjectionDatabase {
 
   private database = async () => {
     if (!this.client.isConnected()) await asyncRetry(() => this.client.connect());
-    return this.client.db(this.env.database.name);
+    return this.client.db(this.env.projectionDatabaseName);
   };
 }

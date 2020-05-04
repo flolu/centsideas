@@ -9,18 +9,18 @@ import {
   UpdateReview,
   DeleteReview,
 } from '@centsideas/rpc';
+import { GlobalEnvironment } from '@centsideas/environment';
 
-import { ReviewsEnvironment } from './reviews.environment';
 import { ReviewsHandler } from './reviews.handler';
 
 @injectable()
 export class ReviewsServer {
   constructor(
-    private env: ReviewsEnvironment,
+    private globalEnv: GlobalEnvironment,
     private rpcServer: RpcServer,
     private handler: ReviewsHandler,
   ) {
-    Logger.info('launch in', this.env.environment, 'mode');
+    Logger.info('launch in', this.globalEnv.environment, 'mode');
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);

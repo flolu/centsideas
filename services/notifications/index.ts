@@ -31,6 +31,6 @@ registerProviders(
 );
 
 const env: NotificationEnvironment = getProvider(NotificationEnvironment);
-registerConstant(RpcServer, new RpcServer(env.rpc.host, env.rpc.port));
+registerConstant(RpcServer, new RpcServer(env.rpcPort));
 
 getProvider(NotificationsServer);

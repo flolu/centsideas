@@ -48,6 +48,8 @@ spec:
   ports:
     - name: http
       port: 3000
+    - name: grpc
+      port: 40000
   type: ClusterIP
 ---
 apiVersion: apps/v1

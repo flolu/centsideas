@@ -3,17 +3,14 @@ kind: Ingress
 metadata:
   name: centsideas-ingress
   annotations:
-    #nginx.ingress.kubernetes.io/rewrite-target: /
-    kubernetes.io/tls-acme: 'true'
-    kubernetes.io/ingress.class: 'nginx'
-    # cert-manager.io/cluster-issuer: letsencrypt-staging
-    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   tls:
     - hosts:
         - localhost
         - api.localhost
-      # secretName: centsideas-tls
   rules:
     - host: api.localhost
       http:
@@ -27,12 +24,15 @@ spec:
           - backend:
               serviceName: centsideas-client
               servicePort: 8080
-# ---
-# kind: ConfigMap
-# apiVersion: v1
-# metadata:
-#   name: centsideas-ingress
-#   namespace: ingress-nginx
-# data:
-#   # FIXME I am not sure if this actually works, because it makes no differnce even when turned off
-#   use-gzip: 'true'
+    - host: admin.localhost
+      http:
+        paths:
+          - backend:
+              serviceName: centsideas-admin-client
+              servicePort: 8080
+    - host: socket.admin.localhost
+      http:
+        paths:
+          - backend:
+              serviceName: centsideas-admin
+              servicePort: 3000

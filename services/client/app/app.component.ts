@@ -13,7 +13,7 @@ import { ServiceWorkerService } from './service-worker.service';
 @Component({
   selector: 'cic-root',
   template: `
-    <h1>CENTS Ideas</h1>
+    <h1 id="title">CENTS Ideas</h1>
     <div *ngIf="availableSwUpdate" (click)="onUpdateServiceWorker()" id="update_banner">
       Click to update the app
     </div>

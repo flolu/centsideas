@@ -31,7 +31,7 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
-        "//packages/rpc",
+        "//packages/rpc:proto_files",
     ],
     entry_point = ":index.ts",
 )

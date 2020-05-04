@@ -3,18 +3,18 @@ import { injectable } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
 import { IIdeaCommands, RpcServer, CreateIdea, DeleteIdea, UpdateIdea } from '@centsideas/rpc';
+import { GlobalEnvironment } from '@centsideas/environment';
 
-import { IdeasEnvironment } from './ideas.environment';
 import { IdeasHandler } from './ideas.handler';
 
 @injectable()
 export class IdeasServer {
   constructor(
-    private env: IdeasEnvironment,
+    private globalEnv: GlobalEnvironment,
     private handler: IdeasHandler,
     private rpcServer: RpcServer,
   ) {
-    Logger.info('launch in', this.env.environment, 'mode');
+    Logger.info('launch in', this.globalEnv.environment, 'mode');
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);

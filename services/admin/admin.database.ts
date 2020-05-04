@@ -7,7 +7,7 @@ import { IEvent } from '@centsideas/models';
 
 @injectable()
 export class AdminDatabase {
-  private client = new MongoClient(this.env.database.url, {
+  private client = new MongoClient(this.env.adminDatabaseUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
@@ -28,11 +28,11 @@ export class AdminDatabase {
 
   private events = async () => {
     const db = await this.database();
-    return db.collection<IEvent>(this.env.database.eventsCollectionName);
+    return db.collection<IEvent>(this.env.eventsCollectionName);
   };
 
   private database = async () => {
     if (!this.client.isConnected()) await asyncRetry(() => this.client.connect());
-    return this.client.db(this.env.database.name);
+    return this.client.db(this.env.adminDatabaseName);
   };
 }

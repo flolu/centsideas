@@ -12,15 +12,15 @@ import {
   UpdateNotificationSettings,
   GetNotificationSettings,
 } from '@centsideas/rpc';
+import { GlobalEnvironment } from '@centsideas/environment';
 
-import { NotificationEnvironment } from './notifications.environment';
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
 import { NotificationsHandlers } from './notifications.handlers';
 
 @injectable()
 export class NotificationsServer {
   constructor(
-    private env: NotificationEnvironment,
+    private globalEnv: GlobalEnvironment,
     private notificationSettingsHandlers: NotificationSettingsHandlers,
     private messageBroker: MessageBroker,
     private notificationsHandler: NotificationsHandlers,
@@ -42,7 +42,7 @@ export class NotificationsServer {
       getSettings: this.getSettings,
     });
 
-    Logger.info('launch in', this.env.environment, 'mode');
+    Logger.info('launch in', this.globalEnv.environment, 'mode');
   }
 
   subscribePush: SubscribePushNotifications = async ({ subscription, userId }) => {
