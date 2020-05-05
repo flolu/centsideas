@@ -1,18 +1,30 @@
 import * as http from 'http';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
-import { IIdeaCommands, RpcServer, CreateIdea, DeleteIdea, UpdateIdea } from '@centsideas/rpc';
+import {
+  IIdeaCommands,
+  RpcServer,
+  CreateIdea,
+  DeleteIdea,
+  UpdateIdea,
+  RPC_TYPES,
+  RpcServerFactory,
+} from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { IdeasHandler } from './ideas.handler';
+import { IdeasEnvironment } from './ideas.environment';
 
 @injectable()
 export class IdeasServer {
+  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+
   constructor(
+    private env: IdeasEnvironment,
     private globalEnv: GlobalEnvironment,
     private handler: IdeasHandler,
-    private rpcServer: RpcServer,
+    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     Logger.info('launch in', this.globalEnv.environment, 'mode');
     http

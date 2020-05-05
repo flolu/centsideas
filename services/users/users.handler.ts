@@ -19,11 +19,7 @@ import { UsersEnvironment } from './users.environment';
 export class UsersHandler {
   constructor(private userRepository: UserRepository, private env: UsersEnvironment) {}
 
-  updateUser = async (
-    auid: string | null,
-    username: string | null,
-    email: string | null,
-  ): Promise<User> => {
+  updateUser = async (auid: string | null, username: string | null, email: string | null) => {
     if (!auid) throw new UnauthenticatedError();
     UserErrors.UserIdRequiredError.validate(auid);
 
@@ -56,10 +52,10 @@ export class UsersHandler {
 
     if (username) await this.userRepository.usernameMapping.update(auid, username);
     const saved: User = await this.userRepository.save(user);
-    return saved;
+    return saved.persistedState;
   };
 
-  confirmEmailChange = async (token: string, auid: string): Promise<User> => {
+  confirmEmailChange = async (token: string, auid: string) => {
     if (!auid) throw new UnauthenticatedError();
 
     const data = decodeToken(token, this.env.changeEmailTokenSecret);
@@ -74,7 +70,8 @@ export class UsersHandler {
     user.confirmEmailChange(payload.newEmail, payload.currentEmail);
 
     await this.userRepository.emailMapping.update(user.persistedState.id, payload.newEmail);
-    return this.userRepository.save(user);
+    const updated = await this.userRepository.save(user);
+    return updated.persistedState;
   };
 
   private requestEmailChange = async (userId: string, newEmail: string): Promise<User> => {

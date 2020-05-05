@@ -1,8 +1,9 @@
 import * as http from 'http';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
+// TODO group imports?
 import {
   RpcServer,
   IUserCommands,
@@ -15,18 +16,24 @@ import {
   GoogleLoginRedicrect,
   Logout,
   RefreshToken,
+  RPC_TYPES,
+  RpcServerFactory,
 } from '@centsideas/rpc';
 
 import { UsersHandler } from './users.handler';
 import { AuthHandler } from './auth.handler';
+import { UsersEnvironment } from './users.environment';
 
 @injectable()
 export class UsersServer {
+  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+
   constructor(
+    private env: UsersEnvironment,
     private globalEnv: GlobalEnvironment,
-    private rpcServer: RpcServer,
     private usersHandler: UsersHandler,
     private authHandler: AuthHandler,
+    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     Logger.info('launch in', this.globalEnv.environment, 'mode');
     http
@@ -50,38 +57,16 @@ export class UsersServer {
     });
   }
 
-  login: Login = async ({ email }) => {
-    await this.authHandler.login(email);
-  };
-
-  confirmLogin: ConfirmLogin = ({ token }) => {
-    return this.authHandler.confirmLogin(token);
-  };
-
-  googleLogin: GoogleLogin = ({ code }) => {
-    return this.authHandler.googleLogin(code);
-  };
-
-  googleLoginRedirect: GoogleLoginRedicrect = async () => {
-    const url = await this.authHandler.googleLoginRedirect();
-    return { url };
-  };
-
-  logout: Logout = async ({ userId }) => {
-    return this.authHandler.logout(userId);
-  };
-
-  refreshToken: RefreshToken = async ({ refreshToken }) => {
-    return this.authHandler.refreshToken(refreshToken);
-  };
-
-  update: UpdateUser = async ({ userId, username, email }) => {
-    const updated = await this.usersHandler.updateUser(userId, username, email);
-    return updated.persistedState;
-  };
-
-  confirmEmailChange: ConfirmEmailChange = async ({ token, userId }) => {
-    const updated = await this.usersHandler.confirmEmailChange(token, userId);
-    return updated.persistedState;
-  };
+  // TODO pass objects directly into handler without destructing (destructure in handler)... also for all other backend services
+  login: Login = async ({ email }) => this.authHandler.login(email);
+  confirmLogin: ConfirmLogin = ({ token }) => this.authHandler.confirmLogin(token);
+  googleLogin: GoogleLogin = ({ code }) => this.authHandler.googleLogin(code);
+  googleLoginRedirect: GoogleLoginRedicrect = async () => this.authHandler.googleLoginRedirect();
+  logout: Logout = async ({ userId }) => this.authHandler.logout(userId);
+  refreshToken: RefreshToken = async ({ refreshToken }) =>
+    this.authHandler.refreshToken(refreshToken);
+  update: UpdateUser = async ({ userId, username, email }) =>
+    this.usersHandler.updateUser(userId, username, email);
+  confirmEmailChange: ConfirmEmailChange = async ({ token, userId }) =>
+    this.usersHandler.confirmEmailChange(token, userId);
 }

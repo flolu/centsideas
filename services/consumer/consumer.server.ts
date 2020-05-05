@@ -1,27 +1,38 @@
 import * as http from 'http';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { Logger } from '@centsideas/utils';
 import { EventTopics } from '@centsideas/enums';
 import { GlobalEnvironment } from '@centsideas/environment';
-import { RpcServer, IIdeaQueries, GetAllIdeas, GetIdeaById } from '@centsideas/rpc';
+import {
+  RpcServer,
+  IIdeaQueries,
+  GetAllIdeas,
+  GetIdeaById,
+  RPC_TYPES,
+  RpcServerFactory,
+} from '@centsideas/rpc';
 
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
 import { ReviewsProjection } from './reviews.projection';
 import { UsersProjection } from './users.projection';
+import { ConsumerEnvironment } from './consumer.environment';
 
 @injectable()
 export class ConsumerServer {
+  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+
   constructor(
+    private env: ConsumerEnvironment,
     private globalEnv: GlobalEnvironment,
     private messageBroker: MessageBroker,
     private queryService: QueryService,
     private ideasProjection: IdeasProjection,
     private reviewsProjection: ReviewsProjection,
     private usersProjection: UsersProjection,
-    private rpcServer: RpcServer,
+    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     Logger.info('launch in', this.globalEnv.environment, 'mode');
     http

@@ -18,7 +18,7 @@ interface IDatabaseEvent extends IEvent {
 
 // FIXME create indexes to increase read performance
 
-// TODO factory for injecting
+// TODO factory for injecting and make non-abstract class that isn't extended?
 
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> {

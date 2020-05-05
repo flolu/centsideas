@@ -7,14 +7,13 @@ import { Services } from '@centsideas/enums';
 process.env.service = Services.Gateway;
 import { registerProviders, getProvider, registerFactory } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
-import { RpcClient, rpcClientFactory } from '@centsideas/rpc';
+import { RpcClient, rpcClientFactory, RPC_TYPES } from '@centsideas/rpc';
 
 import { GatewayServer } from './gateway.server';
 import { GatewayEnvironment } from './gateway.environment';
 import { QueryController } from './query.controller';
 import { CommandController } from './command.controller';
 import { AuthMiddleware } from './middlewares';
-import TYPES from './types';
 
 registerProviders(
   GatewayServer,
@@ -25,6 +24,6 @@ registerProviders(
   AuthMiddleware,
   RpcClient,
 );
-registerFactory(TYPES.RPC_CLIENT_FACTORY, rpcClientFactory);
+registerFactory(RPC_TYPES.RPC_CLIENT_FACTORY, rpcClientFactory);
 
 getProvider(GatewayServer);

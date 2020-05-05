@@ -5,10 +5,10 @@ import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Ideas;
-import { registerProviders, getProvider, registerConstant } from '@centsideas/utils';
+import { registerProviders, getProvider, registerFactory } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { GlobalEnvironment } from '@centsideas/environment';
-import { RpcServer } from '@centsideas/rpc';
+import { RpcServer, RPC_TYPES, rpcServerFactory } from '@centsideas/rpc';
 
 import { IdeasServer } from './ideas.server';
 import { IdeasHandler } from './ideas.handler';
@@ -22,9 +22,9 @@ registerProviders(
   MessageBroker,
   IdeasEnvironment,
   GlobalEnvironment,
+  RpcServer,
 );
 
-const env: IdeasEnvironment = getProvider(IdeasEnvironment);
-registerConstant(RpcServer, new RpcServer(env.rpcPort));
+registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
 
 getProvider(IdeasServer);

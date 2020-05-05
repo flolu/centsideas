@@ -6,3 +6,4 @@ export * from './auth';
 export * from './notification';
 export * from './admin';
 export * from './review';
+export * from './rpc-types';

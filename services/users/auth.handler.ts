@@ -77,7 +77,8 @@ export class AuthHandler {
       access_type: 'offline',
       prompt: 'consent',
     });
-    return `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+    return { url };
   };
 
   googleLogin = async (code: string) => {
@@ -122,8 +123,8 @@ export class AuthHandler {
       const login = Login.createGoogleLogin(loginId, userInfo.email, true, userInfo.id);
 
       const createdUser = await this.handleUserCreation(userInfo.email, [
-        userInfo.name,
-        userInfo.given_name,
+        userInfo.name.replace(' ', '_'),
+        userInfo.given_name.replace(' ', '_'),
       ]);
       await this.userRepository.googleIdMapping.insert(createdUser.persistedState.id, userInfo.id);
       return this.handleConfirmedLogin(createdUser, login);

@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
 import {
@@ -8,17 +8,23 @@ import {
   CreateReview,
   UpdateReview,
   DeleteReview,
+  RPC_TYPES,
+  RpcServerFactory,
 } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { ReviewsHandler } from './reviews.handler';
+import { ReviewsEnvironment } from './reviews.environment';
 
 @injectable()
 export class ReviewsServer {
+  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+
   constructor(
+    private env: ReviewsEnvironment,
     private globalEnv: GlobalEnvironment,
-    private rpcServer: RpcServer,
     private handler: ReviewsHandler,
+    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     Logger.info('launch in', this.globalEnv.environment, 'mode');
     http
@@ -26,6 +32,7 @@ export class ReviewsServer {
       .listen(3000);
 
     const reviewsCommands = this.rpcServer.loadService('review', 'ReviewCommands');
+    // TODO directly add handler function onto here instead of creating helper functions (also in other servcies!)
     this.rpcServer.addService<IReviewCommands>(reviewsCommands, {
       create: this.create,
       update: this.update,

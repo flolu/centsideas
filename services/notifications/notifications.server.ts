@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
 import { EventTopics, IdeaEvents, LoginEvents, UserEvents } from '@centsideas/enums';
@@ -11,20 +11,26 @@ import {
   SubscribePushNotifications,
   UpdateNotificationSettings,
   GetNotificationSettings,
+  RPC_TYPES,
+  RpcServerFactory,
 } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
 import { NotificationsHandlers } from './notifications.handlers';
+import { NotificationEnvironment } from './notifications.environment';
 
 @injectable()
 export class NotificationsServer {
+  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+
   constructor(
+    private env: NotificationEnvironment,
     private globalEnv: GlobalEnvironment,
     private notificationSettingsHandlers: NotificationSettingsHandlers,
     private messageBroker: MessageBroker,
     private notificationsHandler: NotificationsHandlers,
-    private rpcServer: RpcServer,
+    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     // FIXME also consider kafka connection in health checks
     http

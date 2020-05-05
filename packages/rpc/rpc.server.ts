@@ -1,11 +1,9 @@
 import * as grpc from '@grpc/grpc-js';
-import { injectable } from 'inversify';
+import { injectable, interfaces } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
 
 import { loadProtoPackage } from './util';
-
-// TODO factory
 
 @injectable()
 export class RpcServer {
@@ -13,8 +11,20 @@ export class RpcServer {
 
   private server = new grpc.Server();
 
-  constructor(private port: number, private host = '0.0.0.0') {
-    this.startServer();
+  initialize(port: number, host = '0.0.0.0') {
+    this.server.bindAsync(
+      `${host}:${port}`,
+      grpc.ServerCredentials.createInsecure(),
+      (err, listeningPort) => {
+        if (err) {
+          Logger.error(err, `while binding rpc server (port: ${listeningPort})`);
+          throw err;
+        }
+        Logger.info(`rpc server running on ${listeningPort}`);
+        this.server.start();
+        this.isRunning = true;
+      },
+    );
   }
 
   addService<IServiceImplementation>(
@@ -28,22 +38,6 @@ export class RpcServer {
   loadService(packageName: string, serviceName: string): grpc.ServiceDefinition {
     const protoPackage = loadProtoPackage(packageName);
     return (protoPackage as any)[serviceName].service;
-  }
-
-  private startServer() {
-    this.server.bindAsync(
-      `${this.host}:${this.port}`,
-      grpc.ServerCredentials.createInsecure(),
-      (err, port) => {
-        if (err) {
-          Logger.error(err, `while binding rpc server (port: ${port})`);
-          throw err;
-        }
-        Logger.info(`rpc server running on ${port}`);
-        this.server.start();
-        this.isRunning = true;
-      },
-    );
   }
 
   /**
@@ -85,3 +79,13 @@ export class RpcServer {
     };
   }
 }
+
+export type RpcServerFactory = (port: number, host?: string) => RpcServer;
+
+export const rpcServerFactory = (context: interfaces.Context): RpcServerFactory => {
+  return (port, host) => {
+    const rpcServer = context.container.get(RpcServer);
+    rpcServer.initialize(port, host);
+    return rpcServer;
+  };
+};

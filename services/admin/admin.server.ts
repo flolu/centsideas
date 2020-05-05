@@ -1,12 +1,18 @@
 import * as express from 'express';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import * as http from 'http';
 import * as socketIO from 'socket.io';
 import { takeWhile, tap } from 'rxjs/operators';
 
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { Logger } from '@centsideas/utils';
-import { RpcServer, IAdminQueries, GetAdminEvents } from '@centsideas/rpc';
+import {
+  RpcServer,
+  IAdminQueries,
+  GetAdminEvents,
+  RPC_TYPES,
+  RpcServerFactory,
+} from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { AdminDatabase } from './admin.database';
@@ -19,13 +25,14 @@ export class AdminServer {
   private app = express();
   private httpServer = http.createServer(this.app);
   private io = socketIO(this.httpServer);
+  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
 
   constructor(
     private env: AdminEnvironment,
     private globalEnv: GlobalEnvironment,
     private messageBroker: MessageBroker,
     private adminDatabase: AdminDatabase,
-    private rpcServer: RpcServer,
+    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     Logger.info('launch in', this.globalEnv.environment, 'mode');
     http

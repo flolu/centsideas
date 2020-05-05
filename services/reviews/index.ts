@@ -5,9 +5,9 @@ import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Reviews;
-import { registerProviders, getProvider, registerConstant } from '@centsideas/utils';
+import { registerProviders, getProvider, registerFactory } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
-import { RpcServer } from '@centsideas/rpc';
+import { RPC_TYPES, rpcServerFactory, RpcServer } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { ReviewsServer } from './reviews.server';
@@ -22,9 +22,9 @@ registerProviders(
   MessageBroker,
   ReviewsEnvironment,
   GlobalEnvironment,
+  RpcServer,
 );
 
-const env: ReviewsEnvironment = getProvider(ReviewsEnvironment);
-registerConstant(RpcServer, new RpcServer(env.rpcPort));
+registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
 
 getProvider(ReviewsServer);

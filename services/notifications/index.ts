@@ -5,10 +5,10 @@ import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Notifications;
-import { registerProviders, getProvider, registerConstant } from '@centsideas/utils';
+import { registerProviders, getProvider, registerFactory } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { GlobalEnvironment } from '@centsideas/environment';
-import { RpcServer } from '@centsideas/rpc';
+import { RpcServer, RPC_TYPES, rpcServerFactory } from '@centsideas/rpc';
 
 import { NotificationsServer } from './notifications.server';
 import { NotificationSettingsRepository } from './notification-settings.repository';
@@ -28,9 +28,9 @@ registerProviders(
   EmailService,
   NotificationsRepository,
   GlobalEnvironment,
+  RpcServer,
 );
 
-const env: NotificationEnvironment = getProvider(NotificationEnvironment);
-registerConstant(RpcServer, new RpcServer(env.rpcPort));
+registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
 
 getProvider(NotificationsServer);

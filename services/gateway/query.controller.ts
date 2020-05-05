@@ -3,10 +3,15 @@ import { inject } from 'inversify';
 import { interfaces, controller, httpGet } from 'inversify-express-utils';
 
 import { ApiEndpoints, AdminApiRoutes } from '@centsideas/enums';
-import { IIdeaQueries, IAdminQueries, RpcClient, RpcClientFactory } from '@centsideas/rpc';
+import {
+  IIdeaQueries,
+  IAdminQueries,
+  RpcClient,
+  RpcClientFactory,
+  RPC_TYPES,
+} from '@centsideas/rpc';
 
 import { GatewayEnvironment } from './gateway.environment';
-import TYPES from './types';
 
 @controller('')
 export class QueryController implements interfaces.Controller {
@@ -25,8 +30,8 @@ export class QueryController implements interfaces.Controller {
 
   constructor(
     private env: GatewayEnvironment,
-    @inject(TYPES.RPC_CLIENT_FACTORY) private ideasRpcFactory: RpcClientFactory,
-    @inject(TYPES.RPC_CLIENT_FACTORY) private adminRpcFactory: RpcClientFactory,
+    @inject(RPC_TYPES.RPC_CLIENT_FACTORY) private ideasRpcFactory: RpcClientFactory,
+    @inject(RPC_TYPES.RPC_CLIENT_FACTORY) private adminRpcFactory: RpcClientFactory,
   ) {}
 
   @httpGet(``)
