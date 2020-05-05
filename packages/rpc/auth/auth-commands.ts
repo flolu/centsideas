@@ -30,7 +30,7 @@ interface IGoogleLoginUrl {
   url: string;
 }
 
-export type Login = (payload: ILoginCommand) => Promise<any>;
+export type LoginHandler = (payload: ILoginCommand) => Promise<any>;
 export type ConfirmLogin = (payload: IConfirmLoginCommand) => Promise<IAuthSuccessCredentials>;
 export type GoogleLogin = (payload: IGoogleLoginCommand) => Promise<IAuthSuccessCredentials>;
 export type GoogleLoginRedicrect = (payload: any) => Promise<IGoogleLoginUrl>;
@@ -38,7 +38,7 @@ export type Logout = (payload: ILogoutCommand) => Promise<any>;
 export type RefreshToken = (payload: IRefreshTokenCommand) => Promise<IAuthSuccessCredentials>;
 
 export interface IAuthCommands {
-  login: Login;
+  login: LoginHandler;
   confirmLogin: ConfirmLogin;
   googleLogin: GoogleLogin;
   googleLoginRedirect: GoogleLoginRedicrect;

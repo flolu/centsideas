@@ -9,6 +9,7 @@ import {
 } from '@centsideas/utils';
 import { IEmailChangeTokenPayload } from '@centsideas/models';
 import { TokenExpirationTimes } from '@centsideas/enums';
+import { IUserCommands, ConfirmEmailChange, UpdateUser } from '@centsideas/rpc';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -16,12 +17,12 @@ import { UserErrors } from './errors';
 import { UsersEnvironment } from './users.environment';
 
 @injectable()
-export class UsersHandler {
+export class UsersHandler implements IUserCommands {
   constructor(private userRepository: UserRepository, private env: UsersEnvironment) {}
 
-  updateUser = async (auid: string | null, username: string | null, email: string | null) => {
-    if (!auid) throw new UnauthenticatedError();
-    UserErrors.UserIdRequiredError.validate(auid);
+  update: UpdateUser = async ({ userId, username, email }) => {
+    if (!userId) throw new UnauthenticatedError();
+    UserErrors.UserIdRequiredError.validate(userId);
 
     if (username) {
       username = sanitizeHtml(username);
@@ -35,7 +36,7 @@ export class UsersHandler {
       UserErrors.EmailInvalidError.validate(email);
     }
 
-    let user = await this.userRepository.findById(auid);
+    let user = await this.userRepository.findById(userId);
 
     const isNewUsername = user && user.persistedState.username !== username;
     if (username && isNewUsername) {
@@ -45,23 +46,23 @@ export class UsersHandler {
     const isNewEmail = email && user.persistedState.email !== email;
     if (email && isNewEmail) {
       await this.userRepository.checkEmailAvailability(email);
-      user = await this.requestEmailChange(auid, email);
+      user = await this.requestEmailChange(userId, email);
     }
 
     user.update(username, isNewEmail ? email : null);
 
-    if (username) await this.userRepository.usernameMapping.update(auid, username);
+    if (username) await this.userRepository.usernameMapping.update(userId, username);
     const saved: User = await this.userRepository.save(user);
     return saved.persistedState;
   };
 
-  confirmEmailChange = async (token: string, auid: string) => {
-    if (!auid) throw new UnauthenticatedError();
+  confirmEmailChange: ConfirmEmailChange = async ({ token, userId }) => {
+    if (!userId) throw new UnauthenticatedError();
 
     const data = decodeToken(token, this.env.changeEmailTokenSecret);
     const payload: IEmailChangeTokenPayload = data;
 
-    PermissionDeniedError.validate(auid, payload.userId);
+    PermissionDeniedError.validate(userId, payload.userId);
 
     await this.userRepository.checkEmailAvailability(payload.newEmail);
 

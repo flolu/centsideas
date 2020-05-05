@@ -5,15 +5,7 @@ import { Logger } from '@centsideas/utils';
 import { EventTopics, IdeaEvents, LoginEvents, UserEvents } from '@centsideas/enums';
 import { IEvent } from '@centsideas/models';
 import { MessageBroker } from '@centsideas/event-sourcing';
-import {
-  RpcServer,
-  INotificationCommands,
-  SubscribePushNotifications,
-  UpdateNotificationSettings,
-  GetNotificationSettings,
-  RPC_TYPES,
-  RpcServerFactory,
-} from '@centsideas/rpc';
+import { RpcServer, INotificationCommands, RPC_TYPES, RpcServerFactory } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { NotificationSettingsHandlers } from './notification-settings.handlers';
@@ -43,39 +35,13 @@ export class NotificationsServer {
 
     const commandService = this.rpcServer.loadService('notification', 'NotificationCommands');
     this.rpcServer.addService<INotificationCommands>(commandService, {
-      subscribePush: this.subscribePush,
-      updateSettings: this.updateSettings,
-      getSettings: this.getSettings,
+      subscribePush: this.notificationSettingsHandlers.addPushSubscription,
+      updateSettings: this.notificationSettingsHandlers.updateSettings,
+      getSettings: this.notificationSettingsHandlers.getSettings,
     });
 
     Logger.info('launch in', this.globalEnv.environment, 'mode');
   }
-
-  subscribePush: SubscribePushNotifications = async ({ subscription, userId }) => {
-    const upserted = await this.notificationSettingsHandlers.upsert(userId);
-    const updated = await this.notificationSettingsHandlers.addPushSubscription(
-      upserted.persistedState.id,
-      userId,
-      subscription,
-    );
-    // FIXME acutally, we don't really need to return push sub array?!
-    return updated.persistedState;
-  };
-
-  updateSettings: UpdateNotificationSettings = async ({ sendEmails, sendPushes, userId }) => {
-    const upserted = await this.notificationSettingsHandlers.upsert(userId);
-    const updated = await this.notificationSettingsHandlers.updateSettings(
-      upserted.persistedState.id,
-      userId,
-      { sendPushes, sendEmails },
-    );
-    return updated.persistedState;
-  };
-
-  getSettings: GetNotificationSettings = async ({ userId }) => {
-    const settings = await this.notificationSettingsHandlers.upsert(userId);
-    return settings.persistedState;
-  };
 
   private handleIdeasEvents = async (event: IEvent<any>) => {
     try {

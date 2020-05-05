@@ -2,15 +2,7 @@ import * as http from 'http';
 import { injectable, inject } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
-import {
-  RpcServer,
-  IReviewCommands,
-  CreateReview,
-  UpdateReview,
-  DeleteReview,
-  RPC_TYPES,
-  RpcServerFactory,
-} from '@centsideas/rpc';
+import { RpcServer, IReviewCommands, RPC_TYPES, RpcServerFactory } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 
 import { ReviewsHandler } from './reviews.handler';
@@ -32,26 +24,10 @@ export class ReviewsServer {
       .listen(3000);
 
     const reviewsCommands = this.rpcServer.loadService('review', 'ReviewCommands');
-    // TODO directly add handler function onto here instead of creating helper functions (also in other servcies!)
     this.rpcServer.addService<IReviewCommands>(reviewsCommands, {
-      create: this.create,
-      update: this.update,
-      delete: this.delete,
+      create: this.handler.create,
+      update: this.handler.update,
+      delete: this.handler.delete,
     });
   }
-
-  create: CreateReview = async ({ ideaId, content, scores, userId }) => {
-    const created = await this.handler.create(ideaId, userId, content, scores);
-    return created.persistedState;
-  };
-
-  update: UpdateReview = async ({ reviewId, content, scores, userId }) => {
-    const updated = await this.handler.update(userId, reviewId, content, scores);
-    return updated.persistedState;
-  };
-
-  delete: DeleteReview = async ({ reviewId, userId }) => {
-    const deleted = await this.handler.delete(userId, reviewId);
-    return deleted.persistedState;
-  };
 }

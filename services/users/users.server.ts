@@ -3,19 +3,10 @@ import { injectable, inject } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
-// TODO group imports?
 import {
   RpcServer,
   IUserCommands,
-  UpdateUser,
-  ConfirmEmailChange,
   IAuthCommands,
-  Login,
-  ConfirmLogin,
-  GoogleLogin,
-  GoogleLoginRedicrect,
-  Logout,
-  RefreshToken,
   RPC_TYPES,
   RpcServerFactory,
 } from '@centsideas/rpc';
@@ -42,31 +33,18 @@ export class UsersServer {
 
     const userService = this.rpcServer.loadService('user', 'UserCommands');
     this.rpcServer.addService<IUserCommands>(userService, {
-      update: this.update,
-      confirmEmailChange: this.confirmEmailChange,
+      update: this.usersHandler.update,
+      confirmEmailChange: this.usersHandler.confirmEmailChange,
     });
 
     const authService = this.rpcServer.loadService('auth', 'AuthCommands');
     this.rpcServer.addService<IAuthCommands>(authService, {
-      login: this.login,
-      confirmLogin: this.confirmLogin,
-      googleLogin: this.googleLogin,
-      googleLoginRedirect: this.googleLoginRedirect,
-      logout: this.logout,
-      refreshToken: this.refreshToken,
+      login: this.authHandler.login,
+      confirmLogin: this.authHandler.confirmLogin,
+      googleLogin: this.authHandler.googleLogin,
+      googleLoginRedirect: this.authHandler.googleLoginRedirect,
+      logout: this.authHandler.logout,
+      refreshToken: this.authHandler.refreshToken,
     });
   }
-
-  // TODO pass objects directly into handler without destructing (destructure in handler)... also for all other backend services
-  login: Login = async ({ email }) => this.authHandler.login(email);
-  confirmLogin: ConfirmLogin = ({ token }) => this.authHandler.confirmLogin(token);
-  googleLogin: GoogleLogin = ({ code }) => this.authHandler.googleLogin(code);
-  googleLoginRedirect: GoogleLoginRedicrect = async () => this.authHandler.googleLoginRedirect();
-  logout: Logout = async ({ userId }) => this.authHandler.logout(userId);
-  refreshToken: RefreshToken = async ({ refreshToken }) =>
-    this.authHandler.refreshToken(refreshToken);
-  update: UpdateUser = async ({ userId, username, email }) =>
-    this.usersHandler.updateUser(userId, username, email);
-  confirmEmailChange: ConfirmEmailChange = async ({ token, userId }) =>
-    this.usersHandler.confirmEmailChange(token, userId);
 }

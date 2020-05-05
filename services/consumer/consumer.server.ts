@@ -5,14 +5,7 @@ import { MessageBroker } from '@centsideas/event-sourcing';
 import { Logger } from '@centsideas/utils';
 import { EventTopics } from '@centsideas/enums';
 import { GlobalEnvironment } from '@centsideas/environment';
-import {
-  RpcServer,
-  IIdeaQueries,
-  GetAllIdeas,
-  GetIdeaById,
-  RPC_TYPES,
-  RpcServerFactory,
-} from '@centsideas/rpc';
+import { RpcServer, IIdeaQueries, RPC_TYPES, RpcServerFactory } from '@centsideas/rpc';
 
 import { QueryService } from './query.service';
 import { IdeasProjection } from './ideas.projection';
@@ -45,17 +38,8 @@ export class ConsumerServer {
 
     const ideaService = this.rpcServer.loadService('idea', 'IdeaQueries');
     this.rpcServer.addService<IIdeaQueries>(ideaService, {
-      getAll: this.getAll,
-      getById: this.getById,
+      getAll: this.queryService.getAllIdeas,
+      getById: this.queryService.getIdeaById,
     });
   }
-
-  getAll: GetAllIdeas = async () => {
-    const ideas = await this.queryService.getAllIdeas();
-    return { ideas };
-  };
-
-  getById: GetIdeaById = async ({ id }) => {
-    return this.queryService.getIdeaById(id);
-  };
 }

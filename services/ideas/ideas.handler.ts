@@ -5,12 +5,13 @@ import { sanitizeHtml, UnauthenticatedError, PermissionDeniedError } from '@cent
 import { IdeaErrors } from './errors';
 import { Idea } from './idea.entity';
 import { IdeaRepository } from './idea.repository';
+import { CreateIdea, UpdateIdea, DeleteIdea } from '@centsideas/rpc';
 
 @injectable()
 export class IdeasHandler {
   constructor(private repository: IdeaRepository) {}
 
-  async create(userId: string | null, title: string, description: string): Promise<Idea> {
+  create: CreateIdea = async ({ userId, title, description }) => {
     if (!userId) throw new UnauthenticatedError();
 
     title = sanitizeHtml(title || '');
@@ -23,15 +24,11 @@ export class IdeasHandler {
     const ideaId = await this.repository.generateAggregateId();
     const idea = Idea.create(ideaId, userId, title, description);
 
-    return this.repository.save(idea);
-  }
+    const created = await this.repository.save(idea);
+    return created.persistedState;
+  };
 
-  async update(
-    userId: string | null,
-    ideaId: string,
-    title: string,
-    description: string,
-  ): Promise<Idea> {
+  update: UpdateIdea = async ({ userId, description, title, ideaId }) => {
     if (!userId) throw new UnauthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
 
@@ -46,10 +43,12 @@ export class IdeasHandler {
     PermissionDeniedError.validate(userId, idea.persistedState.userId);
 
     idea.update(title, description);
-    return this.repository.save(idea);
-  }
 
-  async delete(userId: string | null, ideaId: string): Promise<Idea> {
+    const updated = await this.repository.save(idea);
+    return updated.persistedState;
+  };
+
+  delete: DeleteIdea = async ({ userId, ideaId }) => {
     if (!userId) throw new UnauthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
 
@@ -58,7 +57,10 @@ export class IdeasHandler {
     PermissionDeniedError.validate(userId, idea.persistedState.userId);
 
     IdeaErrors.IdeaAlreadyDeletedError.validate(idea.persistedState.deleted, ideaId);
+
     idea.delete();
-    return this.repository.save(idea);
-  }
+
+    const deleted = await this.repository.save(idea);
+    return deleted.persistedState;
+  };
 }

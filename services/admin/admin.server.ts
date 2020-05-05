@@ -9,9 +9,9 @@ import { Logger } from '@centsideas/utils';
 import {
   RpcServer,
   IAdminQueries,
-  GetAdminEvents,
   RPC_TYPES,
   RpcServerFactory,
+  GetAdminEvents,
 } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
 

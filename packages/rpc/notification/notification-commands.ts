@@ -18,9 +18,11 @@ interface IGetNotificationSettingsCommand {
 export type SubscribePushNotifications = (
   payload: ISubscribePushNotificationsCommand,
 ) => Promise<INotificationSettingsState>;
+
 export type UpdateNotificationSettings = (
   payload: IUpdateNotificationSettingsCommand,
 ) => Promise<INotificationSettingsState>;
+
 export type GetNotificationSettings = (
   payload: IGetNotificationSettingsCommand,
 ) => Promise<INotificationSettingsState>;

@@ -8,6 +8,14 @@ import { decodeToken, TokenInvalidError, Identifier } from '@centsideas/utils';
 import { ILoginTokenPayload, IRefreshTokenPayload } from '@centsideas/models';
 import { TopLevelFrontendRoutes, TokenExpirationTimes } from '@centsideas/enums';
 import { GlobalEnvironment } from '@centsideas/environment';
+import {
+  LoginHandler,
+  ConfirmLogin,
+  GoogleLoginRedicrect,
+  GoogleLogin,
+  RefreshToken,
+  Logout,
+} from '@centsideas/rpc';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -26,7 +34,7 @@ export class AuthHandler {
     private globalEnv: GlobalEnvironment,
   ) {}
 
-  login = async (email: string): Promise<Login> => {
+  login: LoginHandler = async ({ email }) => {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
 
@@ -43,7 +51,7 @@ export class AuthHandler {
     return this.loginRepository.save(login);
   };
 
-  confirmLogin = async (token: string) => {
+  confirmLogin: ConfirmLogin = async ({ token }) => {
     const data = decodeToken(token, this.env.loginTokenSecret);
 
     const payload: ILoginTokenPayload = data;
@@ -65,7 +73,7 @@ export class AuthHandler {
     return this.handleConfirmedLogin(user, login);
   };
 
-  googleLoginRedirect = () => {
+  googleLoginRedirect: GoogleLoginRedicrect = async () => {
     const params = queryString.stringify({
       client_id: this.env.googleClientId,
       redirect_uri: this.getGoogleRedirectUri(),
@@ -81,7 +89,7 @@ export class AuthHandler {
     return { url };
   };
 
-  googleLogin = async (code: string) => {
+  googleLogin: GoogleLogin = async ({ code }) => {
     const userInfo = await this.fetchGoogleUserInfo(code);
 
     // FIXME send verification email manually
@@ -131,18 +139,27 @@ export class AuthHandler {
     }
   };
 
-  refreshToken = async (token: string) => {
-    const data: IRefreshTokenPayload = decodeToken(token, this.env.refreshTokenSecret);
+  refreshToken: RefreshToken = async ({ refreshToken }) => {
+    const data: IRefreshTokenPayload = decodeToken(refreshToken, this.env.refreshTokenSecret);
 
     const user = await this.userRepository.findById(data.userId);
 
     if (user.persistedState.refreshTokenId !== data.tokenId)
-      throw new TokenInvalidError(token, 'token was invalidated');
+      throw new TokenInvalidError(refreshToken, 'token was invalidated');
 
     const accessToken = this.generateAccessToken(user);
-    const refreshToken = this.generateRefreshToken(user);
+    const updatedRefreshToken = this.generateRefreshToken(user);
 
-    return { accessToken, refreshToken, user: user.persistedState };
+    return { accessToken, refreshToken: updatedRefreshToken, user: user.persistedState };
+  };
+
+  logout: Logout = async ({ userId }) => {
+    UserErrors.UserIdRequiredError.validate(userId);
+
+    const user = await this.userRepository.findById(userId);
+    user.logout();
+
+    return this.userRepository.save(user);
   };
 
   // FIXME implement such that access to this controller is only for admins
@@ -155,15 +172,6 @@ export class AuthHandler {
     user.revokeRefreshToken(refreshTokenId, reason);
 
     // FIXME maybe send email to user
-    return this.userRepository.save(user);
-  };
-
-  logout = async (userId: string) => {
-    UserErrors.UserIdRequiredError.validate(userId);
-
-    const user = await this.userRepository.findById(userId);
-    user.logout();
-
     return this.userRepository.save(user);
   };
 

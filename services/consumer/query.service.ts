@@ -1,20 +1,23 @@
 import { injectable } from 'inversify';
 import * as grpc from '@grpc/grpc-js';
 
-import { ProjectionDatabase } from './projection-database';
 import { InternalError } from '@centsideas/utils';
 import { ErrorNames } from '@centsideas/enums';
+import { GetIdeaById, GetAllIdeas } from '@centsideas/rpc';
+
+import { ProjectionDatabase } from './projection-database';
 
 @injectable()
 export class QueryService {
   constructor(private projectionDatabase: ProjectionDatabase) {}
 
-  getAllIdeas = async () => {
+  getAllIdeas: GetAllIdeas = async () => {
     const ideasCollection = await this.projectionDatabase.ideas();
-    return ideasCollection.find({ deleted: false }).toArray();
+    const ideas = await ideasCollection.find({ deleted: false }).toArray();
+    return { ideas };
   };
 
-  getIdeaById = async (id: string) => {
+  getIdeaById: GetIdeaById = async ({ id }) => {
     const ideasCollection = await this.projectionDatabase.ideas();
     const reviewsCollection = await this.projectionDatabase.reviews();
 
