@@ -12,7 +12,7 @@
     "lint": "tslint --project .",
     "up": "yarn upgrade-interactive --latest",
     "docker": "docker-compose up --build --no-color",
-    "clean": "rm -rf node_modules && bazelisk clean && env:clean",
+    "clean": "yarn env:clean && rm -rf node_modules && bazelisk clean",
     "env:clean": "ts-node packages/environment/clean",
     "env:setup": "ts-node packages/environment/setups/dev",
     "env:setup:staging": "ts-node packages/environment/setups/staging",

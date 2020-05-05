@@ -1,15 +1,18 @@
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-import { EntityError } from '..';
+import { ErrorNames } from '@centsideas/enums';
 
-export class NotAuthenticatedError extends EntityError {
+import { InternalError } from './internal.error';
+
+export class UnauthenticatedError extends InternalError {
   static validate = (userId: string | null): void => {
-    if (!userId) {
-      throw new NotAuthenticatedError();
-    }
+    if (!userId) throw new UnauthenticatedError();
   };
 
   constructor() {
-    super(`Not authenticated. Please login.`, HttpStatusCodes.Unauthorized);
+    super(`Not authenticated. Please login.`, {
+      code: grpc.status.UNAUTHENTICATED,
+      name: ErrorNames.Unauthenticated,
+    });
   }
 }

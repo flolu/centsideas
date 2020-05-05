@@ -34,6 +34,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
     );
   }
 
+  // TODO double check if this works
   private handleAccessTokenRefresh = (
     req: HttpRequest<any>,
     next: HttpHandler,

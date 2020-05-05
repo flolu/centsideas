@@ -24,7 +24,6 @@ export class ConsumerServer {
     private rpcServer: RpcServer,
   ) {
     Logger.info('launch in', this.globalEnv.environment, 'mode');
-    // TODO also consider kafka connection in health checks
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);

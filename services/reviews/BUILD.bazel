@@ -17,6 +17,7 @@ lib_deps = [
     "@npm//reflect-metadata",
     "@npm//shortid",
     "@npm//@types/node",
+    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

@@ -20,6 +20,7 @@ lib_deps = [
     "@npm//@sendgrid/mail",
     "@npm//rxjs",
     "@npm//@types/node",
+    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

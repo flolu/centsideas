@@ -4,8 +4,8 @@ import * as jwt from 'jsonwebtoken';
 import {
   sanitizeHtml,
   decodeToken,
-  NotAuthenticatedError,
-  NoPermissionError,
+  UnauthenticatedError,
+  PermissionDeniedError,
 } from '@centsideas/utils';
 import { IEmailChangeTokenPayload } from '@centsideas/models';
 import { TokenExpirationTimes } from '@centsideas/enums';
@@ -24,7 +24,7 @@ export class UsersHandler {
     username: string | null,
     email: string | null,
   ): Promise<User> => {
-    if (!auid) throw new NotAuthenticatedError();
+    if (!auid) throw new UnauthenticatedError();
     UserErrors.UserIdRequiredError.validate(auid);
 
     if (username) {
@@ -60,12 +60,12 @@ export class UsersHandler {
   };
 
   confirmEmailChange = async (token: string, auid: string): Promise<User> => {
-    if (!auid) throw new NotAuthenticatedError();
+    if (!auid) throw new UnauthenticatedError();
 
     const data = decodeToken(token, this.env.changeEmailTokenSecret);
     const payload: IEmailChangeTokenPayload = data;
 
-    NoPermissionError.validate(auid, payload.userId);
+    PermissionDeniedError.validate(auid, payload.userId);
 
     await this.userRepository.checkEmailAvailability(payload.newEmail);
 

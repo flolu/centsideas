@@ -1,8 +1,13 @@
-import { HttpStatusCodes } from '@centsideas/enums';
-import { EntityError } from '@centsideas/utils';
+import * as grpc from '@grpc/grpc-js';
 
-export class NotificationSettingsNotFoundError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
+
+export class NotificationSettingsNotFoundError extends InternalError {
   constructor(id: string) {
-    super(`Notification settings with id: ${id} were not found`, HttpStatusCodes.NotFound);
+    super(`Notification settings with id: ${id} were not found`, {
+      name: ErrorNames.NotificationSettingsNotFound,
+      code: grpc.status.NOT_FOUND,
+    });
   }
 }

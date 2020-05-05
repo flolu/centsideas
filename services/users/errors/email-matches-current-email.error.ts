@@ -1,12 +1,17 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-export class EmailMatchesCurrentEmailError extends EntityError {
-  constructor(email: string) {
-    super(`${email} is your current email`, HttpStatusCodes.BadRequest);
-  }
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
 
+export class EmailMatchesCurrentEmailError extends InternalError {
   static validate = (currentEmail: string, newEmail: string): void => {
     if (currentEmail === newEmail) throw new EmailMatchesCurrentEmailError(currentEmail);
   };
+
+  constructor(email: string) {
+    super(`${email} is your current email`, {
+      name: ErrorNames.EmailMatchesCurrentEmail,
+      code: grpc.status.INVALID_ARGUMENT,
+    });
+  }
 }

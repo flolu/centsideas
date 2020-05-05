@@ -15,15 +15,20 @@ export class QueryController implements interfaces.Controller {
     @inject(TYPES.ADMIN_QUERY_RPC_CLIENT) private adminRpc: RpcClient<IAdminQueries>,
   ) {}
 
+  @httpGet(``)
+  index(_req: express.Request, res: express.Response) {
+    return 'api gateway';
+  }
+
   @httpGet(`/${ApiEndpoints.Alive}`)
   alive(_req: express.Request, res: express.Response) {
-    res.status(200);
+    return 'alive';
   }
 
   @httpGet(`/${ApiEndpoints.Ideas}`)
   async getIdeas() {
     const { ideas } = await this.ideasRpc.client.getAll(undefined);
-    return ideas;
+    return ideas || [];
   }
 
   @httpGet(`/${ApiEndpoints.Ideas}/:id`)

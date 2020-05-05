@@ -1,14 +1,17 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-export class UsernameRequiredError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
+
+export class UsernameRequiredError extends InternalError {
   static validate = (username: string): void => {
-    if (!username) {
-      throw new UsernameRequiredError();
-    }
+    if (!username) throw new UsernameRequiredError();
   };
 
   constructor() {
-    super(`Username is required`, HttpStatusCodes.BadRequest);
+    super(`Username is required`, {
+      name: ErrorNames.UsernameRequired,
+      code: grpc.status.INVALID_ARGUMENT,
+    });
   }
 }

@@ -1,6 +1,9 @@
 import { injectable } from 'inversify';
+import * as grpc from '@grpc/grpc-js';
 
 import { ProjectionDatabase } from './projection-database';
+import { InternalError } from '@centsideas/utils';
+import { ErrorNames } from '@centsideas/enums';
 
 @injectable()
 export class QueryService {
@@ -19,8 +22,12 @@ export class QueryService {
       ideasCollection.findOne({ id }),
       reviewsCollection.find({ ideaId: id }).toArray(),
     ]);
-    // TODO better error handling
-    if (!idea) throw new Error('idea not found');
+
+    if (!idea)
+      throw new InternalError(`Idea (${id}) not found`, {
+        name: ErrorNames.NotFound,
+        code: grpc.status.NOT_FOUND,
+      });
 
     return { ...idea, reviews: reviews || [] };
   };

@@ -30,17 +30,17 @@ export class RpcClient<IClientService = any> {
    */
   private registerMethods(methodNames: string[]) {
     this.client = {} as any;
-    methodNames.forEach(mn => {
-      (this.client as any)[mn] = (payload: any) => {
-        return new Promise(resolve => {
-          const method: grpc.requestCallback<any> = (this.internalRpcClient as any)[mn](
+    methodNames.forEach(methodName => {
+      (this.client as any)[methodName] = (payload: any) => {
+        return new Promise((resolve, reject) => {
+          const method: grpc.requestCallback<any> = (this.internalRpcClient as any)[methodName](
             payload,
             (err: grpc.ServiceError, response: any) => {
-              if (err) throw err;
+              if (err) reject(err);
               resolve(response);
             },
           );
-          (this.internalRpcClient as any)[mn].bind(method);
+          (this.internalRpcClient as any)[methodName].bind(method);
         });
       };
     });

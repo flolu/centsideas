@@ -43,7 +43,6 @@ export class CommandController implements interfaces.Controller {
     private notificationsRpc: RpcClient<INotificationCommands>,
   ) {}
 
-  // TODO error handling https://stackoverflow.com/questions/48748745 https://grpc.io/docs/guides/error/ https://github.com/avinassh/grpc-errors/tree/master/node
   @httpPost(`/${ApiEndpoints.Ideas}`, AuthMiddleware)
   async createIdea(req: express.Request, res: express.Response) {
     const { title, description } = req.body;

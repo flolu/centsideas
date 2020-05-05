@@ -1,14 +1,16 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-export class EmailRequiredError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
+export class EmailRequiredError extends InternalError {
   static validate = (email: string): void => {
-    if (!email) {
-      throw new EmailRequiredError();
-    }
+    if (!email) throw new EmailRequiredError();
   };
 
   constructor() {
-    super(`Email is required`, HttpStatusCodes.BadRequest);
+    super(`Email is required`, {
+      name: ErrorNames.EmailRequired,
+      code: grpc.status.INVALID_ARGUMENT,
+    });
   }
 }

@@ -1,20 +1,18 @@
-import { IReviewScores } from '@centsideas/models';
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-export class ReviewScoresRangeError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
+import { IReviewScores } from '@centsideas/models';
+
+export class ReviewScoresRangeError extends InternalError {
   static min: number = 0;
   static max: number = 5;
 
   static validate = (scores: IReviewScores): void => {
     Object.keys(scores).forEach(name => {
       const score: number = (scores as any)[name] as number;
-      if (score > ReviewScoresRangeError.max) {
-        throw new ReviewScoresRangeError(name, true, score);
-      }
-      if (score < ReviewScoresRangeError.min) {
-        throw new ReviewScoresRangeError(name, false, score);
-      }
+      if (score > ReviewScoresRangeError.max) throw new ReviewScoresRangeError(name, true, score);
+      if (score < ReviewScoresRangeError.min) throw new ReviewScoresRangeError(name, false, score);
     });
   };
 
@@ -22,9 +20,9 @@ export class ReviewScoresRangeError extends EntityError {
     const message = isToBig
       ? `Score can't be bigger than ${ReviewScoresRangeError.max}.`
       : `Score shouldn't be smaller than ${ReviewScoresRangeError.min}.`;
-    super(
-      `${message} You've set ${invalidScoreName} to ${actualValue}`,
-      HttpStatusCodes.BadRequest,
-    );
+    super(`${message} You've set ${invalidScoreName} to ${actualValue}`, {
+      name: ErrorNames.ReviewScoresRange,
+      code: grpc.status.INVALID_ARGUMENT,
+    });
   }
 }

@@ -1,14 +1,17 @@
-import { HttpStatusCodes } from '@centsideas/enums';
-import { EntityError } from '@centsideas/utils';
+import * as grpc from '@grpc/grpc-js';
 
-export class ReviewIdRequiredError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
+
+export class ReviewIdRequiredError extends InternalError {
   static validate = (reviewId: string): void => {
-    if (!reviewId) {
-      throw new ReviewIdRequiredError();
-    }
+    if (!reviewId) throw new ReviewIdRequiredError();
   };
 
   constructor() {
-    super(`Review id required`, HttpStatusCodes.BadRequest);
+    super(`Review id required`, {
+      name: ErrorNames.ReviewIdRequired,
+      code: grpc.status.INVALID_ARGUMENT,
+    });
   }
 }

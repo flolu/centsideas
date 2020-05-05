@@ -1,8 +1,10 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
+
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
 import { IPushSubscription } from '@centsideas/models';
 
-export class PushSubscriptionInvalidError extends EntityError {
+export class PushSubscriptionInvalidError extends InternalError {
   static validate = (pushSub: IPushSubscription): void => {
     if (!pushSub) throw new PushSubscriptionInvalidError(`payload is required`);
     if (!pushSub.endpoint) throw new PushSubscriptionInvalidError(`endpoint is missing`);
@@ -12,6 +14,9 @@ export class PushSubscriptionInvalidError extends EntityError {
   };
 
   constructor(message: string) {
-    super(`Invalid push subscription: ${message}`, HttpStatusCodes.BadRequest);
+    super(`Invalid push subscription: ${message}`, {
+      name: ErrorNames.PushSubscriptionInvalid,
+      code: grpc.status.INVALID_ARGUMENT,
+    });
   }
 }

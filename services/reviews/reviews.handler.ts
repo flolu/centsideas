@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { sanitizeHtml, NotAuthenticatedError, NoPermissionError } from '@centsideas/utils';
+import { sanitizeHtml, UnauthenticatedError, PermissionDeniedError } from '@centsideas/utils';
 import { IReviewScores } from '@centsideas/models';
 
 import { ReviewErrors } from './errors';
@@ -11,14 +11,14 @@ import { ReviewRepository } from './review.repository';
 export class ReviewsHandler {
   constructor(private repository: ReviewRepository) {}
 
-  // TODO how to ensure that userId and ideaId are valid? (probably need to do check in gateway before sending it to here)
+  // FIXME how to ensure that userId and ideaId are valid? (probably need to do check in gateway before sending it to here)
   create = async (
     ideaId: string,
     userId: string,
     content: string,
     scores: IReviewScores,
   ): Promise<Review> => {
-    NotAuthenticatedError.validate(userId);
+    UnauthenticatedError.validate(userId);
     ReviewErrors.IdeaIdRequiredError.validate(ideaId);
     content = sanitizeHtml(content);
     ReviewErrors.SaveReviewPayloadRequiredError.validate(content, scores);
@@ -37,7 +37,7 @@ export class ReviewsHandler {
     content: string,
     scores: IReviewScores,
   ): Promise<Review> => {
-    NotAuthenticatedError.validate(userId);
+    UnauthenticatedError.validate(userId);
     ReviewErrors.ReviewIdRequiredError.validate(reviewId);
     content = sanitizeHtml(content);
     ReviewErrors.SaveReviewPayloadRequiredError.validate(content, scores);
@@ -45,18 +45,18 @@ export class ReviewsHandler {
     ReviewErrors.ReviewScoresRangeError.validate(scores);
 
     const review = await this.repository.findById(reviewId);
-    NoPermissionError.validate(userId, review.persistedState.userId);
+    PermissionDeniedError.validate(userId, review.persistedState.userId);
 
     review.update(content, scores);
     return this.repository.save(review);
   };
 
   delete = async (userId: string, reviewId: string): Promise<Review> => {
-    NotAuthenticatedError.validate(userId);
+    UnauthenticatedError.validate(userId);
     ReviewErrors.ReviewIdRequiredError.validate(reviewId);
 
     const review = await this.repository.findById(reviewId);
-    NoPermissionError.validate(userId, review.persistedState.userId);
+    PermissionDeniedError.validate(userId, review.persistedState.userId);
 
     review.delete();
     return this.repository.save(review);

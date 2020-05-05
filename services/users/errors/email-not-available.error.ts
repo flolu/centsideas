@@ -1,8 +1,13 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-export class EmailNotAvailableError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
+
+export class EmailNotAvailableError extends InternalError {
   constructor(email: string) {
-    super(`${email} is not available`, HttpStatusCodes.Conflict);
+    super(`${email} is not available`, {
+      name: ErrorNames.EmailNotAvailable,
+      code: grpc.status.INVALID_ARGUMENT,
+    });
   }
 }

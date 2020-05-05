@@ -26,6 +26,7 @@ lib_deps = [
     "@npm//query-string",
     "@npm//axios",
     "@npm//@types/node",
+    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

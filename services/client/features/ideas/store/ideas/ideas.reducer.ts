@@ -6,7 +6,7 @@ import { LoadStatus } from '@cic/shared';
 import { IdeasActions } from './ideas.actions';
 import { IIdeasReducerState } from './ideas.state';
 import { CreateIdeaActions } from '../create-idea';
-// TODO for some mysterious reason i can't import this from ../edit-idea
+// FIXME for some mysterious reason i can't import this from ../edit-idea
 import { EditIdeaActions } from '../edit-idea/edit-idea.actions';
 
 const adapter: EntityAdapter<IIdeaViewModel> = createEntityAdapter({

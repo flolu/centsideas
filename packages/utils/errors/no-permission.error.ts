@@ -1,18 +1,16 @@
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-import { EntityError } from '..';
+import { ErrorNames } from '@centsideas/enums';
 
-export class NoPermissionError extends EntityError {
+import { InternalError } from './internal.error';
+
+export class PermissionDeniedError extends InternalError {
   static validate = (auid: string | null, eligibleUserId: string): void => {
-    if (!auid) {
-      throw new NoPermissionError();
-    }
-    if (auid !== eligibleUserId) {
-      throw new NoPermissionError();
-    }
+    if (!auid) throw new PermissionDeniedError();
+    if (auid !== eligibleUserId) throw new PermissionDeniedError();
   };
 
   constructor() {
-    super(`No permission`, HttpStatusCodes.BadRequest);
+    super(`No permission`, { name: ErrorNames.NoPermission, code: grpc.status.PERMISSION_DENIED });
   }
 }

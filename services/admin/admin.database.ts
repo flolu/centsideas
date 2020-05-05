@@ -19,7 +19,6 @@ export class AdminDatabase {
     return collection.insertOne(event);
   };
 
-  // TODO "pagination" or better: endless scroll
   getEvents = async (): Promise<IEvent[]> => {
     const collection = await this.events();
     const events = await collection.find().sort({ timestamp: -1 });

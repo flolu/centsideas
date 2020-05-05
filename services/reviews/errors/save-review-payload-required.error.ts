@@ -1,12 +1,12 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
+
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
 import { IReviewScores } from '@centsideas/models';
 
-export class SaveReviewPayloadRequiredError extends EntityError {
+export class SaveReviewPayloadRequiredError extends InternalError {
   static validate = (content: string, scores: IReviewScores): void => {
-    if (!(content && scores)) {
-      throw new SaveReviewPayloadRequiredError(!content, !scores);
-    }
+    if (!(content && scores)) throw new SaveReviewPayloadRequiredError(!content, !scores);
   };
 
   constructor(contentMissing: boolean, scoresMissing: boolean) {
@@ -14,7 +14,10 @@ export class SaveReviewPayloadRequiredError extends EntityError {
       `Review content and scores are required to save an review. Missing: ${
         contentMissing ? 'content' : ''
       } ${scoresMissing ? ', scores' : ''}`,
-      HttpStatusCodes.BadRequest,
+      {
+        name: ErrorNames.SaveReviewPayloadRequired,
+        code: grpc.status.INVALID_ARGUMENT,
+      },
     );
   }
 }

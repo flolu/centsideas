@@ -1,14 +1,17 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-export class GoogleLoginCodeRequiredError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
+
+export class GoogleLoginCodeRequiredError extends InternalError {
   static validate = (code: string): void => {
-    if (!code) {
-      throw new GoogleLoginCodeRequiredError();
-    }
+    if (!code) throw new GoogleLoginCodeRequiredError();
   };
 
   constructor() {
-    super(`Google login code is required`, HttpStatusCodes.BadRequest);
+    super(`Google login code is required`, {
+      name: ErrorNames.GoogleLoginCodeRequired,
+      code: grpc.status.INVALID_ARGUMENT,
+    });
   }
 }

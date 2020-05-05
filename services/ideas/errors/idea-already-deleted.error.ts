@@ -1,14 +1,17 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-export class IdeaAlreadyDeletedError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+import { InternalError } from '@centsideas/utils';
+
+export class IdeaAlreadyDeletedError extends InternalError {
   static validate = (deleted: boolean, ideaId: string): void => {
-    if (deleted) {
-      throw new IdeaAlreadyDeletedError(`Idea with id: ${ideaId} has already been deleted`);
-    }
+    if (deleted) throw new IdeaAlreadyDeletedError(ideaId);
   };
 
-  constructor(message: string) {
-    super(message, HttpStatusCodes.Conflict);
+  constructor(ideaId: string) {
+    super(`Idea with id: ${ideaId} has already been deleted`, {
+      name: ErrorNames.IdeaAlreadyDeleted,
+      code: grpc.status.FAILED_PRECONDITION,
+    });
   }
 }

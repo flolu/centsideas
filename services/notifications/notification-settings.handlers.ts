@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { IPushSubscription, Dtos } from '@centsideas/models';
-import { NotAuthenticatedError, Identifier } from '@centsideas/utils';
+import { UnauthenticatedError, Identifier } from '@centsideas/utils';
 
 import { NotificationSettingsRepository } from './notification-settings.repository';
 import { NotificationSettings } from './notification-settings.entity';
@@ -12,7 +12,7 @@ export class NotificationSettingsHandlers {
   constructor(private nsRepository: NotificationSettingsRepository) {}
 
   async upsert(authenticatedUserId: string): Promise<NotificationSettings> {
-    NotAuthenticatedError.validate(authenticatedUserId);
+    UnauthenticatedError.validate(authenticatedUserId);
 
     const existingMapping = await this.nsRepository.userIdMapping.get(authenticatedUserId);
     if (existingMapping) {
@@ -32,7 +32,7 @@ export class NotificationSettingsHandlers {
     auid: string,
     subscription: IPushSubscription,
   ): Promise<NotificationSettings> {
-    NotAuthenticatedError.validate(auid);
+    UnauthenticatedError.validate(auid);
     NotificationSettingsErrors.PushSubscriptionInvalidError.validate(subscription);
 
     const ns = await this.nsRepository.findById(nsId);
@@ -53,8 +53,8 @@ export class NotificationSettingsHandlers {
     auid: string,
     settings: Dtos.INotificationSettingsDto,
   ): Promise<NotificationSettings> {
-    NotAuthenticatedError.validate(auid);
-    NotificationSettingsErrors.NotificationSettingsPayloadInvalid.validate(settings);
+    UnauthenticatedError.validate(auid);
+    NotificationSettingsErrors.NotificationSettingsPayloadInvalidError.validate(settings);
 
     const ns = await this.nsRepository.findById(nsId);
     ns.update(settings.sendEmails, settings.sendPushes);
@@ -63,7 +63,7 @@ export class NotificationSettingsHandlers {
   }
 
   async getSettings(auid: string) {
-    NotAuthenticatedError.validate(auid);
+    UnauthenticatedError.validate(auid);
     return this.getSettingsOfUser(auid);
   }
 

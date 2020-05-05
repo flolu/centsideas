@@ -29,6 +29,7 @@ lib_deps = [
     "@npm//inversify-express-utils",
     "@npm//helmet",
     "@npm//@types/helmet",
+    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

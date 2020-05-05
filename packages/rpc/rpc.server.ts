@@ -2,6 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import { injectable } from 'inversify';
 
 import { Logger } from '@centsideas/utils';
+
 import { loadProtoPackage } from './util';
 
 @injectable()
@@ -60,8 +61,25 @@ export class RpcServer {
     handler: (payload: any) => Promise<any>,
   ): grpc.handleUnaryCall<any, any> {
     return async (call, callback) => {
-      const response = await handler(call.request).catch(err => callback(err, null));
-      callback(null, response);
+      try {
+        const response = await handler(call.request);
+        callback(null, response);
+      } catch (error) {
+        const name = error.name;
+        const details = error.message;
+        const code = error.code || grpc.status.UNKNOWN;
+
+        const metadata = new grpc.Metadata();
+        if (error.name) metadata.add('name', error.name);
+
+        if (!name || name?.toLowerCase() === 'error' || name?.includes('unexpected')) {
+          Logger.error(error);
+          callback({ code, details, metadata, stack: error.stack }, null);
+        }
+
+        // TODO maybe also send expected errors to admin?!
+        callback({ code, details, metadata }, null);
+      }
     };
   }
 }

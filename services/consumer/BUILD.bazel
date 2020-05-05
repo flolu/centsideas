@@ -21,6 +21,7 @@ lib_deps = [
     "@npm//rxjs",
     "@npm//reflect-metadata",
     "@npm//@types/node",
+    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

@@ -26,7 +26,7 @@ export class NotificationsServer {
     private notificationsHandler: NotificationsHandlers,
     private rpcServer: RpcServer,
   ) {
-    // TODO also consider kafka connection in health checks
+    // FIXME also consider kafka connection in health checks
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);

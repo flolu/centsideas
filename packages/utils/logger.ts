@@ -4,6 +4,8 @@ import * as chalk from 'chalk';
 import { Services, Environments } from '@centsideas/enums';
 import { IEvent } from '@centsideas/models';
 
+import { InternalError } from './errors';
+
 type LogStyle = (...text: unknown[]) => string;
 
 class LoggerClass {
@@ -15,16 +17,14 @@ class LoggerClass {
     this.setupPrefixStyle();
   }
 
-  error(error: Error, info?: string) {
-    console.log(
-      this.prefix,
-      this.timestamp,
-      chalk.red.bold(error.name),
-      chalk.redBright.bold(error.message),
-    );
-    if (info) console.log(chalk.red(`with info: ${info}`));
-    if (this.service) console.log(chalk.reset(`from service: ${this.service}`));
-    console.log(chalk.red(error.stack));
+  error(error: any, details: string = '') {
+    console.log(this.timestamp, chalk.red.bold(error.name));
+    console.log(chalk.redBright(error.message));
+    if (!error.details) error.details = details;
+
+    if (error.details) console.log(chalk.red(`details: ${error.details}`));
+    if (error.service) console.log(chalk.red(`service: ${error.service}`));
+    console.log(chalk.red.dim(error.stack));
     // TODO send to admin service
   }
 

@@ -10,3 +10,4 @@ export * from './cookie-names.enum';
 export * from './notification-mediums.enum';
 export * from './services.enum';
 export * from './environments';
+export * from './error-names.enum';

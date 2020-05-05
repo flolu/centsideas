@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { sanitizeHtml, NotAuthenticatedError, NoPermissionError } from '@centsideas/utils';
+import { sanitizeHtml, UnauthenticatedError, PermissionDeniedError } from '@centsideas/utils';
 
 import { IdeaErrors } from './errors';
 import { Idea } from './idea.entity';
@@ -11,7 +11,7 @@ export class IdeasHandler {
   constructor(private repository: IdeaRepository) {}
 
   async create(userId: string | null, title: string, description: string): Promise<Idea> {
-    if (!userId) throw new NotAuthenticatedError();
+    if (!userId) throw new UnauthenticatedError();
 
     title = sanitizeHtml(title || '');
     description = sanitizeHtml(description || '');
@@ -32,7 +32,7 @@ export class IdeasHandler {
     title: string,
     description: string,
   ): Promise<Idea> {
-    if (!userId) throw new NotAuthenticatedError();
+    if (!userId) throw new UnauthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
 
     title = sanitizeHtml(title || '');
@@ -43,19 +43,19 @@ export class IdeasHandler {
     IdeaErrors.IdeaDescriptionLengthError.validate(description);
 
     const idea = await this.repository.findById(ideaId);
-    NoPermissionError.validate(userId, idea.persistedState.userId);
+    PermissionDeniedError.validate(userId, idea.persistedState.userId);
 
     idea.update(title, description);
     return this.repository.save(idea);
   }
 
   async delete(userId: string | null, ideaId: string): Promise<Idea> {
-    if (!userId) throw new NotAuthenticatedError();
+    if (!userId) throw new UnauthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
 
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
     const idea = await this.repository.findById(ideaId);
-    NoPermissionError.validate(userId, idea.persistedState.userId);
+    PermissionDeniedError.validate(userId, idea.persistedState.userId);
 
     IdeaErrors.IdeaAlreadyDeletedError.validate(idea.persistedState.deleted, ideaId);
     idea.delete();

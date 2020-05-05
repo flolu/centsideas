@@ -1,15 +1,20 @@
-import { EntityError } from '@centsideas/utils';
-import { HttpStatusCodes } from '@centsideas/enums';
+import * as grpc from '@grpc/grpc-js';
 
-export class TokenInvalidError extends EntityError {
+import { ErrorNames } from '@centsideas/enums';
+
+import { InternalError } from './internal.error';
+
+export class TokenInvalidError extends InternalError {
   constructor(invalidToken: string | null, extraInfo?: string) {
-    super(
-      extraInfo
-        ? `You provided an invalid token (${
-            invalidToken ? invalidToken.slice(0, 10) : 'null'
-          }...) ${extraInfo}`
-        : `You provided an invalid token (${invalidToken ? invalidToken.slice(0, 10) : 'null'}...)`,
-      HttpStatusCodes.BadRequest,
-    );
+    const message = extraInfo
+      ? `You provided an invalid token (${
+          invalidToken ? invalidToken.slice(0, 10) : 'null'
+        }...) ${extraInfo}`
+      : `You provided an invalid token (${invalidToken ? invalidToken.slice(0, 10) : 'null'}...)`;
+
+    super(message, {
+      name: ErrorNames.TokenInvalid,
+      code: grpc.status.UNAUTHENTICATED,
+    });
   }
 }
