@@ -3,14 +3,30 @@ import { inject } from 'inversify';
 import { interfaces, controller, httpGet } from 'inversify-express-utils';
 
 import { ApiEndpoints, AdminApiRoutes } from '@centsideas/enums';
-import { IIdeaQueries, IAdminQueries } from '@centsideas/rpc';
+import { IIdeaQueries, IAdminQueries, RpcClient, RpcClientFactory } from '@centsideas/rpc';
+
+import { GatewayEnvironment } from './gateway.environment';
 import TYPES from './types';
 
 @controller('')
 export class QueryController implements interfaces.Controller {
+  private ideasRpc: RpcClient<IIdeaQueries> = this.ideasRpcFactory(
+    this.env.consumerRpcHost,
+    this.env.consumerRpcPort,
+    'idea',
+    'IdeaQueries',
+  );
+  private adminRpc: RpcClient<IAdminQueries> = this.adminRpcFactory(
+    this.env.adminRpcHost,
+    this.env.adminRpcPort,
+    'admin',
+    'AdminQueries',
+  );
+
   constructor(
-    @inject(TYPES.IDEAS_QUERY_RPC_CLIENT) private ideasRpc: IIdeaQueries,
-    @inject(TYPES.ADMIN_QUERY_RPC_CLIENT) private adminRpc: IAdminQueries,
+    private env: GatewayEnvironment,
+    @inject(TYPES.RPC_CLIENT_FACTORY) private ideasRpcFactory: RpcClientFactory,
+    @inject(TYPES.RPC_CLIENT_FACTORY) private adminRpcFactory: RpcClientFactory,
   ) {}
 
   @httpGet(``)
@@ -25,18 +41,18 @@ export class QueryController implements interfaces.Controller {
 
   @httpGet(`/${ApiEndpoints.Ideas}`)
   async getIdeas() {
-    const { ideas } = await this.ideasRpc.getAll(undefined);
+    const { ideas } = await this.ideasRpc.client.getAll(undefined);
     return ideas || [];
   }
 
   @httpGet(`/${ApiEndpoints.Ideas}/:id`)
   getIdeaById(req: express.Request) {
-    return this.ideasRpc.getById({ id: req.params.id });
+    return this.ideasRpc.client.getById({ id: req.params.id });
   }
 
   @httpGet(`/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)
   async getAdminEvents() {
-    const { events } = await this.adminRpc.getEvents(undefined);
+    const { events } = await this.adminRpc.client.getEvents(undefined);
     return events;
   }
 }

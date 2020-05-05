@@ -4,8 +4,6 @@ import * as chalk from 'chalk';
 import { Services, Environments } from '@centsideas/enums';
 import { IEvent } from '@centsideas/models';
 
-import { InternalError } from './errors';
-
 type LogStyle = (...text: unknown[]) => string;
 
 class LoggerClass {

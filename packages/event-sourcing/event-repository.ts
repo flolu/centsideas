@@ -18,6 +18,8 @@ interface IDatabaseEvent extends IEvent {
 
 // FIXME create indexes to increase read performance
 
+// TODO factory for injecting
+
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> {
   private client = new MongoClient(this.databaseUrl, {

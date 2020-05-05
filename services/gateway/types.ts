@@ -1,9 +1,5 @@
-export default {
-  IDEAS_QUERY_RPC_CLIENT: Symbol(),
-  ADMIN_QUERY_RPC_CLIENT: Symbol(),
+// NOW keep here or move?
 
-  IDEAS_COMMAND_RPC_CLIENT: Symbol(),
-  USERS_COMMAND_RPC_CLIENT: Symbol(),
-  AUTH_COMMAND_RPC_CLIENT: Symbol(),
-  NOTIFICATIONS_COMMAND_RPC_CLIENT: Symbol(),
+export default {
+  RPC_CLIENT_FACTORY: Symbol.for('Factory<RpcClient>'),
 };

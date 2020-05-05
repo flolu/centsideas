@@ -1,5 +1,5 @@
-import { injectable } from 'inversify';
 import * as grpc from '@grpc/grpc-js';
+import { injectable, interfaces } from 'inversify';
 
 import { loadProtoPackage } from './util';
 
@@ -8,16 +8,11 @@ export class RpcClient<IClientService = any> {
   private internalRpcClient!: grpc.Client;
   client!: IClientService;
 
-  constructor(
-    private host: string,
-    private port: number,
-    private packageName: string,
-    private serviceName: string,
-  ) {
-    const protoPackage = loadProtoPackage(this.packageName);
-    const serviceDefinition = (protoPackage as any)[this.serviceName];
+  initialize(host: string, port: number, packageName: string, serviceName: string) {
+    const protoPackage = loadProtoPackage(packageName);
+    const serviceDefinition = (protoPackage as any)[serviceName];
     this.internalRpcClient = new serviceDefinition(
-      `${this.host}:${this.port}`,
+      `${host}:${port}`,
       grpc.credentials.createInsecure(),
     );
 
@@ -46,3 +41,18 @@ export class RpcClient<IClientService = any> {
     });
   }
 }
+
+export type RpcClientFactory = (
+  host: string,
+  port: number,
+  packageName: string,
+  serviceName: string,
+) => RpcClient<any>;
+
+export const rpcClientFactory = (context: interfaces.Context): RpcClientFactory => {
+  return (host, port, packageName, serviceName) => {
+    const rpcClient = context.container.get(RpcClient);
+    rpcClient.initialize(host, port, packageName, serviceName);
+    return rpcClient;
+  };
+};

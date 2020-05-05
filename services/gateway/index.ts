@@ -5,9 +5,9 @@ import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Gateway;
-import { registerProviders, getProvider, registerConstant } from '@centsideas/utils';
+import { registerProviders, getProvider, registerFactory } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
-import { RpcClient } from '@centsideas/rpc';
+import { RpcClient, rpcClientFactory } from '@centsideas/rpc';
 
 import { GatewayServer } from './gateway.server';
 import { GatewayEnvironment } from './gateway.environment';
@@ -23,43 +23,8 @@ registerProviders(
   QueryController,
   CommandController,
   AuthMiddleware,
+  RpcClient,
 );
-
-const env: GatewayEnvironment = getProvider(GatewayEnvironment);
-
-registerConstant(
-  TYPES.IDEAS_QUERY_RPC_CLIENT,
-  new RpcClient(env.consumerRpcHost, env.consumerRpcPort, 'idea', 'IdeaQueries').client,
-);
-
-registerConstant(
-  TYPES.ADMIN_QUERY_RPC_CLIENT,
-  new RpcClient(env.adminRpcHost, env.adminRpcPort, 'admin', 'AdminQueries').client,
-);
-
-registerConstant(
-  TYPES.IDEAS_COMMAND_RPC_CLIENT,
-  new RpcClient(env.ideasHost, env.ideasRpcPort, 'idea', 'IdeaCommands').client,
-);
-
-registerConstant(
-  TYPES.USERS_COMMAND_RPC_CLIENT,
-  new RpcClient(env.usersHost, env.usersRpcPort, 'user', 'UserCommands').client,
-);
-
-registerConstant(
-  TYPES.AUTH_COMMAND_RPC_CLIENT,
-  new RpcClient(env.usersHost, env.usersRpcPort, 'auth', 'AuthCommands').client,
-);
-
-registerConstant(
-  TYPES.NOTIFICATIONS_COMMAND_RPC_CLIENT,
-  new RpcClient(
-    env.notificationsRpcHost,
-    env.notificationsRpcPort,
-    'notification',
-    'NotificationCommands',
-  ),
-);
+registerFactory(TYPES.RPC_CLIENT_FACTORY, rpcClientFactory);
 
 getProvider(GatewayServer);

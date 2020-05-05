@@ -5,6 +5,8 @@ import { Logger } from '@centsideas/utils';
 
 import { loadProtoPackage } from './util';
 
+// TODO factory
+
 @injectable()
 export class RpcServer {
   isRunning = false;
