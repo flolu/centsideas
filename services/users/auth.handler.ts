@@ -121,8 +121,10 @@ export class AuthHandler {
       const loginId = Identifier.makeLongId();
       const login = Login.createGoogleLogin(loginId, userInfo.email, true, userInfo.id);
 
-      // FIXME set username based on google username
-      const createdUser = await this.handleUserCreation(userInfo.email);
+      const createdUser = await this.handleUserCreation(userInfo.email, [
+        userInfo.name,
+        userInfo.given_name,
+      ]);
       await this.userRepository.googleIdMapping.insert(createdUser.persistedState.id, userInfo.id);
       return this.handleConfirmedLogin(createdUser, login);
     }
@@ -157,24 +159,29 @@ export class AuthHandler {
 
   logout = async (userId: string) => {
     UserErrors.UserIdRequiredError.validate(userId);
-    // FIXME save logout event?
-    return true;
+
+    const user = await this.userRepository.findById(userId);
+    user.logout();
+
+    return this.userRepository.save(user);
   };
 
-  private handleUserCreation = async (email: string): Promise<User> => {
+  private handleUserCreation = async (
+    email: string,
+    usernamesToTry: string[] = [],
+  ): Promise<User> => {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
 
     await this.userRepository.checkEmailAvailability(email);
 
-    const username: string = faker.internet.userName().toLowerCase().toString();
-    await this.userRepository.checkUsernameAvailibility(username);
+    const username = await this.generateUsername(usernamesToTry);
 
     const userId = await this.userRepository.generateAggregateId();
     const refreshTokenId = Identifier.makeLongId();
     const user = User.create(userId, email, username, refreshTokenId);
 
-    // FIXME somehow make sure all three succeed to complte the user creation
+    // FIXME somehow make sure all three succeed to complete the user creation (we probably need compensations events if not)
     await this.userRepository.usernameMapping.insert(userId, username);
     await this.userRepository.emailMapping.insert(userId, email);
     return this.userRepository.save(user);
@@ -241,5 +248,22 @@ export class AuthHandler {
   private getGoogleRedirectUri = () => {
     const frontendUrl = this.globalEnv.mainClientUrl;
     return `${frontendUrl}/${TopLevelFrontendRoutes.Login}`;
+  };
+
+  private generateUsername = (usernames: string[] = []) => {
+    let counter = -1;
+    const maxTries = 5;
+
+    const check = (): Promise<string> =>
+      new Promise(async (resolve, reject) => {
+        counter++;
+        const name = usernames[counter] || faker.internet.userName();
+        const available = await this.userRepository.checkUsernameAvailibility(name);
+        if (available) return resolve(name);
+        if (counter >= maxTries) reject(`Usernsame couldn't be generated`);
+        resolve(check());
+      });
+
+    return check();
   };
 }

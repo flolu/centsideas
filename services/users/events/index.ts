@@ -9,6 +9,7 @@ import { UserUpdatedEvent } from './user-updated.event';
 import { UserCreatedEvent } from './user-created.event';
 import { GoogleLoginRequestedEvent } from './google-login-requested.event';
 import { RefreshTokenRevokedEvent } from './refresh-token-revoked.event';
+import { UserLoggedOutEvent } from './user-logged-out.event';
 
 export const UserEvents = {
   UserCreatedEvent,
@@ -16,6 +17,7 @@ export const UserEvents = {
   EmailChangeRequestedEvent,
   EmailChangeConfirmedEvent,
   RefreshTokenRevokedEvent,
+  UserLoggedOutEvent,
 };
 
 export const LoginEvents = {

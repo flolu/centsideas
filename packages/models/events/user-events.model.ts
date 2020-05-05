@@ -27,3 +27,7 @@ export interface IRefreshTokenRevokedEvent {
   reason: string;
   newRefreshTokenId: string;
 }
+
+export interface IUserLoggedOutEvent {
+  userId: string;
+}

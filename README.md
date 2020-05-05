@@ -4,46 +4,45 @@ This is a project with the purpose of learning the architecture of complex appli
 
 # Goals
 
-| Requirement                                    | Keywords                                   | Status |
-| ---------------------------------------------- | ------------------------------------------ | ------ |
-| Microservices                                  | small services, docker                     | ✔️     |
-| Redux frontend                                 | reactive, actions, effects                 | ✔️     |
-| Monorepo                                       | all packages and services in one repo      | ✔️     |
-| Typescript                                     | types everywhere!                          | ✔️     |
-| Local development                              | hot reload, docker-compose, vscode, ubuntu | ✔️     |
-| Git flow                                       | branching, releases, rebasing              | ✔️     |
-| Gateway                                        | discovery, entry point, auth               | ✔️     |
-| Authentication                                 | passwordless, google login                 | ✔️     |
-| Progressive Web App                            | pwa, service worker, mobile-friendly       | ✔️     |
-| Frontend                                       | code splitting, 100% lighthouse score      | ✔️     |
-| [Event sourcing](https://youtu.be/GzrZworHpIk) | event-driven, commands, message broker     | ✅     |
-| Deployment                                     | ci, cd, build automation, bazel            | ✅     |
-| Testing                                        | unit tests, integration Tests              | ✅     |
-| Kubernetes                                     | container orchestration                    | ✅     |
-| Database(s)                                    | data storage, event store, backups         | ✅     |
-| Search Engine Optimization                     | server side rendering, marketing, google   | ✅     |
-| Security                                       | encryption, https                          | ✅     |
-| Push notifications                             | mobile and desktop                         | ✅     |
-| Local Kubernetes Cluster                       | microk8s                                   | ✅     |
-| Remote Procedure Calls                         | grpc, protobuf                             | ✅     |
-| Admin panel                                    | monitoring, event handling, logs           | ❌     |
-| Realtime                                       | some kind of realtime integration          | ❌     |
-| File storage                                   | blob storage, encrypted, access control    | ❌     |
-| General Data Protection Regulation             | legal, privacy, gdpr, eu law               | ❌     |
-| Backups                                        | automatic, manual, restore                 | ❌     |
-| Multi-Language                                 | change language, easily add more           | ❌     |
-| Static pages                                   | homepage, static content                   | ❌     |
-| Search                                         | indexing, realtime search                  | ❌     |
-| User Interface                                 | modern, drag&drop, touch gestures          | ❌     |
-| Trusted Web Activity                           | twa, publish app on play store             | ❌     |
-| Message Queue                                  | batching, scheduled tasks                  | ❌     |
-| Compute server                                 | non-nodejs server for high cpu tasks       | ❌     |
-| Payments                                       | payout, credit card, paypal                | ❌     |
-| Recommendation System                          | machine learning                           | ❌     |
+| Requirement                                    | Keywords                                                      | Status |
+| ---------------------------------------------- | ------------------------------------------------------------- | ------ |
+| Microservices                                  | **small services**, **docker**                                | ✔️     |
+| Redux frontend                                 | **reactive**, **actions**, **effects**                        | ✔️     |
+| Monorepo                                       | **all packages and services in one repo**                     | ✔️     |
+| Typescript                                     | **types everywhere!**                                         | ✔️     |
+| Local development                              | **hot reload**, **docker-compose**, **vscode**, **ubuntu**    | ✔️     |
+| Gateway                                        | **discovery**, **entry point**, **auth**                      | ✔️     |
+| Authentication                                 | **passwordless**, **google login**                            | ✔️     |
+| Progressive Web App                            | **pwa**, **service worker**, mobile-friendly                  | ✔️     |
+| Frontend                                       | **code splitting**, **~100% lighthouse score**                | ✔️     |
+| Remote Procedure Calls                         | **grpc**, **protobuf**, grpc-web                              | ✔️     |
+| Local Kubernetes Cluster                       | **microk8s**                                                  | ✔️     |
+| [Event sourcing](https://youtu.be/GzrZworHpIk) | **event-driven**, **commands**, message broker, replay events | ✅     |
+| Deployment                                     | ci, cd, **build automation**, **bazel**                       | ✅     |
+| Testing                                        | **unit tests**, integration tests, ~100% coverage             | ✅     |
+| Kubernetes                                     | **container orchestration**, autoscaling, rolling updates     | ✅     |
+| Database(s)                                    | **data storage**, **event store**, backups                    | ✅     |
+| Search Engine Optimization                     | **server side rendering**, marketing, google                  | ✅     |
+| Security                                       | encryption, **https**                                         | ✅     |
+| Push notifications                             | mobile, **desktop**                                           | ✅     |
+| Admin panel                                    | monitoring, **events**, logs, errors, prometheus, realtime    | ✅     |
+| Realtime                                       | some kind of realtime integration, socketio, grpc             | ❌     |
+| File storage                                   | blob storage, encrypted, access control                       | ❌     |
+| General Data Protection Regulation             | legal, privacy, gdpr, eu law                                  | ❌     |
+| Backups                                        | automatic, manual, restore                                    | ❌     |
+| Multi-Language                                 | change language, easily add more                              | ❌     |
+| Static pages                                   | homepage, static content                                      | ❌     |
+| Search                                         | indexing, realtime search                                     | ❌     |
+| User Interface                                 | modern, drag&drop, touch gestures                             | ❌     |
+| Trusted Web Activity                           | twa, publish app on play store                                | ❌     |
+| Message Queue                                  | batching, scheduled tasks                                     | ❌     |
+| Compute server                                 | non-nodejs server for high cpu/gpu tasks                      | ❌     |
+| Payments                                       | payout, credit card, paypal, altcoins                         | ❌     |
+| Recommendation System                          | machine learning                                              | ❌     |
 
-✔️ Completely implemented
-✅ Partly implemented
-❌ Not yet implemented
+✔️ Completely implemented,
+✅ Partly implemented,
+❌ Not yet implemented, **bold** tags are done
 
 # Commands
 

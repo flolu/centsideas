@@ -43,8 +43,6 @@ data:
   kafkaZookeeperConnect: ${kafkaZookeeperConnect}
   kafkaAdvertisedPort: "${kafkaAdvertisedPort}"
   kafkaBrokerHost: ${kafkaBrokerHost}
-
-  # TODO deduplicate
   KAFKA_ADVERTISED_HOST_NAME: ${kafkaAdvertisedHostName}
   KAFKA_ZOOKEEPER_CONNECT: ${kafkaZookeeperConnect}
   KAFKA_ADVERTISED_PORT: "${kafkaAdvertisedPort}"

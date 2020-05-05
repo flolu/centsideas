@@ -25,6 +25,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
         req = this.setRequestAuthHeader(req, authState.accessToken);
         return next.handle(req).pipe(
           catchError(error => {
+            console.log('error in intercetpor', error);
             if (error instanceof HttpErrorResponse && error.status === HttpStatusCodes.Unauthorized)
               return this.handleAccessTokenRefresh(req, next);
             return throwError(error);
@@ -34,7 +35,6 @@ export class AuthTokenInterceptor implements HttpInterceptor {
     );
   }
 
-  // TODO double check if this works
   private handleAccessTokenRefresh = (
     req: HttpRequest<any>,
     next: HttpHandler,

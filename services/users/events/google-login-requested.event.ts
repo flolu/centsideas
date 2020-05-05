@@ -13,14 +13,6 @@ export class GoogleLoginRequestedEvent extends Event<IGoogleLoginRequestedEvnet>
     state.id = event.aggregateId;
     state.createdAt = event.timestamp;
     state.email = event.data.email;
-    // FIXME consider adding  the google user id to the login state (but this is probably not that important since it is saved on the event if we would really need it later)
-    /**
-     * {
-     *    oauth: {
-     *        googleId: string;
-     *    }
-     * }
-     */
     return state;
   }
 }

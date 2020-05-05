@@ -53,4 +53,9 @@ export class User extends EventEntity<IUserState> {
     );
     return this;
   }
+
+  logout() {
+    this.pushEvents(new UserEvents.UserLoggedOutEvent(this.currentState.id));
+    return this;
+  }
 }

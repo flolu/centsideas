@@ -19,6 +19,7 @@ export enum UserEvents {
   UserLoggedIn = 'user-logged-in',
   UserUpdated = 'user-updated',
   UserCreated = 'user-created',
+  UserLoggedOut = 'user-logged-out',
   RefreshTokenRevoked = 'refresh-token-revoked',
 }
 

@@ -56,11 +56,10 @@ export class GatewayServer {
   }
 
   private isOriginAllowed = (origin: string | undefined) => {
-    // TODO why is origin undefined sometimes? should it be blocked?
-    if (origin === undefined) return true;
-
     if (this.globalEnv.environment === Environments.Dev) return true;
-    if (this.env.corsWhitelist.includes(origin)) return true;
+    if (origin && this.env.corsWhitelist.includes(origin)) return true;
+
+    if (origin === undefined) Logger.info('Origin is undefined');
 
     return false;
   };

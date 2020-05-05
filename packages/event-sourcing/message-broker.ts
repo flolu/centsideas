@@ -6,7 +6,7 @@ import { Identifier, Logger } from '@centsideas/utils';
 import { IEvent } from '@centsideas/models';
 import { GlobalEnvironment } from '@centsideas/environment';
 
-// TODO it will probably make more sense to split message broker into a producer and consumer class
+// FIXME it will probably make more sense to split message broker into a producer and consumer class
 
 @injectable()
 export class MessageBroker {

@@ -15,7 +15,7 @@ export class UserCreatedEvent extends Event<IUserCreatedEvent> {
     state.updatedAt = event.timestamp;
     state.createdAt = event.timestamp;
     state.email = event.data.email;
-    state.username = event.data.username;
+    state.username = event.data.username.toLowerCase();
     return state;
   }
 }

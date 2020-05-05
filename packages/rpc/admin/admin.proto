@@ -17,7 +17,6 @@ message Event {
   string id = 1;
   string aggregateId = 2;
   string name = 3;
-  // TODO consider oneof https://developers.google.com/protocol-buffers/docs/proto3#oneof
   google.protobuf.Any data = 4;
   string timestamp = 5;
   int32 eventNumber = 6;
