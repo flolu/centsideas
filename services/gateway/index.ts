@@ -7,6 +7,7 @@ import { Services } from '@centsideas/enums';
 import { DependencyInjection, UTILS_TYPES, Logger } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
 import { RpcClient, rpcClientFactory, RPC_TYPES } from '@centsideas/rpc';
+import { MessageBroker } from '@centsideas/event-sourcing';
 
 import { GatewayServer } from './gateway.server';
 import { GatewayEnvironment } from './gateway.environment';
@@ -19,6 +20,7 @@ DependencyInjection.registerProviders(
   GatewayEnvironment,
   GlobalEnvironment,
   QueryController,
+  MessageBroker,
   CommandController,
   AuthMiddleware,
   RpcClient,

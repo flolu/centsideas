@@ -1,7 +1,8 @@
 import * as grpc from '@grpc/grpc-js';
 import { injectable, interfaces } from 'inversify';
 
-import { Logger } from '@centsideas/utils';
+import { MessageBroker } from '@centsideas/event-sourcing';
+import { Logger, InternalError } from '@centsideas/utils';
 
 import { loadProtoPackage } from './util';
 
@@ -11,7 +12,7 @@ export class RpcServer {
 
   private server = new grpc.Server();
 
-  constructor(private logger: Logger) {}
+  constructor(private logger: Logger, private messageBroker: MessageBroker) {}
 
   initialize(port: number, host = '0.0.0.0') {
     this.server.bindAsync(
@@ -19,7 +20,11 @@ export class RpcServer {
       grpc.ServerCredentials.createInsecure(),
       (err, listeningPort) => {
         if (err) {
-          this.logger.error(err, `while binding rpc server (port: ${listeningPort})`);
+          const errorPayload = this.logger.error(
+            err,
+            `while binding rpc server (port: ${listeningPort})`,
+          );
+          this.messageBroker.dispatchError(errorPayload);
           throw err;
         }
         this.logger.info(`rpc server running on ${listeningPort}`);
@@ -66,17 +71,16 @@ export class RpcServer {
         const name = error.name;
         const details = error.message;
         const code = error.code || grpc.status.UNKNOWN;
-
         const metadata = new grpc.Metadata();
+
         if (error.name) metadata.add('name', error.name);
 
-        if (!name || name?.toLowerCase() === 'error' || name?.includes('unexpected')) {
-          this.logger.error(error);
+        if (InternalError.isUnexpected(name))
           callback({ code, details, metadata, stack: error.stack }, null);
-        }
+        else callback({ code, details, metadata }, null);
 
-        // TODO maybe also send expected errors to admin?!
-        callback({ code, details, metadata }, null);
+        const errorPayload = this.logger.error(error);
+        await this.messageBroker.dispatchError(errorPayload);
       }
     };
   }

@@ -10,6 +10,7 @@ export class AdminEnvironment {
   };
   adminDatabaseUrl = environment.adminDatabaseUrl;
   adminDatabaseName = 'admin';
+  errorDatabaseName = 'errors';
   eventsCollectionName = 'events';
   rpcPort = environment.adminRpcPort;
 }

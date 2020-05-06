@@ -11,7 +11,7 @@
     "deploy:microk8s": "yarn env:setup:staging && bazelisk run :microk8s.apply",
     "lint": "tslint --project .",
     "up": "yarn upgrade-interactive --latest",
-    "docker": "docker-compose up --build --no-color",
+    "docker": "docker-compose up --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "clean": "yarn env:clean && rm -rf node_modules && bazelisk clean",
     "env:clean": "ts-node packages/environment/clean",
     "env:setup": "ts-node packages/environment/setups/dev",

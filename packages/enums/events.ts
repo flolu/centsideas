@@ -40,3 +40,7 @@ export enum NotificationsEvents {
   Created = 'notification-created',
   Sent = 'notification-sent',
 }
+
+export enum ErrorEvents {
+  ErrorOccurred = 'error-occurred',
+}

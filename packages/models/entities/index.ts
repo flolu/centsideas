@@ -5,3 +5,4 @@ export * from './login-entity.model';
 export * from './notification-settings.model';
 export * from './notification.model';
 export * from './event-base.model';
+export * from './error-entity.model';

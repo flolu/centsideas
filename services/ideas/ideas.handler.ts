@@ -1,17 +1,19 @@
 import { injectable } from 'inversify';
 
 import { sanitizeHtml, UnauthenticatedError, PermissionDeniedError } from '@centsideas/utils';
+import { CreateIdea, UpdateIdea, DeleteIdea } from '@centsideas/rpc';
 
 import { IdeaErrors } from './errors';
 import { Idea } from './idea.entity';
 import { IdeaRepository } from './idea.repository';
-import { CreateIdea, UpdateIdea, DeleteIdea } from '@centsideas/rpc';
 
 @injectable()
 export class IdeasHandler {
   constructor(private repository: IdeaRepository) {}
 
   create: CreateIdea = async ({ userId, title, description }) => {
+    throw new Error("woowwowoow this wasn't exprected : )(");
+
     if (!userId) throw new UnauthenticatedError();
 
     title = sanitizeHtml(title || '');
@@ -41,6 +43,10 @@ export class IdeasHandler {
 
     const idea = await this.repository.findById(ideaId);
     PermissionDeniedError.validate(userId, idea.persistedState.userId);
+    IdeaErrors.IdeaAlreadyDeletedError.validate(
+      idea.persistedState.deleted,
+      idea.persistedState.id,
+    );
 
     idea.update(title, description);
 

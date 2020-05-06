@@ -14,9 +14,11 @@ import {
   GetAdminEvents,
 } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
+import { OtherTopics } from '@centsideas/enums';
 
 import { AdminDatabase } from './admin.database';
 import { AdminEnvironment } from './admin.environment';
+import { ErrorRepository } from './error.repository';
 
 // TODO secure the connection to admin
 // FIXME delete events older than a month (otherwise the admin db would become bigger than all other dbs together)
@@ -33,6 +35,7 @@ export class AdminServer {
     private messageBroker: MessageBroker,
     private adminDatabase: AdminDatabase,
     private logger: Logger,
+    private errorRepository: ErrorRepository,
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
@@ -42,7 +45,21 @@ export class AdminServer {
 
     this.setupSocketIO();
 
-    this.messageBroker.events(/centsideas-.*/i).subscribe(this.adminDatabase.insertEvent);
+    /**
+     * Listen for every event that happends in the whole application
+     * and save it to the admin database
+     */
+    // NOW unexpected errors arent persisted for some reasone
+    // NOW event data isn't persisted for some reason
+    this.messageBroker.events(/centsideas.events..*/i).subscribe(this.adminDatabase.insertEvent);
+
+    /**
+     * Listen for errrors that happened (will be sent from the Logger)
+     * and create an "error-occurred-event" from the payload
+     */
+    this.messageBroker
+      .listen(OtherTopics.OccurredErrors)
+      .subscribe(this.errorRepository.handleErrorOccurred);
 
     const adminQueries = this.rpcServer.loadService('admin', 'AdminQueries');
     this.rpcServer.addService<IAdminQueries>(adminQueries, {
@@ -62,7 +79,7 @@ export class AdminServer {
       let connected = true;
 
       this.messageBroker
-        .events(/centsideas-.*/i)
+        .events(/centsideas.events..*/i)
         .pipe(
           takeWhile(() => connected),
           tap(event => {

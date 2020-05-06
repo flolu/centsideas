@@ -20,4 +20,8 @@ export class InternalError extends Error {
     this.code = options.code;
     this.details = options.details || this.details;
   }
+
+  static isUnexpected(name: string) {
+    return !name || name?.toLowerCase() === 'error' || name?.includes('unexpected');
+  }
 }

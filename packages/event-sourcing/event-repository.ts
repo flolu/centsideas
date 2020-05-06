@@ -32,9 +32,10 @@ export abstract class EventRepository<Entity extends IEventEntity> {
   private readonly snapshotsCollectionSuffix = 'snapshots';
   private readonly counterCollectionSuffix = 'counters';
 
-  @inject(Logger) private logger!: Logger;
+  @inject(Logger) logger!: Logger;
 
   constructor(
+    // TODO i might aswell just inject the message broker now
     private dispatchEvents: (topic: string, events: IEvent[]) => void,
     private entity: new (snapshot?: ISnapshot) => Entity,
     private databaseUrl: string,

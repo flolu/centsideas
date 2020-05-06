@@ -4,7 +4,7 @@ import { Socket } from 'ngx-socket-io';
 
 import { IEvent } from '@centsideas/models';
 import { ENVIRONMENT, IAdminClientEnvironment } from '@cia/environment';
-import { ApiEndpoints, AdminApiRoutes } from '@centsideas/enums';
+import { ApiEndpoints, AdminApiRoutes, ErrorEvents } from '@centsideas/enums';
 
 @Component({
   selector: 'cia-root',
@@ -12,7 +12,11 @@ import { ApiEndpoints, AdminApiRoutes } from '@centsideas/enums';
     <h1>Admin Panel</h1>
     <h2>Events</h2>
     <div class="events">
-      <div *ngFor="let event of events">
+      <div
+        *ngFor="let event of events"
+        [class.error]="isExpectedError(event)"
+        [class.unexpected_error]="isUnexpectedError(event)"
+      >
         <pre>{{ event | json }}</pre>
       </div>
     </div>
@@ -21,6 +25,14 @@ import { ApiEndpoints, AdminApiRoutes } from '@centsideas/enums';
     `
       .events {
         overflow: scroll;
+      }
+
+      .error {
+        background: #ffd6d4;
+      }
+
+      .unexpected_error {
+        background: #ff7e75;
       }
     `,
   ],
@@ -39,5 +51,13 @@ export class AppComponent {
         this.events = events;
         this.socket.on('event', event => (this.events = [JSON.parse(event), ...this.events]));
       });
+  }
+
+  isExpectedError(event: IEvent) {
+    return event.name === ErrorEvents.ErrorOccurred && !event.data.unexpected;
+  }
+
+  isUnexpectedError(event: IEvent) {
+    return event.name === ErrorEvents.ErrorOccurred && event.data.unexpected;
   }
 }
