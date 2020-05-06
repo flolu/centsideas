@@ -5,7 +5,7 @@ import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Admin;
-import { registerProviders, getProvider, registerFactory } from '@centsideas/utils';
+import { DependencyInjection } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { GlobalEnvironment } from '@centsideas/environment';
 
@@ -14,7 +14,7 @@ import { AdminEnvironment } from './admin.environment';
 import { AdminDatabase } from './admin.database';
 import { RpcServer, RPC_TYPES, rpcServerFactory } from '@centsideas/rpc';
 
-registerProviders(
+DependencyInjection.registerProviders(
   AdminServer,
   AdminEnvironment,
   MessageBroker,
@@ -22,9 +22,7 @@ registerProviders(
   GlobalEnvironment,
   RpcServer,
 );
-
-registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
-
-getProvider(AdminServer);
+DependencyInjection.registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
+DependencyInjection.bootstrap(AdminServer);
 
 // TODO store unexpected errors in admin service db (connect to logger)

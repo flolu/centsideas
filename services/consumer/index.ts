@@ -6,7 +6,7 @@ import 'reflect-metadata';
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Consumer;
 import { MessageBroker } from '@centsideas/event-sourcing';
-import { getProvider, registerProviders, registerFactory } from '@centsideas/utils';
+import { DependencyInjection } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
 import { RpcServer, RPC_TYPES, rpcServerFactory } from '@centsideas/rpc';
 
@@ -18,7 +18,7 @@ import { ReviewsProjection } from './reviews.projection';
 import { UsersProjection } from './users.projection';
 import { ConsumerEnvironment } from './consumer.environment';
 
-registerProviders(
+DependencyInjection.registerProviders(
   MessageBroker,
   ConsumerServer,
   ProjectionDatabase,
@@ -30,7 +30,5 @@ registerProviders(
   GlobalEnvironment,
   RpcServer,
 );
-
-registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
-
-getProvider(ConsumerServer);
+DependencyInjection.registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
+DependencyInjection.bootstrap(ConsumerServer);

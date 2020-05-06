@@ -5,7 +5,7 @@ import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Reviews;
-import { registerProviders, getProvider, registerFactory } from '@centsideas/utils';
+import { DependencyInjection } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { RPC_TYPES, rpcServerFactory, RpcServer } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
@@ -15,7 +15,7 @@ import { ReviewsHandler } from './reviews.handler';
 import { ReviewRepository } from './review.repository';
 import { ReviewsEnvironment } from './reviews.environment';
 
-registerProviders(
+DependencyInjection.registerProviders(
   ReviewsServer,
   ReviewsHandler,
   ReviewRepository,
@@ -24,7 +24,5 @@ registerProviders(
   GlobalEnvironment,
   RpcServer,
 );
-
-registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
-
-getProvider(ReviewsServer);
+DependencyInjection.registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
+DependencyInjection.bootstrap(ReviewsServer);

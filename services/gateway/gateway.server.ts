@@ -7,7 +7,7 @@ import * as grpc from '@grpc/grpc-js';
 import { injectable } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
 
-import { Logger, getContainer } from '@centsideas/utils';
+import { Logger, DependencyInjection } from '@centsideas/utils';
 import { Environments } from '@centsideas/enums';
 import { GlobalEnvironment } from '@centsideas/environment';
 
@@ -21,7 +21,7 @@ export class GatewayServer {
     this.initializeGrpcHttpMap();
 
     Logger.info('launch in', this.globalEnv.environment, 'mode');
-    const server = new InversifyExpressServer(getContainer());
+    const server = new InversifyExpressServer(DependencyInjection.getContainer());
     server.setConfig((app: express.Application) => {
       app.use(helmet());
       app.use(

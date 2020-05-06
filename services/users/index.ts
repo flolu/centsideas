@@ -5,7 +5,7 @@ import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
 process.env.service = Services.Users;
-import { registerProviders, getProvider, registerFactory } from '@centsideas/utils';
+import { DependencyInjection } from '@centsideas/utils';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { RPC_TYPES, rpcServerFactory, RpcServer } from '@centsideas/rpc';
 import { GlobalEnvironment } from '@centsideas/environment';
@@ -17,7 +17,7 @@ import { LoginRepository } from './login.repository';
 import { AuthHandler } from './auth.handler';
 import { UsersEnvironment } from './users.environment';
 
-registerProviders(
+DependencyInjection.registerProviders(
   UsersServer,
   UsersHandler,
   UserRepository,
@@ -28,7 +28,5 @@ registerProviders(
   GlobalEnvironment,
   RpcServer,
 );
-
-registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
-
-getProvider(UsersServer);
+DependencyInjection.registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
+DependencyInjection.bootstrap(UsersServer);

@@ -7,22 +7,22 @@ import { Container, interfaces } from 'inversify';
  */
 const container = new Container({ skipBaseClassChecks: true });
 
-// TODO dont export all methods individually instead expose one api
+export const DependencyInjection = {
+  registerProviders: (...providers: any[]) => providers.forEach(p => container.bind(p).toSelf()),
 
-export const registerProviders = (...providers: any[]) =>
-  providers.forEach(p => container.bind(p).toSelf());
+  registerFactory: (identifier: any, factory: (context: interfaces.Context) => any) =>
+    container.bind(identifier).toFactory(factory),
 
-export const registerFactory = (identifier: any, factory: (context: interfaces.Context) => any) =>
-  container.bind(identifier).toFactory(factory);
+  registerConstant: (identifier: any, constant: any) =>
+    container.bind(identifier).toConstantValue(constant),
 
-export const registerConstant = (identifier: any, constant: any) =>
-  container.bind(identifier).toConstantValue(constant);
+  getProvider: (provider: any): any => container.get(provider),
+  bootstrap: (provider: any): any => container.get(provider),
 
-export const getProvider = (provider: any): any => container.get(provider);
+  overrideProvider: (provider: any, newProvider: any) => {
+    container.unbind(provider);
+    container.bind(provider).to(newProvider);
+  },
 
-export const overrideProvider = (provider: any, newProvider: any) => {
-  container.unbind(provider);
-  container.bind(provider).to(newProvider);
+  getContainer: () => container,
 };
-
-export const getContainer = () => container;

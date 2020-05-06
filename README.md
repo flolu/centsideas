@@ -39,6 +39,7 @@ This is a project with the purpose of learning the architecture of complex appli
 | Compute server                                 | non-nodejs server for high cpu/gpu tasks                      | ❌     |
 | Payments                                       | payout, credit card, paypal, altcoins                         | ❌     |
 | Recommendation System                          | machine learning                                              | ❌     |
+| Clean Architecture                             | ioc, [example](https://youtu.be/CnailTcJV_U)                  | ❌     |
 
 ✔️ Completely implemented,
 ✅ Partly implemented,
