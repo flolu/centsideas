@@ -1,28 +1,34 @@
 /* tslint:disable:no-console */
-import * as chalk from 'chalk';
+import * as fromChalk from 'chalk';
+import { injectable, inject } from 'inversify';
 
-import { Services, Environments } from '@centsideas/enums';
+import { Environments } from '@centsideas/enums';
 import { IEvent } from '@centsideas/models';
+import { GlobalEnvironment } from '@centsideas/environment';
 
-type LogStyle = (...text: unknown[]) => string;
+import { UTILS_TYPES } from './utils-types';
 
-class LoggerClass {
-  private prefixStyle: LogStyle = chalk.bold.bgBlack.grey;
-  private service: Services | undefined = process.env.service as Services;
-  private env: Environments | undefined = process.env.environment as Environments;
+@injectable()
+export class Logger {
+  private env = this.globalEnv.environment;
+  private chalk = new fromChalk.Instance({ level: this.env === Environments.Prod ? 0 : 3 });
+  private prefixStyle = this.chalk.hsl(...this.color).bold;
 
-  constructor() {
-    this.setupPrefixStyle();
-  }
+  constructor(
+    private globalEnv: GlobalEnvironment,
+    @inject(UTILS_TYPES.SERVICE_NAME) private service: string = 'unknown',
+    @inject(UTILS_TYPES.LOGGER_COLOR)
+    private color: [number, number, number] = [Math.random() * 360, 100, 50],
+  ) {}
 
   error(error: any, details: string = '') {
-    console.log(this.timestamp, chalk.red.bold(error.name));
-    console.log(chalk.redBright(error.message));
+    console.log(this.timestamp, this.chalk.red.bold(error.name));
+    console.log(this.chalk.redBright(error.message));
     if (!error.details) error.details = details;
 
-    if (error.details) console.log(chalk.red(`details: ${error.details}`));
-    if (error.service) console.log(chalk.red(`service: ${error.service}`));
-    console.log(chalk.red.dim(error.stack));
+    if (error.details) console.log(this.chalk.red(`details: ${error.details}`));
+    if (error.service) console.log(this.chalk.red(`service: ${error.service}`));
+    console.log(this.chalk.red.dim(error.stack));
     // TODO send to admin service
   }
 
@@ -31,9 +37,9 @@ class LoggerClass {
   }
 
   event(event: IEvent) {
-    console.log(chalk.bold(event.name));
-    console.log(chalk.dim(JSON.stringify(event.data)));
     console.log();
+    console.log(this.chalk.bold(event.name));
+    console.log(this.chalk.dim(JSON.stringify(event.data)));
   }
 
   private get timestamp() {
@@ -43,25 +49,4 @@ class LoggerClass {
   private get prefix() {
     return this.prefixStyle(this.service);
   }
-
-  private setupPrefixStyle() {
-    switch (this.service) {
-      case Services.Admin:
-        return (this.prefixStyle = chalk.bold.red);
-      case Services.Consumer:
-        return (this.prefixStyle = chalk.bold.magenta);
-      case Services.Gateway:
-        return (this.prefixStyle = chalk.bold.inverse);
-      case Services.Ideas:
-        return (this.prefixStyle = chalk.bold.yellow);
-      case Services.Notifications:
-        return (this.prefixStyle = chalk.bold.gray);
-      case Services.Reviews:
-        return (this.prefixStyle = chalk.bold.blueBright);
-      case Services.Users:
-        return (this.prefixStyle = chalk.bold.greenBright);
-    }
-  }
 }
-
-export const Logger = new LoggerClass();

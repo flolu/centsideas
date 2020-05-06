@@ -1,9 +1,9 @@
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import { MongoClient } from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
 import { IEvent } from '@centsideas/models';
-import { Logger, Identifier } from '@centsideas/utils';
+import { Identifier, Logger } from '@centsideas/utils';
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
 
@@ -31,6 +31,8 @@ export abstract class EventRepository<Entity extends IEventEntity> {
   private readonly eventsCollectionSuffix = 'events';
   private readonly snapshotsCollectionSuffix = 'snapshots';
   private readonly counterCollectionSuffix = 'counters';
+
+  @inject(Logger) private logger!: Logger;
 
   constructor(
     private dispatchEvents: (topic: string, events: IEvent[]) => void,
@@ -65,7 +67,7 @@ export abstract class EventRepository<Entity extends IEventEntity> {
     const appendedEvents = await Promise.all(eventsToInsert.map(this.appendEvent));
     const events = await Promise.all(
       appendedEvents.map(async event => {
-        Logger.event(event);
+        this.logger.event(event);
         if (event.eventNumber % this.snapshotThreshold === 0)
           await this.saveSnapshot(event.aggregateId);
         return event;

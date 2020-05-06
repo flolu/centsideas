@@ -6,3 +6,4 @@ export * from './test';
 export * from './errors';
 export * from './token';
 export * from './logger';
+export * from './utils-types';

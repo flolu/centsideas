@@ -4,8 +4,7 @@ if (!process.env.environment) require('../../register-aliases').registerAliases(
 import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
-process.env.service = Services.Gateway;
-import { DependencyInjection } from '@centsideas/utils';
+import { DependencyInjection, UTILS_TYPES, Logger } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
 import { RpcClient, rpcClientFactory, RPC_TYPES } from '@centsideas/rpc';
 
@@ -24,5 +23,9 @@ DependencyInjection.registerProviders(
   AuthMiddleware,
   RpcClient,
 );
+// FIXME which providers should be singletons?
+DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.Gateway);
+DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [334, 100, 80]);
+DependencyInjection.registerSingleton(Logger);
 DependencyInjection.registerFactory(RPC_TYPES.RPC_CLIENT_FACTORY, rpcClientFactory);
 DependencyInjection.bootstrap(GatewayServer);

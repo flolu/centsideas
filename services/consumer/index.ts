@@ -4,9 +4,8 @@ if (!process.env.environment) require('../../register-aliases').registerAliases(
 import 'reflect-metadata';
 
 import { Services } from '@centsideas/enums';
-process.env.service = Services.Consumer;
 import { MessageBroker } from '@centsideas/event-sourcing';
-import { DependencyInjection } from '@centsideas/utils';
+import { DependencyInjection, UTILS_TYPES, Logger } from '@centsideas/utils';
 import { GlobalEnvironment } from '@centsideas/environment';
 import { RpcServer, RPC_TYPES, rpcServerFactory } from '@centsideas/rpc';
 
@@ -30,5 +29,8 @@ DependencyInjection.registerProviders(
   GlobalEnvironment,
   RpcServer,
 );
+DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.Consumer);
+DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [276, 100, 80]);
+DependencyInjection.registerSingleton(Logger);
 DependencyInjection.registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
 DependencyInjection.bootstrap(ConsumerServer);

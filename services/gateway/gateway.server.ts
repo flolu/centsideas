@@ -7,7 +7,7 @@ import * as grpc from '@grpc/grpc-js';
 import { injectable } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
 
-import { Logger, DependencyInjection } from '@centsideas/utils';
+import { DependencyInjection, Logger } from '@centsideas/utils';
 import { Environments } from '@centsideas/enums';
 import { GlobalEnvironment } from '@centsideas/environment';
 
@@ -17,10 +17,14 @@ import { GatewayEnvironment } from './gateway.environment';
 export class GatewayServer {
   grpcHttpMap = new Map<number, number>();
 
-  constructor(private globalEnv: GlobalEnvironment, private env: GatewayEnvironment) {
+  constructor(
+    private globalEnv: GlobalEnvironment,
+    private env: GatewayEnvironment,
+    private logger: Logger,
+  ) {
     this.initializeGrpcHttpMap();
 
-    Logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch in', this.globalEnv.environment, 'mode');
     const server = new InversifyExpressServer(DependencyInjection.getContainer());
     server.setConfig((app: express.Application) => {
       app.use(helmet());
@@ -59,7 +63,7 @@ export class GatewayServer {
     if (this.globalEnv.environment === Environments.Dev) return true;
     if (origin && this.env.corsWhitelist.includes(origin)) return true;
 
-    if (origin === undefined) Logger.info('Origin is undefined');
+    if (origin === undefined) this.logger.info('Origin is undefined');
 
     return false;
   };

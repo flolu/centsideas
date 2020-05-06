@@ -16,9 +16,10 @@ export class ReviewsServer {
     private env: ReviewsEnvironment,
     private globalEnv: GlobalEnvironment,
     private handler: ReviewsHandler,
+    private logger: Logger,
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
-    Logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch in', this.globalEnv.environment, 'mode');
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);

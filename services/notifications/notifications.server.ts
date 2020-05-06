@@ -22,6 +22,7 @@ export class NotificationsServer {
     private notificationSettingsHandlers: NotificationSettingsHandlers,
     private messageBroker: MessageBroker,
     private notificationsHandler: NotificationsHandlers,
+    private logger: Logger,
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     // FIXME also consider kafka connection in health checks
@@ -40,9 +41,10 @@ export class NotificationsServer {
       getSettings: this.notificationSettingsHandlers.getSettings,
     });
 
-    Logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch in', this.globalEnv.environment, 'mode');
   }
 
+  // TODO better error handling?
   private handleIdeasEvents = async (event: IEvent<any>) => {
     try {
       switch (event.name) {
@@ -50,7 +52,7 @@ export class NotificationsServer {
           return this.notificationsHandler.handleIdeaCreatedNotification(event);
       }
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
   };
 
@@ -61,7 +63,7 @@ export class NotificationsServer {
           return this.notificationsHandler.handleLoginNotification(event);
       }
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
   };
 
@@ -75,7 +77,7 @@ export class NotificationsServer {
           return this.notificationsHandler.handleEmailChangedNotification(event);
       }
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
     }
   };
 }

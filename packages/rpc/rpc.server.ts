@@ -11,16 +11,18 @@ export class RpcServer {
 
   private server = new grpc.Server();
 
+  constructor(private logger: Logger) {}
+
   initialize(port: number, host = '0.0.0.0') {
     this.server.bindAsync(
       `${host}:${port}`,
       grpc.ServerCredentials.createInsecure(),
       (err, listeningPort) => {
         if (err) {
-          Logger.error(err, `while binding rpc server (port: ${listeningPort})`);
+          this.logger.error(err, `while binding rpc server (port: ${listeningPort})`);
           throw err;
         }
-        Logger.info(`rpc server running on ${listeningPort}`);
+        this.logger.info(`rpc server running on ${listeningPort}`);
         this.server.start();
         this.isRunning = true;
       },
@@ -69,7 +71,7 @@ export class RpcServer {
         if (error.name) metadata.add('name', error.name);
 
         if (!name || name?.toLowerCase() === 'error' || name?.includes('unexpected')) {
-          Logger.error(error);
+          this.logger.error(error);
           callback({ code, details, metadata, stack: error.stack }, null);
         }
 

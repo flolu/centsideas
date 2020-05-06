@@ -15,7 +15,7 @@ export class MessageBroker {
   private kafka = new Kafka({ brokers: [this.globalEnv.kafkaBrokerHost], logLevel: logLevel.WARN });
   private producer: Producer | undefined;
 
-  constructor(private globalEnv: GlobalEnvironment) {}
+  constructor(private globalEnv: GlobalEnvironment, private logger: Logger) {}
 
   dispatch = async (topic: string, messages: Message[] = []): Promise<RecordMetadata[]> => {
     if (!this.producer) {
@@ -39,7 +39,7 @@ export class MessageBroker {
             const event: IEvent = JSON.parse(message.value.toString());
             observer.next(event);
           } catch (error) {
-            Logger.error(error, `in MessageBroker, while consuming event from ${topic} topic`);
+            this.logger.error(error, `in MessageBroker, while consuming event from ${topic} topic`);
           }
         },
       });

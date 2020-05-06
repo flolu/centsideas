@@ -6,6 +6,7 @@ package(default_visibility = ["//visibility:public"])
 lib_deps = [
     "//packages/enums",
     "//packages/models",
+    "//packages/environment",
     "@npm//@types/express",
     "@npm//@types/jest",
     "@npm//@types/module-alias",

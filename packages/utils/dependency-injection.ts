@@ -16,6 +16,11 @@ export const DependencyInjection = {
   registerConstant: (identifier: any, constant: any) =>
     container.bind(identifier).toConstantValue(constant),
 
+  registerSingleton: (identifier: any, provider?: any) =>
+    provider
+      ? container.bind(identifier).to(provider).inSingletonScope()
+      : container.bind(identifier).toSelf().inSingletonScope(),
+
   getProvider: (provider: any): any => container.get(provider),
   bootstrap: (provider: any): any => container.get(provider),
 
