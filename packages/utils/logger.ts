@@ -45,6 +45,8 @@ export class Logger {
       service: this.service,
       stack: error.stack,
       details,
+      name: error.name,
+      message: error.message,
     };
   }
 

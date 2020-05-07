@@ -8,4 +8,6 @@ export interface IErrorOccurredPayload {
   service: string;
   stack: string;
   details: string;
+  name: string;
+  message: string;
 }

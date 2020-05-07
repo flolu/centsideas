@@ -12,8 +12,7 @@ export class IdeasHandler {
   constructor(private repository: IdeaRepository) {}
 
   create: CreateIdea = async ({ userId, title, description }) => {
-    throw new Error("woowwowoow this wasn't exprected : )(");
-
+    // TODO error handling doesn't work when doing something like `throw 'some-message'`
     if (!userId) throw new UnauthenticatedError();
 
     title = sanitizeHtml(title || '');

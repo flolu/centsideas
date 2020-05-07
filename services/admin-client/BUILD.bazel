@@ -8,14 +8,23 @@ load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
 exports_files(["tsconfig.json"])
 
-inserted_assets = ["@npm//:node_modules/zone.js/dist/zone.min.js"]
+inserted_assets = [
+    "@npm//:node_modules/zone.js/dist/zone.min.js",
+    ":styles.css",
+]
 
 static_assets = [":_index.html"] + inserted_assets
+
+sass_binary(
+    name = "styles",
+    src = "styles.sass",
+)
 
 ng_ts_library(
     name = "dev_src",
@@ -51,6 +60,7 @@ ts_devserver(
     static_files = [
         ":dev_html",
         "@npm//:node_modules/zone.js/dist/zone.min.js",
+        ":styles.css",
     ],
     deps = [":dev_src"],
 )
@@ -116,11 +126,8 @@ history_server(
 
 nodejs_image(
     name = "nodejs_image",
-    data = [":prod_app"],
-    entry_point = "@npm//:node_modules/history-server/modules/cli.js",
-    node_modules = "@npm//:node_modules",
+    binary = ":admin-client",
     tags = ["local"],
-    templated_args = ["services/admin-client/prod_app"],
 )
 
 k8s_deploy(

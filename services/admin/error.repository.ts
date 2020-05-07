@@ -20,12 +20,29 @@ export class ErrorRepository extends EventRepository<ErrorEntity> {
     );
   }
 
-  handleErrorOccurred = async (message: KafkaMessage) => {
-    const payload = JSON.parse(message.value.toString());
-    const { occurredAt, unexpected, service, stack, details }: IErrorOccurredPayload = payload;
+  handleErrorOccurred = async (kafkaMessage: KafkaMessage) => {
+    const payload = JSON.parse(kafkaMessage.value.toString());
+    const {
+      occurredAt,
+      unexpected,
+      service,
+      stack,
+      details,
+      name,
+      message,
+    }: IErrorOccurredPayload = payload;
 
     const errorId = await this.generateAggregateId();
-    const error = ErrorEntity.create(errorId, occurredAt, unexpected, service, stack, details);
+    const error = ErrorEntity.create(
+      errorId,
+      occurredAt,
+      unexpected,
+      service,
+      stack,
+      details,
+      name,
+      message,
+    );
 
     const created = await this.save(error);
     return created.persistedState;

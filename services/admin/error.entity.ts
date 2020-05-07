@@ -21,6 +21,7 @@ export class ErrorEntity extends EventEntity<IErrorEntityState> {
     } else super(errorCommitFunctions, ErrorEntity.initialState);
   }
 
+  // TODO consider passing object instead of all those individual params?
   static create(
     errorId: string,
     occurredAt: string,
@@ -28,6 +29,8 @@ export class ErrorEntity extends EventEntity<IErrorEntityState> {
     service: string,
     stack: string,
     details: string,
+    name: string,
+    message: string,
   ): ErrorEntity {
     const error = new ErrorEntity();
     error.pushEvents(
@@ -38,6 +41,8 @@ export class ErrorEntity extends EventEntity<IErrorEntityState> {
         service,
         stack,
         details,
+        name,
+        message,
       ),
     );
     return error;

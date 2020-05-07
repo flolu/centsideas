@@ -17,7 +17,13 @@ message Event {
   string id = 1;
   string aggregateId = 2;
   string name = 3;
-  google.protobuf.Any data = 4;
+  
+  /* FIXME don't use JSON string as this defeats the purpose of protobuf
+   * But: how to handle dynamic field efficiently? With "any" or "oneof" we
+   * would need to add ALL events and check which event it is on every response
+   */
+  string data = 4;
+  
   string timestamp = 5;
   int32 eventNumber = 6;
 }

@@ -16,13 +16,17 @@ export class AdminDatabase {
 
   insertEvent = async (event: IEvent): Promise<any> => {
     const collection = await this.events();
-    return collection.insertOne(event);
+    const result = await collection.insertOne(event);
+    return result.ops[0];
   };
 
   getEvents = async (): Promise<IEvent[]> => {
     const collection = await this.events();
-    const events = await collection.find().sort({ timestamp: -1 });
-    return events.toArray();
+    const result = await collection.find().sort({ timestamp: -1 });
+    const events = await result.toArray();
+
+    // FIXME dont stringify data as this defeats the purpose of protobuf
+    return events.map(e => ({ ...e, data: JSON.stringify(e.data) }));
   };
 
   private events = async () => {

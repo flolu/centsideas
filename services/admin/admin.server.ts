@@ -49,8 +49,7 @@ export class AdminServer {
      * Listen for every event that happends in the whole application
      * and save it to the admin database
      */
-    // NOW unexpected errors arent persisted for some reasone
-    // NOW event data isn't persisted for some reason
+    // FIXME how to receive events when admin server was down for a while?
     this.messageBroker.events(/centsideas.events..*/i).subscribe(this.adminDatabase.insertEvent);
 
     /**

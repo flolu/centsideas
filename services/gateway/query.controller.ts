@@ -58,6 +58,6 @@ export class QueryController implements interfaces.Controller {
   @httpGet(`/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)
   async getAdminEvents() {
     const { events } = await this.adminRpc.client.getEvents(undefined);
-    return events;
+    return events ? events.map(e => ({ ...e, data: JSON.parse(e.data) })) : [];
   }
 }

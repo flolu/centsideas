@@ -1,6 +1,12 @@
 load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 
 package(default_visibility = ["//services/admin-client:__subpackages__"])
+
+sass_binary(
+    name = "app_styles",
+    src = "app.component.sass",
+)
 
 ng_ts_library(
     name = "base",
@@ -8,6 +14,7 @@ ng_ts_library(
         "app.component.ts",
         "app-base.module.ts",
     ],
+    angular_assets = [":app_styles"],
     tsconfig = "//services/admin-client:tsconfig.json",
     deps = [
         "//packages/enums",

@@ -11,31 +11,17 @@ import { ApiEndpoints, AdminApiRoutes, ErrorEvents } from '@centsideas/enums';
   template: `
     <h1>Admin Panel</h1>
     <h2>Events</h2>
-    <div class="events">
-      <div
-        *ngFor="let event of events"
-        [class.error]="isExpectedError(event)"
-        [class.unexpected_error]="isUnexpectedError(event)"
-      >
-        <pre>{{ event | json }}</pre>
-      </div>
+    <div
+      *ngFor="let event of events"
+      class="event"
+      [class.error]="isError(event)"
+      [class.unexpected_error]="isUnexpectedError(event)"
+    >
+      <h3 class="name">{{ event?.name }}</h3>
+      <pre>{{ event?.data | json }}</pre>
     </div>
   `,
-  styles: [
-    `
-      .events {
-        overflow: scroll;
-      }
-
-      .error {
-        background: #ffd6d4;
-      }
-
-      .unexpected_error {
-        background: #ff7e75;
-      }
-    `,
-  ],
+  styleUrls: ['app.component.sass'],
 })
 export class AppComponent {
   events: IEvent[] = [];
@@ -53,8 +39,8 @@ export class AppComponent {
       });
   }
 
-  isExpectedError(event: IEvent) {
-    return event.name === ErrorEvents.ErrorOccurred && !event.data.unexpected;
+  isError(event: IEvent) {
+    return event.name === ErrorEvents.ErrorOccurred;
   }
 
   isUnexpectedError(event: IEvent) {

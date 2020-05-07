@@ -25,13 +25,11 @@ export async function setupEnv(environment: IEnvironment) {
     await setupTemplateFile(templatePaths.adminClient, genPaths.adminClient, environment);
     console.log(chalk.greenBright('✔'), chalk.bold(genPaths.adminClient));
 
-    if (environment.environment !== Environments.Dev) {
-      await setupTemplateFile(templatePaths.k8sConfig, genPaths.k8sConfig, environment);
-      console.log(chalk.greenBright('✔'), chalk.bold(genPaths.k8sConfig));
+    await setupTemplateFile(templatePaths.k8sConfig, genPaths.k8sConfig, environment);
+    console.log(chalk.greenBright('✔'), chalk.bold(genPaths.k8sConfig));
 
-      await setupTemplateFile(templatePaths.k8sSecret, genPaths.k8sSecret, environment);
-      console.log(chalk.greenBright('✔'), chalk.bold(genPaths.k8sSecret));
-    }
+    await setupTemplateFile(templatePaths.k8sSecret, genPaths.k8sSecret, environment);
+    console.log(chalk.greenBright('✔'), chalk.bold(genPaths.k8sSecret));
   } catch (error) {
     // tslint:disable-next-line:no-console
     console.log(chalk.red('somethin went wrong while setting up env'));

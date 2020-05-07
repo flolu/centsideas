@@ -20,8 +20,7 @@ export class NotificationSettingsHandlers {
     UnauthenticatedError.validate(userId);
     NotificationSettingsErrors.PushSubscriptionInvalidError.validate(subscription);
 
-    const upserted = await this.upsert(userId);
-    const ns = await this.nsRepository.findById(upserted.persistedState.id);
+    const ns = await this.getSettingsOfUser(userId);
 
     for (const sub of ns.persistedState.pushSubscriptions) {
       if (sub.endpoint === subscription.endpoint) {
@@ -42,8 +41,7 @@ export class NotificationSettingsHandlers {
       sendEmails,
     });
 
-    const upserted = await this.upsert(userId);
-    const ns = await this.nsRepository.findById(upserted.persistedState.id);
+    const ns = await this.getSettingsOfUser(userId);
     ns.update(sendEmails, sendPushes);
 
     const updated = await this.nsRepository.save(ns);
@@ -66,25 +64,17 @@ export class NotificationSettingsHandlers {
   }
 
   getSettingsOfUser = async (userId: string) => {
-    const mapping = await this.nsRepository.userIdMapping.get(userId);
-    if (!mapping)
-      throw new NotificationSettingsErrors.NoNotificationSettingsWithUserIdFoundError(userId);
+    UnauthenticatedError.validate(userId);
 
-    return this.nsRepository.findById(mapping.notificationSettingsId);
-  };
-
-  private upsert = async (authenticatedUserId: string) => {
-    UnauthenticatedError.validate(authenticatedUserId);
-
-    const existingMapping = await this.nsRepository.userIdMapping.get(authenticatedUserId);
+    const existingMapping = await this.nsRepository.userIdMapping.get(userId);
     if (existingMapping) {
       const existingNs = await this.nsRepository.findById(existingMapping.notificationSettingsId);
       return existingNs;
     }
 
     const nsId = Identifier.makeLongId();
-    const ns = NotificationSettings.create(nsId, authenticatedUserId);
-    await this.nsRepository.userIdMapping.insert(nsId, authenticatedUserId);
+    const ns = NotificationSettings.create(nsId, userId);
+    await this.nsRepository.userIdMapping.insert(nsId, userId);
 
     return this.nsRepository.save(ns);
   };

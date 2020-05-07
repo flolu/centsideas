@@ -12,10 +12,12 @@ export class ErrorOccurredEvent extends Event<IErrorOccurredEvent> {
     service: string,
     stack: string,
     details: string,
+    name: string,
+    message: string,
   ) {
     super(
       ErrorOccurredEvent.eventName,
-      { errorId, occurredAt, unexpected, service, stack, details },
+      { errorId, occurredAt, unexpected, service, stack, details, name, message },
       errorId,
     );
   }
