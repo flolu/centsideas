@@ -1,7 +1,7 @@
 {
   "name": "CENTS Ideas",
   "short_name": "CENTS Ideas",
-  "theme_color": "#dcedc1",
+  "theme_color": "#ff9c32",
   "background_color": "#fff",
   "display": "standalone",
   "scope": "./",
