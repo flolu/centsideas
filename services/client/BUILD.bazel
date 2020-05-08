@@ -123,6 +123,7 @@ terser_minified(
     config_file = "//packages/angular-bazel:terser.config.json",
 )
 
+# FIXME  create a wrapper rule for this one
 html_insert_assets(
     name = "html",
     outs = ["_prod/index.html"],
@@ -130,6 +131,8 @@ html_insert_assets(
         "--html=$(execpath :_index.html)",
         "--out=$@",
         "--roots=. $(RULEDIR)",
+        "--preload",
+    ] + ["$(execpath %s)" % s for s in inserted_assets] + [
         "--assets",
     ] + ["$(execpath %s)" % s for s in inserted_assets] + ["$(execpath %s)/index.es2015.js" % ":bundle.min"],
     data = static_assets + [":bundle.min"],

@@ -19,14 +19,12 @@
     />
     <link rel="dns-prefetch" href="http://centsideas.com" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <!-- TODO fix async tag issue https://github.com/jbedard/html-insert-assets/issues/9 -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
       rel="stylesheet"
       async
     />
-    <!-- FIXME preload bundles (problem: name of bundles change on rebuild) -->
-    <!-- TODO try preloading with the help of thie pull request https://github.com/jbedard/html-insert-assets/issues/7#issuecomment-623901928-->
-    <!-- <link rel="preload" href="bundle.min/index.es2015.js?v=XXXX" as="script" /> -->
     <source src="assets/drip.ogg" type="audio/ogg" async />
   </head>
   <body>
