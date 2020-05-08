@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { RpcStatus, ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 
 export class IdeaIdRequiredError extends InternalError {
@@ -11,7 +9,7 @@ export class IdeaIdRequiredError extends InternalError {
   constructor() {
     super(`Idea id required`, {
       name: ErrorNames.ReviewIdeaIdRequired,
-      code: grpc.status.INVALID_ARGUMENT,
+      code: RpcStatus.INVALID_ARGUMENT,
     });
   }
 }

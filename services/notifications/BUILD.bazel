@@ -14,13 +14,10 @@ lib_deps = [
     "//packages/utils",
     "//packages/rpc",
     "@npm//inversify",
-    "@npm//reflect-metadata",
     "@npm//web-push",
     "@npm//@types/web-push",
     "@npm//@sendgrid/mail",
-    "@npm//rxjs",
     "@npm//@types/node",
-    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

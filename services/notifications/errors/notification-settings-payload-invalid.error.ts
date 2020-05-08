@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { RpcStatus, ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 import { Dtos } from '@centsideas/models';
 
@@ -15,7 +13,7 @@ export class NotificationSettingsPayloadInvalidError extends InternalError {
   constructor(message: string) {
     super(`Invalid notifications settings: ${message}`, {
       name: ErrorNames.NotificationSettingsPayloadInvalid,
-      code: grpc.status.INVALID_ARGUMENT,
+      code: RpcStatus.INVALID_ARGUMENT,
     });
   }
 }

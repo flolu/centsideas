@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { RpcStatus, ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 import { IReviewScores } from '@centsideas/models';
 
@@ -22,7 +20,7 @@ export class ReviewScoresRangeError extends InternalError {
       : `Score shouldn't be smaller than ${ReviewScoresRangeError.min}.`;
     super(`${message} You've set ${invalidScoreName} to ${actualValue}`, {
       name: ErrorNames.ReviewScoresRange,
-      code: grpc.status.INVALID_ARGUMENT,
+      code: RpcStatus.INVALID_ARGUMENT,
     });
   }
 }

@@ -7,3 +7,4 @@ export * from './notification';
 export * from './admin';
 export * from './review';
 export * from './rpc-types';
+export * from './rpc-status';

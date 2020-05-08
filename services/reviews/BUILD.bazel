@@ -14,10 +14,7 @@ lib_deps = [
     "//packages/utils",
     "//packages/rpc",
     "@npm//inversify",
-    "@npm//reflect-metadata",
-    "@npm//shortid",
     "@npm//@types/node",
-    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

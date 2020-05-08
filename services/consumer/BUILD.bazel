@@ -13,15 +13,12 @@ lib_deps = [
     "//packages/models",
     "//packages/utils",
     "//packages/rpc",
-    "@npm//@types/async-retry",
-    "@npm//@types/mongodb",
     "@npm//async-retry",
     "@npm//inversify",
     "@npm//mongodb",
-    "@npm//rxjs",
-    "@npm//reflect-metadata",
+    "@npm//@types/async-retry",
+    "@npm//@types/mongodb",
     "@npm//@types/node",
-    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

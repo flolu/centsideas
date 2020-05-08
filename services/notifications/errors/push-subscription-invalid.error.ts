@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { RpcStatus, ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 import { IPushSubscription } from '@centsideas/models';
 
@@ -16,7 +14,7 @@ export class PushSubscriptionInvalidError extends InternalError {
   constructor(message: string) {
     super(`Invalid push subscription: ${message}`, {
       name: ErrorNames.PushSubscriptionInvalid,
-      code: grpc.status.INVALID_ARGUMENT,
+      code: RpcStatus.INVALID_ARGUMENT,
     });
   }
 }

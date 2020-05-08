@@ -14,9 +14,7 @@ lib_deps = [
     "//packages/rpc",
     "//packages/event-sourcing",
     "@npm//inversify",
-    "@npm//reflect-metadata",
     "@npm//@types/node",
-    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

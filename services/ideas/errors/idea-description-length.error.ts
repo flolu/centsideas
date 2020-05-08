@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { RpcStatus, ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 
 export class IdeaDescriptionLengthError extends InternalError {
@@ -22,7 +20,7 @@ export class IdeaDescriptionLengthError extends InternalError {
 
     super(`${message} You provided a description with a length of ${actualLength}`, {
       name: ErrorNames.IdeaDescriptionLength,
-      code: grpc.status.INVALID_ARGUMENT,
+      code: RpcStatus.INVALID_ARGUMENT,
     });
   }
 }

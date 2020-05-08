@@ -1,5 +1,7 @@
 import { Container, interfaces } from 'inversify';
 
+import 'reflect-metadata';
+
 /**
  * `skipBaseClassChecks: true`
  * https://github.com/inversify/InversifyJS/blob/master/wiki/inheritance.md#workaround-e-skip-base-class-injectable-checks

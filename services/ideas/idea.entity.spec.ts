@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import { ISnapshot } from '@centsideas/event-sourcing';
 import { IIdeaState } from '@centsideas/models';
 

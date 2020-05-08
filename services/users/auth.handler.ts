@@ -1,9 +1,14 @@
 import { injectable } from 'inversify';
 import * as faker from 'faker';
-import axios from 'axios';
-import * as queryString from 'query-string';
 
-import { decodeToken, TokenInvalidError, Identifier, signToken } from '@centsideas/utils';
+import {
+  decodeToken,
+  TokenInvalidError,
+  Identifier,
+  signToken,
+  createQueryParams,
+  httpRequest,
+} from '@centsideas/utils';
 import { ILoginTokenPayload, IRefreshTokenPayload, IAccessTokenPayload } from '@centsideas/models';
 import { TopLevelFrontendRoutes, TokenExpirationTimes } from '@centsideas/enums';
 import { GlobalEnvironment } from '@centsideas/environment';
@@ -72,7 +77,7 @@ export class AuthHandler {
   };
 
   googleLoginRedirect: GoogleLoginRedicrect = async () => {
-    const params = queryString.stringify({
+    const params = createQueryParams({
       client_id: this.env.googleClientId,
       redirect_uri: this.getGoogleRedirectUri(),
       scope: [
@@ -223,7 +228,7 @@ export class AuthHandler {
   private fetchGoogleUserInfo = async (code: string): Promise<IGoogleUserinfo> => {
     UserErrors.GoogleLoginCodeRequiredError.validate(code);
 
-    const tokensResponse = await axios({
+    const tokensResponse = await httpRequest({
       url: `https://oauth2.googleapis.com/token`,
       method: 'post',
       data: {
@@ -237,7 +242,7 @@ export class AuthHandler {
     const { access_token } = tokensResponse.data;
     if (!access_token) throw new Error('Google access token could not be acquired');
 
-    const userInfoResponse = await axios({
+    const userInfoResponse = await httpRequest({
       url: 'https://www.googleapis.com/oauth2/v2/userinfo',
       method: 'get',
       headers: {

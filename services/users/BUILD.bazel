@@ -6,7 +6,6 @@ load("@centsideas//packages/jest:jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
 
-# TODO try to move 3rd party stuff to utils
 lib_deps = [
     "//packages/enums",
     "//packages/environment",
@@ -14,18 +13,10 @@ lib_deps = [
     "//packages/models",
     "//packages/utils",
     "//packages/rpc",
-    "@npm//@types/express",
-    "@npm//@types/faker",
-    "@npm//@types/mongodb",
     "@npm//faker",
     "@npm//inversify",
-    "@npm//mongodb",
-    "@npm//reflect-metadata",
-    "@npm//shortid",
-    "@npm//query-string",
-    "@npm//axios",
+    "@npm//@types/faker",
     "@npm//@types/node",
-    "@npm//@grpc/grpc-js",
 ]
 
 ts_library(

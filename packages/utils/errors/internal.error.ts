@@ -1,13 +1,13 @@
-import * as grpc from '@grpc/grpc-js';
+import { RpcStatus } from '@centsideas/enums';
 
 interface InternalErrorOptions {
   name: string;
-  code: grpc.status;
+  code: RpcStatus;
   details?: string;
 }
 
 export class InternalError extends Error {
-  code = grpc.status.UNKNOWN;
+  code = RpcStatus.UNKNOWN;
   timestamp = new Date().toISOString();
   service = process.env.service || process.env.SERVICE || '';
   details = '';

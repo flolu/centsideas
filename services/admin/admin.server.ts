@@ -1,4 +1,3 @@
-import * as express from 'express';
 import { injectable, inject } from 'inversify';
 import * as http from 'http';
 import * as socketIO from 'socket.io';
@@ -24,8 +23,7 @@ import { ErrorRepository } from './error.repository';
 // FIXME delete events older than a month (otherwise the admin db would become bigger than all other dbs together)
 @injectable()
 export class AdminServer {
-  private app = express();
-  private httpServer = http.createServer(this.app);
+  private httpServer = http.createServer();
   private io = socketIO(this.httpServer);
   private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
 

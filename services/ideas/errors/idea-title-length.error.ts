@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { RpcStatus, ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 
 export class IdeaTitleLengthError extends InternalError {
@@ -21,7 +19,7 @@ export class IdeaTitleLengthError extends InternalError {
 
     super(`${message} You provided a title with a length of ${actualLength}`, {
       name: ErrorNames.IdeaTitleLength,
-      code: grpc.status.INVALID_ARGUMENT,
+      code: RpcStatus.INVALID_ARGUMENT,
     });
   }
 }

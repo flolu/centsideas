@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { RpcStatus, ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 
 export class UsernameInvalidError extends InternalError {
@@ -28,7 +26,7 @@ export class UsernameInvalidError extends InternalError {
   constructor(message: string) {
     super(message, {
       name: ErrorNames.UsernameInvalid,
-      code: grpc.status.INVALID_ARGUMENT,
+      code: RpcStatus.INVALID_ARGUMENT,
     });
   }
 }

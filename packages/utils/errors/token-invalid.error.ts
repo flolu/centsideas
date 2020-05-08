@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { ErrorNames, RpcStatus } from '@centsideas/enums';
 
 import { InternalError } from './internal.error';
 
@@ -14,7 +12,7 @@ export class TokenInvalidError extends InternalError {
 
     super(message, {
       name: ErrorNames.TokenInvalid,
-      code: grpc.status.UNAUTHENTICATED,
+      code: RpcStatus.UNAUTHENTICATED,
     });
   }
 }

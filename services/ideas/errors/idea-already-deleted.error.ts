@@ -1,6 +1,4 @@
-import * as grpc from '@grpc/grpc-js';
-
-import { ErrorNames } from '@centsideas/enums';
+import { RpcStatus, ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 
 export class IdeaAlreadyDeletedError extends InternalError {
@@ -11,7 +9,7 @@ export class IdeaAlreadyDeletedError extends InternalError {
   constructor(ideaId: string) {
     super(`Idea with id: ${ideaId} has already been deleted`, {
       name: ErrorNames.IdeaAlreadyDeleted,
-      code: grpc.status.FAILED_PRECONDITION,
+      code: RpcStatus.FAILED_PRECONDITION,
     });
   }
 }
