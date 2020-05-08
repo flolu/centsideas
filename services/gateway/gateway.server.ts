@@ -22,7 +22,6 @@ export class GatewayServer {
     private logger: Logger,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
-    this.logger.info('launch with worker id', process.env.NODE_UNIQUE_ID);
 
     const server = new InversifyExpressServer(DependencyInjection.getContainer());
     server.setConfig((app: express.Application) => {
@@ -61,8 +60,7 @@ export class GatewayServer {
   private isOriginAllowed = (origin: string | undefined) => {
     if (this.globalEnv.environment === Environments.Dev) return true;
     if (origin && this.env.corsWhitelist.includes(origin)) return true;
-
-    if (origin === undefined) this.logger.info('Origin is undefined');
+    if (origin === undefined) return true;
 
     return false;
   };

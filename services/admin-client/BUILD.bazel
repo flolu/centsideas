@@ -124,6 +124,7 @@ history_server(
     templated_args = ["-a $$(rlocation $(rootpath :prod_app))"],
 )
 
+# TODO running this target throws internal rules_nodejs error :( (try implementing universal server)
 nodejs_image(
     name = "nodejs_image",
     binary = ":admin-client",

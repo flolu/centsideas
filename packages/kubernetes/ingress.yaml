@@ -37,12 +37,3 @@ spec:
           - backend:
               serviceName: centsideas-admin
               servicePort: 3000
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: centsideas-ingress
-  namespace: ingress-nginx
-data:
-  # FIXME I am not sure if this actually works, because it makes no differnce even when turned off
-  use-gzip: "true"

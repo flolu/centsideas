@@ -26,7 +26,6 @@ export class NotificationsServer {
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
-    this.logger.info('launch with worker id', process.env.NODE_UNIQUE_ID);
 
     // FIXME also consider kafka connection in health checks
     http

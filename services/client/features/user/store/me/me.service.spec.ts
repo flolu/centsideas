@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserTransferStateModule } from '@angular/platform-browser';
 
-import { MeService } from './me.service';
 import { ENVIRONMENT, environment } from '@cic/environment';
+import { MeService } from './me.service';
 
 describe('UserService', () => {
   beforeEach(() => {

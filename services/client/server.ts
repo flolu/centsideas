@@ -4,7 +4,6 @@ import { ngExpressEngine } from '@nguniversal/express-engine';
 import { enableProdMode } from '@angular/core';
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
-import * as compression from 'compression';
 import { join } from 'path';
 import { argv } from 'yargs';
 
@@ -17,9 +16,6 @@ const PORT = argv.port || process.env.PORT || 4000;
 const DIST_FOLDER = join(process.cwd(), 'services/client/pwa');
 
 app.use(cookieParser());
-
-// TODO make compression with k8s work (I shouldn't do it here when possible)
-app.use(compression());
 
 app.engine('html', ngExpressEngine({ bootstrap: AppServerModule }) as any);
 app.set('view engine', 'html');
