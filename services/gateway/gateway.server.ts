@@ -25,6 +25,8 @@ export class GatewayServer {
     this.initializeGrpcHttpMap();
 
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch with worker id', process.env.NODE_UNIQUE_ID);
+
     const server = new InversifyExpressServer(DependencyInjection.getContainer());
     server.setConfig((app: express.Application) => {
       app.use(helmet());

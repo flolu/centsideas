@@ -11,3 +11,6 @@ export const decodeToken = <T = any>(token: string, jwtSecret: string): T => {
   }
   return decoded;
 };
+
+export const signToken = (payload: any, secret: string, expiresIn: number) =>
+  jwt.sign(payload, secret, { expiresIn });

@@ -1,5 +1,9 @@
 import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
-import { INotificationSettingsState, IPushSubscription } from '@centsideas/models';
+import {
+  INotificationSettingsState,
+  IPushSubscription,
+  INotificationSettingsUpdatedEvent,
+} from '@centsideas/models';
 
 import { notificationSettingsCommitFunctions, NotificationSettingsEvents } from './events';
 
@@ -37,12 +41,11 @@ export class NotificationSettings extends EventEntity<INotificationSettingsState
     return this;
   }
 
-  update(sendEmails: boolean, sendPushes: boolean): NotificationSettings {
+  update(payload: INotificationSettingsUpdatedEvent): NotificationSettings {
     this.pushEvents(
       new NotificationSettingsEvents.NotificationSettingsUpdatedEvent(
         this.currentState.id,
-        sendEmails,
-        sendPushes,
+        payload,
       ),
     );
     return this;

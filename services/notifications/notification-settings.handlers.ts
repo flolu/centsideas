@@ -42,7 +42,7 @@ export class NotificationSettingsHandlers {
     });
 
     const ns = await this.getSettingsOfUser(userId);
-    ns.update(sendEmails, sendPushes);
+    ns.update({ sendEmails, sendPushes });
 
     const updated = await this.nsRepository.save(ns);
     return updated.persistedState;

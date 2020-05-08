@@ -3,8 +3,6 @@ import * as grpc from '@grpc/grpc-js';
 import { ErrorNames } from '@centsideas/enums';
 import { InternalError } from '@centsideas/utils';
 
-// TODO don't allow spaces in username
-
 export class UsernameInvalidError extends InternalError {
   static readonly max: number = 30;
   static readonly min: number = 3;

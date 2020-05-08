@@ -6,8 +6,8 @@ import { IIdeaCreatedEvent, IIdeaState } from '@centsideas/models';
 export class IdeaCreatedEvent extends Event<IIdeaCreatedEvent> {
   static readonly eventName: string = IdeaEvents.IdeaCreated;
 
-  constructor(ideaId: string, userId: string, title: string, description: string) {
-    super(IdeaCreatedEvent.eventName, { ideaId, userId, title, description }, ideaId);
+  constructor(payload: IIdeaCreatedEvent) {
+    super(IdeaCreatedEvent.eventName, payload, payload.ideaId);
   }
 
   static commit(state: IIdeaState, event: IdeaCreatedEvent): IIdeaState {

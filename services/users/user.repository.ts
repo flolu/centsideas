@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { EventRepository, MessageBroker, EntityMapping } from '@centsideas/event-sourcing';
+import { EventRepository, EntityMapping } from '@centsideas/event-sourcing';
 import { EventTopics } from '@centsideas/enums';
 
 import { UsersEnvironment } from './users.environment';
@@ -10,6 +10,10 @@ import { IUserIdEmailMapping, IGoogleUserIdMapping, IUserIdUsernameMapping } fro
 
 @injectable()
 export class UserRepository extends EventRepository<User> {
+  constructor(private env: UsersEnvironment) {
+    super(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, 100);
+  }
+
   emailMapping = new EntityMapping<IUserIdEmailMapping>(
     this.env.databaseUrl,
     'emails',
@@ -30,17 +34,6 @@ export class UserRepository extends EventRepository<User> {
     'userId',
     'googleId',
   );
-
-  constructor(private env: UsersEnvironment, private _messageBroker: MessageBroker) {
-    super(
-      _messageBroker.dispatchEvents,
-      User,
-      env.databaseUrl,
-      env.userDatabaseName,
-      EventTopics.Users,
-      100,
-    );
-  }
 
   async checkUsernameAvailibility(username: string) {
     const existingUsername = await this.usernameMapping.get(username);

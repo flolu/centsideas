@@ -5,8 +5,8 @@ import { IUserUpdatedEvent, IUserState } from '@centsideas/models';
 export class UserUpdatedEvent extends Event<IUserUpdatedEvent> {
   static readonly eventName: string = UserEvents.UserUpdated;
 
-  constructor(userId: string, username: string | null, pendingEmail: string | null) {
-    super(UserUpdatedEvent.eventName, { username, pendingEmail }, userId);
+  constructor(userId: string, payload: IUserUpdatedEvent) {
+    super(UserUpdatedEvent.eventName, payload, userId);
   }
 
   static commit(state: IUserState, event: UserUpdatedEvent): IUserState {

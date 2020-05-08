@@ -1,4 +1,5 @@
 import { injectable, inject } from 'inversify';
+// FIXME create abstraction for db (this class shouldn't know anything about which db it is using)
 import { MongoClient } from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
@@ -6,6 +7,7 @@ import { IEvent } from '@centsideas/models';
 import { Identifier, Logger } from '@centsideas/utils';
 import { IEventEntity } from './event-entity';
 import { ISnapshot } from './snapshot';
+import { MessageBroker } from './message-broker';
 
 interface ICounter {
   name: string;
@@ -17,8 +19,7 @@ interface IDatabaseEvent extends IEvent {
 }
 
 // FIXME create indexes to increase read performance
-
-// TODO factory for injecting and make non-abstract class that isn't extended?
+// FIXME try other db's (mongodb is probably not the best way to store events)
 
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> {
@@ -33,10 +34,9 @@ export abstract class EventRepository<Entity extends IEventEntity> {
   private readonly counterCollectionSuffix = 'counters';
 
   @inject(Logger) logger!: Logger;
+  @inject(MessageBroker) messageBroker!: MessageBroker;
 
   constructor(
-    // TODO i might aswell just inject the message broker now
-    private dispatchEvents: (topic: string, events: IEvent[]) => void,
     private entity: new (snapshot?: ISnapshot) => Entity,
     private databaseUrl: string,
     private databaseName: string,
@@ -75,7 +75,7 @@ export abstract class EventRepository<Entity extends IEventEntity> {
       }),
     );
 
-    this.dispatchEvents(this.topicName, events);
+    await this.messageBroker.dispatchEvents(this.topicName, events);
     return entity.confirmEvents();
   };
 
@@ -94,22 +94,8 @@ export abstract class EventRepository<Entity extends IEventEntity> {
     return entity.confirmEvents();
   };
 
-  generateAggregateId = async (long = true, maxRetries = 5) => {
-    const collection = await this.eventsCollection();
-    let count = 0;
-
-    const check = async (resolve: (id: string) => void) => {
-      count++;
-      if (count > maxRetries)
-        throw new Error(`Unique aggregate id could not be generated after ${count} retries`);
-
-      const id = long ? Identifier.makeLongId() : Identifier.makeShortId();
-      const result = await collection.findOne({ aggregateId: id });
-      result ? await check(resolve) : resolve(id);
-    };
-
-    return new Promise(check);
-  };
+  generateAggregateId = (long = true) =>
+    long ? Identifier.makeLongId() : Identifier.makeShortId();
 
   private getEventsAfterSnapshot = async (snapshot: ISnapshot) => {
     const collection = await this.eventsCollection();

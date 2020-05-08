@@ -1,5 +1,5 @@
 import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
-import { IReviewScores, IReviewState } from '@centsideas/models';
+import { IReviewState, IReviewCreatedEvent, IReviewUpdatedEvent } from '@centsideas/models';
 
 import { commitFunctions, ReviewEvents } from './events';
 import { ReviewDeletedEvent } from './events/review-deleted.event';
@@ -24,22 +24,14 @@ export class Review extends EventEntity<IReviewState> {
     } else super(commitFunctions, Review.initialState);
   }
 
-  static create(
-    reviewId: string,
-    ideaId: string,
-    userId: string,
-    content: string,
-    scores: IReviewScores,
-  ): Review {
+  static create(payload: IReviewCreatedEvent): Review {
     const review = new Review();
-    review.pushEvents(
-      new ReviewEvents.ReviewCreatedEvent(reviewId, ideaId, userId, content, scores),
-    );
+    review.pushEvents(new ReviewEvents.ReviewCreatedEvent(payload));
     return review;
   }
 
-  update(content?: string, scores?: IReviewScores) {
-    this.pushEvents(new ReviewEvents.ReviewUpdatedEvent(this.currentState.id, content, scores));
+  update(payload: IReviewUpdatedEvent) {
+    this.pushEvents(new ReviewEvents.ReviewUpdatedEvent(this.currentState.id, payload));
     return this;
   }
 

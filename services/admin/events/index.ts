@@ -5,7 +5,7 @@ import { ErrorOccurredEvent } from './error-occurred.event';
 
 export const ErrorEntityEvents = {
   ErrorOccurredEvent,
-  // TODO error fixed event, error needs to be fixed event, ...
+  // FIXME error fixed event, error needs to be fixed event, ...
 };
 
 export const errorCommitFunctions = composeCommitFunctions<IErrorEntityState>(ErrorEntityEvents);

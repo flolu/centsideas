@@ -20,6 +20,9 @@ export class IdeasServer {
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
+    // TODO make sure worker id is set for unique shortid's https://github.com/dylang/shortid#shortidworkerinteger
+    this.logger.info('launch with worker id', process.env.NODE_UNIQUE_ID);
+
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);

@@ -20,6 +20,8 @@ export class ReviewsServer {
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch with worker id', process.env.NODE_UNIQUE_ID);
+
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);

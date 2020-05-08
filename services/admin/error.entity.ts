@@ -1,5 +1,5 @@
 import { EventEntity, initialEntityBaseState, ISnapshot } from '@centsideas/event-sourcing';
-import { IErrorEntityState } from '@centsideas/models';
+import { IErrorEntityState, IErrorOccurredEvent } from '@centsideas/models';
 
 import { errorCommitFunctions, ErrorEntityEvents } from './events';
 
@@ -21,30 +21,9 @@ export class ErrorEntity extends EventEntity<IErrorEntityState> {
     } else super(errorCommitFunctions, ErrorEntity.initialState);
   }
 
-  // TODO consider passing object instead of all those individual params?
-  static create(
-    errorId: string,
-    occurredAt: string,
-    unexpected: boolean,
-    service: string,
-    stack: string,
-    details: string,
-    name: string,
-    message: string,
-  ): ErrorEntity {
+  static create(payload: IErrorOccurredEvent): ErrorEntity {
     const error = new ErrorEntity();
-    error.pushEvents(
-      new ErrorEntityEvents.ErrorOccurredEvent(
-        errorId,
-        occurredAt,
-        unexpected,
-        service,
-        stack,
-        details,
-        name,
-        message,
-      ),
-    );
+    error.pushEvents(new ErrorEntityEvents.ErrorOccurredEvent(payload));
     return error;
   }
 }

@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { EventRepository, MessageBroker, EntityMapping } from '@centsideas/event-sourcing';
+import { EventRepository, EntityMapping } from '@centsideas/event-sourcing';
 import { EventTopics } from '@centsideas/enums';
 
 import { NotificationEnvironment } from './notifications.environment';
@@ -8,20 +8,19 @@ import { IUserIdNotificationSettingsMapping } from './models';
 
 @injectable()
 export class NotificationSettingsRepository extends EventRepository<NotificationSettings> {
-  userIdMapping = new EntityMapping<IUserIdNotificationSettingsMapping>(
-    this.env.databaseUrl,
-    'userIdMappings',
-    'notificationSettingsId',
-    'userId',
-  );
-
-  constructor(private _messageBroker: MessageBroker, private env: NotificationEnvironment) {
+  constructor(private env: NotificationEnvironment) {
     super(
-      _messageBroker.dispatchEvents,
       NotificationSettings,
       env.databaseUrl,
       env.notificationSettingsDatabaseName,
       EventTopics.Notifications,
     );
   }
+
+  userIdMapping = new EntityMapping<IUserIdNotificationSettingsMapping>(
+    this.env.databaseUrl,
+    'userIdMappings',
+    'notificationSettingsId',
+    'userId',
+  );
 }

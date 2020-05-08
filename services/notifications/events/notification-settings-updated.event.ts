@@ -5,12 +5,8 @@ import { INotificationSettingsState, INotificationSettingsUpdatedEvent } from '@
 export class NotificationSettingsUpdatedEvent extends Event<INotificationSettingsUpdatedEvent> {
   static readonly eventName: string = NotificationSettingsEvents.Updated;
 
-  constructor(notificationSettingsId: string, sendEmails: boolean, sendPushes: boolean) {
-    super(
-      NotificationSettingsUpdatedEvent.eventName,
-      { sendEmails, sendPushes },
-      notificationSettingsId,
-    );
+  constructor(notificationSettingsId: string, payload: INotificationSettingsUpdatedEvent) {
+    super(NotificationSettingsUpdatedEvent.eventName, payload, notificationSettingsId);
   }
 
   static commit(

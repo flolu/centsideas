@@ -1,11 +1,10 @@
 import { injectable } from 'inversify';
 import * as faker from 'faker';
-import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
 import * as queryString from 'query-string';
 
-import { decodeToken, TokenInvalidError, Identifier } from '@centsideas/utils';
-import { ILoginTokenPayload, IRefreshTokenPayload } from '@centsideas/models';
+import { decodeToken, TokenInvalidError, Identifier, signToken } from '@centsideas/utils';
+import { ILoginTokenPayload, IRefreshTokenPayload, IAccessTokenPayload } from '@centsideas/models';
 import { TopLevelFrontendRoutes, TokenExpirationTimes } from '@centsideas/enums';
 import { GlobalEnvironment } from '@centsideas/environment';
 import {
@@ -43,30 +42,29 @@ export class AuthHandler {
     const loginId = await this.loginRepository.generateAggregateId();
 
     const tokenData: ILoginTokenPayload = { loginId, email, firstLogin };
-    const token = jwt.sign(tokenData, this.env.loginTokenSecret, {
-      expiresIn: TokenExpirationTimes.LoginToken,
-    });
+    const token = signToken(tokenData, this.env.loginTokenSecret, TokenExpirationTimes.LoginToken);
 
     const login = Login.create(loginId, email, token, firstLogin);
     return this.loginRepository.save(login);
   };
 
   confirmLogin: ConfirmLogin = async ({ token }) => {
-    const data = decodeToken(token, this.env.loginTokenSecret);
-
-    const payload: ILoginTokenPayload = data;
-    const login = await this.loginRepository.findById(payload.loginId);
+    const { loginId, firstLogin, email } = decodeToken<ILoginTokenPayload>(
+      token,
+      this.env.loginTokenSecret,
+    );
+    const login = await this.loginRepository.findById(loginId);
 
     if (login && login.persistedState.confirmedAt)
       throw new TokenInvalidError(token, `This login was already confirmed`);
 
-    if (payload.firstLogin && payload.loginId) {
-      const createdUser = await this.handleUserCreation(payload.email);
+    if (firstLogin && loginId) {
+      const createdUser = await this.handleUserCreation(email);
       return this.handleConfirmedLogin(createdUser, login);
     }
 
-    const emailUserMapping = await this.userRepository.emailMapping.get(payload.email);
-    if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(payload.email);
+    const emailUserMapping = await this.userRepository.emailMapping.get(email);
+    if (!emailUserMapping) throw new UserErrors.NoUserWithEmailError(email);
 
     const user = await this.userRepository.findById(emailUserMapping.userId);
 
@@ -140,11 +138,14 @@ export class AuthHandler {
   };
 
   refreshToken: RefreshToken = async ({ refreshToken }) => {
-    const data: IRefreshTokenPayload = decodeToken(refreshToken, this.env.refreshTokenSecret);
+    const { userId, tokenId } = decodeToken<IRefreshTokenPayload>(
+      refreshToken,
+      this.env.refreshTokenSecret,
+    );
 
-    const user = await this.userRepository.findById(data.userId);
+    const user = await this.userRepository.findById(userId);
 
-    if (user.persistedState.refreshTokenId !== data.tokenId)
+    if (user.persistedState.refreshTokenId !== tokenId)
       throw new TokenInvalidError(refreshToken, 'token was invalidated');
 
     const accessToken = this.generateAccessToken(user);
@@ -168,10 +169,9 @@ export class AuthHandler {
 
     const user = await this.userRepository.findById(userId);
 
-    const refreshTokenId = Identifier.makeLongId();
-    user.revokeRefreshToken(refreshTokenId, reason);
+    const newRefreshTokenId = Identifier.makeLongId();
+    user.revokeRefreshToken({ newRefreshTokenId, reason, userId });
 
-    // FIXME maybe send email to user
     return this.userRepository.save(user);
   };
 
@@ -186,9 +186,9 @@ export class AuthHandler {
 
     const username = await this.generateUsername(usernamesToTry);
 
-    const userId = await this.userRepository.generateAggregateId();
+    const userId = await this.userRepository.generateAggregateId(false);
     const refreshTokenId = Identifier.makeLongId();
-    const user = User.create(userId, email, username, refreshTokenId);
+    const user = User.create({ userId, email, username, refreshTokenId });
 
     // FIXME somehow make sure all three succeed to complete the user creation (we probably need compensations events if not)
     await this.userRepository.usernameMapping.insert(userId, username);
@@ -196,6 +196,7 @@ export class AuthHandler {
     return this.userRepository.save(user);
   };
 
+  // FIXME currently when user is alrady logged in and then loggs in with new account old account will stay (should this be like this?)
   private handleConfirmedLogin = async (user: User, login: Login) => {
     const accessToken = this.generateAccessToken(user);
     const refreshToken = this.generateRefreshToken(user);
@@ -207,20 +208,16 @@ export class AuthHandler {
   };
 
   private generateAccessToken = (user: User) => {
-    return jwt.sign({ userId: user.persistedState.id }, this.env.accessTokenSecret, {
-      expiresIn: TokenExpirationTimes.AccessToken,
-    });
+    const payload: IAccessTokenPayload = { userId: user.persistedState.id };
+    return signToken(payload, this.env.accessTokenSecret, TokenExpirationTimes.AccessToken);
   };
 
   private generateRefreshToken = (user: User) => {
-    return jwt.sign(
-      {
-        userId: user.persistedState.id,
-        tokenId: user.persistedState.refreshTokenId,
-      },
-      this.env.refreshTokenSecret,
-      { expiresIn: TokenExpirationTimes.RefreshToken },
-    );
+    const payload: IRefreshTokenPayload = {
+      userId: user.persistedState.id,
+      tokenId: user.persistedState.refreshTokenId,
+    };
+    return signToken(payload, this.env.refreshTokenSecret, TokenExpirationTimes.RefreshToken);
   };
 
   private fetchGoogleUserInfo = async (code: string): Promise<IGoogleUserinfo> => {

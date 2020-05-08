@@ -25,14 +25,13 @@ export class NotificationsServer {
     private logger: Logger,
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
+    this.logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch with worker id', process.env.NODE_UNIQUE_ID);
+
     // FIXME also consider kafka connection in health checks
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);
-
-    this.messageBroker.events(EventTopics.Ideas).subscribe(this.handleIdeasEvents);
-    this.messageBroker.events(EventTopics.Logins).subscribe(this.handleLoginEvents);
-    this.messageBroker.events(EventTopics.Users).subscribe(this.handleUsersEvents);
 
     const commandService = this.rpcServer.loadService('notification', 'NotificationCommands');
     this.rpcServer.addService<INotificationCommands>(commandService, {
@@ -41,43 +40,37 @@ export class NotificationsServer {
       getSettings: this.notificationSettingsHandlers.getSettings,
     });
 
-    this.logger.info('launch in', this.globalEnv.environment, 'mode');
-  }
-
-  // TODO better error handling?
-  private handleIdeasEvents = async (event: IEvent<any>) => {
+    // FIXME better error handling
     try {
-      switch (event.name) {
-        case IdeaEvents.IdeaCreated:
-          return this.notificationsHandler.handleIdeaCreatedNotification(event);
-      }
+      this.messageBroker.events(EventTopics.Ideas).subscribe(this.handleIdeasEvents);
+      this.messageBroker.events(EventTopics.Logins).subscribe(this.handleLoginEvents);
+      this.messageBroker.events(EventTopics.Users).subscribe(this.handleUsersEvents);
     } catch (error) {
       this.logger.error(error);
+    }
+  }
+
+  private handleIdeasEvents = async (event: IEvent<any>) => {
+    switch (event.name) {
+      case IdeaEvents.IdeaCreated:
+        return this.notificationsHandler.handleIdeaCreatedNotification(event);
     }
   };
 
   private handleLoginEvents = async (event: IEvent<any>) => {
-    try {
-      switch (event.name) {
-        case LoginEvents.LoginRequested:
-          return this.notificationsHandler.handleLoginNotification(event);
-      }
-    } catch (error) {
-      this.logger.error(error);
+    switch (event.name) {
+      case LoginEvents.LoginRequested:
+        return this.notificationsHandler.handleLoginNotification(event);
     }
   };
 
   private handleUsersEvents = async (event: IEvent<any>) => {
-    try {
-      switch (event.name) {
-        case UserEvents.EmailChangeRequested:
-          return this.notificationsHandler.handleEmailChangeRequestedNotification(event);
+    switch (event.name) {
+      case UserEvents.EmailChangeRequested:
+        return this.notificationsHandler.handleEmailChangeRequestedNotification(event);
 
-        case UserEvents.EmailChangeConfirmed:
-          return this.notificationsHandler.handleEmailChangedNotification(event);
-      }
-    } catch (error) {
-      this.logger.error(error);
+      case UserEvents.EmailChangeConfirmed:
+        return this.notificationsHandler.handleEmailChangedNotification(event);
     }
   };
 }

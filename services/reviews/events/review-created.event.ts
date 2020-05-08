@@ -1,18 +1,12 @@
 import { Event } from '@centsideas/event-sourcing';
 import { ReviewEvents } from '@centsideas/enums';
-import { IReviewCreatedEvent, IReviewState, IReviewScores } from '@centsideas/models';
+import { IReviewCreatedEvent, IReviewState } from '@centsideas/models';
 
 export class ReviewCreatedEvent extends Event<IReviewCreatedEvent> {
   static readonly eventName: string = ReviewEvents.ReviewCreated;
 
-  constructor(
-    reviewId: string,
-    ideaId: string,
-    userId: string,
-    content: string,
-    scores: IReviewScores,
-  ) {
-    super(ReviewCreatedEvent.eventName, { reviewId, ideaId, userId, content, scores }, reviewId);
+  constructor(payload: IReviewCreatedEvent) {
+    super(ReviewCreatedEvent.eventName, payload, payload.reviewId);
   }
 
   static commit(state: IReviewState, event: ReviewCreatedEvent): IReviewState {

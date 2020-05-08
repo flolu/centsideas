@@ -1,5 +1,5 @@
 import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
-import { IIdeaState } from '@centsideas/models';
+import { IIdeaState, IIdeaCreatedEvent, IIdeaUpdatedEvent } from '@centsideas/models';
 
 import { commitFunctions, IdeasEvents } from './events';
 
@@ -23,14 +23,14 @@ export class Idea extends EventEntity<IIdeaState> {
     } else super(commitFunctions, Idea.initialState);
   }
 
-  static create(ideaId: string, userId: string, title: string, description: string): Idea {
+  static create(payload: IIdeaCreatedEvent): Idea {
     const idea = new Idea();
-    idea.pushEvents(new IdeasEvents.IdeaCreatedEvent(ideaId, userId, title, description));
+    idea.pushEvents(new IdeasEvents.IdeaCreatedEvent(payload));
     return idea;
   }
 
-  update(title?: string, description?: string): Idea {
-    this.pushEvents(new IdeasEvents.IdeaUpdatedEvent(this.currentState.id, title, description));
+  update(payload: IIdeaUpdatedEvent): Idea {
+    this.pushEvents(new IdeasEvents.IdeaUpdatedEvent(this.currentState.id, payload));
     return this;
   }
 

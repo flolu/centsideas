@@ -20,8 +20,8 @@ export class ReviewsHandler {
     ReviewErrors.ReviewContentLengthError.validate(content);
     ReviewErrors.ReviewScoresRangeError.validate(scores);
 
-    const reviewId = await this.repository.generateAggregateId();
-    const review = Review.create(reviewId, ideaId, userId, content, scores);
+    const reviewId = await this.repository.generateAggregateId(false);
+    const review = Review.create({ reviewId, ideaId, userId, content, scores });
 
     const created = await this.repository.save(review);
     return created.persistedState;
@@ -38,7 +38,7 @@ export class ReviewsHandler {
     const review = await this.repository.findById(reviewId);
     PermissionDeniedError.validate(userId, review.persistedState.userId);
 
-    review.update(content, scores);
+    review.update({ content, scores });
     const updated = await this.repository.save(review);
     return updated.persistedState;
   };

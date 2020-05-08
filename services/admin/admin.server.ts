@@ -20,7 +20,7 @@ import { AdminDatabase } from './admin.database';
 import { AdminEnvironment } from './admin.environment';
 import { ErrorRepository } from './error.repository';
 
-// TODO secure the connection to admin
+// FIXME secure the connection to admin
 // FIXME delete events older than a month (otherwise the admin db would become bigger than all other dbs together)
 @injectable()
 export class AdminServer {
@@ -39,6 +39,8 @@ export class AdminServer {
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch with worker id', process.env.NODE_UNIQUE_ID);
+
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(4000);

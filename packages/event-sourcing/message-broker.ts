@@ -18,8 +18,6 @@ import { OtherTopics } from '@centsideas/enums';
 
 // FIXME it will probably make more sense to split message broker into a producer and consumer class
 
-// TODO factory for injecting
-
 @injectable()
 export class MessageBroker {
   private kafka = new Kafka({ brokers: [this.globalEnv.kafkaBrokerHost], logLevel: logLevel.WARN });

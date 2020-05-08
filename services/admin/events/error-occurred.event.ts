@@ -5,21 +5,8 @@ import { ErrorEvents } from '@centsideas/enums';
 export class ErrorOccurredEvent extends Event<IErrorOccurredEvent> {
   static readonly eventName: string = ErrorEvents.ErrorOccurred;
 
-  constructor(
-    errorId: string,
-    occurredAt: string,
-    unexpected: boolean,
-    service: string,
-    stack: string,
-    details: string,
-    name: string,
-    message: string,
-  ) {
-    super(
-      ErrorOccurredEvent.eventName,
-      { errorId, occurredAt, unexpected, service, stack, details, name, message },
-      errorId,
-    );
+  constructor(payload: IErrorOccurredEvent) {
+    super(ErrorOccurredEvent.eventName, payload, payload.errorId);
   }
 
   static commit(state: IErrorEntityState, event: ErrorOccurredEvent): IErrorEntityState {

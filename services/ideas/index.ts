@@ -28,3 +28,5 @@ DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [60, 100, 80]);
 DependencyInjection.registerSingleton(Logger);
 DependencyInjection.registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
 DependencyInjection.bootstrap(IdeasServer);
+
+// TODO test this service

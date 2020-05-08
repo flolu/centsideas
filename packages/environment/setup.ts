@@ -7,7 +7,6 @@ import { config } from 'dotenv';
 import * as chalk from 'chalk';
 
 import { IEnvironment } from './environment.model';
-import { Environments } from '@centsideas/enums';
 import { setupDotEnvFile, setupTemplateFile } from './utils';
 import { templatePaths, genPaths, dotenvFilePath } from './paths';
 

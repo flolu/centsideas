@@ -12,7 +12,6 @@ export class IdeasHandler {
   constructor(private repository: IdeaRepository) {}
 
   create: CreateIdea = async ({ userId, title, description }) => {
-    // TODO error handling doesn't work when doing something like `throw 'some-message'`
     if (!userId) throw new UnauthenticatedError();
 
     title = sanitizeHtml(title || '');
@@ -22,8 +21,8 @@ export class IdeasHandler {
     IdeaErrors.IdeaTitleLengthError.validate(title);
     IdeaErrors.IdeaDescriptionLengthError.validate(description);
 
-    const ideaId = await this.repository.generateAggregateId();
-    const idea = Idea.create(ideaId, userId, title, description);
+    const ideaId = await this.repository.generateAggregateId(false);
+    const idea = Idea.create({ ideaId, userId, title, description });
 
     const created = await this.repository.save(idea);
     return created.persistedState;
@@ -47,7 +46,7 @@ export class IdeasHandler {
       idea.persistedState.id,
     );
 
-    idea.update(title, description);
+    idea.update({ title, description });
 
     const updated = await this.repository.save(idea);
     return updated.persistedState;

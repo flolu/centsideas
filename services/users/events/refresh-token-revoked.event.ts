@@ -5,12 +5,8 @@ import { IUserState, IRefreshTokenRevokedEvent } from '@centsideas/models';
 export class RefreshTokenRevokedEvent extends Event<IRefreshTokenRevokedEvent> {
   static readonly eventName: string = UserEvents.RefreshTokenRevoked;
 
-  constructor(userId: string, newTokenId: string, reason: string) {
-    super(
-      RefreshTokenRevokedEvent.eventName,
-      { userId, reason, newRefreshTokenId: newTokenId },
-      userId,
-    );
+  constructor(userId: string, payload: IRefreshTokenRevokedEvent) {
+    super(RefreshTokenRevokedEvent.eventName, { ...payload, userId }, userId);
   }
 
   static commit(state: IUserState, event: RefreshTokenRevokedEvent): IUserState {

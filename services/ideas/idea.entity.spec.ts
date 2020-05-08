@@ -26,13 +26,23 @@ describe('Idea Entity', () => {
   });
 
   it('should create an idea', () => {
-    const idea = Idea.create(fakeIdeaId, fakeUserId, fakeIdeaTitle, fakeIdeaDescription);
+    const idea = Idea.create({
+      ideaId: fakeIdeaId,
+      userId: fakeUserId,
+      title: fakeIdeaTitle,
+      description: fakeIdeaDescription,
+    });
 
     expect(idea.currentState.id).toEqual(fakeIdeaId);
   });
 
   it('should delete an idea', () => {
-    const idea = Idea.create(fakeIdeaId, fakeUserId, fakeIdeaTitle, fakeIdeaDescription);
+    const idea = Idea.create({
+      ideaId: fakeIdeaId,
+      userId: fakeUserId,
+      title: fakeIdeaTitle,
+      description: fakeIdeaDescription,
+    });
     idea.delete();
 
     expect(idea.currentState.deleted).toEqual(true);

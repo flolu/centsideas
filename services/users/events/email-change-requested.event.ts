@@ -5,8 +5,8 @@ import { IEmailChangeRequestedEvent, IUserState } from '@centsideas/models';
 export class EmailChangeRequestedEvent extends Event<IEmailChangeRequestedEvent> {
   static readonly eventName: string = UserEvents.EmailChangeRequested;
 
-  constructor(userId: string, email: string, token: string) {
-    super(EmailChangeRequestedEvent.eventName, { email, token }, userId);
+  constructor(userId: string, payload: IEmailChangeRequestedEvent) {
+    super(EmailChangeRequestedEvent.eventName, payload, userId);
   }
 
   static commit(state: IUserState, event: EmailChangeRequestedEvent): IUserState {

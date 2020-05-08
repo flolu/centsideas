@@ -1,5 +1,4 @@
 import * as express from 'express';
-import * as jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';
 import { BaseMiddleware } from 'inversify-express-utils';
 
@@ -7,6 +6,7 @@ import { IAccessTokenPayload } from '@centsideas/models';
 import { HeaderKeys } from '@centsideas/enums';
 
 import { GatewayEnvironment } from '../gateway.environment';
+import { decodeToken } from '@centsideas/utils';
 
 @injectable()
 export class AuthMiddleware extends BaseMiddleware {
@@ -21,9 +21,8 @@ export class AuthMiddleware extends BaseMiddleware {
 
     try {
       const accessToken = (authHeader as string).split(' ')[1];
-      const decoded = jwt.verify(accessToken, this.env.accessTokenSecret);
-      const data: IAccessTokenPayload = decoded as any;
-      res.locals.userId = data.userId;
+      const { userId } = decodeToken<IAccessTokenPayload>(accessToken, this.env.accessTokenSecret);
+      res.locals.userId = userId;
       // tslint:disable-next-line:no-empty
     } catch (error) {}
 

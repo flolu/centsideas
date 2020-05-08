@@ -1,11 +1,11 @@
 import { injectable } from 'inversify';
-import * as jwt from 'jsonwebtoken';
 
 import {
   sanitizeHtml,
   decodeToken,
   UnauthenticatedError,
   PermissionDeniedError,
+  signToken,
 } from '@centsideas/utils';
 import { IEmailChangeTokenPayload } from '@centsideas/models';
 import { TokenExpirationTimes } from '@centsideas/enums';
@@ -49,51 +49,51 @@ export class UsersHandler implements IUserCommands {
       user = await this.requestEmailChange(userId, email);
     }
 
-    user.update(username, isNewEmail ? email : null);
+    user.update({ username, pendingEmail: isNewEmail ? email : null });
 
     if (username) await this.userRepository.usernameMapping.update(userId, username);
-    const saved: User = await this.userRepository.save(user);
+    const saved = await this.userRepository.save(user);
     return saved.persistedState;
   };
 
   confirmEmailChange: ConfirmEmailChange = async ({ token, userId }) => {
     if (!userId) throw new UnauthenticatedError();
 
-    const data = decodeToken(token, this.env.changeEmailTokenSecret);
-    const payload: IEmailChangeTokenPayload = data;
-
+    const payload = decodeToken<IEmailChangeTokenPayload>(token, this.env.changeEmailTokenSecret);
     PermissionDeniedError.validate(userId, payload.userId);
 
     await this.userRepository.checkEmailAvailability(payload.newEmail);
 
     const user = await this.userRepository.findById(payload.userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, payload.newEmail);
-    user.confirmEmailChange(payload.newEmail, payload.currentEmail);
+    user.confirmEmailChange({ newEmail: payload.newEmail, oldEmail: payload.currentEmail });
 
     await this.userRepository.emailMapping.update(user.persistedState.id, payload.newEmail);
     const updated = await this.userRepository.save(user);
     return updated.persistedState;
   };
 
-  private requestEmailChange = async (userId: string, newEmail: string): Promise<User> => {
-    UserErrors.EmailRequiredError.validate(newEmail);
-    UserErrors.EmailInvalidError.validate(newEmail);
+  private requestEmailChange = async (userId: string, email: string): Promise<User> => {
+    UserErrors.EmailRequiredError.validate(email);
+    UserErrors.EmailInvalidError.validate(email);
 
     const user = await this.userRepository.findById(userId);
-    UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, newEmail);
+    UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, email);
 
-    const emailUserMapping = await this.userRepository.emailMapping.get(newEmail);
-    if (emailUserMapping) throw new UserErrors.EmailNotAvailableError(newEmail);
+    const emailUserMapping = await this.userRepository.emailMapping.get(email);
+    if (emailUserMapping) throw new UserErrors.EmailNotAvailableError(email);
 
     const tokenPayload: IEmailChangeTokenPayload = {
       currentEmail: user.persistedState.email,
-      newEmail,
+      newEmail: email,
       userId,
     };
-    const token = jwt.sign(tokenPayload, this.env.changeEmailTokenSecret, {
-      expiresIn: TokenExpirationTimes.EmailChangeToken,
-    });
+    const token = signToken(
+      tokenPayload,
+      this.env.changeEmailTokenSecret,
+      TokenExpirationTimes.EmailChangeToken,
+    );
 
-    return user.requestEmailChange(newEmail, token);
+    return user.requestEmailChange({ email, token });
   };
 }
