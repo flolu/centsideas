@@ -8,6 +8,7 @@ package(default_visibility = ["//visibility:public"])
 
 lib_deps = [
     "//packages/utils",
+    "//packages/dependency-injection",
     "//packages/enums",
     "//packages/models",
     "//packages/environment",

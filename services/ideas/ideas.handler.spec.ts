@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { DependencyInjection } from '@centsideas/utils';
+import { DependencyInjection } from '@centsideas/dependency-injection';
 
 import { IdeasHandler } from './ideas.handler';
 import { IdeaRepository } from './idea.repository';

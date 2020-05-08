@@ -1,7 +1,8 @@
 // tslint:disable-next-line:no-var-requires
 if (!process.env.environment) require('../../register-aliases').registerAliases();
 
-import { DependencyInjection, UTILS_TYPES, Logger } from '@centsideas/utils';
+import { UTILS_TYPES, Logger } from '@centsideas/utils';
+import { DependencyInjection } from '@centsideas/dependency-injection';
 import { Services } from '@centsideas/enums';
 import { MessageBroker } from '@centsideas/event-sourcing';
 import { GlobalEnvironment } from '@centsideas/environment';

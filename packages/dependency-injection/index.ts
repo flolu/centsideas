@@ -1,6 +1,5 @@
-import { Container, interfaces } from 'inversify';
-
 import 'reflect-metadata';
+import { Container, interfaces } from 'inversify';
 
 /**
  * `skipBaseClassChecks: true`

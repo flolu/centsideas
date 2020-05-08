@@ -7,9 +7,10 @@ import { injectable } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
 
 import { RpcStatusHttpMap } from '@centsideas/rpc';
-import { DependencyInjection, Logger } from '@centsideas/utils';
+import { Logger } from '@centsideas/utils';
 import { Environments } from '@centsideas/enums';
 import { GlobalEnvironment } from '@centsideas/environment';
+import { DependencyInjection } from '@centsideas/dependency-injection';
 
 import { GatewayEnvironment } from './gateway.environment';
 

@@ -4,42 +4,42 @@ This is a project with the purpose of learning the architecture of complex appli
 
 # Goals
 
-| Requirement                                    | Keywords                                                      | Status |
-| ---------------------------------------------- | ------------------------------------------------------------- | ------ |
-| Microservices                                  | **small services**, **docker**                                | ✔️     |
-| Redux frontend                                 | **reactive**, **actions**, **effects**                        | ✔️     |
-| Monorepo                                       | **all packages and services in one repo**                     | ✔️     |
-| Typescript                                     | **types everywhere!**                                         | ✔️     |
-| Local development                              | **hot reload**, **docker-compose**, **vscode**, **ubuntu**    | ✔️     |
-| Gateway                                        | **discovery**, **entry point**, **auth**                      | ✔️     |
-| Authentication                                 | **passwordless**, **google login**                            | ✔️     |
-| Progressive Web App                            | **pwa**, **service worker**, mobile-friendly                  | ✔️     |
-| Frontend                                       | **code splitting**, **~100% lighthouse score**                | ✔️     |
-| Remote Procedure Calls                         | **grpc**, **protobuf**, grpc-web                              | ✔️     |
-| Local Kubernetes Cluster                       | **microk8s**                                                  | ✔️     |
-| [Event sourcing](https://youtu.be/GzrZworHpIk) | **event-driven**, **commands**, message broker, replay events | ✅     |
-| Deployment                                     | ci, cd, **build automation**, **bazel**                       | ✅     |
-| Testing                                        | **unit tests**, integration tests, ~100% coverage             | ✅     |
-| Kubernetes                                     | **container orchestration**, autoscaling, rolling updates     | ✅     |
-| Database(s)                                    | **data storage**, **event store**, backups                    | ✅     |
-| Search Engine Optimization                     | **server side rendering**, marketing, google                  | ✅     |
-| Security                                       | encryption, **https**                                         | ✅     |
-| Push notifications                             | mobile, **desktop**                                           | ✅     |
-| Admin panel                                    | monitoring, **events**, logs, errors, prometheus, realtime    | ✅     |
-| Realtime                                       | some kind of realtime integration, socketio, grpc             | ❌     |
-| File storage                                   | blob storage, encrypted, access control                       | ❌     |
-| General Data Protection Regulation             | legal, privacy, gdpr, eu law                                  | ❌     |
-| Backups                                        | automatic, manual, restore                                    | ❌     |
-| Multi-Language                                 | change language, easily add more                              | ❌     |
-| Static pages                                   | homepage, static content                                      | ❌     |
-| Search                                         | indexing, realtime search                                     | ❌     |
-| User Interface                                 | modern, drag&drop, touch gestures                             | ❌     |
-| Trusted Web Activity                           | twa, publish app on play store                                | ❌     |
-| Message Queue                                  | batching, scheduled tasks                                     | ❌     |
-| Compute server                                 | non-nodejs server for high cpu/gpu tasks                      | ❌     |
-| Payments                                       | payout, credit card, paypal, altcoins                         | ❌     |
-| Recommendation System                          | machine learning                                              | ❌     |
-| Clean Architecture                             | ioc, [example](https://youtu.be/CnailTcJV_U)                  | ❌     |
+| Requirement                        | Keywords                                                      | Status |
+| ---------------------------------- | ------------------------------------------------------------- | ------ |
+| Microservices                      | **small services**, **docker**                                | ✔️     |
+| Redux frontend                     | **reactive**, **actions**, **effects**                        | ✔️     |
+| Monorepo                           | **all packages and services in one repo**                     | ✔️     |
+| Typescript                         | **types everywhere!**                                         | ✔️     |
+| Local development                  | **hot reload**, **docker-compose**, **vscode**, **ubuntu**    | ✔️     |
+| Gateway                            | **discovery**, **entry point**, **auth**                      | ✔️     |
+| Authentication                     | **passwordless**, **google login**                            | ✔️     |
+| Progressive Web App                | **pwa**, **service worker**, mobile-friendly                  | ✔️     |
+| Frontend                           | **code splitting**, **~100% lighthouse score**                | ✔️     |
+| Remote Procedure Calls             | **grpc**, **protobuf**, grpc-web                              | ✔️     |
+| Local Kubernetes Cluster           | **microk8s**                                                  | ✔️     |
+| [Event sourcing][0]                | **event-driven**, **commands**, message broker, replay events | ✅     |
+| Deployment                         | ci, cd, **build automation**, **bazel**                       | ✅     |
+| Testing                            | **unit tests**, integration tests, ~100% coverage             | ✅     |
+| Kubernetes                         | **container orchestration**, autoscaling, rolling updates     | ✅     |
+| Database(s)                        | **data storage**, **event store**, backups                    | ✅     |
+| Search Engine Optimization         | **server side rendering**, marketing, google                  | ✅     |
+| Security                           | encryption, **https**                                         | ✅     |
+| Push notifications                 | mobile, **desktop**                                           | ✅     |
+| Admin panel                        | monitoring, **events**, logs, errors, prometheus, realtime    | ✅     |
+| [Clean Architecture][3]            | ioc, **[di][1]**, [example][2]                                | ✅     |
+| Realtime                           | some kind of realtime integration, socketio, grpc             | ❌     |
+| File storage                       | blob storage, encrypted, access control                       | ❌     |
+| General Data Protection Regulation | legal, privacy, gdpr, eu law                                  | ❌     |
+| Backups                            | automatic, manual, restore                                    | ❌     |
+| Multi-Language                     | change language, easily add more                              | ❌     |
+| Static pages                       | homepage, static content                                      | ❌     |
+| Search                             | indexing, realtime search                                     | ❌     |
+| User Interface                     | modern, drag&drop, touch gestures                             | ❌     |
+| Trusted Web Activity               | twa, publish app on play store                                | ❌     |
+| Message Queue                      | batching, scheduled tasks                                     | ❌     |
+| Compute server                     | non-nodejs server for high cpu/gpu tasks                      | ❌     |
+| Payments                           | payout, credit card, paypal, altcoins                         | ❌     |
+| Recommendation System              | machine learning                                              | ❌     |
 
 ✔️ Completely implemented,
 ✅ Partly implemented,
@@ -96,3 +96,8 @@ This is a project with the purpose of learning the architecture of complex appli
 # Thanks to all people listed below for your help!
 
 [@rayman1104](https://github.com/rayman1104) [@marcus-sa](https://github.com/marcus-sa) [@joeljeske](https://github.com/joeljeske)
+
+[0]: https://youtu.be/GzrZworHpIk
+[1]: https://angular.io/guide/dependency-injection
+[2]: https://youtu.be/CnailTcJV_U
+[3]: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
