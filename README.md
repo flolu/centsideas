@@ -59,9 +59,9 @@ This is a project with the purpose of learning the architecture of complex appli
 
 **Main web app**
 
-`yarn client` production server http://localhost:4000
+`yarn client` production server http://localhost:5000
 
-`yarn client:dev` development server http://localhost:4200
+`yarn client:dev` development server http://localhost:4200 (currently not working)
 
 **Admin web app**
 

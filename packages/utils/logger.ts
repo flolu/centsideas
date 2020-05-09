@@ -21,7 +21,7 @@ export class Logger {
    */
   constructor(
     private globalEnv: GlobalEnvironment,
-    @inject(UTILS_TYPES.SERVICE_NAME) private service: string = 'unknown',
+    @inject(UTILS_TYPES.SERVICE_NAME) private service: string,
     @inject(UTILS_TYPES.LOGGER_COLOR)
     private color: [number, number, number] = [Math.random() * 360, 100, 50],
   ) {}

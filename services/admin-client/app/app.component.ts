@@ -1,10 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Injector, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
 import { Socket } from 'ngx-socket-io';
 
 import { IEvent } from '@centsideas/models';
-import { ENVIRONMENT, IAdminClientEnvironment } from '@cia/environment';
 import { ApiEndpoints, AdminApiRoutes, ErrorEvents } from '@centsideas/enums';
+import { ENVIRONMENT, IAdminClientEnvironment } from '@cia/environment';
 
 @Component({
   selector: 'cia-root',
@@ -27,16 +28,21 @@ export class AppComponent {
   events: IEvent[] = [];
 
   constructor(
-    private socket: Socket,
-    @Inject(ENVIRONMENT) private env: IAdminClientEnvironment,
+    private injector: Injector,
     private http: HttpClient,
+    @Inject(ENVIRONMENT) private env: IAdminClientEnvironment,
+    @Inject(PLATFORM_ID) private platform: string,
   ) {
-    this.http
-      .get<IEvent[]>(`${this.env.gatewayUrl}/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)
-      .subscribe(events => {
-        this.events = events;
-        this.socket.on('event', event => (this.events = [JSON.parse(event), ...this.events]));
-      });
+    if (isPlatformBrowser(this.platform)) {
+      console.log('is browser');
+      const socket = this.injector.get(Socket);
+      this.http
+        .get<IEvent[]>(`${this.env.gatewayUrl}/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)
+        .subscribe(events => {
+          this.events = events;
+          socket.on('event', event => (this.events = [JSON.parse(event), ...this.events]));
+        });
+    }
   }
 
   isError(event: IEvent) {

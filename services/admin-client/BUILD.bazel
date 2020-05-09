@@ -1,14 +1,14 @@
-load("@npm_bazel_typescript//:index.bzl", "ts_devserver")
+load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
-load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_web")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
-load("@npm//history-server:index.bzl", "history_server")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+load("@npm//history-server:index.bzl", "history_server")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -119,22 +119,50 @@ pkg_web(
 )
 
 history_server(
-    name = "admin-client",
+    name = "prod_server",
     data = [":prod_app"],
     templated_args = ["-a $$(rlocation $(rootpath :prod_app))"],
 )
 
-# TODO running this target throws internal rules_nodejs error :( (try implementing universal server)
+ts_library(
+    name = "server_lib",
+    srcs = ["server.ts"],
+    deps = [
+        "//services/admin-client/app:server",
+        "@npm//@angular/core",
+        "@npm//@nguniversal/express-engine",
+        "@npm//@types/cookie-parser",
+        "@npm//@types/express",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+        "@npm//cookie-parser",
+        "@npm//express",
+        "@npm//yargs",
+    ],
+)
+
+nodejs_binary(
+    name = "admin-client",
+    data = [
+        ":prod_app",
+        ":server_lib",
+    ],
+    entry_point = ":server.ts",
+)
+
 nodejs_image(
-    name = "nodejs_image",
-    binary = ":admin-client",
-    tags = ["local"],
+    name = "prod_server_image",
+    data = [
+        ":prod_app",
+        ":server_lib",
+    ],
+    entry_point = ":server.ts",
 )
 
 k8s_deploy(
     name = "k8s",
     images = {
-        "admin-client:placeholder_name": ":nodejs_image",
+        "admin-client:placeholder_name": ":prod_server_image",
     },
     template = ":admin-client.yaml",
 )
@@ -142,7 +170,7 @@ k8s_deploy(
 microk8s_deploy(
     name = "microk8s",
     images = {
-        "admin-client:placeholder_name": ":nodejs_image",
+        "admin-client:placeholder_name": ":prod_server_image",
     },
     template = ":admin-client.yaml",
 )

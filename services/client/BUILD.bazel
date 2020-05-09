@@ -28,14 +28,6 @@ static_assets = [
     ":manifest.webmanifest",
 ] + inserted_assets
 
-filegroup(
-    name = "rxjs_umd_modules",
-    srcs = [
-        "//packages/angular-bazel:rxjs_shims.js",
-        "@npm//:node_modules/rxjs/bundles/rxjs.umd.js",
-    ],
-)
-
 sass_binary(
     name = "styles",
     src = "styles.sass",
@@ -62,7 +54,7 @@ ng_ts_library(
 )
 
 html_insert_assets(
-    name = "inject_scripts_for_dev",
+    name = "dev_html",
     outs = ["index.html"],
     args = [
         "--html=$(execpath :_index.html)",
@@ -82,7 +74,7 @@ ts_devserver(
         "//packages/angular-bazel:rxjs_umd_modules",
     ],
     static_files = [
-        ":inject_scripts_for_dev",
+        ":dev_html",
         ":manifest.webmanifest",
         ":favicon.ico",
         ":styles.css",
@@ -125,7 +117,7 @@ terser_minified(
 
 # FIXME  create a wrapper rule for this one
 html_insert_assets(
-    name = "html",
+    name = "prod_html",
     outs = ["_prod/index.html"],
     args = [
         "--html=$(execpath :_index.html)",
@@ -143,8 +135,8 @@ pkg_web(
     srcs = [
         ":bundle.min",
         ":favicon.ico",
-        ":html",
         ":manifest.webmanifest",
+        ":prod_html",
         ":robots.txt",
         ":styles.css",
         "//services/client/assets",
@@ -158,7 +150,7 @@ ngsw_config(
     name = "pwa",
     src = ":pwa_app",
     config = "//services/client:ngsw-config.json",
-    index_html = ":html",
+    index_html = ":prod_html",
 )
 
 history_server(

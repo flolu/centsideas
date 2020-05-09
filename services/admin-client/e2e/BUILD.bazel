@@ -26,7 +26,7 @@ ts_library(
 protractor_web_test_suite(
     name = "pwa_server_test",
     on_prepare = "//packages/angular-bazel:pwa-server.on-prepare.js",
-    server = "//services/admin-client",
+    server = "//services/admin-client:prod_server",
     deps = [
         ":e2e",
         "@npm//tslib",

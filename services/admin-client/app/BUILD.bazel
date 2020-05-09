@@ -47,3 +47,15 @@ ng_ts_library(
         "@npm//@angular/core",
     ],
 )
+
+ng_ts_library(
+    name = "server",
+    srcs = ["app.server.module.ts"],
+    tsconfig = "//services/admin-client:tsconfig.json",
+    deps = [
+        ":base",
+        ":prod",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-server",
+    ],
+)

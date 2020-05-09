@@ -1,4 +1,7 @@
+import { inject } from 'inversify';
+
 import { RpcStatus } from '@centsideas/enums';
+import { UTILS_TYPES } from '../utils-types';
 
 interface InternalErrorOptions {
   name: string;
@@ -9,8 +12,9 @@ interface InternalErrorOptions {
 export class InternalError extends Error {
   code = RpcStatus.UNKNOWN;
   timestamp = new Date().toISOString();
-  service = process.env.service || process.env.SERVICE || '';
   details = '';
+
+  @inject(UTILS_TYPES.SERVICE_NAME) service!: string;
 
   constructor(message: string, options?: InternalErrorOptions) {
     super(message);
