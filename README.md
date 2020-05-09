@@ -1,64 +1,192 @@
-![](misc/assets/repository-banner.jpg)
+<a href="https://centsideas.com"><img align="center" src="misc/assets/banner.png"></a>
 
-<h3 align="center">Ideas are worthless yet every valuable business started with one!</h3>
-<h4 align="center">Explore and share Fastlane business ideas based on the  <a href="https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090/" target="_blank">CENTS</a> Commandments by <a href="https://www.mjdemarco.com/" target="_blank">MJ DeMarco</a></h4>
+<h2 align="center">A modern full stack application to explore and share Fastlane business ideas<br>based on the <a href="https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090" target="_blank">CENTS</a> Commandments by <a href="https://www.mjdemarco.com" target="_blank">MJ DeMarco</a></h2>
+<p align="center">Having read <a href="http://www.themillionairefastlane.com/">The Millionaire Fastlane</a> and <a href="https://www.getunscripted.com/">UNSCRIPTED</a> by <a href="https://www.mjdemarco.com" target="_blank">MJ DeMarco</a> it is hard to imagine working a lifetime without ever enjoying true freedom. With the help of modern technology, now almost everyone has the opportunity to get UNSCRIPTED by providing real value. But just as I did, you maybe quickly noticed that building complex applications is really challenging, especially on a technical level! I am using this project to dive deep into modern technologies and learn everything needed to build great products, that people will actually enjoy using.</p>
 
----
+<table style="width:100%; text-align: left; font-size: 12px;">
+  <tr>
+    <th>Goal</th>
+    <th>Tags</th>
+    <th>Status</th>
+  </tr>
+  <tr>
+    <td>Microservices</td>
+    <td><strong>small services</strong>, <strong>docker</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Monorepo</td>
+    <td><strong>all packages and services in one git repository</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Gateway</td>
+    <td><strong>discovery</strong>, <strong>entry point</strong>,<strong>auth</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Typescript</td>
+    <td><strong>types everywhere!</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Local development</td>
+    <td><strong>hot reload</strong>, <strong>docker-compose</strong>,<strong>vscode</strong>,<strong>ubuntu</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Progressive Web App</td>
+    <td><strong>pwa</strong>, <strong>service worker</strong>,<strong>mobile-friendly</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Authentication</td>
+    <td><strong>passwordless</strong>, <strong>google sign in</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Frontend</td>
+    <td><strong>code splitting</strong>, <strong>~100% lighthouse score</strong>, <strong>ngrx</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Remote Procedure Calls</td>
+    <td><strong>grpc</strong>, <strong>protobuf</strong>, grpc-web</td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Local Kubernetes Cluster</td>
+    <td><strong>microk8s</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Push notifications</td>
+    <td><strong>desktop</strong>, <strong>mobile</strong></td>
+    <td><img src="misc/assets/check.svg" width="16"></td>
+  </tr>
+  
+  <tr>
+    <td>Event sourcing</td>
+    <td><strong>event-driven</strong>, <strong>commands</strong>, replay events</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Deployment</td>
+    <td><strong>build automation</strong>, <strong>bazel</strong>, <strong>google kubernetes engine</strong>, ci/cd</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Testing</td>
+    <td><strong>unit tests</strong>, integration tests, ~100% coverage</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Kubernetes</td>
+    <td><strong>container orchestration</strong>, autoscaling, rolling updates</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Databases</td>
+    <td><strong>event store</strong>, <strong>read database</strong>, backups</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Search Engine Optimization</td>
+    <td><strong>server side rendering</strong>, seo implementations</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Security</td>
+    <td><strong>https</strong>, data encryption, bot detection</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Admin panel</td>
+    <td><strong>events</strong>,<strong>errors</strong>, cluster monitoring, realtime</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Clean Architecture</td>
+    <td><strong>dependency injection</strong>, inversion of control</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Kafka</td>
+    <td>event backbone, message broker, consumers</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
 
-# Goals
+  <tr>
+    <td>Realtime</td>
+    <td>some kind of realtime integration, socketio, grpc</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>File storage</td>
+    <td>storage, access control, backups</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>General Data Protection Regulation</td>
+    <td>legal, privacy, gdpr, eu law</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Multi-Language</td>
+    <td>change language, ability to easily add more</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Static pages</td>
+    <td>homepage, static content</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Search</td>
+    <td>indexing, realtime search</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>User Interface</td>
+    <td>modern, drag&drop, touch gestures</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Trusted Web Activity</td>
+    <td>twa, publish app on play store</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Message Queue</td>
+    <td>batching, scheduled tasks</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Compute server</td>
+    <td>non-nodejs server for cpu/gpu intensive tasks</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Payments</td>
+    <td>payout, credit card, paypal, altcoins</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Machine Learning</td>
+    <td>recommendation system, content moderation, spam detection</td>
+    <td></td>
+  </tr>
+</table>
 
-| Requirement                        | Keywords                                                      | Status |
-| ---------------------------------- | ------------------------------------------------------------- | ------ |
-| Microservices                      | **small services**, **docker**                                | ✔️     |
-| Redux frontend                     | **reactive**, **actions**, **effects**                        | ✔️     |
-| Monorepo                           | **all packages and services in one repo**                     | ✔️     |
-| Typescript                         | **types everywhere!**                                         | ✔️     |
-| Local development                  | **hot reload**, **docker-compose**, **vscode**, **ubuntu**    | ✔️     |
-| Gateway                            | **discovery**, **entry point**, **auth**                      | ✔️     |
-| Authentication                     | **passwordless**, **google login**                            | ✔️     |
-| Progressive Web App                | **pwa**, **service worker**, mobile-friendly                  | ✔️     |
-| Frontend                           | **code splitting**, **~100% lighthouse score**                | ✔️     |
-| Remote Procedure Calls             | **grpc**, **protobuf**, grpc-web                              | ✔️     |
-| Local Kubernetes Cluster           | **microk8s**                                                  | ✔️     |
-| [Event sourcing][0]                | **event-driven**, **commands**, message broker, replay events | ✅     |
-| Deployment                         | ci, cd, **build automation**, **bazel**                       | ✅     |
-| Testing                            | **unit tests**, integration tests, ~100% coverage             | ✅     |
-| Kubernetes                         | **container orchestration**, autoscaling, rolling updates     | ✅     |
-| Database(s)                        | **data storage**, **event store**, backups                    | ✅     |
-| Search Engine Optimization         | **server side rendering**, marketing, google                  | ✅     |
-| Security                           | encryption, **https**                                         | ✅     |
-| Push notifications                 | mobile, **desktop**                                           | ✅     |
-| Admin panel                        | monitoring, **events**, logs, errors, prometheus, realtime    | ✅     |
-| [Clean Architecture][3]            | ioc, **[di][1]**, [example][2]                                | ✅     |
-| Realtime                           | some kind of realtime integration, socketio, grpc             | ❌     |
-| File storage                       | blob storage, encrypted, access control                       | ❌     |
-| General Data Protection Regulation | legal, privacy, gdpr, eu law                                  | ❌     |
-| Backups                            | automatic, manual, restore                                    | ❌     |
-| Multi-Language                     | change language, easily add more                              | ❌     |
-| Static pages                       | homepage, static content                                      | ❌     |
-| Search                             | indexing, realtime search                                     | ❌     |
-| User Interface                     | modern, drag&drop, touch gestures                             | ❌     |
-| Trusted Web Activity               | twa, publish app on play store                                | ❌     |
-| Message Queue                      | batching, scheduled tasks                                     | ❌     |
-| Compute server                     | non-nodejs server for high cpu/gpu tasks                      | ❌     |
-| Payments                           | payout, credit card, paypal, altcoins                         | ❌     |
-| Recommendation System              | machine learning                                              | ❌     |
+## Commands
 
-✔️ Completely implemented,
-✅ Partly implemented,
-❌ Not yet implemented, **bold** tags are done
+**Setup (required!)**
 
-# Commands
-
-**Setup**
-
-`yarn setup` install dependencies, add environments
-
-- Afterwards you might want to add your credentials into `.env.dev`. Those variables will bill used across all services.
+`yarn install`
 
 **Backend**
 
-`yarn dev` backend services http://localhost:3000
+`yarn dev` all backend services http://localhost:3000
 
 **Main web app**
 
@@ -76,7 +204,7 @@
 
 `yarn test` all tests
 
-**Misc**
+**Miscellaneous**
 
 `yarn clean` clear the mess
 
@@ -86,7 +214,7 @@
 
 `yarn deploy:microk8s` deploy app to local kubernetes cluster
 
-# Documentation
+## Documentation
 
 [Setup your local development environment on Ubuntu](misc/docs/ubuntu.md)
 
@@ -96,13 +224,6 @@
 
 [User Git Flow to manage development of new features](misc/docs/gitflow.md)
 
-# Thanks to all people listed below for your help!
+## Thanks to all people listed below for your help!
 
 [@rayman1104](https://github.com/rayman1104) [@marcus-sa](https://github.com/marcus-sa) [@joeljeske](https://github.com/joeljeske)
-
-[0]: https://youtu.be/GzrZworHpIk
-[1]: https://angular.io/guide/dependency-injection
-[2]: https://youtu.be/CnailTcJV_U
-[3]: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
-[4]: https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090/
-[5]: https://www.mjdemarco.com/
