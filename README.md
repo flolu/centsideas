@@ -1,6 +1,9 @@
-This is a project with the purpose of learning the architecture of complex applications. The main goals can be seen in the table below. CENTS Ideas is going to be an app to share, review and discover business ideas.
+![](misc/assets/repository-banner.jpg)
 
-> The concept of [CENTS](https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090) (**C**ontrol, **E**ntry, **N**eed, **T**ime, **S**cale) was initially introduced by [MJ DeMarco](http://www.mjdemarco.com/).
+<h3 align="center">Ideas are worthless yet every valuable business started with one!</h3>
+<h4 align="center">Explore and share Fastlane business ideas based on the  <a href="https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090/" target="_blank">CENTS</a> Commandments by <a href="https://www.mjdemarco.com/" target="_blank">MJ DeMarco</a></h4>
+
+---
 
 # Goals
 
@@ -101,3 +104,5 @@ This is a project with the purpose of learning the architecture of complex appli
 [1]: https://angular.io/guide/dependency-injection
 [2]: https://youtu.be/CnailTcJV_U
 [3]: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+[4]: https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090/
+[5]: https://www.mjdemarco.com/
