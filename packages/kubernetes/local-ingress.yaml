@@ -11,6 +11,8 @@ spec:
     - hosts:
         - localhost
         - api.localhost
+        - admin.localhost
+        - socket.admin.localhost
   rules:
     - host: api.localhost
       http:

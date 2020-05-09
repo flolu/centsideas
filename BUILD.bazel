@@ -17,6 +17,7 @@ k8s_objects(
         "//services/reviews:k8s",
         "//services/users:k8s",
         "//services/client:k8s",
+        "//services/admin-client:k8s",
         "//services/notifications:k8s",
         "//services/admin:k8s",
     ],

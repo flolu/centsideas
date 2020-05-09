@@ -11,6 +11,8 @@ spec:
     - hosts:
         - centsideas.com
         - api.centsideas.com
+        - admin.centsideas.com
+        - socket.admin.centsideas.com
       secretName: centsideas-tls
   rules:
     - host: api.centsideas.com
