@@ -1,25 +1,18 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver", "ts_library")
-load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_web")
 load("@npm_bazel_rollup//:index.bzl", "rollup_bundle")
 load("@npm_bazel_terser//:index.bzl", "terser_minified")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
-load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
-load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 load("@npm//history-server:index.bzl", "history_server")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
+load("//packages/angular-bazel:tools/angular_ts_library.bzl", "ng_ts_library")
+load("//packages/angular-bazel:tools/insert_html_assets.bzl", "insert_html_assets")
 
 package(default_visibility = ["//visibility:public"])
 
 exports_files(["tsconfig.json"])
-
-inserted_assets = [
-    "@npm//:node_modules/zone.js/dist/zone.min.js",
-    ":styles.css",
-]
-
-static_assets = [":_index.html"] + inserted_assets
 
 sass_binary(
     name = "styles",
@@ -36,20 +29,9 @@ ng_ts_library(
     ],
 )
 
-html_insert_assets(
-    name = "dev_html",
-    outs = ["index.html"],
-    args = [
-        "--html=$(execpath :_index.html)",
-        "--out=$@",
-        "--roots=. $(RULEDIR)",
-        "--assets",
-    ] + ["$(execpath %s)" % s for s in inserted_assets] + ["./_/ts_scripts.js"],
-    data = static_assets,
-)
-
 ts_devserver(
-    name = "live_server",
+    name = "dev_server",
+    additional_root_paths = ["centsideas/services/admin-client/_"],
     entry_module = "centsideas/services/admin-client/main.dev",
     port = 4201,
     scripts = [
@@ -57,9 +39,10 @@ ts_devserver(
         "//packages/angular-bazel:rxjs_umd_modules",
         "@npm//socket.io-client:socket.io-client__umd",
     ],
+    serving_path = "/bundle.min/index.es2015.js",
     static_files = [
-        ":dev_html",
         "@npm//:node_modules/zone.js/dist/zone.min.js",
+        ":asset_injected_index_html",
         ":styles.css",
     ],
     deps = [":dev_src"],
@@ -97,24 +80,31 @@ terser_minified(
     config_file = "//packages/angular-bazel:terser.config.json",
 )
 
-html_insert_assets(
-    name = "prod_html",
+insert_html_assets(
+    name = "asset_injected_index_html",
     outs = ["_prod_app/services/admin-client/index.html"],
-    args = [
-        "--html=$(execpath :_index.html)",
-        "--out=$@",
-        "--roots=. $(RULEDIR)",
-        "--assets",
-    ] + ["$(execpath %s)" % s for s in inserted_assets] + ["$(execpath %s)/index.es2015.js" % ":bundle.min"],
-    data = [":bundle.min"] + static_assets,
+    asset_paths = [
+        "$(execpath styles.css)",
+        "$(execpath @npm//:node_modules/zone.js/dist/zone.min.js)",
+        "$(execpath bundle.min)/index.es2015.js",
+    ],
+    data = [
+        ":bundle.min",
+        ":index.html",
+        ":styles.css",
+        "@npm//:node_modules/zone.js/dist/zone.min.js",
+    ],
+    html_file = ":index.html",
 )
 
 pkg_web(
     name = "prod_app",
-    srcs = inserted_assets + [
-        ":prod_html",
-        ":favicon.ico",
+    srcs = [
+        ":asset_injected_index_html",
         ":bundle.min",
+        ":favicon.ico",
+        ":styles.css",
+        "@npm//:node_modules/zone.js/dist/zone.min.js",
     ],
 )
 

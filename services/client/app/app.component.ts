@@ -30,6 +30,12 @@ import { ServiceWorkerService } from './service-worker.service';
       <a [routerLink]="[topLevelRoutes.Login]">Login</a>
     </div>
     <router-outlet></router-outlet>
+    <footer>
+      <p>
+        Icon made by <a href="https://www.flaticon.com/authors/freepik">Freepik</a> from
+        <a href="www.flaticon.com">www.flaticon.com</a>
+      </p>
+    </footer>
   `,
   styleUrls: ['app.component.sass'],
 })

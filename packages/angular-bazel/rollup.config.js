@@ -8,12 +8,10 @@ module.exports = {
     }),
     commonjs(),
   ],
-  onwarn: function (warning) {
-    // https://stackoverflow.com/a/43556986/8586803
 
-    if (warning.code === 'THIS_IS_UNDEFINED') {
-      return;
-    }
+  // https://stackoverflow.com/a/43556986/8586803
+  onwarn: function (warning) {
+    if (warning.code === 'THIS_IS_UNDEFINED') return;
     console.warn(warning.message);
   },
 };

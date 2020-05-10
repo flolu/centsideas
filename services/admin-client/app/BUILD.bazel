@@ -1,4 +1,4 @@
-load("//packages/angular-bazel:angular_ts_library.bzl", "ng_ts_library")
+load("//packages/angular-bazel:tools/angular_ts_library.bzl", "ng_ts_library")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 
 package(default_visibility = ["//services/admin-client:__subpackages__"])
