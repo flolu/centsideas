@@ -1,4 +1,4 @@
-import { IEvent } from '@centsideas/models';
+import {IEvent} from '@centsideas/models';
 
 interface IEventList {
   events: IEvent[];

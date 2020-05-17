@@ -1,6 +1,6 @@
-import { INotificationSentEvent, INotificationState } from '@centsideas/models';
-import { Event } from '@centsideas/event-sourcing';
-import { NotificationsEvents } from '@centsideas/enums';
+import {INotificationSentEvent, INotificationState} from '@centsideas/models';
+import {Event} from '@centsideas/event-sourcing';
+import {NotificationsEvents} from '@centsideas/enums';
 
 export class NotificationSentEvent extends Event<INotificationSentEvent> {
   static readonly eventName: string = NotificationsEvents.Sent;

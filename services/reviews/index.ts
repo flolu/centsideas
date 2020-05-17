@@ -1,17 +1,17 @@
 // tslint:disable-next-line:no-var-requires
 if (!process.env.environment) require('../../register-aliases').registerAliases();
 
-import { DependencyInjection } from '@centsideas/dependency-injection';
-import { UTILS_TYPES, Logger } from '@centsideas/utils';
-import { Services } from '@centsideas/enums';
-import { MessageBroker } from '@centsideas/event-sourcing';
-import { RPC_TYPES, rpcServerFactory, RpcServer } from '@centsideas/rpc';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {DependencyInjection} from '@centsideas/dependency-injection';
+import {UTILS_TYPES, Logger} from '@centsideas/utils';
+import {Services} from '@centsideas/enums';
+import {MessageBroker} from '@centsideas/event-sourcing';
+import {RPC_TYPES, rpcServerFactory, RpcServer} from '@centsideas/rpc';
+import {GlobalEnvironment} from '@centsideas/environment';
 
-import { ReviewsServer } from './reviews.server';
-import { ReviewsHandler } from './reviews.handler';
-import { ReviewRepository } from './review.repository';
-import { ReviewsEnvironment } from './reviews.environment';
+import {ReviewsServer} from './reviews.server';
+import {ReviewsHandler} from './reviews.handler';
+import {ReviewRepository} from './review.repository';
+import {ReviewsEnvironment} from './reviews.environment';
 
 DependencyInjection.registerProviders(
   ReviewsServer,

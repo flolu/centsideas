@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { FormGroup, FormControl } from '@angular/forms';
-import { tap, take } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {FormGroup, FormControl} from '@angular/forms';
+import {tap, take} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
-import { QueryParamKeys } from '@centsideas/enums';
-import { IUserState } from '@centsideas/models';
-import { AuthActions, AuthSelectors, RouterSelectors } from '@cic/store';
-import { PushNotificationService } from '@cic/shared';
+import {QueryParamKeys} from '@centsideas/enums';
+import {IUserState} from '@centsideas/models';
+import {AuthActions, AuthSelectors, RouterSelectors} from '@cic/store';
+import {PushNotificationService} from '@cic/shared';
 import {
   NotificationsActions,
   INotificationSettingsForm,
@@ -65,16 +65,16 @@ export class UserContainer {
   }
 
   async onUpdateNotificationSettingsForm(event: INotificationSettingsForm) {
-    this.store.dispatch(NotificationsActions.formChanged({ value: event }));
+    this.store.dispatch(NotificationsActions.formChanged({value: event}));
     if (event.sendPushes) {
       this.hasPushPermission = this.pushService.hasNotificationPermission;
       const sub = await this.pushService.ensurePushPermission();
-      if (sub) this.store.dispatch(NotificationsActions.addPushSub({ subscription: sub }));
+      if (sub) this.store.dispatch(NotificationsActions.addPushSub({subscription: sub}));
     }
   }
 
   onUpdateUserForm(event: IMeForm) {
-    this.store.dispatch(MeActions.formChanged({ value: event }));
+    this.store.dispatch(MeActions.formChanged({value: event}));
   }
 
   onTestNotification = () => {
@@ -91,9 +91,9 @@ export class UserContainer {
       .pipe(
         tap(token => {
           if (token) {
-            this.store.dispatch(MeActions.confirmEmailChange({ token }));
+            this.store.dispatch(MeActions.confirmEmailChange({token}));
             this.router.navigate([], {
-              queryParams: { [QueryParamKeys.ConfirmEmailChangeToken]: null },
+              queryParams: {[QueryParamKeys.ConfirmEmailChangeToken]: null},
               queryParamsHandling: 'merge',
             });
           }

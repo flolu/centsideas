@@ -1,5 +1,5 @@
-import { RpcStatus, ErrorNames } from '@centsideas/enums';
-import { InternalError } from '@centsideas/utils';
+import {RpcStatus, ErrorNames} from '@centsideas/enums';
+import {InternalError} from '@centsideas/utils';
 
 export class EmailMatchesCurrentEmailError extends InternalError {
   static validate = (currentEmail: string, newEmail: string): void => {

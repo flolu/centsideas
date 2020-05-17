@@ -1,6 +1,6 @@
-import { Event } from '@centsideas/event-sourcing';
-import { IdeaEvents } from '@centsideas/enums';
-import { IIdeaCreatedEvent, IIdeaState } from '@centsideas/models';
+import {Event} from '@centsideas/event-sourcing';
+import {IdeaEvents} from '@centsideas/enums';
+import {IIdeaCreatedEvent, IIdeaState} from '@centsideas/models';
 
 // FIXME more "guided" way of creating events (currently i could easily forget to add eventName or commit function)
 export class IdeaCreatedEvent extends Event<IIdeaCreatedEvent> {

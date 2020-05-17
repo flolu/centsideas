@@ -1,9 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable, Inject} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
-import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
-import { ApiEndpoints } from '@centsideas/enums';
-import { IIdeaViewModel, IIdeaState } from '@centsideas/models';
+import {ENVIRONMENT, IClientEnvironment} from '@cic/environment';
+import {ApiEndpoints} from '@centsideas/enums';
+import {IIdeaViewModel, IIdeaState} from '@centsideas/models';
 
 @Injectable()
 export class IdeasService {

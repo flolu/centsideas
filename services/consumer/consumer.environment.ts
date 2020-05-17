@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 
 import environment from '@centsideas/environment';
 

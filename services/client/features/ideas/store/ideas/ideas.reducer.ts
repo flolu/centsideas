@@ -1,13 +1,13 @@
-import { createReducer, on } from '@ngrx/store';
-import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import {createReducer, on} from '@ngrx/store';
+import {EntityAdapter, createEntityAdapter} from '@ngrx/entity';
 
-import { IIdeaViewModel } from '@centsideas/models';
-import { LoadStatus } from '@cic/shared';
-import { IdeasActions } from './ideas.actions';
-import { IIdeasReducerState } from './ideas.state';
-import { CreateIdeaActions } from '../create-idea';
+import {IIdeaViewModel} from '@centsideas/models';
+import {LoadStatus} from '@cic/shared';
+import {IdeasActions} from './ideas.actions';
+import {IIdeasReducerState} from './ideas.state';
+import {CreateIdeaActions} from '../create-idea';
 // FIXME for some mysterious reason i can't import this from ../edit-idea
-import { EditIdeaActions } from '../edit-idea/edit-idea.actions';
+import {EditIdeaActions} from '../edit-idea/edit-idea.actions';
 
 const adapter: EntityAdapter<IIdeaViewModel> = createEntityAdapter({
   selectId: (idea: IIdeaViewModel) => idea.id,
@@ -20,30 +20,24 @@ const initialState: IIdeasReducerState = adapter.getInitialState({
 
 export const ideasReducer = createReducer(
   initialState,
-  on(IdeasActions.getIdeasDone, (state, action) => adapter.addMany(action.ideas, { ...state })),
-  on(IdeasActions.getIdeasFail, (state, { error }) => ({ ...state, error })),
-  on(IdeasActions.getIdeaById, state => ({ ...state, pageStatus: LoadStatus.Loading })),
-  on(IdeasActions.getIdeaByIdDone, (state, { idea }) =>
-    adapter.upsertOne(idea, { ...state, pageStatus: LoadStatus.Loaded }),
+  on(IdeasActions.getIdeasDone, (state, action) => adapter.addMany(action.ideas, {...state})),
+  on(IdeasActions.getIdeasFail, (state, {error}) => ({...state, error})),
+  on(IdeasActions.getIdeaById, state => ({...state, pageStatus: LoadStatus.Loading})),
+  on(IdeasActions.getIdeaByIdDone, (state, {idea}) =>
+    adapter.upsertOne(idea, {...state, pageStatus: LoadStatus.Loaded}),
   ),
-  on(IdeasActions.getIdeaByIdFail, (state, { error }) => ({
+  on(IdeasActions.getIdeaByIdFail, (state, {error}) => ({
     ...state,
     error,
     pageStatus: LoadStatus.Error,
   })),
 
   on(CreateIdeaActions.createIdeaDone, (state, action) =>
-    adapter.upsertOne(
-      { ...action.created, reviews: [], scores: null, reviewCount: -1 },
-      { ...state },
-    ),
+    adapter.upsertOne({...action.created, reviews: [], scores: null, reviewCount: -1}, {...state}),
   ),
 
   on(EditIdeaActions.updateIdeaDone, (state, action) =>
-    adapter.upsertOne(
-      { ...action.updated, reviews: [], scores: null, reviewCount: -1 },
-      { ...state },
-    ),
+    adapter.upsertOne({...action.updated, reviews: [], scores: null, reviewCount: -1}, {...state}),
   ),
 );
 

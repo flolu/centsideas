@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 import * as faker from 'faker';
 
 import {
@@ -9,9 +9,9 @@ import {
   createQueryParams,
   httpRequest,
 } from '@centsideas/utils';
-import { ILoginTokenPayload, IRefreshTokenPayload, IAccessTokenPayload } from '@centsideas/models';
-import { TopLevelFrontendRoutes, TokenExpirationTimes } from '@centsideas/enums';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {ILoginTokenPayload, IRefreshTokenPayload, IAccessTokenPayload} from '@centsideas/models';
+import {TopLevelFrontendRoutes, TokenExpirationTimes} from '@centsideas/enums';
+import {GlobalEnvironment} from '@centsideas/environment';
 import {
   LoginHandler,
   ConfirmLogin,
@@ -21,13 +21,13 @@ import {
   Logout,
 } from '@centsideas/rpc';
 
-import { UserRepository } from './user.repository';
-import { User } from './user.entity';
-import { UserErrors } from './errors';
-import { UsersEnvironment } from './users.environment';
-import { Login } from './login.entity';
-import { IGoogleUserinfo } from './models';
-import { LoginRepository } from './login.repository';
+import {UserRepository} from './user.repository';
+import {User} from './user.entity';
+import {UserErrors} from './errors';
+import {UsersEnvironment} from './users.environment';
+import {Login} from './login.entity';
+import {IGoogleUserinfo} from './models';
+import {LoginRepository} from './login.repository';
 
 @injectable()
 export class AuthHandler {
@@ -38,7 +38,7 @@ export class AuthHandler {
     private globalEnv: GlobalEnvironment,
   ) {}
 
-  login: LoginHandler = async ({ email }) => {
+  login: LoginHandler = async ({email}) => {
     UserErrors.EmailRequiredError.validate(email);
     UserErrors.EmailInvalidError.validate(email);
 
@@ -46,15 +46,15 @@ export class AuthHandler {
     const firstLogin = !emailUserMapping;
     const loginId = await this.loginRepository.generateAggregateId();
 
-    const tokenData: ILoginTokenPayload = { loginId, email, firstLogin };
+    const tokenData: ILoginTokenPayload = {loginId, email, firstLogin};
     const token = signToken(tokenData, this.env.loginTokenSecret, TokenExpirationTimes.LoginToken);
 
     const login = Login.create(loginId, email, token, firstLogin);
     return this.loginRepository.save(login);
   };
 
-  confirmLogin: ConfirmLogin = async ({ token }) => {
-    const { loginId, firstLogin, email } = decodeToken<ILoginTokenPayload>(
+  confirmLogin: ConfirmLogin = async ({token}) => {
+    const {loginId, firstLogin, email} = decodeToken<ILoginTokenPayload>(
       token,
       this.env.loginTokenSecret,
     );
@@ -89,10 +89,10 @@ export class AuthHandler {
       prompt: 'consent',
     });
     const url = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
-    return { url };
+    return {url};
   };
 
-  googleLogin: GoogleLogin = async ({ code }) => {
+  googleLogin: GoogleLogin = async ({code}) => {
     const userInfo = await this.fetchGoogleUserInfo(code);
 
     // FIXME send verification email manually
@@ -142,8 +142,8 @@ export class AuthHandler {
     }
   };
 
-  refreshToken: RefreshToken = async ({ refreshToken }) => {
-    const { userId, tokenId } = decodeToken<IRefreshTokenPayload>(
+  refreshToken: RefreshToken = async ({refreshToken}) => {
+    const {userId, tokenId} = decodeToken<IRefreshTokenPayload>(
       refreshToken,
       this.env.refreshTokenSecret,
     );
@@ -156,10 +156,10 @@ export class AuthHandler {
     const accessToken = this.generateAccessToken(user);
     const updatedRefreshToken = this.generateRefreshToken(user);
 
-    return { accessToken, refreshToken: updatedRefreshToken, user: user.persistedState };
+    return {accessToken, refreshToken: updatedRefreshToken, user: user.persistedState};
   };
 
-  logout: Logout = async ({ userId }) => {
+  logout: Logout = async ({userId}) => {
     UserErrors.UserIdRequiredError.validate(userId);
 
     const user = await this.userRepository.findById(userId);
@@ -175,7 +175,7 @@ export class AuthHandler {
     const user = await this.userRepository.findById(userId);
 
     const newRefreshTokenId = Identifier.makeLongId();
-    user.revokeRefreshToken({ newRefreshTokenId, reason, userId });
+    user.revokeRefreshToken({newRefreshTokenId, reason, userId});
 
     return this.userRepository.save(user);
   };
@@ -193,7 +193,7 @@ export class AuthHandler {
 
     const userId = await this.userRepository.generateAggregateId(false);
     const refreshTokenId = Identifier.makeLongId();
-    const user = User.create({ userId, email, username, refreshTokenId });
+    const user = User.create({userId, email, username, refreshTokenId});
 
     // FIXME somehow make sure all three succeed to complete the user creation (we probably need compensations events if not)
     await this.userRepository.usernameMapping.insert(userId, username);
@@ -209,11 +209,11 @@ export class AuthHandler {
     login.confirmLogin(login.currentState.id, user.persistedState.id);
     await this.loginRepository.save(login);
 
-    return { user: user.persistedState, accessToken, refreshToken };
+    return {user: user.persistedState, accessToken, refreshToken};
   };
 
   private generateAccessToken = (user: User) => {
-    const payload: IAccessTokenPayload = { userId: user.persistedState.id };
+    const payload: IAccessTokenPayload = {userId: user.persistedState.id};
     return signToken(payload, this.env.accessTokenSecret, TokenExpirationTimes.AccessToken);
   };
 
@@ -239,7 +239,7 @@ export class AuthHandler {
         code,
       },
     });
-    const { access_token } = tokensResponse.data;
+    const {access_token} = tokensResponse.data;
     if (!access_token) throw new Error('Google access token could not be acquired');
 
     const userInfoResponse = await httpRequest({

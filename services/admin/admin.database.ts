@@ -1,9 +1,9 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 import * as asyncRetry from 'async-retry';
-import { MongoClient } from 'mongodb';
+import {MongoClient} from 'mongodb';
 
-import { AdminEnvironment } from './admin.environment';
-import { IEvent } from '@centsideas/models';
+import {AdminEnvironment} from './admin.environment';
+import {IEvent} from '@centsideas/models';
 
 @injectable()
 export class AdminDatabase {
@@ -22,11 +22,11 @@ export class AdminDatabase {
 
   getEvents = async (): Promise<IEvent[]> => {
     const collection = await this.events();
-    const result = await collection.find().sort({ timestamp: -1 });
+    const result = await collection.find().sort({timestamp: -1});
     const events = await result.toArray();
 
     // FIXME dont stringify data as this defeats the purpose of protobuf
-    return events.map(e => ({ ...e, data: JSON.stringify(e.data) }));
+    return events.map(e => ({...e, data: JSON.stringify(e.data)}));
   };
 
   private events = async () => {

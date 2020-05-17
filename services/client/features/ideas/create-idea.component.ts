@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {FormGroup, FormControl} from '@angular/forms';
 
-import { IIdeaForm } from './store';
+import {IIdeaForm} from './store';
 
 @Component({
   selector: 'cic-ideas-create',

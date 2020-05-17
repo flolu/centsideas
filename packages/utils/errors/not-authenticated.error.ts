@@ -1,6 +1,6 @@
-import { ErrorNames, RpcStatus } from '@centsideas/enums';
+import {ErrorNames, RpcStatus} from '@centsideas/enums';
 
-import { InternalError } from './internal.error';
+import {InternalError} from './internal.error';
 
 export class UnauthenticatedError extends InternalError {
   static validate = (userId: string | null): void => {

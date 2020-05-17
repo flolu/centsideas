@@ -1,7 +1,7 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 
-import { Idea } from '../idea.entity';
-import { fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeUserId } from './idea.entity.fake';
+import {Idea} from '../idea.entity';
+import {fakeIdeaId, fakeIdeaTitle, fakeIdeaDescription, fakeUserId} from './idea.entity.fake';
 
 @injectable()
 export class IdeasHandlerMock {
@@ -23,7 +23,7 @@ export class IdeasHandlerMock {
       title: fakeIdeaTitle,
       description: fakeIdeaDescription,
     });
-    idea.update({ title, description });
+    idea.update({title, description});
     idea.confirmEvents();
     return idea;
   };

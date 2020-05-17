@@ -3,16 +3,16 @@ import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
-import { injectable } from 'inversify';
-import { InversifyExpressServer } from 'inversify-express-utils';
+import {injectable} from 'inversify';
+import {InversifyExpressServer} from 'inversify-express-utils';
 
-import { RpcStatusHttpMap } from '@centsideas/rpc';
-import { Logger } from '@centsideas/utils';
-import { Environments } from '@centsideas/enums';
-import { GlobalEnvironment } from '@centsideas/environment';
-import { DependencyInjection } from '@centsideas/dependency-injection';
+import {RpcStatusHttpMap} from '@centsideas/rpc';
+import {Logger} from '@centsideas/utils';
+import {Environments} from '@centsideas/enums';
+import {GlobalEnvironment} from '@centsideas/environment';
+import {DependencyInjection} from '@centsideas/dependency-injection';
 
-import { GatewayEnvironment } from './gateway.environment';
+import {GatewayEnvironment} from './gateway.environment';
 
 @injectable()
 export class GatewayServer {
@@ -50,7 +50,7 @@ export class GatewayServer {
           const name = err.metadata?.get('name')[0] || '';
           const unexpected = httpCode >= 500 ? true : false;
 
-          res.status(httpCode).json({ message, unexpected, name });
+          res.status(httpCode).json({message, unexpected, name});
         },
       );
     });

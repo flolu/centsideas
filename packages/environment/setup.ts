@@ -3,14 +3,14 @@
 // tslint:disable-next-line:no-var-requires
 require('../../misc/register-aliases').registerAliases('../');
 
-import { config } from 'dotenv';
+import {config} from 'dotenv';
 import * as chalk from 'chalk';
 
-import { IEnvironment } from './environment.model';
-import { setupDotEnvFile, setupTemplateFile } from './utils';
-import { templatePaths, genPaths, dotenvFilePath } from './paths';
+import {IEnvironment} from './environment.model';
+import {setupDotEnvFile, setupTemplateFile} from './utils';
+import {templatePaths, genPaths, dotenvFilePath} from './paths';
 
-config({ path: dotenvFilePath });
+config({path: dotenvFilePath});
 
 export async function setupEnv(environment: IEnvironment) {
   try {

@@ -17,33 +17,33 @@ data:
   mainClientUrl: ${mainClientUrl}
   frontendServerExchangeSecret: ${frontendServerExchangeSecret}
 
-  usersRpcPort: "${usersRpcPort}"
+  usersRpcPort: '${usersRpcPort}'
   usersDatabaseUrl: ${usersDatabaseUrl}
   googleClientId: ${googleClientId}
 
-  notificationsRpcPort: "${notificationsRpcPort}"
+  notificationsRpcPort: '${notificationsRpcPort}'
   notificationsDatabaseUrl: ${notificationsDatabaseUrl}
   vapidPublicKey: ${vapidPublicKey}
 
-  ideasRpcPort: "${ideasRpcPort}"
+  ideasRpcPort: '${ideasRpcPort}'
   ideasDatabaseUrl: ${ideasDatabaseUrl}
 
-  consumerRpcPort: "${consumerRpcPort}"
+  consumerRpcPort: '${consumerRpcPort}'
   projectionDatabaseUrl: ${projectionDatabaseUrl}
 
   adminClientUrl: ${adminClientUrl}
   adminSocketUrl: ${adminSocketUrl}
   adminDatabaseUrl: ${adminDatabaseUrl}
-  adminRpcPort: "${adminRpcPort}"
+  adminRpcPort: '${adminRpcPort}'
 
   reviewsDatabaseUrl: ${reviewsDatabaseUrl}
-  reviewsRpcPort: "${reviewsRpcPort}"
+  reviewsRpcPort: '${reviewsRpcPort}'
 
   kafkaAdvertisedHostName: ${kafkaAdvertisedHostName}
   kafkaZookeeperConnect: ${kafkaZookeeperConnect}
-  kafkaAdvertisedPort: "${kafkaAdvertisedPort}"
+  kafkaAdvertisedPort: '${kafkaAdvertisedPort}'
   kafkaBrokerHost: ${kafkaBrokerHost}
   KAFKA_ADVERTISED_HOST_NAME: ${kafkaAdvertisedHostName}
   KAFKA_ZOOKEEPER_CONNECT: ${kafkaZookeeperConnect}
-  KAFKA_ADVERTISED_PORT: "${kafkaAdvertisedPort}"
+  KAFKA_ADVERTISED_PORT: '${kafkaAdvertisedPort}'
   KAFKA_BROKER_HOST: ${kafkaBrokerHost}

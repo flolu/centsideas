@@ -1,11 +1,11 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
+import {createSelector, createFeatureSelector} from '@ngrx/store';
 
-import { IIdeaViewModel } from '@centsideas/models';
+import {IIdeaViewModel} from '@centsideas/models';
 
-import { AuthSelectors, RouterSelectors } from '@cic/store';
-import { StoreKeys } from '@cic/shared';
-import { IIdeasFeatureReducerState } from './ideas.state';
-import { IdeasReducerSelectors } from './ideas';
+import {AuthSelectors, RouterSelectors} from '@cic/store';
+import {StoreKeys} from '@cic/shared';
+import {IIdeasFeatureReducerState} from './ideas.state';
+import {IdeasReducerSelectors} from './ideas';
 
 const selectIdeasFeatureState = createFeatureSelector<IIdeasFeatureReducerState>(StoreKeys.Ideas);
 

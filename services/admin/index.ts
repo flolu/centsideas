@@ -1,17 +1,17 @@
 // tslint:disable-next-line:no-var-requires
 if (!process.env.environment) require('../../register-aliases').registerAliases();
 
-import { DependencyInjection } from '@centsideas/dependency-injection';
-import { UTILS_TYPES, Logger } from '@centsideas/utils';
-import { Services } from '@centsideas/enums';
-import { MessageBroker } from '@centsideas/event-sourcing';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {DependencyInjection} from '@centsideas/dependency-injection';
+import {UTILS_TYPES, Logger} from '@centsideas/utils';
+import {Services} from '@centsideas/enums';
+import {MessageBroker} from '@centsideas/event-sourcing';
+import {GlobalEnvironment} from '@centsideas/environment';
 
-import { AdminServer } from './admin.server';
-import { AdminEnvironment } from './admin.environment';
-import { AdminDatabase } from './admin.database';
-import { RpcServer, RPC_TYPES, rpcServerFactory } from '@centsideas/rpc';
-import { ErrorRepository } from './error.repository';
+import {AdminServer} from './admin.server';
+import {AdminEnvironment} from './admin.environment';
+import {AdminDatabase} from './admin.database';
+import {RpcServer, RPC_TYPES, rpcServerFactory} from '@centsideas/rpc';
+import {ErrorRepository} from './error.repository';
 
 DependencyInjection.registerProviders(
   AdminServer,

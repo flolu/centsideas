@@ -5,6 +5,6 @@ export interface IPushPayload {
     icon?: string;
     vibrate?: number[];
     data?: any;
-    actions?: { action: string; title: string }[];
+    actions?: {action: string; title: string}[];
   };
 }

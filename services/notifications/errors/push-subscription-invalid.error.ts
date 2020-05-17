@@ -1,6 +1,6 @@
-import { RpcStatus, ErrorNames } from '@centsideas/enums';
-import { InternalError } from '@centsideas/utils';
-import { IPushSubscription } from '@centsideas/models';
+import {RpcStatus, ErrorNames} from '@centsideas/enums';
+import {InternalError} from '@centsideas/utils';
+import {IPushSubscription} from '@centsideas/models';
 
 export class PushSubscriptionInvalidError extends InternalError {
   static validate = (pushSub: IPushSubscription): void => {

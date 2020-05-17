@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+import {NgModule} from '@angular/core';
+import {StoreModule} from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
 
-import { StoreKeys } from '@cic/shared';
-import { MeEffects, meReducer, MeService } from './me';
-import { NotificationsEffects, notificationsReducer, NotificationsService } from './notifications';
+import {StoreKeys} from '@cic/shared';
+import {MeEffects, meReducer, MeService} from './me';
+import {NotificationsEffects, notificationsReducer, NotificationsService} from './notifications';
 
 @NgModule({
   imports: [

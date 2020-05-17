@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { TopLevelFrontendRoutes } from '@centsideas/enums';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
+import {TopLevelFrontendRoutes} from '@centsideas/enums';
 
 const routes: Routes = [
   {
@@ -15,11 +15,11 @@ const routes: Routes = [
     path: TopLevelFrontendRoutes.User,
     loadChildren: () => import('../features/user/user.module').then(m => m.UserModule),
   },
-  { path: '**', redirectTo: TopLevelFrontendRoutes.Ideas, pathMatch: 'full' },
+  {path: '**', redirectTo: TopLevelFrontendRoutes.Ideas, pathMatch: 'full'},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { initialNavigation: 'enabled' })],
+  imports: [RouterModule.forRoot(routes, {initialNavigation: 'enabled'})],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

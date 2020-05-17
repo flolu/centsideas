@@ -1,7 +1,7 @@
 import * as grpc from '@grpc/grpc-js';
-import { injectable, interfaces } from 'inversify';
+import {injectable, interfaces} from 'inversify';
 
-import { loadProtoPackage } from './util';
+import {loadProtoPackage} from './util';
 
 @injectable()
 export class RpcClient<IClientService = any> {

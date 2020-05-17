@@ -1,9 +1,9 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnChanges } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { takeWhile, debounceTime, tap } from 'rxjs/operators';
+import {Component, Input, Output, EventEmitter, OnDestroy, OnChanges} from '@angular/core';
+import {FormGroup, FormControl} from '@angular/forms';
+import {takeWhile, debounceTime, tap} from 'rxjs/operators';
 
-import { SyncStatus } from '@cic/shared';
-import { INotificationSettingsForm } from './store';
+import {SyncStatus} from '@cic/shared';
+import {INotificationSettingsForm} from './store';
 
 @Component({
   selector: 'cic-user-notifications',
@@ -48,7 +48,7 @@ export class NotificationsComponent implements OnDestroy, OnChanges {
 
   ngOnChanges() {
     if (this.formState && this.status !== SyncStatus.Syncing && this.status >= 0)
-      this.form.patchValue(this.formState, { emitEvent: false });
+      this.form.patchValue(this.formState, {emitEvent: false});
   }
 
   ngOnDestroy() {

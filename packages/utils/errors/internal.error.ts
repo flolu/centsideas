@@ -1,7 +1,7 @@
-import { inject } from 'inversify';
+import {inject} from 'inversify';
 
-import { RpcStatus } from '@centsideas/enums';
-import { UTILS_TYPES } from '../utils-types';
+import {RpcStatus} from '@centsideas/enums';
+import {UTILS_TYPES} from '../utils-types';
 
 interface InternalErrorOptions {
   name: string;

@@ -1,10 +1,10 @@
 import * as grpc from '@grpc/grpc-js';
-import { injectable, interfaces } from 'inversify';
+import {injectable, interfaces} from 'inversify';
 
-import { MessageBroker } from '@centsideas/event-sourcing';
-import { Logger, InternalError } from '@centsideas/utils';
+import {MessageBroker} from '@centsideas/event-sourcing';
+import {Logger, InternalError} from '@centsideas/utils';
 
-import { loadProtoPackage } from './util';
+import {loadProtoPackage} from './util';
 
 @injectable()
 export class RpcServer {
@@ -76,8 +76,8 @@ export class RpcServer {
         if (error.name) metadata.add('name', error.name);
 
         if (InternalError.isUnexpected(name))
-          callback({ code, details, metadata, stack: error.stack }, null);
-        else callback({ code, details, metadata }, null);
+          callback({code, details, metadata, stack: error.stack}, null);
+        else callback({code, details, metadata}, null);
 
         const errorPayload = this.logger.error(error);
         await this.messageBroker.dispatchError(errorPayload);

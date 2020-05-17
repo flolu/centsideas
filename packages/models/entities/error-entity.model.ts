@@ -1,4 +1,4 @@
-import { IEventEntityBase } from './event-base.model';
+import {IEventEntityBase} from './event-base.model';
 
 export interface IErrorEntityState extends IEventEntityBase {
   occuredAt: string;

@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Store } from '@ngrx/store';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Store} from '@ngrx/store';
 
-import { IIdeaViewModel } from '@centsideas/models';
-import { Router } from '@angular/router';
-import { TopLevelFrontendRoutes } from '@centsideas/enums';
-import { IdeasSelectors, IdeasActions, CreateIdeaActions, IIdeaForm } from './store';
+import {IIdeaViewModel} from '@centsideas/models';
+import {Router} from '@angular/router';
+import {TopLevelFrontendRoutes} from '@centsideas/enums';
+import {IdeasSelectors, IdeasActions, CreateIdeaActions, IIdeaForm} from './store';
 
 @Component({
   selector: 'cic-ideas',
@@ -41,7 +41,7 @@ export class IdeasContainer {
     this.router.navigate([TopLevelFrontendRoutes.Ideas, idea.id]);
   }
 
-  onCreateIdea({ title, description }: IIdeaForm) {
-    this.store.dispatch(CreateIdeaActions.createIdea({ title, description }));
+  onCreateIdea({title, description}: IIdeaForm) {
+    this.store.dispatch(CreateIdeaActions.createIdea({title, description}));
   }
 }

@@ -1,11 +1,11 @@
-import { NgModule, PLATFORM_ID, Inject } from '@angular/core';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { isPlatformBrowser } from '@angular/common';
+import {NgModule, PLATFORM_ID, Inject} from '@angular/core';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {isPlatformBrowser} from '@angular/common';
 
-import { RootStoreModule } from '@cic/store';
-import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
-import { AppComponent } from './app.component';
-import { AppBaseModule } from './app-base.module';
+import {RootStoreModule} from '@cic/store';
+import {ENVIRONMENT, IClientEnvironment} from '@cic/environment';
+import {AppComponent} from './app.component';
+import {AppBaseModule} from './app-base.module';
 
 @NgModule({
   imports: [ServiceWorkerModule.register('ngsw-worker.js'), AppBaseModule, RootStoreModule],

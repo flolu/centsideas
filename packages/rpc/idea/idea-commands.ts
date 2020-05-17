@@ -1,4 +1,4 @@
-import { IIdeaState } from '@centsideas/models';
+import {IIdeaState} from '@centsideas/models';
 
 interface ICreateIdeaCommand {
   title: string;

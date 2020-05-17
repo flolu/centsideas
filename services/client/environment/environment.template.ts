@@ -1,4 +1,4 @@
-import { IClientEnvironment } from './index';
+import {IClientEnvironment} from './index';
 
 export const environment: IClientEnvironment = {
   environment: '${environment}',

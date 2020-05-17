@@ -1,11 +1,11 @@
-import { Component, Inject, Injector, PLATFORM_ID } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { isPlatformBrowser } from '@angular/common';
-import { Socket } from 'ngx-socket-io';
+import {Component, Inject, Injector, PLATFORM_ID} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {isPlatformBrowser} from '@angular/common';
+import {Socket} from 'ngx-socket-io';
 
-import { IEvent } from '@centsideas/models';
-import { ApiEndpoints, AdminApiRoutes, ErrorEvents } from '@centsideas/enums';
-import { ENVIRONMENT, IAdminClientEnvironment } from '@cia/environment';
+import {IEvent} from '@centsideas/models';
+import {ApiEndpoints, AdminApiRoutes, ErrorEvents} from '@centsideas/enums';
+import {ENVIRONMENT, IAdminClientEnvironment} from '@cia/environment';
 
 @Component({
   selector: 'cia-root',

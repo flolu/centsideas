@@ -1,6 +1,6 @@
-import { IReviewViewModel } from './review.view-model';
-import { IReviewScores } from '../entities';
-import { IEventEntityBase } from '../entities/event-base.model';
+import {IReviewViewModel} from './review.view-model';
+import {IReviewScores} from '../entities';
+import {IEventEntityBase} from '../entities/event-base.model';
 
 export interface IIdeaViewModel extends IEventEntityBase {
   title: string;

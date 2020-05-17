@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
-import { IIdeaViewModel } from '@centsideas/models';
+import {IIdeaViewModel} from '@centsideas/models';
 
 @Component({
   selector: 'cic-ideas-card',

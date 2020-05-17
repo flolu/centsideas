@@ -1,4 +1,4 @@
-import { NotificationMedium } from '@centsideas/enums';
+import {NotificationMedium} from '@centsideas/enums';
 
 export interface INotificationCreatedEvent {
   notificationId: string;

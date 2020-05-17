@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { tap, take } from 'rxjs/operators';
+import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {FormGroup, FormControl} from '@angular/forms';
+import {Router} from '@angular/router';
+import {tap, take} from 'rxjs/operators';
 
-import { QueryParamKeys, TopLevelFrontendRoutes } from '@centsideas/enums';
-import { AuthActions, RouterSelectors } from '@cic/store';
+import {QueryParamKeys, TopLevelFrontendRoutes} from '@centsideas/enums';
+import {AuthActions, RouterSelectors} from '@cic/store';
 
 @Component({
   selector: 'cic-login',
@@ -31,7 +31,7 @@ export class LoginContainer {
     this.handleGoogleSignIn();
   }
 
-  onLogin = () => this.store.dispatch(AuthActions.login({ email: this.form.value.email }));
+  onLogin = () => this.store.dispatch(AuthActions.login({email: this.form.value.email}));
   onLoginWithGoogle = () => this.store.dispatch(AuthActions.googleLoginRedirect());
 
   handleConfirmLogin = () => {
@@ -39,7 +39,7 @@ export class LoginContainer {
       .select(RouterSelectors.queryParam(QueryParamKeys.Token))
       .pipe(
         tap(token => {
-          if (token) this.store.dispatch(AuthActions.confirmLogin({ token }));
+          if (token) this.store.dispatch(AuthActions.confirmLogin({token}));
           this.router.navigate([TopLevelFrontendRoutes.Login]);
         }),
         take(1),
@@ -52,7 +52,7 @@ export class LoginContainer {
       .select(RouterSelectors.queryParam(QueryParamKeys.GoogleSignInCode))
       .pipe(
         tap(code => {
-          if (code) this.store.dispatch(AuthActions.googleLogin({ code }));
+          if (code) this.store.dispatch(AuthActions.googleLogin({code}));
           this.router.navigate([TopLevelFrontendRoutes.Login]);
         }),
         take(1),

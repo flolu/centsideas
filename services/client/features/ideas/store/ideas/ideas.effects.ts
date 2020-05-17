@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { switchMap, catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {createEffect, Actions, ofType} from '@ngrx/effects';
+import {switchMap, catchError, map} from 'rxjs/operators';
+import {of} from 'rxjs';
 
-import { IdeasActions } from './ideas.actions';
-import { IdeasService } from '../ideas.service';
+import {IdeasActions} from './ideas.actions';
+import {IdeasService} from '../ideas.service';
 
 @Injectable()
 export class IdeasEffects {
@@ -15,8 +15,8 @@ export class IdeasEffects {
       ofType(IdeasActions.getIdeas),
       switchMap(() =>
         this.ideasService.getIdeas().pipe(
-          map(found => IdeasActions.getIdeasDone({ ideas: found || [] })),
-          catchError(error => of(IdeasActions.getIdeasFail({ error }))),
+          map(found => IdeasActions.getIdeasDone({ideas: found || []})),
+          catchError(error => of(IdeasActions.getIdeasFail({error}))),
         ),
       ),
     ),
@@ -27,8 +27,8 @@ export class IdeasEffects {
       ofType(IdeasActions.getIdeaById),
       switchMap(action =>
         this.ideasService.getIdeaById(action.id).pipe(
-          map(found => IdeasActions.getIdeaByIdDone({ idea: found })),
-          catchError(error => of(IdeasActions.getIdeaByIdFail({ error }))),
+          map(found => IdeasActions.getIdeaByIdDone({idea: found})),
+          catchError(error => of(IdeasActions.getIdeaByIdFail({error}))),
         ),
       ),
     ),

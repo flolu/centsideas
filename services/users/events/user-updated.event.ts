@@ -1,6 +1,6 @@
-import { Event } from '@centsideas/event-sourcing';
-import { UserEvents } from '@centsideas/enums';
-import { IUserUpdatedEvent, IUserState } from '@centsideas/models';
+import {Event} from '@centsideas/event-sourcing';
+import {UserEvents} from '@centsideas/enums';
+import {IUserUpdatedEvent, IUserState} from '@centsideas/models';
 
 export class UserUpdatedEvent extends Event<IUserUpdatedEvent> {
   static readonly eventName: string = UserEvents.UserUpdated;

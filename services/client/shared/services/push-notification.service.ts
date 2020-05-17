@@ -1,12 +1,12 @@
-import { Injectable, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
-import { tap, takeWhile } from 'rxjs/operators';
-import { SwPush } from '@angular/service-worker';
-import { Router } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
+import {Injectable, OnDestroy, Inject, PLATFORM_ID} from '@angular/core';
+import {tap, takeWhile} from 'rxjs/operators';
+import {SwPush} from '@angular/service-worker';
+import {Router} from '@angular/router';
+import {isPlatformBrowser} from '@angular/common';
 
-import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
+import {ENVIRONMENT, IClientEnvironment} from '@cic/environment';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class PushNotificationService implements OnDestroy {
   private alive = true;
 
@@ -84,8 +84,8 @@ export class PushNotificationService implements OnDestroy {
     this.swPush.notificationClicks
       .pipe(
         takeWhile(() => this.alive),
-        tap(({ notification }) => {
-          console.log('user clicked on notification', { notification });
+        tap(({notification}) => {
+          console.log('user clicked on notification', {notification});
           if (notification.data && notification.data.url) {
             const url = notification.data.url;
             this.router.navigateByUrl(url);
@@ -100,7 +100,7 @@ export class PushNotificationService implements OnDestroy {
       .pipe(
         takeWhile(() => this.alive),
         tap(message => {
-          console.log('imcomming message', { message });
+          console.log('imcomming message', {message});
           this.playNotificationSound();
         }),
       )

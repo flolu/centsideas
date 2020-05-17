@@ -1,9 +1,9 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 import * as asyncRetry from 'async-retry';
-import { MongoClient } from 'mongodb';
+import {MongoClient} from 'mongodb';
 
-import { ConsumerEnvironment } from './consumer.environment';
-import { IIdeaViewModel, IUserViewModel, IReviewViewModel } from '@centsideas/models';
+import {ConsumerEnvironment} from './consumer.environment';
+import {IIdeaViewModel, IUserViewModel, IReviewViewModel} from '@centsideas/models';
 
 @injectable()
 export class ProjectionDatabase {

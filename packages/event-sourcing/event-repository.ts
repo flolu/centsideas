@@ -1,13 +1,13 @@
-import { injectable, inject } from 'inversify';
+import {injectable, inject} from 'inversify';
 // FIXME create abstraction for db (this class shouldn't know anything about which db it is using)
-import { MongoClient } from 'mongodb';
+import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
-import { IEvent } from '@centsideas/models';
-import { Identifier, Logger } from '@centsideas/utils';
-import { IEventEntity } from './event-entity';
-import { ISnapshot } from './snapshot';
-import { MessageBroker } from './message-broker';
+import {IEvent} from '@centsideas/models';
+import {Identifier, Logger} from '@centsideas/utils';
+import {IEventEntity} from './event-entity';
+import {ISnapshot} from './snapshot';
+import {MessageBroker} from './message-broker';
 
 interface ICounter {
   name: string;
@@ -63,7 +63,7 @@ export abstract class EventRepository<Entity extends IEventEntity> {
     let eventNumber = lastPersistedEvent?.eventNumber || 0;
     const eventsToInsert: IEvent[] = entity.pendingEvents.map(event => {
       eventNumber += 1;
-      return { ...event, eventNumber };
+      return {...event, eventNumber};
     });
 
     const appendedEvents = await Promise.all(eventsToInsert.map(this.appendEvent));
@@ -82,7 +82,7 @@ export abstract class EventRepository<Entity extends IEventEntity> {
 
   findById = async (aggregateId: string): Promise<Entity> => {
     const collection = await this.snapshotsCollection();
-    const snapshot = await collection.findOne({ aggregateId });
+    const snapshot = await collection.findOne({aggregateId});
 
     const events = await (snapshot
       ? this.getEventsAfterSnapshot(snapshot)
@@ -100,7 +100,7 @@ export abstract class EventRepository<Entity extends IEventEntity> {
 
   private getEventsAfterSnapshot = async (snapshot: ISnapshot) => {
     const collection = await this.eventsCollection();
-    const lastEvent = await collection.findOne({ id: snapshot.lastEventId });
+    const lastEvent = await collection.findOne({id: snapshot.lastEventId});
     if (!lastEvent) throw new Error(`Last event with id ${snapshot.lastEventId} not found`);
     return this.getEvents(snapshot.state.id, lastEvent.eventNumber);
   };
@@ -108,8 +108,8 @@ export abstract class EventRepository<Entity extends IEventEntity> {
   private getEvents = async (aggregateId: string, from = 0) => {
     const collection = await this.eventsCollection();
     const result = await collection.find(
-      { $and: [{ aggregateId }, { eventNumber: { $gte: from } }] },
-      { sort: { eventNumber: 1 } },
+      {$and: [{aggregateId}, {eventNumber: {$gte: from}}]},
+      {sort: {eventNumber: 1}},
     );
     return result.toArray();
   };
@@ -118,9 +118,9 @@ export abstract class EventRepository<Entity extends IEventEntity> {
     const collection = await this.eventsCollection();
 
     const result = await collection.find(
-      { aggregateId },
+      {aggregateId},
       {
-        sort: { eventNumber: -1 },
+        sort: {eventNumber: -1},
         limit: 1,
       },
     );
@@ -130,15 +130,15 @@ export abstract class EventRepository<Entity extends IEventEntity> {
   private appendEvent = async (event: IEvent): Promise<IEvent> => {
     const counterCollection = await this.counterCollection();
     const counter = await counterCollection.findOneAndUpdate(
-      { name: this.eventCounterName },
-      { $inc: { count: 1 } },
-      { returnOriginal: false },
+      {name: this.eventCounterName},
+      {$inc: {count: 1}},
+      {returnOriginal: false},
     );
     if (!counter.value) throw new Error('Events counter not found');
     const position = counter.value.count;
 
     const collection = await this.eventsCollection();
-    const result = await collection.insertOne({ ...event, position });
+    const result = await collection.insertOne({...event, position});
     return result.ops[0];
   };
 
@@ -151,16 +151,16 @@ export abstract class EventRepository<Entity extends IEventEntity> {
 
     const collection = await this.snapshotsCollection();
     return collection.updateOne(
-      { aggregateId },
-      { $set: { aggregateId, lastEventId: lastEvent.id, state: entity.persistedState } },
-      { upsert: true },
+      {aggregateId},
+      {$set: {aggregateId, lastEventId: lastEvent.id, state: entity.persistedState}},
+      {upsert: true},
     );
   };
 
   private initialize = async () => {
     const counters = await this.counterCollection();
-    const existing = await counters.findOne({ name: this.eventCounterName });
-    if (!existing) await counters.insertOne({ name: this.eventCounterName, count: 0 });
+    const existing = await counters.findOne({name: this.eventCounterName});
+    if (!existing) await counters.insertOne({name: this.eventCounterName, count: 0});
   };
 
   private snapshotsCollection = async () => {

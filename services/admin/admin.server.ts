@@ -1,10 +1,10 @@
-import { injectable, inject } from 'inversify';
+import {injectable, inject} from 'inversify';
 import * as http from 'http';
 import * as socketIO from 'socket.io';
-import { takeWhile, tap } from 'rxjs/operators';
+import {takeWhile, tap} from 'rxjs/operators';
 
-import { MessageBroker } from '@centsideas/event-sourcing';
-import { Logger } from '@centsideas/utils';
+import {MessageBroker} from '@centsideas/event-sourcing';
+import {Logger} from '@centsideas/utils';
 import {
   RpcServer,
   IAdminQueries,
@@ -12,12 +12,12 @@ import {
   RpcServerFactory,
   GetAdminEvents,
 } from '@centsideas/rpc';
-import { GlobalEnvironment } from '@centsideas/environment';
-import { OtherTopics } from '@centsideas/enums';
+import {GlobalEnvironment} from '@centsideas/environment';
+import {OtherTopics} from '@centsideas/enums';
 
-import { AdminDatabase } from './admin.database';
-import { AdminEnvironment } from './admin.environment';
-import { ErrorRepository } from './error.repository';
+import {AdminDatabase} from './admin.database';
+import {AdminEnvironment} from './admin.environment';
+import {ErrorRepository} from './error.repository';
 
 // FIXME secure the connection to admin
 // FIXME delete events older than a month (otherwise the admin db would become bigger than all other dbs together)
@@ -69,7 +69,7 @@ export class AdminServer {
 
   getEvents: GetAdminEvents = async () => {
     const events = await this.adminDatabase.getEvents();
-    return { events };
+    return {events};
   };
 
   private setupSocketIO() {

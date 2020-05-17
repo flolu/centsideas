@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { switchMap, catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {createEffect, Actions, ofType} from '@ngrx/effects';
+import {switchMap, catchError, map} from 'rxjs/operators';
+import {of} from 'rxjs';
 
-import { CreateIdeaActions } from './create-idea.actions';
-import { IdeasService } from '../ideas.service';
+import {CreateIdeaActions} from './create-idea.actions';
+import {IdeasService} from '../ideas.service';
 
 @Injectable()
 export class CreateIdeaEffects {
@@ -13,10 +13,10 @@ export class CreateIdeaEffects {
   createIdea$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CreateIdeaActions.createIdea),
-      switchMap(({ title, description }) =>
+      switchMap(({title, description}) =>
         this.ideasService.createIdea(title, description).pipe(
-          map(created => CreateIdeaActions.createIdeaDone({ created })),
-          catchError(error => of(CreateIdeaActions.createIdeaFail({ error }))),
+          map(created => CreateIdeaActions.createIdeaDone({created})),
+          catchError(error => of(CreateIdeaActions.createIdeaFail({error}))),
         ),
       ),
     ),

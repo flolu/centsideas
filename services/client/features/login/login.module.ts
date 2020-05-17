@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 
-import { LoginContainer } from './login.container';
-import { LoginStoreModule } from './store';
+import {LoginContainer} from './login.container';
+import {LoginStoreModule} from './store';
 
 // FIXME more generic, that it also can be used as a popup?!
 @NgModule({
@@ -12,7 +12,7 @@ import { LoginStoreModule } from './store';
     CommonModule,
     ReactiveFormsModule,
     LoginStoreModule,
-    RouterModule.forChild([{ path: '', component: LoginContainer }]),
+    RouterModule.forChild([{path: '', component: LoginContainer}]),
   ],
   declarations: [LoginContainer],
 })

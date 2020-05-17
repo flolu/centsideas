@@ -1,5 +1,5 @@
-import { RpcStatus, ErrorNames } from '@centsideas/enums';
-import { InternalError } from '@centsideas/utils';
+import {RpcStatus, ErrorNames} from '@centsideas/enums';
+import {InternalError} from '@centsideas/utils';
 
 export class NoUserWithEmailError extends InternalError {
   constructor(email: string) {

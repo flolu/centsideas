@@ -1,18 +1,18 @@
 // tslint:disable-next-line:no-var-requires
 if (!process.env.environment) require('../../register-aliases').registerAliases();
 
-import { UTILS_TYPES, Logger } from '@centsideas/utils';
-import { DependencyInjection } from '@centsideas/dependency-injection';
-import { Services } from '@centsideas/enums';
-import { GlobalEnvironment } from '@centsideas/environment';
-import { RpcClient, rpcClientFactory, RPC_TYPES } from '@centsideas/rpc';
-import { MessageBroker } from '@centsideas/event-sourcing';
+import {UTILS_TYPES, Logger} from '@centsideas/utils';
+import {DependencyInjection} from '@centsideas/dependency-injection';
+import {Services} from '@centsideas/enums';
+import {GlobalEnvironment} from '@centsideas/environment';
+import {RpcClient, rpcClientFactory, RPC_TYPES} from '@centsideas/rpc';
+import {MessageBroker} from '@centsideas/event-sourcing';
 
-import { GatewayServer } from './gateway.server';
-import { GatewayEnvironment } from './gateway.environment';
-import { QueryController } from './query.controller';
-import { CommandController } from './command.controller';
-import { AuthMiddleware } from './middlewares';
+import {GatewayServer} from './gateway.server';
+import {GatewayEnvironment} from './gateway.environment';
+import {QueryController} from './query.controller';
+import {CommandController} from './command.controller';
+import {AuthMiddleware} from './middlewares';
 
 DependencyInjection.registerProviders(
   GatewayServer,

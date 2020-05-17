@@ -1,4 +1,4 @@
-import { IUserState } from '@centsideas/models';
+import {IUserState} from '@centsideas/models';
 
 interface ILoginCommand {
   email: string;

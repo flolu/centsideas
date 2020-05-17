@@ -1,18 +1,18 @@
 /* tslint:disable:no-console */
 import * as fromChalk from 'chalk';
-import { injectable, inject } from 'inversify';
+import {injectable, inject} from 'inversify';
 
-import { Environments } from '@centsideas/enums';
-import { IEvent, IErrorOccurredPayload } from '@centsideas/models';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {Environments} from '@centsideas/enums';
+import {IEvent, IErrorOccurredPayload} from '@centsideas/models';
+import {GlobalEnvironment} from '@centsideas/environment';
 
-import { UTILS_TYPES } from './utils-types';
-import { InternalError } from './errors';
+import {UTILS_TYPES} from './utils-types';
+import {InternalError} from './errors';
 
 @injectable()
 export class Logger {
   private env = this.globalEnv.environment;
-  private chalk = new fromChalk.Instance({ level: this.env === Environments.Prod ? 0 : 3 });
+  private chalk = new fromChalk.Instance({level: this.env === Environments.Prod ? 0 : 3});
   private prefixStyle = this.chalk.hsl(...this.color).bold;
 
   /**

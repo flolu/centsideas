@@ -1,7 +1,7 @@
-import { injectable } from 'inversify';
-import { Collection } from 'mongodb';
+import {injectable} from 'inversify';
+import {Collection} from 'mongodb';
 
-import { ReviewEvents } from '@centsideas/enums';
+import {ReviewEvents} from '@centsideas/enums';
 import {
   IReviewViewModel,
   IReviewCreatedEvent,
@@ -10,7 +10,7 @@ import {
   IEvent,
 } from '@centsideas/models';
 
-import { ProjectionDatabase } from './projection-database';
+import {ProjectionDatabase} from './projection-database';
 
 @injectable()
 export class ReviewsProjection {
@@ -51,7 +51,7 @@ export class ReviewsProjection {
       ideaId: event.data.ideaId,
       userId: event.data.userId,
       content: '',
-      scores: { control: 0, entry: 0, need: 0, time: 0, scale: 0 },
+      scores: {control: 0, entry: 0, need: 0, time: 0, scale: 0},
       createdAt: event.timestamp,
       published: false,
       publishedAt: null,
@@ -70,7 +70,7 @@ export class ReviewsProjection {
     if (!currentReview) return;
     const newReviewScores: IReviewScores = event.data.scores || currentReview.scores;
     await this.reviewsCollection.findOneAndUpdate(
-      { id: event.aggregateId },
+      {id: event.aggregateId},
       {
         $set: {
           content: event.data.content || currentReview.content,
@@ -111,7 +111,7 @@ export class ReviewsProjection {
           idea.reviewCount,
       };
       await this.ideasCollection.findOneAndUpdate(
-        { id: currentReview.ideaId },
+        {id: currentReview.ideaId},
         {
           $set: {
             scores: updatedScores,
@@ -124,7 +124,7 @@ export class ReviewsProjection {
   private reviewPublished = async (event: IEvent<any>) => {
     // FIXME transactional update?!
     await this.reviewsCollection.findOneAndUpdate(
-      { id: event.aggregateId },
+      {id: event.aggregateId},
       {
         $set: {
           published: true,
@@ -150,7 +150,7 @@ export class ReviewsProjection {
       scale: idea.scores.scale * idea.reviewCount,
     };
     await this.ideasCollection.findOneAndUpdate(
-      { id: review.ideaId },
+      {id: review.ideaId},
       {
         $inc: {
           reviewCount: 1,

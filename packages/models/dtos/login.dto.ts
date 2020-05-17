@@ -1,4 +1,4 @@
-import { IUserState } from '../entities';
+import {IUserState} from '../entities';
 
 export interface ILoginDto {
   email: string;

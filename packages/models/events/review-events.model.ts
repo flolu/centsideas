@@ -1,4 +1,4 @@
-import { IReviewScores } from '../entities';
+import {IReviewScores} from '../entities';
 
 export interface IReviewCreatedEvent {
   reviewId: string;

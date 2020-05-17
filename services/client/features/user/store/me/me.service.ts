@@ -1,10 +1,10 @@
-import { Injectable, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable, Inject} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
-import { ApiEndpoints, UsersApiRoutes } from '@centsideas/enums';
-import { IUserState, Dtos } from '@centsideas/models';
+import {ApiEndpoints, UsersApiRoutes} from '@centsideas/enums';
+import {IUserState, Dtos} from '@centsideas/models';
 
-import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
+import {ENVIRONMENT, IClientEnvironment} from '@cic/environment';
 
 @Injectable()
 export class MeService {
@@ -16,7 +16,7 @@ export class MeService {
   ) {}
 
   confirmEmailChange(token: string) {
-    const payload: Dtos.IConfirmEmailChangeDto = { token };
+    const payload: Dtos.IConfirmEmailChangeDto = {token};
     const url = `${this.baseUrl}/${UsersApiRoutes.ConfirmEmailChange}`;
     return this.http.post<IUserState>(url, payload);
   }

@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 
-import { DependencyInjection } from '@centsideas/dependency-injection';
+import {DependencyInjection} from '@centsideas/dependency-injection';
 
-import { IdeasHandler } from './ideas.handler';
-import { IdeaRepository } from './idea.repository';
-import { fakeUserId, fakeIdeaTitle, fakeIdeaDescription } from './test';
-import { IdeaRepositoryMock } from './test/idea.repository.mock';
+import {IdeasHandler} from './ideas.handler';
+import {IdeaRepository} from './idea.repository';
+import {fakeUserId, fakeIdeaTitle, fakeIdeaDescription} from './test';
+import {IdeaRepositoryMock} from './test/idea.repository.mock';
 
 describe('Idea Command Handler', () => {
   DependencyInjection.registerProviders(IdeasHandler, IdeaRepository);

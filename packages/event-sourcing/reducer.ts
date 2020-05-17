@@ -1,6 +1,6 @@
-import { IEvent } from '@centsideas/models';
+import {IEvent} from '@centsideas/models';
 
-import { IEventCommitFunctions } from './event-entity';
+import {IEventCommitFunctions} from './event-entity';
 
 export class Reducer<IEntityState> {
   constructor(private knownEvents: IEventCommitFunctions<IEntityState>) {}
@@ -12,7 +12,7 @@ export class Reducer<IEntityState> {
       const commitFunction = this.knownEvents[event.name];
       currentEventNumber += 1;
       return commitFunction(
-        { ...state, lastEventId: event.id, lastEventNumber: currentEventNumber },
+        {...state, lastEventId: event.id, lastEventNumber: currentEventNumber},
         event,
       );
     }, currentState);

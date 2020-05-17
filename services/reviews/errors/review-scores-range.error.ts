@@ -1,6 +1,6 @@
-import { RpcStatus, ErrorNames } from '@centsideas/enums';
-import { InternalError } from '@centsideas/utils';
-import { IReviewScores } from '@centsideas/models';
+import {RpcStatus, ErrorNames} from '@centsideas/enums';
+import {InternalError} from '@centsideas/utils';
+import {IReviewScores} from '@centsideas/models';
 
 export class ReviewScoresRangeError extends InternalError {
   static min: number = 0;

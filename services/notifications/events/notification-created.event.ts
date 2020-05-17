@@ -1,6 +1,6 @@
-import { INotificationCreatedEvent, INotificationState, IInResponseTo } from '@centsideas/models';
-import { Event } from '@centsideas/event-sourcing';
-import { NotificationsEvents, NotificationMedium } from '@centsideas/enums';
+import {INotificationCreatedEvent, INotificationState, IInResponseTo} from '@centsideas/models';
+import {Event} from '@centsideas/event-sourcing';
+import {NotificationsEvents, NotificationMedium} from '@centsideas/enums';
 
 export class NotificationCreatedEvent extends Event<INotificationCreatedEvent> {
   static readonly eventName: string = NotificationsEvents.Created;
@@ -13,7 +13,7 @@ export class NotificationCreatedEvent extends Event<INotificationCreatedEvent> {
   ) {
     super(
       NotificationCreatedEvent.eventName,
-      { notificationId, receiverUserId, inResponseTo, medium },
+      {notificationId, receiverUserId, inResponseTo, medium},
       notificationId,
     );
   }

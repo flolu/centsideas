@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 
-import { IdeasContainer } from './ideas.container';
-import { IdeaContainer } from './idea.container';
-import { IdeaCardComponent } from './idea-card.component';
-import { IdeaLoadedGuard } from './idea-loaded.guard';
-import { EditIdeaComponent } from './edit-idea.component';
-import { IdeasStoreModule } from './store';
-import { CreateIdeaComponent } from './create-idea.component';
+import {IdeasContainer} from './ideas.container';
+import {IdeaContainer} from './idea.container';
+import {IdeaCardComponent} from './idea-card.component';
+import {IdeaLoadedGuard} from './idea-loaded.guard';
+import {EditIdeaComponent} from './edit-idea.component';
+import {IdeasStoreModule} from './store';
+import {CreateIdeaComponent} from './create-idea.component';
 
 @NgModule({
   imports: [
@@ -17,8 +17,8 @@ import { CreateIdeaComponent } from './create-idea.component';
     ReactiveFormsModule,
     IdeasStoreModule,
     RouterModule.forChild([
-      { path: '', component: IdeasContainer },
-      { path: ':id', component: IdeaContainer, canActivate: [IdeaLoadedGuard] },
+      {path: '', component: IdeasContainer},
+      {path: ':id', component: IdeaContainer, canActivate: [IdeaLoadedGuard]},
     ]),
   ],
   declarations: [

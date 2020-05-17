@@ -7,7 +7,7 @@ import {
   httpDelete,
   httpGet,
 } from 'inversify-express-utils';
-import { inject } from 'inversify';
+import {inject} from 'inversify';
 
 import {
   ApiEndpoints,
@@ -27,10 +27,10 @@ import {
   RpcClientFactory,
   RPC_TYPES,
 } from '@centsideas/rpc';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {GlobalEnvironment} from '@centsideas/environment';
 
-import { GatewayEnvironment } from './gateway.environment';
-import { AuthMiddleware } from './middlewares';
+import {GatewayEnvironment} from './gateway.environment';
+import {AuthMiddleware} from './middlewares';
 
 @controller('')
 export class CommandController implements interfaces.Controller {
@@ -70,45 +70,45 @@ export class CommandController implements interfaces.Controller {
 
   @httpPost(`/${ApiEndpoints.Ideas}`, AuthMiddleware)
   async createIdea(req: express.Request, res: express.Response) {
-    const { title, description } = req.body;
-    const { userId } = res.locals;
-    return this.ideasRpc.client.create({ userId, title, description });
+    const {title, description} = req.body;
+    const {userId} = res.locals;
+    return this.ideasRpc.client.create({userId, title, description});
   }
 
   @httpPut(`/${ApiEndpoints.Ideas}/:id`, AuthMiddleware)
   updateIdea(req: express.Request, res: express.Response) {
     const ideaId = req.params.id;
-    const { title, description } = req.body;
-    const { userId } = res.locals;
-    return this.ideasRpc.client.update({ userId, title, description, ideaId });
+    const {title, description} = req.body;
+    const {userId} = res.locals;
+    return this.ideasRpc.client.update({userId, title, description, ideaId});
   }
 
   @httpDelete(`/${ApiEndpoints.Ideas}/:id`, AuthMiddleware)
   deleteIdea(req: express.Request, res: express.Response) {
     const ideaId = req.params.id;
-    const { userId } = res.locals;
-    return this.ideasRpc.client.delete({ userId, ideaId });
+    const {userId} = res.locals;
+    return this.ideasRpc.client.delete({userId, ideaId});
   }
 
   @httpPut(`/${ApiEndpoints.Users}/:id`, AuthMiddleware)
   updateUser(req: express.Request, res: express.Response) {
-    const { username, email } = req.body;
-    const { userId } = res.locals;
-    return this.usersRpc.client.update({ username, email, userId });
+    const {username, email} = req.body;
+    const {userId} = res.locals;
+    return this.usersRpc.client.update({username, email, userId});
   }
 
   @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.GoogleLogin}`)
   async googleLogin(req: express.Request, res: express.Response) {
-    const { code } = req.body;
-    const { user, refreshToken, accessToken } = await this.authRpc.client.googleLogin({ code });
+    const {code} = req.body;
+    const {user, refreshToken, accessToken} = await this.authRpc.client.googleLogin({code});
     res.cookie(CookieNames.RefreshToken, refreshToken, this.getRefreshTokenCookieOptions());
-    return { user, accessToken };
+    return {user, accessToken};
   }
 
   @httpGet(`/${ApiEndpoints.Auth}/${AuthApiRoutes.GoogleLoginRedirect}`)
   async googleLoginRedirectUrl() {
-    const { url } = await this.authRpc.client.googleLoginRedirect(undefined);
-    return { url };
+    const {url} = await this.authRpc.client.googleLoginRedirect(undefined);
+    return {url};
   }
 
   @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.RefreshToken}`)
@@ -126,7 +126,7 @@ export class CommandController implements interfaces.Controller {
          * to guarantee the authenticity of the request.
          * Here we validate if the `exchangeSecret`s match
          */
-        const { exchangeSecret } = req.body;
+        const {exchangeSecret} = req.body;
         if (
           this.env.frontendServerExchangeSecret === exchangeSecret ||
           this.globalEnv.environment === Environments.Dev
@@ -135,48 +135,48 @@ export class CommandController implements interfaces.Controller {
         }
       }
       if (!currentRefreshToken) {
-        res.cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
-        return { ok: false };
+        res.cookie(CookieNames.RefreshToken, '', {maxAge: 0});
+        return {ok: false};
       }
 
-      const data = await this.authRpc.client.refreshToken({ refreshToken: currentRefreshToken });
-      const { user, accessToken, refreshToken } = data;
+      const data = await this.authRpc.client.refreshToken({refreshToken: currentRefreshToken});
+      const {user, accessToken, refreshToken} = data;
 
       res.cookie(CookieNames.RefreshToken, refreshToken, this.getRefreshTokenCookieOptions());
-      return { user, accessToken };
+      return {user, accessToken};
     } catch (error) {
-      res.cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
-      return { ok: false };
+      res.cookie(CookieNames.RefreshToken, '', {maxAge: 0});
+      return {ok: false};
     }
   }
 
   @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.Login}`)
   login(req: express.Request) {
-    const { email } = req.body;
-    return this.authRpc.client.login({ email });
+    const {email} = req.body;
+    return this.authRpc.client.login({email});
   }
 
   @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.ConfirmLogin}`)
   async confirmLogin(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const { loginToken } = req.body;
-    const data = await this.authRpc.client.confirmLogin({ token: loginToken });
-    const { user, accessToken, refreshToken } = data;
+    const {loginToken} = req.body;
+    const data = await this.authRpc.client.confirmLogin({token: loginToken});
+    const {user, accessToken, refreshToken} = data;
     res.cookie(CookieNames.RefreshToken, refreshToken, this.getRefreshTokenCookieOptions());
-    return { user, accessToken };
+    return {user, accessToken};
   }
 
   @httpPost(`/${ApiEndpoints.Users}/${UsersApiRoutes.ConfirmEmailChange}`, AuthMiddleware)
   confirmEmailChange(req: express.Request, res: express.Response) {
-    const { token } = req.body;
-    const { userId } = res.locals;
-    return this.usersRpc.client.confirmEmailChange({ token, userId });
+    const {token} = req.body;
+    const {userId} = res.locals;
+    return this.usersRpc.client.confirmEmailChange({token, userId});
   }
 
   @httpPost(`/${ApiEndpoints.Auth}/${AuthApiRoutes.Logout}`, AuthMiddleware)
   async logout(_req: express.Request, res: express.Response) {
-    const { userId } = res.locals;
-    await this.authRpc.client.logout({ userId });
-    res.cookie(CookieNames.RefreshToken, '', { maxAge: 0 });
+    const {userId} = res.locals;
+    await this.authRpc.client.logout({userId});
+    res.cookie(CookieNames.RefreshToken, '', {maxAge: 0});
   }
 
   @httpPost(
@@ -184,9 +184,9 @@ export class CommandController implements interfaces.Controller {
     AuthMiddleware,
   )
   subscribePush(req: express.Request, res: express.Response) {
-    const { subscription } = req.body;
-    const { userId } = res.locals;
-    return this.notificationsRpc.client.subscribePush({ subscription, userId });
+    const {subscription} = req.body;
+    const {userId} = res.locals;
+    return this.notificationsRpc.client.subscribePush({subscription, userId});
   }
 
   @httpPost(
@@ -194,15 +194,15 @@ export class CommandController implements interfaces.Controller {
     AuthMiddleware,
   )
   updateNotificationSettings(req: express.Request, res: express.Response) {
-    const { sendPushes, sendEmails } = req.body;
-    const { userId } = res.locals;
-    return this.notificationsRpc.client.updateSettings({ sendPushes, sendEmails, userId });
+    const {sendPushes, sendEmails} = req.body;
+    const {userId} = res.locals;
+    return this.notificationsRpc.client.updateSettings({sendPushes, sendEmails, userId});
   }
 
   @httpGet(`/${ApiEndpoints.Notifications}`, AuthMiddleware)
   getNotificationSettings(_req: express.Request, res: express.Response) {
-    const { userId } = res.locals;
-    return this.notificationsRpc.client.getSettings({ userId });
+    const {userId} = res.locals;
+    return this.notificationsRpc.client.getSettings({userId});
   }
 
   private getRefreshTokenCookieOptions = () => {

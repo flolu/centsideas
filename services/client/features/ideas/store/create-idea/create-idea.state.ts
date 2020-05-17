@@ -1,5 +1,5 @@
-import { SyncStatus } from '@cic/shared';
-import { IIdeaForm } from '../ideas.state';
+import {SyncStatus} from '@cic/shared';
+import {IIdeaForm} from '../ideas.state';
 
 export interface ICreateIdeaReducerState {
   status: SyncStatus;

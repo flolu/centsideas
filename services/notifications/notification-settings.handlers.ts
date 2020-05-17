@@ -1,11 +1,11 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 
-import { IPushSubscription } from '@centsideas/models';
-import { UnauthenticatedError, Identifier } from '@centsideas/utils';
+import {IPushSubscription} from '@centsideas/models';
+import {UnauthenticatedError, Identifier} from '@centsideas/utils';
 
-import { NotificationSettingsRepository } from './notification-settings.repository';
-import { NotificationSettings } from './notification-settings.entity';
-import { NotificationSettingsErrors } from './errors';
+import {NotificationSettingsRepository} from './notification-settings.repository';
+import {NotificationSettings} from './notification-settings.entity';
+import {NotificationSettingsErrors} from './errors';
 import {
   SubscribePushNotifications,
   UpdateNotificationSettings,
@@ -16,7 +16,7 @@ import {
 export class NotificationSettingsHandlers {
   constructor(private nsRepository: NotificationSettingsRepository) {}
 
-  addPushSubscription: SubscribePushNotifications = async ({ subscription, userId }) => {
+  addPushSubscription: SubscribePushNotifications = async ({subscription, userId}) => {
     UnauthenticatedError.validate(userId);
     NotificationSettingsErrors.PushSubscriptionInvalidError.validate(subscription);
 
@@ -34,7 +34,7 @@ export class NotificationSettingsHandlers {
     return saved.persistedState;
   };
 
-  updateSettings: UpdateNotificationSettings = async ({ sendEmails, sendPushes, userId }) => {
+  updateSettings: UpdateNotificationSettings = async ({sendEmails, sendPushes, userId}) => {
     UnauthenticatedError.validate(userId);
     NotificationSettingsErrors.NotificationSettingsPayloadInvalidError.validate({
       sendPushes,
@@ -42,13 +42,13 @@ export class NotificationSettingsHandlers {
     });
 
     const ns = await this.getSettingsOfUser(userId);
-    ns.update({ sendEmails, sendPushes });
+    ns.update({sendEmails, sendPushes});
 
     const updated = await this.nsRepository.save(ns);
     return updated.persistedState;
   };
 
-  getSettings: GetNotificationSettings = async ({ userId }) => {
+  getSettings: GetNotificationSettings = async ({userId}) => {
     UnauthenticatedError.validate(userId);
 
     const found = await this.getSettingsOfUser(userId);

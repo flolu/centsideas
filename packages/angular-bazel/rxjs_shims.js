@@ -24,7 +24,7 @@
   Object.keys(rxjs.operators).forEach(function (key) {
     exports[key] = rxjs.operators[key];
   });
-  Object.defineProperty(exports, '__esModule', { value: true });
+  Object.defineProperty(exports, '__esModule', {value: true});
 });
 
 // rxjs/testing
@@ -40,5 +40,5 @@
   Object.keys(rxjs.testing).forEach(function (key) {
     exports[key] = rxjs.testing[key];
   });
-  Object.defineProperty(exports, '__esModule', { value: true });
+  Object.defineProperty(exports, '__esModule', {value: true});
 });

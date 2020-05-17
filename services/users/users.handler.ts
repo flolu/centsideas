@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 
 import {
   sanitizeHtml,
@@ -7,20 +7,20 @@ import {
   PermissionDeniedError,
   signToken,
 } from '@centsideas/utils';
-import { IEmailChangeTokenPayload } from '@centsideas/models';
-import { TokenExpirationTimes } from '@centsideas/enums';
-import { IUserCommands, ConfirmEmailChange, UpdateUser } from '@centsideas/rpc';
+import {IEmailChangeTokenPayload} from '@centsideas/models';
+import {TokenExpirationTimes} from '@centsideas/enums';
+import {IUserCommands, ConfirmEmailChange, UpdateUser} from '@centsideas/rpc';
 
-import { UserRepository } from './user.repository';
-import { User } from './user.entity';
-import { UserErrors } from './errors';
-import { UsersEnvironment } from './users.environment';
+import {UserRepository} from './user.repository';
+import {User} from './user.entity';
+import {UserErrors} from './errors';
+import {UsersEnvironment} from './users.environment';
 
 @injectable()
 export class UsersHandler implements IUserCommands {
   constructor(private userRepository: UserRepository, private env: UsersEnvironment) {}
 
-  update: UpdateUser = async ({ userId, username, email }) => {
+  update: UpdateUser = async ({userId, username, email}) => {
     if (!userId) throw new UnauthenticatedError();
     UserErrors.UserIdRequiredError.validate(userId);
 
@@ -49,14 +49,14 @@ export class UsersHandler implements IUserCommands {
       user = await this.requestEmailChange(userId, email);
     }
 
-    user.update({ username, pendingEmail: isNewEmail ? email : null });
+    user.update({username, pendingEmail: isNewEmail ? email : null});
 
     if (username) await this.userRepository.usernameMapping.update(userId, username);
     const saved = await this.userRepository.save(user);
     return saved.persistedState;
   };
 
-  confirmEmailChange: ConfirmEmailChange = async ({ token, userId }) => {
+  confirmEmailChange: ConfirmEmailChange = async ({token, userId}) => {
     if (!userId) throw new UnauthenticatedError();
 
     const payload = decodeToken<IEmailChangeTokenPayload>(token, this.env.changeEmailTokenSecret);
@@ -66,7 +66,7 @@ export class UsersHandler implements IUserCommands {
 
     const user = await this.userRepository.findById(payload.userId);
     UserErrors.EmailMatchesCurrentEmailError.validate(user.persistedState.email, payload.newEmail);
-    user.confirmEmailChange({ newEmail: payload.newEmail, oldEmail: payload.currentEmail });
+    user.confirmEmailChange({newEmail: payload.newEmail, oldEmail: payload.currentEmail});
 
     await this.userRepository.emailMapping.update(user.persistedState.id, payload.newEmail);
     const updated = await this.userRepository.save(user);
@@ -94,6 +94,6 @@ export class UsersHandler implements IUserCommands {
       TokenExpirationTimes.EmailChangeToken,
     );
 
-    return user.requestEmailChange({ email, token });
+    return user.requestEmailChange({email, token});
   };
 }

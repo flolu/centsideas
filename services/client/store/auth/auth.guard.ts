@@ -1,13 +1,13 @@
-import { CanActivate, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { Injectable } from '@angular/core';
-import { map, skipWhile } from 'rxjs/operators';
+import {CanActivate, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {Injectable} from '@angular/core';
+import {map, skipWhile} from 'rxjs/operators';
 
-import { TopLevelFrontendRoutes } from '@centsideas/enums';
-import { LoadStatus } from '@cic/shared';
-import { AuthSelectors } from './auth.selectors';
-import { AuthActions } from './auth.actions';
+import {TopLevelFrontendRoutes} from '@centsideas/enums';
+import {LoadStatus} from '@cic/shared';
+import {AuthSelectors} from './auth.selectors';
+import {AuthActions} from './auth.actions';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

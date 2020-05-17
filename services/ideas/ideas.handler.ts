@@ -1,17 +1,17 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 
-import { sanitizeHtml, UnauthenticatedError, PermissionDeniedError } from '@centsideas/utils';
-import { CreateIdea, UpdateIdea, DeleteIdea } from '@centsideas/rpc';
+import {sanitizeHtml, UnauthenticatedError, PermissionDeniedError} from '@centsideas/utils';
+import {CreateIdea, UpdateIdea, DeleteIdea} from '@centsideas/rpc';
 
-import { IdeaErrors } from './errors';
-import { Idea } from './idea.entity';
-import { IdeaRepository } from './idea.repository';
+import {IdeaErrors} from './errors';
+import {Idea} from './idea.entity';
+import {IdeaRepository} from './idea.repository';
 
 @injectable()
 export class IdeasHandler {
   constructor(private repository: IdeaRepository) {}
 
-  create: CreateIdea = async ({ userId, title, description }) => {
+  create: CreateIdea = async ({userId, title, description}) => {
     if (!userId) throw new UnauthenticatedError();
 
     title = sanitizeHtml(title || '');
@@ -22,13 +22,13 @@ export class IdeasHandler {
     IdeaErrors.IdeaDescriptionLengthError.validate(description);
 
     const ideaId = await this.repository.generateAggregateId(false);
-    const idea = Idea.create({ ideaId, userId, title, description });
+    const idea = Idea.create({ideaId, userId, title, description});
 
     const created = await this.repository.save(idea);
     return created.persistedState;
   };
 
-  update: UpdateIdea = async ({ userId, description, title, ideaId }) => {
+  update: UpdateIdea = async ({userId, description, title, ideaId}) => {
     if (!userId) throw new UnauthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
 
@@ -46,13 +46,13 @@ export class IdeasHandler {
       idea.persistedState.id,
     );
 
-    idea.update({ title, description });
+    idea.update({title, description});
 
     const updated = await this.repository.save(idea);
     return updated.persistedState;
   };
 
-  delete: DeleteIdea = async ({ userId, ideaId }) => {
+  delete: DeleteIdea = async ({userId, ideaId}) => {
     if (!userId) throw new UnauthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
 

@@ -1,4 +1,4 @@
-import { SyncStatus } from '@cic/shared';
+import {SyncStatus} from '@cic/shared';
 
 export interface IMeForm {
   username: string;

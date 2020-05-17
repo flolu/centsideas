@@ -1,7 +1,7 @@
-import { injectable } from 'inversify';
-import { Collection } from 'mongodb';
+import {injectable} from 'inversify';
+import {Collection} from 'mongodb';
 
-import { UserEvents } from '@centsideas/enums';
+import {UserEvents} from '@centsideas/enums';
 import {
   IEmailChangeConfirmedEvent,
   IEmailChangeRequestedEvent,
@@ -11,7 +11,7 @@ import {
   IEvent,
 } from '@centsideas/models';
 
-import { ProjectionDatabase } from './projection-database';
+import {ProjectionDatabase} from './projection-database';
 
 @injectable()
 export class UsersProjection {
@@ -57,14 +57,14 @@ export class UsersProjection {
 
   private emailChangeRequested = async (event: IEvent<IEmailChangeRequestedEvent>) => {
     await this.usersCollection.findOneAndUpdate(
-      { id: event.aggregateId },
-      { $set: { 'private.pendingEmail': event.data.email } },
+      {id: event.aggregateId},
+      {$set: {'private.pendingEmail': event.data.email}},
     );
   };
 
   private emailChangeConfirmed = async (event: IEvent<IEmailChangeConfirmedEvent>) => {
     await this.usersCollection.findOneAndUpdate(
-      { id: event.aggregateId },
+      {id: event.aggregateId},
       {
         $set: {
           'private.email': event.data.newEmail,
@@ -76,8 +76,8 @@ export class UsersProjection {
 
   private userUpdated = async (event: IEvent<IUserUpdatedEvent>) => {
     await this.usersCollection.findOneAndUpdate(
-      { id: event.aggregateId },
-      { $set: { username: event.data.username } },
+      {id: event.aggregateId},
+      {$set: {username: event.data.username}},
     );
   };
 }

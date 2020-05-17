@@ -10,6 +10,7 @@
     "deploy": "yarn env:setup:prod && bazelisk run :k8s.apply",
     "deploy:microk8s": "yarn env:setup:staging && bazelisk run :microk8s.apply",
     "lint": "tslint --project .",
+    "format": "prettier --write .",
     "up": "yarn upgrade-interactive --latest",
     "docker": "docker-compose up --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
     "docker:stop": "docker stop $(docker ps -a -q)",
@@ -177,7 +178,7 @@
     "tabWidth": 2,
     "singleQuote": true,
     "trailingComma": "all",
-    "bracketSpacing": true,
+    "bracketSpacing": false,
     "arrowParens": "avoid"
   }
 }

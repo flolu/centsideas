@@ -1,4 +1,4 @@
-import { IEnvironment } from './environment.model';
+import {IEnvironment} from './environment.model';
 
 export const generatableKeyList: (keyof IEnvironment)[] = [
   'refreshTokenSecret',

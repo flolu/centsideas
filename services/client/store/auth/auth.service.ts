@@ -1,9 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable, Inject} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
-import { ENVIRONMENT, IClientEnvironment } from '@cic/environment';
-import { ApiEndpoints, AuthApiRoutes } from '@centsideas/enums';
-import { Dtos } from '@centsideas/models';
+import {ENVIRONMENT, IClientEnvironment} from '@cic/environment';
+import {ApiEndpoints, AuthApiRoutes} from '@centsideas/enums';
+import {Dtos} from '@centsideas/models';
 
 @Injectable()
 export class AuthService {
@@ -13,13 +13,13 @@ export class AuthService {
   ) {}
 
   login(email: string) {
-    const payload: Dtos.ILoginDto = { email };
+    const payload: Dtos.ILoginDto = {email};
     const url = `${this.baseUrl}/${AuthApiRoutes.Login}`;
     return this.http.post<{}>(url, payload);
   }
 
   confirmLogin(token: string) {
-    const payload: Dtos.IConfirmLoginDto = { loginToken: token };
+    const payload: Dtos.IConfirmLoginDto = {loginToken: token};
     const url = `${this.baseUrl}/${AuthApiRoutes.ConfirmLogin}`;
     return this.http.post<Dtos.IConfirmedLoginDto>(url, payload);
   }
@@ -30,14 +30,14 @@ export class AuthService {
   }
 
   googleLogin(code: string) {
-    const payload: Dtos.IGoogleLoginDto = { code };
+    const payload: Dtos.IGoogleLoginDto = {code};
     const url = `${this.baseUrl}/${AuthApiRoutes.GoogleLogin}`;
     return this.http.post<Dtos.IGoogleLoggedInDto>(url, payload);
   }
 
   fetchAccessTokenOnServer(refreshToken: string, exchangeSecret: string) {
     const url = `${this.baseUrl}/${AuthApiRoutes.RefreshToken}`;
-    return this.http.post<Dtos.IRefreshedTokenDto>(url, { refreshToken, exchangeSecret });
+    return this.http.post<Dtos.IRefreshedTokenDto>(url, {refreshToken, exchangeSecret});
   }
 
   fetchAccessToken() {

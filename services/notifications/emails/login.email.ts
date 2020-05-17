@@ -1,5 +1,5 @@
-import { IUserState } from '@centsideas/models';
-import { IEmailContent } from '../models';
+import {IUserState} from '@centsideas/models';
+import {IEmailContent} from '../models';
 
 const subject = 'CENTS Ideas Login Confirmation';
 const subjectFirst = 'Complete Your Sign Up at CENTS Ideas';

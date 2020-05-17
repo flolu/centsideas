@@ -1,12 +1,12 @@
 import * as http from 'http';
-import { injectable, inject } from 'inversify';
+import {injectable, inject} from 'inversify';
 
-import { Logger } from '@centsideas/utils';
-import { RpcServer, IReviewCommands, RPC_TYPES, RpcServerFactory } from '@centsideas/rpc';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {Logger} from '@centsideas/utils';
+import {RpcServer, IReviewCommands, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
+import {GlobalEnvironment} from '@centsideas/environment';
 
-import { ReviewsHandler } from './reviews.handler';
-import { ReviewsEnvironment } from './reviews.environment';
+import {ReviewsHandler} from './reviews.handler';
+import {ReviewsEnvironment} from './reviews.environment';
 
 @injectable()
 export class ReviewsServer {

@@ -1,4 +1,4 @@
-import { IIdeaViewModel } from '@centsideas/models';
+import {IIdeaViewModel} from '@centsideas/models';
 
 interface IIdeaByIdQuery {
   id: string;

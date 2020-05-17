@@ -1,17 +1,11 @@
 import * as express from 'express';
-import { inject } from 'inversify';
-import { interfaces, controller, httpGet } from 'inversify-express-utils';
+import {inject} from 'inversify';
+import {interfaces, controller, httpGet} from 'inversify-express-utils';
 
-import { ApiEndpoints, AdminApiRoutes } from '@centsideas/enums';
-import {
-  IIdeaQueries,
-  IAdminQueries,
-  RpcClient,
-  RpcClientFactory,
-  RPC_TYPES,
-} from '@centsideas/rpc';
+import {ApiEndpoints, AdminApiRoutes} from '@centsideas/enums';
+import {IIdeaQueries, IAdminQueries, RpcClient, RpcClientFactory, RPC_TYPES} from '@centsideas/rpc';
 
-import { GatewayEnvironment } from './gateway.environment';
+import {GatewayEnvironment} from './gateway.environment';
 
 @controller('')
 export class QueryController implements interfaces.Controller {
@@ -46,18 +40,18 @@ export class QueryController implements interfaces.Controller {
 
   @httpGet(`/${ApiEndpoints.Ideas}`)
   async getIdeas() {
-    const { ideas } = await this.ideasRpc.client.getAll(undefined);
+    const {ideas} = await this.ideasRpc.client.getAll(undefined);
     return ideas || [];
   }
 
   @httpGet(`/${ApiEndpoints.Ideas}/:id`)
   getIdeaById(req: express.Request) {
-    return this.ideasRpc.client.getById({ id: req.params.id });
+    return this.ideasRpc.client.getById({id: req.params.id});
   }
 
   @httpGet(`/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)
   async getAdminEvents() {
-    const { events } = await this.adminRpc.client.getEvents(undefined);
-    return events ? events.map(e => ({ ...e, data: JSON.parse(e.data) })) : [];
+    const {events} = await this.adminRpc.client.getEvents(undefined);
+    return events ? events.map(e => ({...e, data: JSON.parse(e.data)})) : [];
   }
 }

@@ -1,8 +1,8 @@
-import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
-import { IReviewState, IReviewCreatedEvent, IReviewUpdatedEvent } from '@centsideas/models';
+import {EventEntity, ISnapshot, initialEntityBaseState} from '@centsideas/event-sourcing';
+import {IReviewState, IReviewCreatedEvent, IReviewUpdatedEvent} from '@centsideas/models';
 
-import { commitFunctions, ReviewEvents } from './events';
-import { ReviewDeletedEvent } from './events/review-deleted.event';
+import {commitFunctions, ReviewEvents} from './events';
+import {ReviewDeletedEvent} from './events/review-deleted.event';
 
 export class Review extends EventEntity<IReviewState> {
   static initialState: IReviewState = {
@@ -10,7 +10,7 @@ export class Review extends EventEntity<IReviewState> {
     ideaId: '',
     userId: '',
     content: '',
-    scores: { control: 0, entry: 0, need: 0, time: 0, scale: 0 },
+    scores: {control: 0, entry: 0, need: 0, time: 0, scale: 0},
     createdAt: '',
     updatedAt: '',
     deletedAt: '',

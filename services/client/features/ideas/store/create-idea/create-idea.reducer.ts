@@ -1,8 +1,8 @@
-import { createReducer, on } from '@ngrx/store';
+import {createReducer, on} from '@ngrx/store';
 
-import { SyncStatus } from '@cic/shared';
-import { ICreateIdeaReducerState } from './create-idea.state';
-import { CreateIdeaActions } from './create-idea.actions';
+import {SyncStatus} from '@cic/shared';
+import {ICreateIdeaReducerState} from './create-idea.state';
+import {CreateIdeaActions} from './create-idea.actions';
 
 // FIXME autosave drafts when creating idea (max one draft per user.. so that it doesn't get to complicated)
 const initialState: ICreateIdeaReducerState = {
@@ -18,12 +18,12 @@ export const createIdeaReducer = createReducer(
     ...state,
     status: state.status === SyncStatus.Syncing ? SyncStatus.PatchSyncing : SyncStatus.Syncing,
   })),
-  on(CreateIdeaActions.createIdeaDone, (state, { created }) => ({
+  on(CreateIdeaActions.createIdeaDone, (state, {created}) => ({
     ...state,
     persisted: created,
     status: state.status === SyncStatus.PatchSyncing ? SyncStatus.Syncing : SyncStatus.Synced,
   })),
-  on(CreateIdeaActions.createIdeaFail, (state, { error }) => ({
+  on(CreateIdeaActions.createIdeaFail, (state, {error}) => ({
     ...state,
     error,
     status: SyncStatus.Error,

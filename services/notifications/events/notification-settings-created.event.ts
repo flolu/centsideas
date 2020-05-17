@@ -1,6 +1,6 @@
-import { Event } from '@centsideas/event-sourcing';
-import { NotificationSettingsEvents } from '@centsideas/enums';
-import { INotificationSettingsState, INotificationSettingsCreatedEvent } from '@centsideas/models';
+import {Event} from '@centsideas/event-sourcing';
+import {NotificationSettingsEvents} from '@centsideas/enums';
+import {INotificationSettingsState, INotificationSettingsCreatedEvent} from '@centsideas/models';
 
 export class NotificationSettingsCreatedEvent extends Event<INotificationSettingsCreatedEvent> {
   static readonly eventName: string = NotificationSettingsEvents.Created;
@@ -8,7 +8,7 @@ export class NotificationSettingsCreatedEvent extends Event<INotificationSetting
   constructor(notificationSettingsId: string, userId: string) {
     super(
       NotificationSettingsCreatedEvent.eventName,
-      { notificationSettingsId, userId },
+      {notificationSettingsId, userId},
       notificationSettingsId,
     );
   }

@@ -1,8 +1,8 @@
-import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
-import { INotificationState, IInResponseTo } from '@centsideas/models';
-import { NotificationMedium } from '@centsideas/enums';
+import {EventEntity, ISnapshot, initialEntityBaseState} from '@centsideas/event-sourcing';
+import {INotificationState, IInResponseTo} from '@centsideas/models';
+import {NotificationMedium} from '@centsideas/enums';
 
-import { notificationsCommitFunctions, NotificationsEvents } from './events';
+import {notificationsCommitFunctions, NotificationsEvents} from './events';
 
 export class Notification extends EventEntity<INotificationState> {
   static initialState: INotificationState = {

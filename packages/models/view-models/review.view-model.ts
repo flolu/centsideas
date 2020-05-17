@@ -1,4 +1,4 @@
-import { IReviewScores } from '../entities';
+import {IReviewScores} from '../entities';
 
 export interface IReviewViewModel {
   id: string;

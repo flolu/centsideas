@@ -1,7 +1,7 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
 
-import { StoreKeys } from '@cic/shared';
-import { IUserFeatureReducerState } from './user.state';
+import {StoreKeys} from '@cic/shared';
+import {IUserFeatureReducerState} from './user.state';
 
 const selectUserFeatureState = createFeatureSelector<IUserFeatureReducerState>(StoreKeys.User);
 

@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 
-import { TokenInvalidError } from './errors/token-invalid.error';
+import {TokenInvalidError} from './errors/token-invalid.error';
 
 export const decodeToken = <T = any>(token: string, jwtSecret: string): T => {
   let decoded: any;
@@ -13,4 +13,4 @@ export const decodeToken = <T = any>(token: string, jwtSecret: string): T => {
 };
 
 export const signToken = (payload: any, secret: string, expiresIn: number) =>
-  jwt.sign(payload, secret, { expiresIn });
+  jwt.sign(payload, secret, {expiresIn});

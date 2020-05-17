@@ -1,5 +1,5 @@
-import { RpcStatus, ErrorNames } from '@centsideas/enums';
-import { InternalError } from '@centsideas/utils';
+import {RpcStatus, ErrorNames} from '@centsideas/enums';
+import {InternalError} from '@centsideas/utils';
 
 export class UserIdRequiredError extends InternalError {
   static validate = (userId: string): void => {

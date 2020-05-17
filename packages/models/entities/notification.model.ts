@@ -1,7 +1,7 @@
-import { NotificationMedium } from '@centsideas/enums';
+import {NotificationMedium} from '@centsideas/enums';
 
-import { IEventEntityBase } from './event-base.model';
-import { IInResponseTo } from '..';
+import {IEventEntityBase} from './event-base.model';
+import {IInResponseTo} from '..';
 
 export interface INotificationState extends IEventEntityBase {
   receiverUserId: string | null;

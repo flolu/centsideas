@@ -1,6 +1,6 @@
-import { RpcStatus, ErrorNames } from '@centsideas/enums';
-import { InternalError } from '@centsideas/utils';
-import { Dtos } from '@centsideas/models';
+import {RpcStatus, ErrorNames} from '@centsideas/enums';
+import {InternalError} from '@centsideas/utils';
+import {Dtos} from '@centsideas/models';
 
 export class NotificationSettingsPayloadInvalidError extends InternalError {
   static validate = (settings: Dtos.INotificationSettingsDto): void => {

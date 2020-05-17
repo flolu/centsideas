@@ -1,4 +1,4 @@
-import { IIdeaState } from '@centsideas/models';
+import {IIdeaState} from '@centsideas/models';
 
 export const fakeEventId = '2WEKaVNO';
 export const fakeIdeaId = 'PPBqWA9';

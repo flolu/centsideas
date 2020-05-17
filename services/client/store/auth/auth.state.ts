@@ -1,5 +1,5 @@
-import { IUserState } from '@centsideas/models';
-import { LoadStatus } from '@cic/shared';
+import {IUserState} from '@centsideas/models';
+import {LoadStatus} from '@cic/shared';
 
 export interface IAuthReducerState {
   user: IUserState | null;

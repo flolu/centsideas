@@ -1,7 +1,7 @@
-import { composeCommitFunctions } from '@centsideas/event-sourcing';
-import { IErrorEntityState } from '@centsideas/models';
+import {composeCommitFunctions} from '@centsideas/event-sourcing';
+import {IErrorEntityState} from '@centsideas/models';
 
-import { ErrorOccurredEvent } from './error-occurred.event';
+import {ErrorOccurredEvent} from './error-occurred.event';
 
 export const ErrorEntityEvents = {
   ErrorOccurredEvent,

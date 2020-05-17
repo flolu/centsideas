@@ -1,7 +1,7 @@
-import { Collection } from 'mongodb';
-import { injectable } from 'inversify';
+import {Collection} from 'mongodb';
+import {injectable} from 'inversify';
 
-import { IdeaEvents } from '@centsideas/enums';
+import {IdeaEvents} from '@centsideas/enums';
 import {
   IIdeaCreatedEvent,
   IIdeaDeletedEvent,
@@ -10,7 +10,7 @@ import {
   IEvent,
 } from '@centsideas/models';
 
-import { ProjectionDatabase } from './projection-database';
+import {ProjectionDatabase} from './projection-database';
 
 // FIXME how should errors in the projection db be handled? (best solution would be to tell the consumer that event wasn't yet consumed)
 
@@ -53,14 +53,14 @@ export class IdeasProjection {
       lastEventNumber: 0,
       lastEventId: '',
       reviews: [],
-      scores: { control: 0, entry: 0, need: 0, time: 0, scale: 0 },
+      scores: {control: 0, entry: 0, need: 0, time: 0, scale: 0},
       reviewCount: 0,
     };
     await this.ideasCollection.insertOne(idea);
   };
 
   private ideaDeleted = async (event: IEvent<IIdeaDeletedEvent>) => {
-    await this.ideasCollection.findOneAndDelete({ id: event.aggregateId });
+    await this.ideasCollection.findOneAndDelete({id: event.aggregateId});
   };
 
   private ideaUpdated = async (event: IEvent<IIdeaUpdatedEvent>) => {
@@ -70,7 +70,7 @@ export class IdeasProjection {
     if (!current) return;
 
     await this.ideasCollection.findOneAndUpdate(
-      { id: event.aggregateId },
+      {id: event.aggregateId},
       {
         $set: {
           title: event.data.title || current.title,

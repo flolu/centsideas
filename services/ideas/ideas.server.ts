@@ -1,12 +1,12 @@
 import * as http from 'http';
-import { injectable, inject } from 'inversify';
+import {injectable, inject} from 'inversify';
 
-import { Logger } from '@centsideas/utils';
-import { IIdeaCommands, RpcServer, RPC_TYPES, RpcServerFactory } from '@centsideas/rpc';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {Logger} from '@centsideas/utils';
+import {IIdeaCommands, RpcServer, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
+import {GlobalEnvironment} from '@centsideas/environment';
 
-import { IdeasHandler } from './ideas.handler';
-import { IdeasEnvironment } from './ideas.environment';
+import {IdeasHandler} from './ideas.handler';
+import {IdeasEnvironment} from './ideas.environment';
 
 @injectable()
 export class IdeasServer {

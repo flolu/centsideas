@@ -1,4 +1,4 @@
-import { IEmailContent } from '../models';
+import {IEmailContent} from '../models';
 
 const subject = 'Change your CENTS Ideas Email Adress';
 const html = (url: string) =>

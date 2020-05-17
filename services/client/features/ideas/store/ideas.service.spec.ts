@@ -1,7 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import {TestBed} from '@angular/core/testing';
+import {HttpClientModule} from '@angular/common/http';
 
-import { IdeasService } from './ideas.service';
+import {IdeasService} from './ideas.service';
 
 describe('IdeasService', () => {
   it('should work', () => {

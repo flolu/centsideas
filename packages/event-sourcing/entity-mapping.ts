@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
 // FIXME it might be worth to create indexes to increase read performance
@@ -30,8 +30,8 @@ export class EntityMapping<IEntityMapping> {
   async update(entityId: string, newMappingPropery: string): Promise<IEntityMapping> {
     const collection = await this.collection();
     const updated = await collection.findOneAndUpdate(
-      { [this.entityIdKey]: entityId },
-      { $set: { [this.mappingEntityIdKey]: newMappingPropery } },
+      {[this.entityIdKey]: entityId},
+      {$set: {[this.mappingEntityIdKey]: newMappingPropery}},
     );
     return updated.value;
   }

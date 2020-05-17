@@ -1,4 +1,4 @@
-import { IEmailContent } from '../models';
+import {IEmailContent} from '../models';
 
 const subject = 'Your Email Adress Has Been Updated';
 const html = (newEmail: string) =>

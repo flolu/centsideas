@@ -1,7 +1,7 @@
-import { ISnapshot } from '@centsideas/event-sourcing';
-import { IIdeaState } from '@centsideas/models';
+import {ISnapshot} from '@centsideas/event-sourcing';
+import {IIdeaState} from '@centsideas/models';
 
-import { Idea } from './idea.entity';
+import {Idea} from './idea.entity';
 import {
   fakeIdeaId,
   fakeIdeaTitle,

@@ -1,6 +1,6 @@
-import { ErrorNames, RpcStatus } from '@centsideas/enums';
+import {ErrorNames, RpcStatus} from '@centsideas/enums';
 
-import { InternalError } from './internal.error';
+import {InternalError} from './internal.error';
 
 export class PermissionDeniedError extends InternalError {
   static validate = (auid: string | null, eligibleUserId: string): void => {
@@ -9,6 +9,6 @@ export class PermissionDeniedError extends InternalError {
   };
 
   constructor() {
-    super(`No permission`, { name: ErrorNames.NoPermission, code: RpcStatus.PERMISSION_DENIED });
+    super(`No permission`, {name: ErrorNames.NoPermission, code: RpcStatus.PERMISSION_DENIED});
   }
 }

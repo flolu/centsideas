@@ -1,5 +1,5 @@
-import { LoadStatus } from '@cic/shared';
-import { IIdeaForm } from '../ideas.state';
+import {LoadStatus} from '@cic/shared';
+import {IIdeaForm} from '../ideas.state';
 
 export interface IEditIdeaReducerState {
   status: LoadStatus;

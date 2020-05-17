@@ -1,4 +1,4 @@
-import { IReviewState, IReviewScores } from '@centsideas/models';
+import {IReviewState, IReviewScores} from '@centsideas/models';
 
 interface ICreateReviewCommand {
   ideaId: string;

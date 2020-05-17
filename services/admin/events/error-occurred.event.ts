@@ -1,6 +1,6 @@
-import { Event } from '@centsideas/event-sourcing';
-import { IErrorOccurredEvent, IErrorEntityState } from '@centsideas/models';
-import { ErrorEvents } from '@centsideas/enums';
+import {Event} from '@centsideas/event-sourcing';
+import {IErrorOccurredEvent, IErrorEntityState} from '@centsideas/models';
+import {ErrorEvents} from '@centsideas/enums';
 
 export class ErrorOccurredEvent extends Event<IErrorOccurredEvent> {
   static readonly eventName: string = ErrorEvents.ErrorOccurred;

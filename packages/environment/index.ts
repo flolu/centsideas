@@ -1,6 +1,6 @@
-import { Environments } from '@centsideas/enums';
-import { generateEnv } from './utils';
-import { defaultProdEnv, defaultStagingEnv, defaultDevEnv } from './defaults';
+import {Environments} from '@centsideas/enums';
+import {generateEnv} from './utils';
+import {defaultProdEnv, defaultStagingEnv, defaultDevEnv} from './defaults';
 
 export * from './global.environment';
 

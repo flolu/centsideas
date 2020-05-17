@@ -1,11 +1,11 @@
-import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
+import {EventEntity, ISnapshot, initialEntityBaseState} from '@centsideas/event-sourcing';
 import {
   INotificationSettingsState,
   IPushSubscription,
   INotificationSettingsUpdatedEvent,
 } from '@centsideas/models';
 
-import { notificationSettingsCommitFunctions, NotificationSettingsEvents } from './events';
+import {notificationSettingsCommitFunctions, NotificationSettingsEvents} from './events';
 
 export class NotificationSettings extends EventEntity<INotificationSettingsState> {
   static initialState: INotificationSettingsState = {

@@ -1,15 +1,15 @@
-import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { REQUEST } from '@nguniversal/express-engine/tokens';
-import { Router } from '@angular/router';
-import { switchMap, map, catchError, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { isPlatformServer, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {Injectable, Inject, PLATFORM_ID, Injector} from '@angular/core';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {REQUEST} from '@nguniversal/express-engine/tokens';
+import {Router} from '@angular/router';
+import {switchMap, map, catchError, tap} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {isPlatformServer, DOCUMENT, isPlatformBrowser} from '@angular/common';
 
-import { TopLevelFrontendRoutes, CookieNames } from '@centsideas/enums';
+import {TopLevelFrontendRoutes, CookieNames} from '@centsideas/enums';
 
-import { AuthActions } from './auth.actions';
-import { AuthService } from './auth.service';
+import {AuthActions} from './auth.actions';
+import {AuthService} from './auth.service';
 
 @Injectable()
 export class AuthEffects {
@@ -25,10 +25,10 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      switchMap(({ email }) =>
+      switchMap(({email}) =>
         this.authService.login(email).pipe(
           map(() => AuthActions.loginDone()),
-          catchError(error => of(AuthActions.loginFail({ error }))),
+          catchError(error => of(AuthActions.loginFail({error}))),
         ),
       ),
     ),
@@ -39,8 +39,8 @@ export class AuthEffects {
       ofType(AuthActions.confirmLogin),
       switchMap(action =>
         this.authService.confirmLogin(action.token).pipe(
-          map(({ accessToken, user }) => AuthActions.confirmLoginDone({ accessToken, user })),
-          catchError(error => of(AuthActions.confirmLoginFail({ error }))),
+          map(({accessToken, user}) => AuthActions.confirmLoginDone({accessToken, user})),
+          catchError(error => of(AuthActions.confirmLoginFail({error}))),
         ),
       ),
     ),
@@ -51,8 +51,8 @@ export class AuthEffects {
       ofType(AuthActions.googleLoginRedirect),
       switchMap(() =>
         this.authService.googleLoginRedirect().pipe(
-          map(({ url }) => AuthActions.googleLoginRedirectDone({ url })),
-          catchError(error => of(AuthActions.googleLoginRedirectFail({ error }))),
+          map(({url}) => AuthActions.googleLoginRedirectDone({url})),
+          catchError(error => of(AuthActions.googleLoginRedirectFail({error}))),
         ),
       ),
     ),
@@ -62,22 +62,22 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.googleLoginRedirectDone),
-        tap(({ url }) => {
+        tap(({url}) => {
           if (isPlatformBrowser(this.platform)) {
             this.document.location.href = url;
           }
         }),
       ),
-    { dispatch: false },
+    {dispatch: false},
   );
 
   googleLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.googleLogin),
-      switchMap(({ code }) =>
+      switchMap(({code}) =>
         this.authService.googleLogin(code).pipe(
-          map(({ user, accessToken }) => AuthActions.googleLoginDone({ user, accessToken })),
-          catchError(error => of(AuthActions.googleLoginFail({ error }))),
+          map(({user, accessToken}) => AuthActions.googleLoginDone({user, accessToken})),
+          catchError(error => of(AuthActions.googleLoginFail({error}))),
         ),
       ),
     ),
@@ -90,7 +90,7 @@ export class AuthEffects {
         ofType(AuthActions.confirmLoginDone, AuthActions.googleLoginDone),
         tap(() => this.router.navigate([TopLevelFrontendRoutes.User])),
       ),
-    { dispatch: false },
+    {dispatch: false},
   );
 
   fetchAccessToken$ = createEffect(() =>
@@ -103,12 +103,12 @@ export class AuthEffects {
           const exchangeSecret = process.env.FRONTEND_SERVER_EXCHANGE_SECRET;
           return this.authService.fetchAccessTokenOnServer(refreshToken, exchangeSecret).pipe(
             map(data => AuthActions.fetchAccessTokenDone(data)),
-            catchError(error => of(AuthActions.fetchAccessTokenFail({ error }))),
+            catchError(error => of(AuthActions.fetchAccessTokenFail({error}))),
           );
         }
         return this.authService.fetchAccessToken().pipe(
           map(data => AuthActions.fetchAccessTokenDone(data)),
-          catchError(error => of(AuthActions.fetchAccessTokenFail({ error }))),
+          catchError(error => of(AuthActions.fetchAccessTokenFail({error}))),
         );
       }),
     ),
@@ -120,7 +120,7 @@ export class AuthEffects {
       switchMap(() =>
         this.authService.logout().pipe(
           map(() => AuthActions.logoutDone()),
-          catchError(error => of(AuthActions.logoutFail({ error }))),
+          catchError(error => of(AuthActions.logoutFail({error}))),
         ),
       ),
     ),
@@ -132,6 +132,6 @@ export class AuthEffects {
         ofType(AuthActions.logoutDone),
         tap(() => this.router.navigate([TopLevelFrontendRoutes.Ideas])),
       ),
-    { dispatch: false },
+    {dispatch: false},
   );
 }

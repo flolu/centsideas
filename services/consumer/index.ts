@@ -1,20 +1,20 @@
 // tslint:disable-next-line:no-var-requires
 if (!process.env.environment) require('../../register-aliases').registerAliases();
 
-import { UTILS_TYPES, Logger } from '@centsideas/utils';
-import { DependencyInjection } from '@centsideas/dependency-injection';
-import { Services } from '@centsideas/enums';
-import { MessageBroker } from '@centsideas/event-sourcing';
-import { GlobalEnvironment } from '@centsideas/environment';
-import { RpcServer, RPC_TYPES, rpcServerFactory } from '@centsideas/rpc';
+import {UTILS_TYPES, Logger} from '@centsideas/utils';
+import {DependencyInjection} from '@centsideas/dependency-injection';
+import {Services} from '@centsideas/enums';
+import {MessageBroker} from '@centsideas/event-sourcing';
+import {GlobalEnvironment} from '@centsideas/environment';
+import {RpcServer, RPC_TYPES, rpcServerFactory} from '@centsideas/rpc';
 
-import { ConsumerServer } from './consumer.server';
-import { ProjectionDatabase } from './projection-database';
-import { QueryService } from './query.service';
-import { IdeasProjection } from './ideas.projection';
-import { ReviewsProjection } from './reviews.projection';
-import { UsersProjection } from './users.projection';
-import { ConsumerEnvironment } from './consumer.environment';
+import {ConsumerServer} from './consumer.server';
+import {ProjectionDatabase} from './projection-database';
+import {QueryService} from './query.service';
+import {IdeasProjection} from './ideas.projection';
+import {ReviewsProjection} from './reviews.projection';
+import {UsersProjection} from './users.projection';
+import {ConsumerEnvironment} from './consumer.environment';
 
 DependencyInjection.registerProviders(
   MessageBroker,

@@ -1,11 +1,11 @@
-import { Environments } from '@centsideas/enums';
+import {Environments} from '@centsideas/enums';
 import {
   defaultDynamicEnv,
   defaultDockerComposeEnv,
   defaultCommonEnv,
   defaultKubernetesEnv,
 } from './defaults';
-import { IEnvironment } from '../environment.model';
+import {IEnvironment} from '../environment.model';
 
 export const defaultDevEnv: IEnvironment = {
   environment: Environments.Dev,

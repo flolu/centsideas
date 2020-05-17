@@ -1,8 +1,8 @@
 import * as http from 'http';
-import { injectable, inject } from 'inversify';
+import {injectable, inject} from 'inversify';
 
-import { Logger } from '@centsideas/utils';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {Logger} from '@centsideas/utils';
+import {GlobalEnvironment} from '@centsideas/environment';
 import {
   RpcServer,
   IUserCommands,
@@ -11,9 +11,9 @@ import {
   RpcServerFactory,
 } from '@centsideas/rpc';
 
-import { UsersHandler } from './users.handler';
-import { AuthHandler } from './auth.handler';
-import { UsersEnvironment } from './users.environment';
+import {UsersHandler} from './users.handler';
+import {AuthHandler} from './auth.handler';
+import {UsersEnvironment} from './users.environment';
 
 @injectable()
 export class UsersServer {

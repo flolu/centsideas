@@ -1,14 +1,14 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable, fromEvent, merge, of } from 'rxjs';
-import { mapTo } from 'rxjs/operators';
-import { UpdateAvailableEvent } from '@angular/service-worker';
+import {isPlatformBrowser} from '@angular/common';
+import {Component, Inject, PLATFORM_ID, OnDestroy} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Observable, fromEvent, merge, of} from 'rxjs';
+import {mapTo} from 'rxjs/operators';
+import {UpdateAvailableEvent} from '@angular/service-worker';
 
-import { TopLevelFrontendRoutes } from '@centsideas/enums';
-import { PushNotificationService } from '@cic/shared';
-import { AuthSelectors } from '@cic/store';
-import { ServiceWorkerService } from './service-worker.service';
+import {TopLevelFrontendRoutes} from '@centsideas/enums';
+import {PushNotificationService} from '@cic/shared';
+import {AuthSelectors} from '@cic/store';
+import {ServiceWorkerService} from './service-worker.service';
 
 @Component({
   selector: 'cic-root',

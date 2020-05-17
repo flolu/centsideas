@@ -1,12 +1,12 @@
 import * as express from 'express';
-import { injectable } from 'inversify';
-import { BaseMiddleware } from 'inversify-express-utils';
+import {injectable} from 'inversify';
+import {BaseMiddleware} from 'inversify-express-utils';
 
-import { IAccessTokenPayload } from '@centsideas/models';
-import { HeaderKeys } from '@centsideas/enums';
+import {IAccessTokenPayload} from '@centsideas/models';
+import {HeaderKeys} from '@centsideas/enums';
 
-import { GatewayEnvironment } from '../gateway.environment';
-import { decodeToken } from '@centsideas/utils';
+import {GatewayEnvironment} from '../gateway.environment';
+import {decodeToken} from '@centsideas/utils';
 
 @injectable()
 export class AuthMiddleware extends BaseMiddleware {
@@ -21,7 +21,7 @@ export class AuthMiddleware extends BaseMiddleware {
 
     try {
       const accessToken = (authHeader as string).split(' ')[1];
-      const { userId } = decodeToken<IAccessTokenPayload>(accessToken, this.env.accessTokenSecret);
+      const {userId} = decodeToken<IAccessTokenPayload>(accessToken, this.env.accessTokenSecret);
       res.locals.userId = userId;
       // tslint:disable-next-line:no-empty
     } catch (error) {}

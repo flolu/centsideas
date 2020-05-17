@@ -1,4 +1,4 @@
-import { IReviewScores } from '../';
+import {IReviewScores} from '../';
 
 export interface ICreateReviewDto {
   ideaId: string;

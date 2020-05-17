@@ -1,7 +1,7 @@
-import { EventEntity, initialEntityBaseState, ISnapshot } from '@centsideas/event-sourcing';
-import { IErrorEntityState, IErrorOccurredEvent } from '@centsideas/models';
+import {EventEntity, initialEntityBaseState, ISnapshot} from '@centsideas/event-sourcing';
+import {IErrorEntityState, IErrorOccurredEvent} from '@centsideas/models';
 
-import { errorCommitFunctions, ErrorEntityEvents } from './events';
+import {errorCommitFunctions, ErrorEntityEvents} from './events';
 
 export class ErrorEntity extends EventEntity<IErrorEntityState> {
   static initialState: IErrorEntityState = {

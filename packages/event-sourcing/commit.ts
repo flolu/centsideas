@@ -1,4 +1,4 @@
-import { IEventCommitFunctions } from '.';
+import {IEventCommitFunctions} from '.';
 
 export const composeCommitFunctions = <T>(events: any): IEventCommitFunctions<T> => {
   const commitFunctions: IEventCommitFunctions<T> = {};

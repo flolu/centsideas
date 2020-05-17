@@ -1,6 +1,6 @@
-import { Event } from '@centsideas/event-sourcing';
-import { IReviewDeletedEvent, IReviewState } from '@centsideas/models';
-import { ReviewEvents } from '@centsideas/enums';
+import {Event} from '@centsideas/event-sourcing';
+import {IReviewDeletedEvent, IReviewState} from '@centsideas/models';
+import {ReviewEvents} from '@centsideas/enums';
 
 export class ReviewDeletedEvent extends Event<IReviewDeletedEvent> {
   static readonly eventName: string = ReviewEvents.ReviewUnpublished;

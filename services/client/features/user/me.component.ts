@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnChanges } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { takeWhile, debounceTime, tap } from 'rxjs/operators';
+import {Component, Input, Output, EventEmitter, OnDestroy, OnChanges} from '@angular/core';
+import {FormGroup, FormControl} from '@angular/forms';
+import {takeWhile, debounceTime, tap} from 'rxjs/operators';
 
-import { IUserState } from '@centsideas/models';
-import { SyncStatus } from '@cic/shared';
-import { IMeForm } from './store';
+import {IUserState} from '@centsideas/models';
+import {SyncStatus} from '@cic/shared';
+import {IMeForm} from './store';
 
 @Component({
   selector: 'cic-user-me',
@@ -57,7 +57,7 @@ export class MeComponent implements OnDestroy, OnChanges {
 
   ngOnChanges() {
     if (this.formState && this.status !== SyncStatus.Syncing && this.status >= 0)
-      this.form.patchValue(this.formState, { emitEvent: false });
+      this.form.patchValue(this.formState, {emitEvent: false});
   }
 
   ngOnDestroy() {

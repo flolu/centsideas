@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   HttpInterceptor,
   HttpRequest,
@@ -6,13 +6,13 @@ import {
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { first, flatMap, catchError } from 'rxjs/operators';
-import { Actions, ofType } from '@ngrx/effects';
+import {Observable, throwError} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {first, flatMap, catchError} from 'rxjs/operators';
+import {Actions, ofType} from '@ngrx/effects';
 
-import { HeaderKeys, HttpStatusCodes } from '@centsideas/enums';
-import { AuthSelectors, AuthActions } from '@cic/store';
+import {HeaderKeys, HttpStatusCodes} from '@centsideas/enums';
+import {AuthSelectors, AuthActions} from '@cic/store';
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
@@ -56,7 +56,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
   };
 
   private setRequestAuthHeader = (req: HttpRequest<any>, accessToken: string): HttpRequest<any> => {
-    const setHeaders = { [HeaderKeys.Auth]: `Bearer ${accessToken}` };
-    return req.clone({ setHeaders, withCredentials: true });
+    const setHeaders = {[HeaderKeys.Auth]: `Bearer ${accessToken}`};
+    return req.clone({setHeaders, withCredentials: true});
   };
 }

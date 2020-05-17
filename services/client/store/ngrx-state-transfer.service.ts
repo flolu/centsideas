@@ -1,13 +1,13 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { TransferState, makeStateKey } from '@angular/platform-browser';
-import { Store, createAction, props, ActionReducer } from '@ngrx/store';
-import { isPlatformBrowser } from '@angular/common';
-import { take, tap } from 'rxjs/operators';
+import {Injectable, PLATFORM_ID, Inject} from '@angular/core';
+import {TransferState, makeStateKey} from '@angular/platform-browser';
+import {Store, createAction, props, ActionReducer} from '@ngrx/store';
+import {isPlatformBrowser} from '@angular/common';
+import {take, tap} from 'rxjs/operators';
 
-import { appPrefix } from '@cic/shared';
+import {appPrefix} from '@cic/shared';
 
 const setRootStateActionName = `${appPrefix}/state-transfer/set-root-state`;
-const setRootState = createAction(setRootStateActionName, props<{ state: any }>());
+const setRootState = createAction(setRootStateActionName, props<{state: any}>());
 
 export function setTransferedState(reducer: ActionReducer<any>): ActionReducer<any> {
   return (state, action) => {
@@ -34,7 +34,7 @@ export class NgRxStateTransferService {
       const exists = this.transferState.hasKey(this.key);
       if (exists) {
         const state = this.transferState.get(this.key, null);
-        this.store.dispatch(setRootState({ state }));
+        this.store.dispatch(setRootState({state}));
       }
     } else {
       this.transferState.onSerialize(this.key, () => {

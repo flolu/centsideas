@@ -1,4 +1,4 @@
-import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
+import {EventEntity, ISnapshot, initialEntityBaseState} from '@centsideas/event-sourcing';
 import {
   IUserState,
   IUserCreatedEvent,
@@ -8,7 +8,7 @@ import {
   IEmailChangeRequestedEvent,
 } from '@centsideas/models';
 
-import { commitFunctions, UserEvents } from './events';
+import {commitFunctions, UserEvents} from './events';
 
 export class User extends EventEntity<IUserState> {
   static initialState: IUserState = {

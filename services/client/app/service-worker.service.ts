@@ -1,8 +1,8 @@
-import { ApplicationRef, Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { SwUpdate, UpdateAvailableEvent } from '@angular/service-worker';
-import { concat, interval } from 'rxjs';
-import { first } from 'rxjs/operators';
-import { isPlatformBrowser } from '@angular/common';
+import {ApplicationRef, Injectable, Inject, PLATFORM_ID} from '@angular/core';
+import {SwUpdate, UpdateAvailableEvent} from '@angular/service-worker';
+import {concat, interval} from 'rxjs';
+import {first} from 'rxjs/operators';
+import {isPlatformBrowser} from '@angular/common';
 
 @Injectable()
 export class ServiceWorkerService {

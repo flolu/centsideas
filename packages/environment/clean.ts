@@ -1,3 +1,3 @@
-import { removeGeneratedFiles } from './utils';
+import {removeGeneratedFiles} from './utils';
 
 removeGeneratedFiles();

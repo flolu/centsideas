@@ -1,17 +1,17 @@
 import * as http from 'http';
-import { injectable, inject } from 'inversify';
+import {injectable, inject} from 'inversify';
 
-import { MessageBroker } from '@centsideas/event-sourcing';
-import { Logger } from '@centsideas/utils';
-import { EventTopics } from '@centsideas/enums';
-import { GlobalEnvironment } from '@centsideas/environment';
-import { RpcServer, IIdeaQueries, RPC_TYPES, RpcServerFactory } from '@centsideas/rpc';
+import {MessageBroker} from '@centsideas/event-sourcing';
+import {Logger} from '@centsideas/utils';
+import {EventTopics} from '@centsideas/enums';
+import {GlobalEnvironment} from '@centsideas/environment';
+import {RpcServer, IIdeaQueries, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
 
-import { QueryService } from './query.service';
-import { IdeasProjection } from './ideas.projection';
-import { ReviewsProjection } from './reviews.projection';
-import { UsersProjection } from './users.projection';
-import { ConsumerEnvironment } from './consumer.environment';
+import {QueryService} from './query.service';
+import {IdeasProjection} from './ideas.projection';
+import {ReviewsProjection} from './reviews.projection';
+import {UsersProjection} from './users.projection';
+import {ConsumerEnvironment} from './consumer.environment';
 
 @injectable()
 export class ConsumerServer {

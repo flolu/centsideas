@@ -1,10 +1,10 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 
-import { InternalError } from '@centsideas/utils';
-import { ErrorNames, RpcStatus } from '@centsideas/enums';
-import { GetIdeaById, GetAllIdeas } from '@centsideas/rpc';
+import {InternalError} from '@centsideas/utils';
+import {ErrorNames, RpcStatus} from '@centsideas/enums';
+import {GetIdeaById, GetAllIdeas} from '@centsideas/rpc';
 
-import { ProjectionDatabase } from './projection-database';
+import {ProjectionDatabase} from './projection-database';
 
 @injectable()
 export class QueryService {
@@ -12,17 +12,17 @@ export class QueryService {
 
   getAllIdeas: GetAllIdeas = async () => {
     const ideasCollection = await this.projectionDatabase.ideas();
-    const ideas = await ideasCollection.find({ deleted: false }).toArray();
-    return { ideas };
+    const ideas = await ideasCollection.find({deleted: false}).toArray();
+    return {ideas};
   };
 
-  getIdeaById: GetIdeaById = async ({ id }) => {
+  getIdeaById: GetIdeaById = async ({id}) => {
     const ideasCollection = await this.projectionDatabase.ideas();
     const reviewsCollection = await this.projectionDatabase.reviews();
 
     const [idea, reviews] = await Promise.all([
-      ideasCollection.findOne({ id }),
-      reviewsCollection.find({ ideaId: id }).toArray(),
+      ideasCollection.findOne({id}),
+      reviewsCollection.find({ideaId: id}).toArray(),
     ]);
 
     if (!idea)
@@ -31,6 +31,6 @@ export class QueryService {
         code: RpcStatus.NOT_FOUND,
       });
 
-    return { ...idea, reviews: reviews || [] };
+    return {...idea, reviews: reviews || []};
   };
 }

@@ -1,12 +1,12 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 
-import { EventRepository, EntityMapping } from '@centsideas/event-sourcing';
-import { EventTopics } from '@centsideas/enums';
+import {EventRepository, EntityMapping} from '@centsideas/event-sourcing';
+import {EventTopics} from '@centsideas/enums';
 
-import { UsersEnvironment } from './users.environment';
-import { User } from './user.entity';
-import { UserErrors } from './errors';
-import { IUserIdEmailMapping, IGoogleUserIdMapping, IUserIdUsernameMapping } from './models';
+import {UsersEnvironment} from './users.environment';
+import {User} from './user.entity';
+import {UserErrors} from './errors';
+import {IUserIdEmailMapping, IGoogleUserIdMapping, IUserIdUsernameMapping} from './models';
 
 @injectable()
 export class UserRepository extends EventRepository<User> {

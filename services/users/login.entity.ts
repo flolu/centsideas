@@ -1,7 +1,7 @@
-import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
-import { ILoginState } from '@centsideas/models';
+import {EventEntity, ISnapshot, initialEntityBaseState} from '@centsideas/event-sourcing';
+import {ILoginState} from '@centsideas/models';
 
-import { loginCommitFunctions, LoginEvents } from './events';
+import {loginCommitFunctions, LoginEvents} from './events';
 
 export class Login extends EventEntity<ILoginState> {
   static initialState: ILoginState = {

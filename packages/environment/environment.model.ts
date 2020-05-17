@@ -1,4 +1,4 @@
-import { Environments } from '@centsideas/enums';
+import {Environments} from '@centsideas/enums';
 
 export interface IEnvironment {
   environment: Environments;

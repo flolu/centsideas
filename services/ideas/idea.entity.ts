@@ -1,7 +1,7 @@
-import { EventEntity, ISnapshot, initialEntityBaseState } from '@centsideas/event-sourcing';
-import { IIdeaState, IIdeaCreatedEvent, IIdeaUpdatedEvent } from '@centsideas/models';
+import {EventEntity, ISnapshot, initialEntityBaseState} from '@centsideas/event-sourcing';
+import {IIdeaState, IIdeaCreatedEvent, IIdeaUpdatedEvent} from '@centsideas/models';
 
-import { commitFunctions, IdeasEvents } from './events';
+import {commitFunctions, IdeasEvents} from './events';
 
 // FIXME consider creating "locked values" (e.g. userId should be locked after first set, because it must never change)
 export class Idea extends EventEntity<IIdeaState> {

@@ -1,5 +1,5 @@
-import { Event } from '@centsideas/event-sourcing';
-import { NotificationSettingsEvents } from '@centsideas/enums';
+import {Event} from '@centsideas/event-sourcing';
+import {NotificationSettingsEvents} from '@centsideas/enums';
 import {
   INotificationSettingsState,
   IPushSubscriptionsRemovedEvent,
@@ -10,7 +10,7 @@ export class PushSubscriptionsRemovedEvent extends Event<IPushSubscriptionsRemov
   static readonly eventName: string = NotificationSettingsEvents.RemovedSubs;
 
   constructor(notificationSettingsId: string, subscriptions: IPushSubscription[]) {
-    super(PushSubscriptionsRemovedEvent.eventName, { subscriptions }, notificationSettingsId);
+    super(PushSubscriptionsRemovedEvent.eventName, {subscriptions}, notificationSettingsId);
   }
 
   static commit(

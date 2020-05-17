@@ -1,5 +1,5 @@
-import { Identifier } from '@centsideas/utils';
-import { IEvent } from '@centsideas/models';
+import {Identifier} from '@centsideas/utils';
+import {IEvent} from '@centsideas/models';
 
 export class Event<IData> implements IEvent<IData> {
   readonly id: string;

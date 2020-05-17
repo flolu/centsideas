@@ -1,6 +1,6 @@
-import { RpcStatus, ErrorNames } from '@centsideas/enums';
-import { InternalError } from '@centsideas/utils';
-import { IReviewScores } from '@centsideas/models';
+import {RpcStatus, ErrorNames} from '@centsideas/enums';
+import {InternalError} from '@centsideas/utils';
+import {IReviewScores} from '@centsideas/models';
 
 export class SaveReviewPayloadRequiredError extends InternalError {
   static validate = (content: string, scores: IReviewScores): void => {

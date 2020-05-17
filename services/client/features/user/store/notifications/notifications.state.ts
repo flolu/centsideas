@@ -1,5 +1,5 @@
-import { SyncStatus } from '@cic/shared';
-import { INotificationSettingsState } from '@centsideas/models';
+import {SyncStatus} from '@cic/shared';
+import {INotificationSettingsState} from '@centsideas/models';
 
 export interface INotificationSettingsForm {
   sendPushes: boolean;

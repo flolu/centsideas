@@ -1,4 +1,4 @@
-import { INotificationSettingsState, IPushSubscription } from '@centsideas/models';
+import {INotificationSettingsState, IPushSubscription} from '@centsideas/models';
 
 interface ISubscribePushNotificationsCommand {
   subscription: IPushSubscription;

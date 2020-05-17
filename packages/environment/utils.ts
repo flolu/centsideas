@@ -4,9 +4,9 @@ import * as webpush from 'web-push';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { IEnvironment } from './environment.model';
-import { dynamicKeysList, generatableKeyList } from './keys';
-import { genPaths, dotenvFilePath } from './paths';
+import {IEnvironment} from './environment.model';
+import {dynamicKeysList, generatableKeyList} from './keys';
+import {genPaths, dotenvFilePath} from './paths';
 import chalk = require('chalk');
 
 const filler = '___';
@@ -64,7 +64,7 @@ function generateSecret() {
 }
 
 function generateEnv(defaultEnv: IEnvironment) {
-  const env: IEnvironment = { ...defaultEnv };
+  const env: IEnvironment = {...defaultEnv};
 
   for (const key in defaultEnv) {
     // @ts-ignore
@@ -88,4 +88,4 @@ function removeGeneratedFiles() {
   }
 }
 
-export { setupTemplateFile, setupDotEnvFile, generateEnv, removeGeneratedFiles };
+export {setupTemplateFile, setupDotEnvFile, generateEnv, removeGeneratedFiles};

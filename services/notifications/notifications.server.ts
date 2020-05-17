@@ -1,16 +1,16 @@
 import * as http from 'http';
-import { injectable, inject } from 'inversify';
+import {injectable, inject} from 'inversify';
 
-import { Logger } from '@centsideas/utils';
-import { EventTopics, IdeaEvents, LoginEvents, UserEvents } from '@centsideas/enums';
-import { IEvent } from '@centsideas/models';
-import { MessageBroker } from '@centsideas/event-sourcing';
-import { RpcServer, INotificationCommands, RPC_TYPES, RpcServerFactory } from '@centsideas/rpc';
-import { GlobalEnvironment } from '@centsideas/environment';
+import {Logger} from '@centsideas/utils';
+import {EventTopics, IdeaEvents, LoginEvents, UserEvents} from '@centsideas/enums';
+import {IEvent} from '@centsideas/models';
+import {MessageBroker} from '@centsideas/event-sourcing';
+import {RpcServer, INotificationCommands, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
+import {GlobalEnvironment} from '@centsideas/environment';
 
-import { NotificationSettingsHandlers } from './notification-settings.handlers';
-import { NotificationsHandlers } from './notifications.handlers';
-import { NotificationEnvironment } from './notifications.environment';
+import {NotificationSettingsHandlers} from './notification-settings.handlers';
+import {NotificationsHandlers} from './notifications.handlers';
+import {NotificationEnvironment} from './notifications.environment';
 
 @injectable()
 export class NotificationsServer {

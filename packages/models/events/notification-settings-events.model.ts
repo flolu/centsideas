@@ -1,4 +1,4 @@
-import { IPushSubscription } from '../entities';
+import {IPushSubscription} from '../entities';
 
 export interface INotificationSettingsCreatedEvent {
   notificationSettingsId: string;

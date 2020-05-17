@@ -1,9 +1,9 @@
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import {TestBed, async, ComponentFixture} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {provideMockStore, MockStore} from '@ngrx/store/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
-import { LoginContainer } from './login.container';
+import {LoginContainer} from './login.container';
 
 describe('LoginContainer', () => {
   let mockStore: MockStore;

@@ -1,16 +1,16 @@
-import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { skipWhile, tap, take } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import {BrowserModule, BrowserTransferStateModule} from '@angular/platform-browser';
+import {NgModule, APP_INITIALIZER} from '@angular/core';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {skipWhile, tap, take} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
 
-import { ENVIRONMENT, environment } from '@cic/environment';
-import { LoadStatus } from '@cic/shared';
-import { AuthActions, AuthSelectors } from '@cic/store';
-import { AuthTokenInterceptor } from './auth-token.interceptor';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { ServiceWorkerService } from './service-worker.service';
+import {ENVIRONMENT, environment} from '@cic/environment';
+import {LoadStatus} from '@cic/shared';
+import {AuthActions, AuthSelectors} from '@cic/store';
+import {AuthTokenInterceptor} from './auth-token.interceptor';
+import {AppComponent} from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {ServiceWorkerService} from './service-worker.service';
 
 const initApplication = (store: Store) => {
   return () =>
@@ -32,16 +32,16 @@ const initApplication = (store: Store) => {
 
 @NgModule({
   imports: [
-    BrowserModule.withServerTransition({ appId: 'client' }),
+    BrowserModule.withServerTransition({appId: 'client'}),
     BrowserTransferStateModule,
     AppRoutingModule,
   ],
   declarations: [AppComponent],
   providers: [
     ServiceWorkerService,
-    { provide: APP_INITIALIZER, useFactory: initApplication, multi: true, deps: [Store] },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
-    { provide: ENVIRONMENT, useValue: environment },
+    {provide: APP_INITIALIZER, useFactory: initApplication, multi: true, deps: [Store]},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true},
+    {provide: ENVIRONMENT, useValue: environment},
   ],
 })
 export class AppBaseModule {}

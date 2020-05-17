@@ -1,17 +1,17 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 import * as sgMail from '@sendgrid/mail';
 
-import { IUserState } from '@centsideas/models';
-import { TopLevelFrontendRoutes, QueryParamKeys } from '@centsideas/enums';
+import {IUserState} from '@centsideas/models';
+import {TopLevelFrontendRoutes, QueryParamKeys} from '@centsideas/enums';
 
-import { NotificationEnvironment } from './notifications.environment';
+import {NotificationEnvironment} from './notifications.environment';
 import {
   getFirstLoginEmail,
   getLoginEmail,
   getRequestEmailChangeEmail,
   getEmailChangedEmail,
 } from './emails';
-import { IEmailContent } from './models';
+import {IEmailContent} from './models';
 
 @injectable()
 export class EmailService {
@@ -36,8 +36,8 @@ export class EmailService {
     return this.sendMail(oldEmail, getEmailChangedEmail(newEmail));
   }
 
-  private sendMail(to: string, { subject, text, html }: IEmailContent): Promise<any> {
-    const message = { to, from: this.from, subject, text, html };
+  private sendMail(to: string, {subject, text, html}: IEmailContent): Promise<any> {
+    const message = {to, from: this.from, subject, text, html};
     return sgMail.send(message);
   }
 }

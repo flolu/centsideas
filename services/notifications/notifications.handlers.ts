@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 import * as webpush from 'web-push';
 
 import {
@@ -7,7 +7,7 @@ import {
   TopLevelFrontendRoutes,
   EventTopics,
 } from '@centsideas/enums';
-import { Identifier } from '@centsideas/utils';
+import {Identifier} from '@centsideas/utils';
 import {
   IPushSubscription,
   IIdeaCreatedEvent,
@@ -17,12 +17,12 @@ import {
   IEvent,
 } from '@centsideas/models';
 
-import { NotificationEnvironment } from './notifications.environment';
-import { IPushPayload } from './models';
-import { NotificationSettingsHandlers } from './notification-settings.handlers';
-import { Notification } from './notification.entity';
-import { NotificationsRepository } from './notifications.repository';
-import { EmailService } from './email.service';
+import {NotificationEnvironment} from './notifications.environment';
+import {IPushPayload} from './models';
+import {NotificationSettingsHandlers} from './notification-settings.handlers';
+import {Notification} from './notification.entity';
+import {NotificationsRepository} from './notifications.repository';
+import {EmailService} from './email.service';
 
 @injectable()
 export class NotificationsHandlers {
@@ -100,7 +100,7 @@ export class NotificationsHandlers {
     const notification = Notification.create(
       notificationId,
       null,
-      { eventId: event.id, eventName: event.name, topic: EventTopics.Logins },
+      {eventId: event.id, eventName: event.name, topic: EventTopics.Logins},
       NotificationMedium.Email,
     );
 
@@ -119,7 +119,7 @@ export class NotificationsHandlers {
     const notification = Notification.create(
       notificationId,
       null,
-      { eventId: event.id, eventName: event.name, topic: EventTopics.Logins },
+      {eventId: event.id, eventName: event.name, topic: EventTopics.Logins},
       NotificationMedium.Email,
     );
 
@@ -134,7 +134,7 @@ export class NotificationsHandlers {
     const notification = Notification.create(
       notificationId,
       null,
-      { eventId: event.id, eventName: event.name, topic: EventTopics.Logins },
+      {eventId: event.id, eventName: event.name, topic: EventTopics.Logins},
       NotificationMedium.Email,
     );
 

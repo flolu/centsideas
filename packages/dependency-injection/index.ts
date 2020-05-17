@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { Container, interfaces } from 'inversify';
+import {Container, interfaces} from 'inversify';
 
 /**
  * `skipBaseClassChecks: true`
  * https://github.com/inversify/InversifyJS/blob/master/wiki/inheritance.md#workaround-e-skip-base-class-injectable-checks
  * is needed because of the abstract `EventRepository` class
  */
-const container = new Container({ skipBaseClassChecks: true });
+const container = new Container({skipBaseClassChecks: true});
 
 export const DependencyInjection = {
   registerProviders: (...providers: any[]) => providers.forEach(p => container.bind(p).toSelf()),
