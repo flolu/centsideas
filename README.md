@@ -67,7 +67,17 @@
   
   <tr>
     <td>Event sourcing</td>
-    <td><strong>event-driven</strong>, <strong>commands</strong>, replay events</td>
+    <td>pure commands, projectors, event store, eventual consistency, event replay, event storming</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Command Query Responsibility Segregation</td>
+    <td>cqrs, command bus, read models</td>
+    <td><img src="misc/assets/progress.svg" width="16"></td>
+  </tr>
+  <tr>
+    <td>Domain Driven Design</td>
+    <td>bounded contexts, aggregates, entities, single responsibility</td>
     <td><img src="misc/assets/progress.svg" width="16"></td>
   </tr>
   <tr>
@@ -87,7 +97,7 @@
   </tr>
   <tr>
     <td>Databases</td>
-    <td><strong>event store</strong>, <strong>read database</strong>, backups</td>
+    <td><strong>event store</strong>, <strong>read database</strong>, caching, sharding, backups</td>
     <td><img src="misc/assets/progress.svg" width="16"></td>
   </tr>
   <tr>
@@ -107,7 +117,7 @@
   </tr>
   <tr>
     <td>Clean Architecture</td>
-    <td><strong>dependency injection</strong>, inversion of control</td>
+    <td><strong>dependency injection</strong>, inversion of control, solid</td>
     <td><img src="misc/assets/progress.svg" width="16"></td>
   </tr>
   <tr>

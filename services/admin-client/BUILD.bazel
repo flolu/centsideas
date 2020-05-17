@@ -39,7 +39,7 @@ ts_devserver(
         "//packages/angular-bazel:rxjs_umd_modules",
         "@npm//socket.io-client:socket.io-client__umd",
     ],
-    serving_path = "/bundle.min/index.es2015.js",
+    serving_path = "/bundle.min/bundle.js",
     static_files = [
         "@npm//:node_modules/zone.js/dist/zone.min.js",
         ":asset_injected_index_html",
@@ -63,9 +63,7 @@ ng_ts_library(
 rollup_bundle(
     name = "bundle",
     config_file = "//packages/angular-bazel:rollup.config.js",
-    entry_points = {
-        ":main.prod.ts": "index.es2015",
-    },
+    entry_point = "main.prod.ts",
     output_dir = True,
     deps = [
         ":prod_src",
@@ -86,7 +84,7 @@ insert_html_assets(
     asset_paths = [
         "$(execpath styles.css)",
         "$(execpath @npm//:node_modules/zone.js/dist/zone.min.js)",
-        "$(execpath bundle.min)/index.es2015.js",
+        "$(execpath bundle.min)/bundle.js",
     ],
     data = [
         ":bundle.min",

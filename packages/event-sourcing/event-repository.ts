@@ -20,7 +20,7 @@ interface IDatabaseEvent extends IEvent {
 
 // FIXME create indexes to increase read performance
 // FIXME try other db's (mongodb is probably not the best way to store events)
-// TODO database abstraction layer
+// FIXME database abstraction layer
 
 @injectable()
 export abstract class EventRepository<Entity extends IEventEntity> {

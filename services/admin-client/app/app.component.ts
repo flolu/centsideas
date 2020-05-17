@@ -34,7 +34,6 @@ export class AppComponent {
     @Inject(PLATFORM_ID) private platform: string,
   ) {
     if (isPlatformBrowser(this.platform)) {
-      console.log('is browser');
       const socket = this.injector.get(Socket);
       this.http
         .get<IEvent[]>(`${this.env.gatewayUrl}/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)
