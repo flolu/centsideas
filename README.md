@@ -67,7 +67,7 @@
   
   <tr>
     <td>Event sourcing</td>
-    <td>pure commands, projectors, event store, eventual consistency, event replay, event storming</td>
+    <td>pure commands, projectors, event store, eventual consistency, event replay, event storming, snapshotting</td>
     <td><img src="misc/assets/progress.svg" width="16"></td>
   </tr>
   <tr>
