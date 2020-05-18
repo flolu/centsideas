@@ -1,18 +1,15 @@
 import {Id} from '@centsideas/types';
 
 import {StreamVersion} from './stream-version';
-
-export class StreamEvent {
-  constructor(
-    public readonly id: Id,
-    public readonly version: StreamVersion,
-    public readonly event: any,
-  ) {}
-}
+import {StreamEvent} from './stream-event';
 
 export abstract class Aggregate {
   private pendingEvents: StreamEvent[] = [];
   private version: StreamVersion = StreamVersion.start();
+
+  protected replay(events: any[]) {
+    events.forEach(this.apply);
+  }
 
   // TODO type
   protected raise(event: any) {
@@ -26,6 +23,5 @@ export abstract class Aggregate {
   }
 
   abstract id: Id;
-  // NOW type
   abstract invokeApplyMethod(event: any): void;
 }

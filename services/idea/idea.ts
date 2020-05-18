@@ -17,8 +17,14 @@ import {IdeaTags} from './idea-tags';
 export class Idea extends Aggregate {
   public id!: IdeaId;
   private userId!: UserId;
-  private title: IdeaTitle | undefined;
+  private title!: IdeaTitle;
   private tags = IdeaTags.empty();
+
+  static buildFrom(events: any[]) {
+    const idea = new Idea();
+    idea.replay(events);
+    return idea;
+  }
 
   static create(id: IdeaId, user: UserId) {
     const idea = new Idea();
@@ -56,16 +62,41 @@ export class Idea extends Aggregate {
     this.raise(new IdeaDeleted(this.id));
   }
 
-  // TODO maybe implementation that doesn't need this helper method?
+  // TODO maybe implementation that doesn't need this helper method? (maybe with dectorators + reflection)
+  // https://github.com/nestjs/cqrs/blob/master/src/decorators/command-handler.decorator.ts
   // TODO type
-  invokeApplyMethod(event: any) {
-    if (event.name === IdeaCreated.eventName) return this.applyCreated(event);
-    // NOW other mothods
-  }
-
-  private applyCreated(event: IdeaCreated) {
-    // TODO set funny default idea title
-    this.id = event.id;
-    this.userId = event.userId;
+  invokeApplyMethod(someEvent: any) {
+    switch (someEvent.name) {
+      case IdeaCreated.eventName: {
+        const event: IdeaCreated = someEvent;
+        this.id = event.id;
+        this.userId = event.userId;
+        this.title = IdeaTitle.fromString('My Awesome Idea');
+        break;
+      }
+      case IdeaRenamed.eventName: {
+        const event: IdeaRenamed = someEvent;
+        this.title = event.title;
+        break;
+      }
+      case IdeaDescriptionEdited.eventName:
+        break;
+      case IdeaTagsAdded.eventName: {
+        const event: IdeaTagsAdded = someEvent;
+        this.tags.add(event.tags);
+        break;
+      }
+      case IdeaTagsRemoved.eventName: {
+        const event: IdeaTagsRemoved = someEvent;
+        this.tags.remove(event.tags);
+        break;
+      }
+      case IdeaPublished.eventName:
+        break;
+      case IdeaDeleted.eventName:
+        break;
+      default:
+        throw new Error(`No apply method for event with name: ${someEvent.name}`);
+    }
   }
 }
