@@ -8,6 +8,7 @@ import {GlobalEnvironment} from '@centsideas/environment';
 import {IdeasHandler} from './ideas.handler';
 import {IdeasEnvironment} from './ideas.environment';
 
+// TODO maybe: extends service-server
 @injectable()
 export class IdeasServer {
   private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);

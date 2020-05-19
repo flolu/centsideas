@@ -1,5 +1,5 @@
 import {Aggregate} from '@centsideas/event-sourcing2';
-import {IdeaId, UserId} from '@centsideas/types';
+import {IdeaId, UserId, ISODate} from '@centsideas/types';
 
 import {NoPermissionToAccessIdea} from './no-permission-to-access-idea';
 import {IdeaDescriptionEdited} from './idea-description-edited';
@@ -15,7 +15,7 @@ import {IdeaTitle} from './idea-title';
 import {IdeaTags} from './idea-tags';
 
 export class Idea extends Aggregate {
-  public id!: IdeaId;
+  protected id!: IdeaId;
   private userId!: UserId;
   private title!: IdeaTitle;
   private tags = IdeaTags.empty();
@@ -26,9 +26,9 @@ export class Idea extends Aggregate {
     return idea;
   }
 
-  static create(id: IdeaId, user: UserId) {
+  static create(id: IdeaId, user: UserId, createdAt: ISODate) {
     const idea = new Idea();
-    idea.raise(new IdeaCreated(id, user));
+    idea.raise(new IdeaCreated(id, user, createdAt));
     return idea;
   }
 
@@ -51,10 +51,10 @@ export class Idea extends Aggregate {
     if (removed.toArray().length) this.raise(new IdeaTagsRemoved(this.id, removed));
   }
 
-  publish(user: UserId) {
+  publish(publishedAt: ISODate, user: UserId) {
     if (this.userId !== user) throw new NoPermissionToAccessIdea(this.id, user);
     if (!this.title) throw new IdeaTitleRequiredError(this.id, user);
-    this.raise(new IdeaPublished(this.id));
+    this.raise(new IdeaPublished(this.id, publishedAt));
   }
 
   delete(user: UserId) {

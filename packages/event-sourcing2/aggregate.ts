@@ -17,11 +17,11 @@ export abstract class Aggregate {
     this.pendingEvents.push(new StreamEvent(this.id, this.version, event));
   }
 
-  apply(event: any) {
+  protected apply(event: any) {
     this.invokeApplyMethod(event);
     this.version.next();
   }
 
-  abstract id: Id;
-  abstract invokeApplyMethod(event: any): void;
+  protected abstract id: Id;
+  protected abstract invokeApplyMethod(event: any): void;
 }
