@@ -1,0 +1,26 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("@centsideas//packages/jest:jest.bzl", "ts_jest")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "lib",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//packages/event-sourcing2",
+        "//packages/types",
+    ],
+)
+
+ts_jest(
+    name = "test",
+    srcs = glob(
+        include = ["**/*.spec.ts"],
+        exclude = ["ideas.handler.spec.ts"],
+    ),
+    test_lib = "lib",
+    tsconfig = "//:tsconfig.json",
+)

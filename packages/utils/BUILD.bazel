@@ -1,57 +1,44 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
-load("@centsideas//packages/jest:jest.bzl", "jest_test")
+load("@centsideas//packages/jest:jest.bzl", "ts_jest")
 
 package(default_visibility = ["//visibility:public"])
-
-lib_deps = [
-    "//packages/enums",
-    "//packages/models",
-    "//packages/environment",
-    "@npm//express",
-    "@npm//inversify",
-    "@npm//sanitize-html",
-    "@npm//shortid",
-    "@npm//jsonwebtoken",
-    "@npm//uuid",
-    "@npm//chalk",
-    "@npm//axios",
-    "@npm//query-string",
-    "@npm//reflect-metadata",
-    "@npm//@types/jsonwebtoken",
-    "@npm//@types/jest",
-    "@npm//@types/module-alias",
-    "@npm//@types/node",
-    "@npm//@types/sanitize-html",
-    "@npm//@types/shortid",
-    "@npm//@types/uuid",
-]
 
 ts_library(
     name = "utils",
     srcs = glob(
         include = ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = [
+            "**/*.spec.ts",
+            "test/**",
+        ],
     ),
     module_name = "@centsideas/utils",
-    deps = lib_deps,
+    deps = [
+        "//packages/enums",
+        "//packages/environment",
+        "//packages/models",
+        "@npm//@types/jsonwebtoken",
+        "@npm//@types/module-alias",
+        "@npm//@types/node",
+        "@npm//@types/sanitize-html",
+        "@npm//@types/shortid",
+        "@npm//@types/uuid",
+        "@npm//axios",
+        "@npm//chalk",
+        "@npm//express",
+        "@npm//inversify",
+        "@npm//jsonwebtoken",
+        "@npm//query-string",
+        "@npm//reflect-metadata",
+        "@npm//sanitize-html",
+        "@npm//shortid",
+        "@npm//uuid",
+    ],
 )
 
-ts_library(
-    name = "test_lib",
-    srcs = glob(include = ["**/*.spec.ts"]),
-    tsconfig = "//:tsconfig.json",
-    deps = [":utils"] + lib_deps,
-)
-
-filegroup(
-    name = "test_lib.js",
-    srcs = [":test_lib"],
-    output_group = "es5_sources",
-)
-
-jest_test(
+ts_jest(
     name = "test",
-    srcs = [":test_lib.js"],
-    jest_config = "//packages/jest:jest.config.js",
-    deps = [":utils"],
+    srcs = glob(include = ["**/*.spec.ts"]),
+    test_lib = "utils",
+    tsconfig = "//:tsconfig.json",
 )

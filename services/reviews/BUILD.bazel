@@ -2,21 +2,9 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
-load("@centsideas//packages/jest:jest.bzl", "jest_test")
+load("@centsideas//packages/jest:jest.bzl", "ts_jest")
 
 package(default_visibility = ["//visibility:public"])
-
-lib_deps = [
-    "//packages/environment",
-    "//packages/enums",
-    "//packages/event-sourcing",
-    "//packages/models",
-    "//packages/utils",
-    "//packages/dependency-injection",
-    "//packages/rpc",
-    "@npm//inversify",
-    "@npm//@types/node",
-]
 
 ts_library(
     name = "lib",
@@ -24,7 +12,17 @@ ts_library(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = lib_deps,
+    deps = [
+        "//packages/dependency-injection",
+        "//packages/enums",
+        "//packages/environment",
+        "//packages/event-sourcing",
+        "//packages/models",
+        "//packages/rpc",
+        "//packages/utils",
+        "@npm//@types/node",
+        "@npm//inversify",
+    ],
 )
 
 nodejs_image(
@@ -48,22 +46,9 @@ microk8s_deploy(
     template = ":reviews.yaml",
 )
 
-ts_library(
-    name = "test_lib",
-    srcs = glob(include = ["**/*.spec.ts"]),
-    tsconfig = "//:tsconfig.json",
-    deps = [":lib"] + lib_deps,
-)
-
-filegroup(
-    name = "test_lib.js",
-    srcs = [":test_lib"],
-    output_group = "es5_sources",
-)
-
-jest_test(
+ts_jest(
     name = "test",
-    srcs = [":test_lib.js"],
-    jest_config = "//packages/jest:jest.config.js",
-    deps = [":lib"],
+    srcs = glob(include = ["**/*.spec.ts"]),
+    test_lib = "lib",
+    tsconfig = "//:tsconfig.json",
 )

@@ -1,8 +1,18 @@
-# credits: https://github.com/marcus-sa
-
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 def ngsw_config(name, config, index_html, src, out = None, **kwargs):
+    """Creates ngsw.json with service worker configuration and hashes for all source files"
+
+    Args:
+        name: name
+        config: ngsw.config.json file
+        index_html: index.html file
+        src: pkg_web assets
+        out: out file
+        **kwargs:
+
+    Credits: https://github.com/marcus-sa
+    """
     if not out:
         out = name
 

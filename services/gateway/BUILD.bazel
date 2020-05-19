@@ -2,32 +2,9 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
-load("@centsideas//packages/jest:jest.bzl", "jest_test")
+load("@centsideas//packages/jest:jest.bzl", "ts_jest")
 
 package(default_visibility = ["//visibility:public"])
-
-lib_deps = [
-    "//packages/enums",
-    "//packages/models",
-    "//packages/environment",
-    "//packages/utils",
-    "//packages/dependency-injection",
-    "//packages/rpc",
-    "//packages/event-sourcing",
-    "@npm//body-parser",
-    "@npm//cors",
-    "@npm//express",
-    "@npm//inversify",
-    "@npm//cookie-parser",
-    "@npm//inversify-express-utils",
-    "@npm//helmet",
-    "@npm//@types/cookie-parser",
-    "@npm//@types/body-parser",
-    "@npm//@types/cors",
-    "@npm//@types/node",
-    "@npm//@types/express",
-    "@npm//@types/helmet",
-]
 
 ts_library(
     name = "lib",
@@ -35,7 +12,28 @@ ts_library(
         include = ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = lib_deps,
+    deps = [
+        "//packages/dependency-injection",
+        "//packages/enums",
+        "//packages/environment",
+        "//packages/event-sourcing",
+        "//packages/models",
+        "//packages/rpc",
+        "//packages/utils",
+        "@npm//@types/body-parser",
+        "@npm//@types/cookie-parser",
+        "@npm//@types/cors",
+        "@npm//@types/express",
+        "@npm//@types/helmet",
+        "@npm//@types/node",
+        "@npm//body-parser",
+        "@npm//cookie-parser",
+        "@npm//cors",
+        "@npm//express",
+        "@npm//helmet",
+        "@npm//inversify",
+        "@npm//inversify-express-utils",
+    ],
 )
 
 nodejs_image(
@@ -59,22 +57,9 @@ microk8s_deploy(
     template = ":gateway.yaml",
 )
 
-ts_library(
-    name = "test_lib",
-    srcs = glob(include = ["**/*.spec.ts"]),
-    tsconfig = "//:tsconfig.json",
-    deps = [":lib"] + lib_deps,
-)
-
-filegroup(
-    name = "test_lib.js",
-    srcs = [":test_lib"],
-    output_group = "es5_sources",
-)
-
-jest_test(
+ts_jest(
     name = "test",
-    srcs = [":test_lib.js"],
-    jest_config = "//packages/jest:jest.config.js",
-    deps = [":lib"],
+    srcs = glob(include = ["**/*.spec.ts"]),
+    test_lib = "lib",
+    tsconfig = "//:tsconfig.json",
 )
