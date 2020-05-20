@@ -2,7 +2,7 @@ import {IdeaId} from '@centsideas/types';
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaEventNames} from '@centsideas/enums';
 
-import {IdeaDescription} from './idea-description';
+import {IdeaDescription} from '../idea-description';
 
 interface IdeaDescriptionEditedData {
   id: string;

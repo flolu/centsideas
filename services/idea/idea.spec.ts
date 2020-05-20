@@ -1,20 +1,11 @@
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 
+import * as Events from './events';
+import * as Errors from './errors';
 import {Idea} from './idea';
-import {IdeaCreated} from './idea-created';
 import {IdeaTitle} from './idea-title';
-import {IdeaRenamed} from './idea-renamed';
 import {IdeaDescription} from './idea-description';
-import {IdeaDescriptionEdited} from './idea-description-edited';
 import {IdeaTags} from './idea-tags';
-import {IdeaTagsAdded} from './idea-tags-added';
-import {IdeaTagsRemoved} from './idea-tags-removed';
-import {IdeaPublished} from './idea-published';
-import {IdeaDeleted} from './idea-deleted';
-import {IdeaTitleRequired} from './idea-title-required';
-import {IdeaAlreadyPublished} from './idea-already-published';
-import {NoPermissionToAccessIdea} from './no-permission-to-access-idea';
-import {IdeaAlreadyDeleted} from './idea-already-deleted';
 
 describe('Idea', () => {
   const id = IdeaId.generate();
@@ -30,21 +21,21 @@ describe('Idea', () => {
   it('creates idea', () => {
     const idea = Idea.create(id, user, createdAt);
     expect(idea.flushEvents().map(e => e.event)).toContainEqual(
-      new IdeaCreated(id, user, createdAt),
+      new Events.IdeaCreated(id, user, createdAt),
     );
   });
 
   it('renames idea', () => {
     const idea = Idea.create(id, user, createdAt);
     idea.rename(title, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(new IdeaRenamed(id, title));
+    expect(idea.flushEvents().map(e => e.event)).toContainEqual(new Events.IdeaRenamed(id, title));
   });
 
   it('edits idea description', () => {
     const idea = Idea.create(id, user, createdAt);
     idea.editDescription(description, user);
     expect(idea.flushEvents().map(e => e.event)).toContainEqual(
-      new IdeaDescriptionEdited(id, description),
+      new Events.IdeaDescriptionEdited(id, description),
     );
   });
 
@@ -52,11 +43,13 @@ describe('Idea', () => {
     const idea = Idea.create(id, user, createdAt);
     const updatedTags = IdeaTags.fromArray(['mock', 'awesome', 'legendary']);
     idea.updateTags(tags, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(new IdeaTagsAdded(id, tags));
+    expect(idea.flushEvents().map(e => e.event)).toContainEqual(new Events.IdeaTagsAdded(id, tags));
     idea.updateTags(updatedTags, user);
     const flushed = idea.flushEvents().map(e => e.event);
-    expect(flushed).toContainEqual(new IdeaTagsAdded(id, IdeaTags.fromArray(['legendary'])));
-    expect(flushed).toContainEqual(new IdeaTagsRemoved(id, IdeaTags.fromArray(['test', 'idea'])));
+    expect(flushed).toContainEqual(new Events.IdeaTagsAdded(id, IdeaTags.fromArray(['legendary'])));
+    expect(flushed).toContainEqual(
+      new Events.IdeaTagsRemoved(id, IdeaTags.fromArray(['test', 'idea'])),
+    );
   });
 
   it('publishes idea', () => {
@@ -64,13 +57,15 @@ describe('Idea', () => {
     const publishedAt = ISODate.now();
     idea.rename(IdeaTitle.fromString('My awesome idea'), user);
     idea.publish(publishedAt, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(new IdeaPublished(id, publishedAt));
+    expect(idea.flushEvents().map(e => e.event)).toContainEqual(
+      new Events.IdeaPublished(id, publishedAt),
+    );
   });
 
   it('can not publish ideas without a title', () => {
     const idea = Idea.create(id, user, createdAt);
     const publishedAt = ISODate.now();
-    expect(() => idea.publish(publishedAt, user)).toThrowError(IdeaTitleRequired);
+    expect(() => idea.publish(publishedAt, user)).toThrowError(Errors.IdeaTitleRequired);
   });
 
   it('can not be published if it was already published', () => {
@@ -78,18 +73,20 @@ describe('Idea', () => {
     const publishedAt = ISODate.now();
     idea.rename(title, user);
     idea.publish(publishedAt, user);
-    expect(() => idea.publish(publishedAt, user)).toThrowError(IdeaAlreadyPublished);
+    expect(() => idea.publish(publishedAt, user)).toThrowError(Errors.IdeaAlreadyPublished);
   });
 
   it('deletes idea', () => {
     const idea = Idea.create(id, user, createdAt);
     const deletedAt = ISODate.now();
     idea.delete(deletedAt, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(new IdeaDeleted(id, deletedAt));
+    expect(idea.flushEvents().map(e => e.event)).toContainEqual(
+      new Events.IdeaDeleted(id, deletedAt),
+    );
   });
 
   it('rejects commands from users other than the owner', () => {
-    const error = NoPermissionToAccessIdea;
+    const error = Errors.NoPermissionToAccessIdea;
     const idea = Idea.create(id, user, createdAt);
     expect(() => idea.rename(title, otherUser)).toThrowError(error);
     expect(() => idea.editDescription(description, otherUser)).toThrowError(error);
@@ -99,7 +96,7 @@ describe('Idea', () => {
   });
 
   it('can not be changed if it was already deleted', () => {
-    const error = IdeaAlreadyDeleted;
+    const error = Errors.IdeaAlreadyDeleted;
     const idea = Idea.create(id, user, createdAt);
     idea.delete(ISODate.now(), user);
     expect(() => idea.rename(title, user)).toThrowError(error);

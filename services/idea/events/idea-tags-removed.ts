@@ -1,8 +1,8 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
-
-import {IdeaTags} from './idea-tags';
 import {IdeaEventNames} from '@centsideas/enums';
+
+import {IdeaTags} from '../idea-tags';
 
 interface IdeaTagsRemovedData {
   id: string;

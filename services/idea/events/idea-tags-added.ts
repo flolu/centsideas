@@ -2,7 +2,7 @@ import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
 
-import {IdeaTags} from './idea-tags';
+import {IdeaTags} from '../idea-tags';
 
 interface IdeaTagsAddedData {
   id: string;

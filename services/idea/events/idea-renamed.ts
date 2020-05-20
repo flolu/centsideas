@@ -2,7 +2,7 @@ import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
 
-import {IdeaTitle} from './idea-title';
+import {IdeaTitle} from '../idea-title';
 
 interface IdeaRenamedData {
   id: string;
