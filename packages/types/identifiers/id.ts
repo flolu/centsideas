@@ -1,6 +1,8 @@
 import * as shortid from 'shortid';
 import {v4 as uuidv4} from 'uuid';
 
+import {InvalidId} from './invalid-id';
+
 abstract class BaseId {
   protected constructor(protected readonly id: string) {}
 
@@ -23,7 +25,7 @@ export class UUId extends BaseId {
   }
 
   static fromString(id: string) {
-    if (!UUId.regex.test(id)) throw new Error('Invalid UUID');
+    if (!UUId.regex.test(id)) throw new InvalidId(id);
     return new UUId(id);
   }
 }
@@ -34,7 +36,7 @@ export class ShortId extends BaseId {
   }
 
   static fromString(id: string) {
-    if (!shortid.isValid(id)) throw new Error('Invalid short id');
+    if (!shortid.isValid(id)) throw new InvalidId(id);
     return new ShortId(id);
   }
 }

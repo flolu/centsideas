@@ -20,7 +20,7 @@ describe('Idea', () => {
 
   it('creates idea', () => {
     const idea = Idea.create(id, user, createdAt);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(
+    expect(idea.pendingEvents().map(e => e.event)).toContainEqual(
       new Events.IdeaCreated(id, user, createdAt),
     );
   });
@@ -28,13 +28,15 @@ describe('Idea', () => {
   it('renames idea', () => {
     const idea = Idea.create(id, user, createdAt);
     idea.rename(title, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(new Events.IdeaRenamed(id, title));
+    expect(idea.pendingEvents().map(e => e.event)).toContainEqual(
+      new Events.IdeaRenamed(id, title),
+    );
   });
 
   it('edits idea description', () => {
     const idea = Idea.create(id, user, createdAt);
     idea.editDescription(description, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(
+    expect(idea.pendingEvents().map(e => e.event)).toContainEqual(
       new Events.IdeaDescriptionEdited(id, description),
     );
   });
@@ -43,9 +45,11 @@ describe('Idea', () => {
     const idea = Idea.create(id, user, createdAt);
     const updatedTags = IdeaTags.fromArray(['mock', 'awesome', 'legendary']);
     idea.updateTags(tags, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(new Events.IdeaTagsAdded(id, tags));
+    expect(idea.pendingEvents().map(e => e.event)).toContainEqual(
+      new Events.IdeaTagsAdded(id, tags),
+    );
     idea.updateTags(updatedTags, user);
-    const flushed = idea.flushEvents().map(e => e.event);
+    const flushed = idea.pendingEvents().map(e => e.event);
     expect(flushed).toContainEqual(new Events.IdeaTagsAdded(id, IdeaTags.fromArray(['legendary'])));
     expect(flushed).toContainEqual(
       new Events.IdeaTagsRemoved(id, IdeaTags.fromArray(['test', 'idea'])),
@@ -57,7 +61,7 @@ describe('Idea', () => {
     const publishedAt = ISODate.now();
     idea.rename(IdeaTitle.fromString('My awesome idea'), user);
     idea.publish(publishedAt, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(
+    expect(idea.pendingEvents().map(e => e.event)).toContainEqual(
       new Events.IdeaPublished(id, publishedAt),
     );
   });
@@ -80,7 +84,7 @@ describe('Idea', () => {
     const idea = Idea.create(id, user, createdAt);
     const deletedAt = ISODate.now();
     idea.delete(deletedAt, user);
-    expect(idea.flushEvents().map(e => e.event)).toContainEqual(
+    expect(idea.pendingEvents().map(e => e.event)).toContainEqual(
       new Events.IdeaDeleted(id, deletedAt),
     );
   });

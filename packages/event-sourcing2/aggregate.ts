@@ -5,23 +5,28 @@ import {StreamEvent} from './stream-event';
 import {DomainEvent} from './domain-event';
 
 export abstract class Aggregate {
-  private pendingEvents: StreamEvent[] = [];
+  private events: StreamEvent[] = [];
   private version: StreamVersion = StreamVersion.start();
 
-  flushEvents(): StreamEvent[] {
-    const events = [...this.pendingEvents];
-    this.pendingEvents = [];
+  pendingEvents(): StreamEvent[] {
+    const events = [...this.events];
+    // TODO really remove events here?
+    this.events = [];
     return events;
   }
 
+  get aggregateVersion() {
+    return this.version.toNumber();
+  }
+
   protected replay(events: DomainEvent[]) {
-    events.forEach(this.apply);
+    events.forEach(e => this.apply(e));
   }
 
   // TODO type DomainEvent might be inappropriate because it is actually Somehting implements DomainEvent
   protected raise(event: DomainEvent) {
     this.apply(event);
-    this.pendingEvents.push(new StreamEvent(this.id, this.version, event));
+    this.events.push(new StreamEvent(this.id, this.version, event));
   }
 
   protected apply(event: DomainEvent) {

@@ -60,7 +60,7 @@ export class Idea extends Aggregate {
   }
 
   private checkGeneralConditions(user: UserId) {
-    if (this.userId !== user) throw new Errors.NoPermissionToAccessIdea(this.id, user);
+    if (!this.userId.equals(user)) throw new Errors.NoPermissionToAccessIdea(this.id, user);
     if (this.deletedAt) throw new Errors.IdeaAlreadyDeleted(this.id, user);
   }
 

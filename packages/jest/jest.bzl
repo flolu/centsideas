@@ -58,5 +58,5 @@ def ts_jest(name, srcs, tsconfig, test_lib, deps = [], **kwargs):
         name = name,
         srcs = [filegroup_name],
         jest_config = "//packages/jest:jest.config.js",
-        deps = [test_lib],
+        deps = [test_lib] + deps,
     )

@@ -1,5 +1,5 @@
 export class StreamVersion {
-  protected constructor(public version: number) {}
+  protected constructor(private version: number) {}
 
   static start() {
     return new StreamVersion(0);
@@ -7,5 +7,9 @@ export class StreamVersion {
 
   next() {
     this.version++;
+  }
+
+  toNumber() {
+    return this.version;
   }
 }

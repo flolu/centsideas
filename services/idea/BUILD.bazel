@@ -24,5 +24,8 @@ ts_jest(
     ),
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
-    deps = ["//packages/types"],
+    deps = [
+        "//packages/testing",
+        "//packages/types",
+    ],
 )
