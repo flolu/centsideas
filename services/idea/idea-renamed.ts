@@ -1,5 +1,6 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
+import {IdeaEventNames} from '@centsideas/enums';
 
 import {IdeaTitle} from './idea-title';
 
@@ -9,7 +10,7 @@ interface IdeaRenamedData {
 }
 
 export class IdeaRenamed implements DomainEvent {
-  static readonly eventName = 'idea.renamed';
+  readonly eventName = IdeaEventNames.Renamed;
 
   constructor(public readonly id: IdeaId, public readonly title: IdeaTitle) {}
 

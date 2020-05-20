@@ -5,7 +5,7 @@ export class IdeaTags {
   static readonly maxCount = 25;
   static readonly minCount = 0;
 
-  constructor(private tags: string[]) {
+  constructor(private tags: string[] = []) {
     if (tags.length > IdeaTags.maxCount)
       throw new Error(`Too many tags. Max number of tags is ${IdeaTags.maxCount}!`);
 
@@ -30,7 +30,7 @@ export class IdeaTags {
   }
 
   remove(toRemove: IdeaTags) {
-    this.tags = this.tags.filter(toRemove.tags.includes);
+    this.tags = this.tags.filter(t => toRemove.tags.includes(t));
   }
 
   toArray() {

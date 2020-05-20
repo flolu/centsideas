@@ -12,3 +12,4 @@ export * from './services.enum';
 export * from './environments';
 export * from './error-names.enum';
 export * from './rpc-status.enum';
+export * from './events2';

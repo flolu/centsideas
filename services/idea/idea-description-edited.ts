@@ -1,7 +1,8 @@
 import {IdeaId} from '@centsideas/types';
+import {DomainEvent} from '@centsideas/event-sourcing2';
+import {IdeaEventNames} from '@centsideas/enums';
 
 import {IdeaDescription} from './idea-description';
-import {DomainEvent} from '@centsideas/event-sourcing2';
 
 interface IdeaDescriptionEditedData {
   id: string;
@@ -9,7 +10,7 @@ interface IdeaDescriptionEditedData {
 }
 
 export class IdeaDescriptionEdited implements DomainEvent {
-  static readonly eventName = 'idea.description-edited';
+  readonly eventName = IdeaEventNames.DescriptionEdited;
 
   constructor(public readonly id: IdeaId, public readonly description: IdeaDescription) {}
 

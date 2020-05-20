@@ -1,5 +1,6 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
+import {IdeaEventNames} from '@centsideas/enums';
 
 interface IdeaCreatedData {
   id: string;
@@ -8,8 +9,7 @@ interface IdeaCreatedData {
 }
 
 export class IdeaCreated implements DomainEvent {
-  // TODO how to enforce events to have thos properties when typescript cant handle abstract static props?
-  static readonly eventName = 'idea.created';
+  readonly eventName = IdeaEventNames.Created;
 
   constructor(
     public readonly id: IdeaId,

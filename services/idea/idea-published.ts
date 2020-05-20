@@ -1,5 +1,6 @@
 import {IdeaId, ISODate} from '@centsideas/types';
 import {DomainEvent} from '@centsideas/event-sourcing2';
+import {IdeaEventNames} from '@centsideas/enums';
 
 interface IdeaPublishedData {
   id: string;
@@ -7,7 +8,7 @@ interface IdeaPublishedData {
 }
 
 export class IdeaPublished implements DomainEvent {
-  static readonly eventName = 'idea.published';
+  readonly eventName = IdeaEventNames.Published;
 
   constructor(public readonly id: IdeaId, public readonly publishedAt: ISODate) {}
 

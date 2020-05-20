@@ -10,6 +10,7 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
+        "//packages/enums",
         "//packages/event-sourcing2",
         "//packages/types",
     ],
@@ -23,4 +24,5 @@ ts_jest(
     ),
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
+    deps = ["//packages/types"],
 )

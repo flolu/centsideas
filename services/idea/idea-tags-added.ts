@@ -1,5 +1,6 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
+import {IdeaEventNames} from '@centsideas/enums';
 
 import {IdeaTags} from './idea-tags';
 
@@ -9,7 +10,7 @@ interface IdeaTagsAddedData {
 }
 
 export class IdeaTagsAdded implements DomainEvent {
-  static readonly eventName = 'idea.tags-added';
+  readonly eventName = IdeaEventNames.TagsAdded;
 
   constructor(public readonly id: IdeaId, public readonly tags: IdeaTags) {}
 

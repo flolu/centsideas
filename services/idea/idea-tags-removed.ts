@@ -2,6 +2,7 @@ import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
 
 import {IdeaTags} from './idea-tags';
+import {IdeaEventNames} from '@centsideas/enums';
 
 interface IdeaTagsRemovedData {
   id: string;
@@ -9,7 +10,7 @@ interface IdeaTagsRemovedData {
 }
 
 export class IdeaTagsRemoved implements DomainEvent {
-  static readonly eventName = 'idea.tags-removed';
+  readonly eventName = IdeaEventNames.TagsRemoved;
 
   constructor(public readonly id: IdeaId, public readonly tags: IdeaTags) {}
 
