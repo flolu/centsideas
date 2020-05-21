@@ -5,7 +5,6 @@ export class ISODate {
     return new ISODate(new Date().toISOString());
   }
 
-  // TODO test if this works
   static fromString(isoString: string) {
     return new ISODate(new Date(isoString).toISOString());
   }

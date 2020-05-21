@@ -8,7 +8,9 @@ describe('IdeaService', () => {
   const userId = UserId.generate().toString();
   const title = 'My awesome title';
   const description = 'This is idea is meant to be great, but also a dummy mock test description!';
+  const description2 = 'This is idea is meant to be great, but also a dummy test description!';
   const tags = ['mock', 'test', 'idea', 'awesome'];
+  const tags2 = ['test', 'idea', 'nice', 'awesome'];
 
   it('should create an idea', async () => {
     const id = IdeaId.generate();
@@ -44,5 +46,19 @@ describe('IdeaService', () => {
     const id = IdeaId.generate();
     await service.create(id, userId);
     await expectNoAsyncError(() => service.delete(id.toString(), userId));
+  });
+
+  it('should go through the whole idea lifecycle', async () => {
+    const id = IdeaId.generate();
+    await expectNoAsyncError(async () => {
+      await service.create(id, userId);
+      await service.rename(id.toString(), userId, title);
+      await service.editDescription(id.toString(), userId, description);
+      await service.updateTags(id.toString(), userId, tags);
+      await service.updateTags(id.toString(), userId, tags2);
+      await service.publish(id.toString(), userId);
+      await service.editDescription(id.toString(), userId, description2);
+      await service.delete(id.toString(), userId);
+    });
   });
 });

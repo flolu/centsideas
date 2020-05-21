@@ -17,6 +17,6 @@ export async function expectNoAsyncError(check: () => Promise<any>) {
   }
 
   // tslint:disable-next-line:no-console
-  if (error) console.log(error);
+  if (error) console.log('Received async error although expected no error: ', error);
   expect(error).toEqual(undefined);
 }

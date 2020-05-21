@@ -28,10 +28,9 @@ export class Idea extends Aggregate {
     return idea;
   }
 
-  // TODO decide whether to pass userId to all methods or validate it before calling methods?!
-  // -> ask shawn
   rename(title: IdeaTitle, user: UserId) {
     this.checkGeneralConditions(user);
+    // FIXME don't rasie if not changed
     this.raise(new Events.IdeaRenamed(this.id, title));
   }
 

@@ -5,6 +5,10 @@ export class StreamVersion {
     return new StreamVersion(0);
   }
 
+  static fromNumber(num: number) {
+    return new StreamVersion(num);
+  }
+
   next() {
     this.version++;
   }

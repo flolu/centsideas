@@ -4,9 +4,14 @@ import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaEventNames} from '@centsideas/enums';
 
 import * as Events from './events';
+import {EventId} from '@centsideas/event-sourcing2/event-id';
 
+// TODO snapshots
+// TODO event dispatcher
 export class IdeaEventStore {
   private events: any[] = [];
+  private sequence: number = 0;
+
   private eventNameClassMap = {
     [IdeaEventNames.Created]: Events.IdeaCreated,
     [IdeaEventNames.Renamed]: Events.IdeaRenamed,
@@ -26,18 +31,35 @@ export class IdeaEventStore {
     return events;
   }
 
-  store(events: StreamEvent[]) {
+  store(events: StreamEvent[], lastVersion: number) {
     const promises = events.map(e => {
+      const lastStoredEvent = this.getLastEvent(e.id);
+      // TODO retry command
+      if (lastStoredEvent && lastStoredEvent.version !== lastVersion) {
+        throw new Error('Concurrency issue');
+      }
+
+      this.sequence++;
       this.events.push({
+        id: EventId.generate(),
         streamId: e.id.toString(),
         version: e.version.toNumber(),
         name: e.event.eventName,
         data: e.event.serialize(),
         insertedAt: ISODate.now().toString(),
+        sequence: this.sequence,
         metadata: null,
       });
+
+      lastVersion++;
     });
     return Promise.all(promises);
+  }
+
+  private getLastEvent(streamId: Id) {
+    return this.events
+      .filter(e => streamId.equals(e.streamId))
+      .sort((a, b) => b.version - a.version)[0];
   }
 
   private deserialize(eventName: IdeaEventNames, data: any): DomainEvent {

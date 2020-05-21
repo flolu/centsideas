@@ -23,10 +23,15 @@ export abstract class Aggregate {
     events.forEach(e => this.apply(e));
   }
 
-  // TODO type DomainEvent might be inappropriate because it is actually Somehting implements DomainEvent
   protected raise(event: DomainEvent) {
     this.apply(event);
-    this.events.push(new StreamEvent(this.id, this.version, event));
+    /**
+     * create a copy of the `StreamVersion` because it would otherwise
+     * continue counting when this.version.next() is invoked
+     */
+    this.events.push(
+      new StreamEvent(this.id, StreamVersion.fromNumber(this.version.toNumber()), event),
+    );
   }
 
   protected apply(event: DomainEvent) {
