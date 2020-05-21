@@ -1,17 +1,21 @@
-import {StreamEvent} from '@centsideas/event-sourcing2/stream-event';
 import {Id, ISODate} from '@centsideas/types';
-import {DomainEvent} from '@centsideas/event-sourcing2';
+import {
+  DomainEvent,
+  EventId,
+  OptimisticConcurrencyIssue,
+  StreamEvent,
+} from '@centsideas/event-sourcing2';
 import {IdeaEventNames} from '@centsideas/enums';
 
 import * as Events from './events';
-import {EventId} from '@centsideas/event-sourcing2/event-id';
+import {Idea} from './idea';
 
 // TODO snapshots
 // TODO event dispatcher
+// TODO multiple aggregates per stream?! (would probably require an aggregate map)
 export class IdeaEventStore {
   private events: any[] = [];
   private sequence: number = 0;
-
   private eventNameClassMap = {
     [IdeaEventNames.Created]: Events.IdeaCreated,
     [IdeaEventNames.Renamed]: Events.IdeaRenamed,
@@ -21,8 +25,9 @@ export class IdeaEventStore {
     [IdeaEventNames.Published]: Events.IdeaPublished,
     [IdeaEventNames.Deleted]: Events.IdeaDeleted,
   };
+  private streamAggregate = Idea;
 
-  getStream(id: Id) {
+  async getStream(id: Id) {
     const rawEvents = this.events
       .filter(e => id.equals(e.streamId))
       .sort((a, b) => a.version - b.version);
@@ -31,12 +36,17 @@ export class IdeaEventStore {
     return events;
   }
 
+  async buildFromStream(id: Id) {
+    const events = await this.getStream(id);
+    return this.streamAggregate.buildFrom(events);
+  }
+
   store(events: StreamEvent[], lastVersion: number) {
     const promises = events.map(e => {
       const lastStoredEvent = this.getLastEvent(e.id);
-      // TODO retry command
       if (lastStoredEvent && lastStoredEvent.version !== lastVersion) {
-        throw new Error('Concurrency issue');
+        // TODO retry command (maybe orchestrated by command bus?!)
+        throw new OptimisticConcurrencyIssue();
       }
 
       this.sequence++;

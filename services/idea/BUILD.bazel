@@ -28,6 +28,7 @@ ts_jest(
     tsconfig = "//:tsconfig.json",
     deps = [
         "//packages/enums",
+        "//packages/event-sourcing2",
         "//packages/testing",
         "//packages/types",
     ],

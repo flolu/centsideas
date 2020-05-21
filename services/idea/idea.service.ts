@@ -17,8 +17,7 @@ export class IdeaService {
   }
 
   async rename(id: string, userId: string, title: string) {
-    const events = await this.eventStore.getStream(IdeaId.fromString(id));
-    const idea = Idea.buildFrom(events);
+    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
     const lastVersion = idea.aggregateVersion;
 
     idea.rename(IdeaTitle.fromString(title), UserId.fromString(userId));
@@ -26,8 +25,7 @@ export class IdeaService {
   }
 
   async editDescription(id: string, userId: string, description: string) {
-    const events = this.eventStore.getStream(IdeaId.fromString(id));
-    const idea = Idea.buildFrom(events);
+    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
     const lastVersion = idea.aggregateVersion;
 
     idea.editDescription(IdeaDescription.fromString(description), UserId.fromString(userId));
@@ -35,8 +33,7 @@ export class IdeaService {
   }
 
   async updateTags(id: string, userId: string, tags: string[]) {
-    const events = this.eventStore.getStream(IdeaId.fromString(id));
-    const idea = Idea.buildFrom(events);
+    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
     const lastVersion = idea.aggregateVersion;
 
     idea.updateTags(IdeaTags.fromArray(tags), UserId.fromString(userId));
@@ -44,8 +41,7 @@ export class IdeaService {
   }
 
   async publish(id: string, userId: string) {
-    const events = this.eventStore.getStream(IdeaId.fromString(id));
-    const idea = Idea.buildFrom(events);
+    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
     const lastVersion = idea.aggregateVersion;
 
     idea.publish(ISODate.now(), UserId.fromString(userId));
@@ -53,8 +49,7 @@ export class IdeaService {
   }
 
   async delete(id: string, userId: string) {
-    const events = this.eventStore.getStream(IdeaId.fromString(id));
-    const idea = Idea.buildFrom(events);
+    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
     const lastVersion = idea.aggregateVersion;
 
     idea.delete(ISODate.now(), UserId.fromString(userId));
