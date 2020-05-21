@@ -13,6 +13,8 @@ ts_library(
         "//packages/enums",
         "//packages/event-sourcing2",
         "//packages/types",
+        "@npm//@types/sanitize-html",
+        "@npm//sanitize-html",
     ],
 )
 
@@ -25,6 +27,7 @@ ts_jest(
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
     deps = [
+        "//packages/enums",
         "//packages/testing",
         "//packages/types",
     ],

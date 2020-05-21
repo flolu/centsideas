@@ -13,3 +13,6 @@ export * from './environments';
 export * from './error-names.enum';
 export * from './rpc-status.enum';
 export * from './events2';
+export * from './idea-title.enum';
+export * from './idea-description.enum';
+export * from './idea-tags.enum';

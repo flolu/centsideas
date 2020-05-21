@@ -1,19 +1,16 @@
-// TODO sanitize
+import * as sanitize from 'sanitize-html';
+
+import {IdeaTagsCount, IdeaTagsLength} from '@centsideas/enums';
+
+import {TooManyIdeaTags} from './errors/too-many-idea-tags';
+import {IdeaTagTooLong} from './errors/idea-tag-too-long';
+import {IdeaTagTooShort} from './errors/idea-tag-too-short';
+
 export class IdeaTags {
-  static readonly maxLength = 30;
-  static readonly minLength = 2;
-  static readonly maxCount = 25;
-  static readonly minCount = 0;
-
   constructor(private tags: string[] = []) {
-    if (tags.length > IdeaTags.maxCount)
-      throw new Error(`Too many tags. Max number of tags is ${IdeaTags.maxCount}!`);
-
-    this.tags = this.removeDuplicates(this.tags);
+    if (tags.length > IdeaTagsCount.Max) throw new TooManyIdeaTags();
+    this.tags = this.cleanTags(this.tags);
     tags.forEach(this.validateTag);
-
-    if (tags.length < IdeaTags.minCount)
-      throw new Error(`Please add at least ${IdeaTags.minCount} tags!`);
   }
 
   static empty() {
@@ -25,12 +22,16 @@ export class IdeaTags {
   }
 
   add(toAdd: IdeaTags) {
-    toAdd.tags.forEach(this.validateTag);
-    this.tags = [...this.tags, ...toAdd.tags];
+    const updatedTags = [...this.tags, ...toAdd.toArray()];
+    const cleaned = this.cleanTags(updatedTags);
+    cleaned.forEach(this.validateTag);
+    if (cleaned.length > IdeaTagsCount.Max) throw new TooManyIdeaTags();
+    this.tags = cleaned;
   }
 
   remove(toRemove: IdeaTags) {
-    this.tags = this.tags.filter(t => toRemove.tags.includes(t));
+    const remove = toRemove.toArray();
+    this.tags = this.tags.filter(t => !remove.includes(t));
   }
 
   toArray() {
@@ -43,15 +44,15 @@ export class IdeaTags {
     return {added, removed};
   }
 
-  private removeDuplicates(tags: string[]) {
-    return tags.filter((tag, pos) => tags.indexOf(tag) === pos);
+  private cleanTags(tags: string[]) {
+    tags = tags.map(t => sanitize(t));
+    tags = tags.filter((tag, pos) => tags.indexOf(tag) === pos);
+    tags = tags.map(t => t.replace(new RegExp(' ', 'g'), '-'));
+    return tags;
   }
 
   private validateTag(tag: string) {
-    if (tag.length > IdeaTags.maxLength)
-      throw new Error(`Idea tag ${tag} is too long. Max length is ${IdeaTags.maxLength}!`);
-
-    if (tag.length < IdeaTags.minLength)
-      throw new Error(`Idea tag ${tag} is too short. Min length is ${IdeaTags.minLength}!`);
+    if (tag.length > IdeaTagsLength.Max) throw new IdeaTagTooLong(tag);
+    if (tag.length < IdeaTagsLength.Min) throw new IdeaTagTooShort(tag);
   }
 }

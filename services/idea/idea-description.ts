@@ -1,10 +1,15 @@
-// TODO sanitize
+import * as sanitize from 'sanitize-html';
+
+import {IdeaDescriptionLength} from '@centsideas/enums';
+
+import {IdeaDescriptionTooLong} from './errors/idea-description-too-long';
+
 export class IdeaDescription {
-  static readonly maxLength = 3000;
+  static readonly maxLength = IdeaDescriptionLength.Max;
 
   private constructor(private readonly description: string) {
-    if (this.description.length > IdeaDescription.maxLength)
-      throw new Error(`Idea description too long. Max length is ${IdeaDescription.maxLength}!`);
+    this.description = sanitize(this.description);
+    if (this.description.length > IdeaDescription.maxLength) throw new IdeaDescriptionTooLong();
   }
 
   static empty() {

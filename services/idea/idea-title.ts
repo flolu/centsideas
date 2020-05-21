@@ -1,17 +1,15 @@
-// TODO interface for serializable value
-// TODO sanitize
+import * as sanitize from 'sanitize-html';
+
+import {IdeaTitleLength} from '@centsideas/enums';
+
+import {IdeaTitleTooShort} from './errors/idea-title-too-short';
+import {IdeaTitleTooLong} from './errors/idea-title-too-long';
+
 export class IdeaTitle {
-  // TODO share with frontend for form validation (either share whole class or only move values to shared package)
-  static readonly maxLength = 100;
-  static readonly minLength = 3;
-
-  private constructor(private readonly title: string) {
-    // TODO create dedicated error(s)
-    if (this.title.length > IdeaTitle.maxLength)
-      throw new Error(`Idea title too long. Max length is ${IdeaTitle.maxLength}!`);
-
-    if (this.title.length < IdeaTitle.minLength)
-      throw new Error(`Idea title too short. Min length is ${IdeaTitle.minLength}!`);
+  private constructor(private title: string) {
+    this.title = sanitize(this.title);
+    if (this.title.length > IdeaTitleLength.Max) throw new IdeaTitleTooLong();
+    if (this.title.length < IdeaTitleLength.Min) throw new IdeaTitleTooShort();
   }
 
   static fromString(title: string) {
