@@ -10,10 +10,16 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
+        "//packages/dependency-injection",
         "//packages/enums",
+        "//packages/environment",
         "//packages/event-sourcing2",
+        "//packages/rpc",
         "//packages/types",
+        "//packages/utils",
+        "@npm//@types/node",
         "@npm//@types/sanitize-html",
+        "@npm//inversify",
         "@npm//sanitize-html",
     ],
 )
@@ -27,7 +33,9 @@ ts_jest(
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
     deps = [
+        "//packages/dependency-injection",
         "//packages/enums",
+        "//packages/environment",
         "//packages/event-sourcing2",
         "//packages/testing",
         "//packages/types",

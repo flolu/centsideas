@@ -1,5 +1,5 @@
 import {injectable} from 'inversify';
-import {Kafka, Producer, Consumer, Message, RecordMetadata, logLevel, KafkaMessage} from 'kafkajs';
+import {Kafka, Producer, Consumer, Message, RecordMetadata, KafkaMessage} from 'kafkajs';
 import {Observable, Observer} from 'rxjs';
 
 import {Identifier} from '@centsideas/utils';
@@ -12,7 +12,7 @@ import {OtherTopics} from '@centsideas/enums';
 
 @injectable()
 export class MessageBroker {
-  private kafka = new Kafka({brokers: [this.globalEnv.kafkaBrokerHost], logLevel: logLevel.WARN});
+  private kafka = new Kafka({brokers: [this.globalEnv.kafkaBrokerHost]});
   private producer: Producer | undefined;
 
   constructor(private globalEnv: GlobalEnvironment) {}

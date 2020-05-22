@@ -1,9 +1,12 @@
+import {injectable} from 'inversify';
+
 import {InMemoryEventStore} from '@centsideas/event-sourcing2';
-import {IdeaEventNames} from '@centsideas/enums';
+import {IdeaEventNames, EventTopics} from '@centsideas/enums';
 
 import * as Events from './events';
 import {Idea} from './idea';
 
+@injectable()
 export class IdeaEventStore extends InMemoryEventStore<Idea> {
   eventMap = {
     [IdeaEventNames.Created]: Events.IdeaCreated,
@@ -15,4 +18,5 @@ export class IdeaEventStore extends InMemoryEventStore<Idea> {
     [IdeaEventNames.Deleted]: Events.IdeaDeleted,
   };
   aggregate = Idea;
+  topic = EventTopics.Ideas;
 }

@@ -1,3 +1,5 @@
+import {injectable} from 'inversify';
+
 import {UserId, IdeaId, ISODate} from '@centsideas/types';
 
 import {Idea} from './idea';
@@ -6,8 +8,9 @@ import {IdeaTitle} from './idea-title';
 import {IdeaDescription} from './idea-description';
 import {IdeaTags} from './idea-tags';
 
+@injectable()
 export class IdeaService {
-  constructor(private eventStore = new IdeaEventStore()) {}
+  constructor(private eventStore: IdeaEventStore) {}
 
   async create(id: IdeaId, userId: string) {
     const idea = Idea.create(id, UserId.fromString(userId), ISODate.now());

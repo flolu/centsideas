@@ -3,8 +3,8 @@ export interface PersistedEvent {
   streamId: string;
   version: number;
   name: string;
-  data: any;
+  data: object;
   insertedAt: string;
   sequence: number;
-  metadata: any;
+  metadata: object;
 }

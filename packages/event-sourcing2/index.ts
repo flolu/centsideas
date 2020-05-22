@@ -5,3 +5,6 @@ export * from './optimistic-concurrency-issue';
 export * from './stream-event';
 export * from './event-store';
 export * from './in-memory-event-store';
+export * from './event-dispatcher';
+export * from './event-listener';
+export * from './event-dispatcher.mock';

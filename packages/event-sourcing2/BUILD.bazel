@@ -11,8 +11,12 @@ ts_library(
     ),
     module_name = "@centsideas/event-sourcing2",
     deps = [
+        "//packages/environment",
         "//packages/types",
         "//packages/utils",
+        "@npm//inversify",
+        "@npm//kafkajs",
+        "@npm//rxjs",
     ],
 )
 

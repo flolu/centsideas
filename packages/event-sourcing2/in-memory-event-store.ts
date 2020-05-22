@@ -1,3 +1,5 @@
+import {inject} from 'inversify';
+
 import {Id, ISODate} from '@centsideas/types';
 
 import {EventStore} from './event-store';
@@ -7,12 +9,14 @@ import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
 import {StreamEvents} from './stream-event';
 import {EventId} from './event-id';
 import {PersistedEvent} from './persisted-event';
+import {EventDispatcher} from './event-dispatcher';
 
 // TODO snapshots (probably not into event store: https://eventstore.com/docs/event-sourcing-basics/rolling-snapshots/index.html)
-// TODO event dispatcher
 export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore<T> {
   private events: PersistedEvent[] = [];
   private sequence: number = 0;
+
+  @inject(EventDispatcher) private dispatcher!: EventDispatcher;
 
   async getStream(id: Id) {
     const rawEvents = this.events
@@ -42,9 +46,18 @@ export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore
         data: e.event.serialize(),
         insertedAt: ISODate.now().toString(),
         sequence: this.sequence,
-        metadata: null,
+        metadata: {},
       });
     });
+
+    await this.dispatcher.dispatch(
+      this.topic,
+      events.toArray().map(e => ({
+        key: events.aggregateId.toString(),
+        value: JSON.stringify(e.event.serialize()),
+        headers: {eventName: e.event.eventName},
+      })),
+    );
   }
 
   private async getLastEvent(streamId: Id) {
@@ -53,7 +66,7 @@ export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore
       .sort((a, b) => b.version - a.version)[0];
   }
 
-  private deserialize(eventName: string, data: any): DomainEvent {
+  private deserialize(eventName: string, data: object): DomainEvent {
     return this.eventMap[eventName].deserialize(data);
   }
 }
