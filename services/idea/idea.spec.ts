@@ -87,7 +87,9 @@ describe('Idea', () => {
   it('can not publish ideas without a title', () => {
     const idea = Idea.create(id, user, createdAt);
     const publishedAt = ISODate.now();
-    expect(() => idea.publish(publishedAt, user)).toThrowError(Errors.IdeaTitleRequired);
+    expect(() => idea.publish(publishedAt, user)).toThrowError(
+      new Errors.IdeaTitleRequired(id, user),
+    );
   });
 
   it('can not be published if it was already published', () => {
@@ -95,7 +97,9 @@ describe('Idea', () => {
     const publishedAt = ISODate.now();
     idea.rename(title, user);
     idea.publish(publishedAt, user);
-    expect(() => idea.publish(publishedAt, user)).toThrowError(Errors.IdeaAlreadyPublished);
+    expect(() => idea.publish(publishedAt, user)).toThrowError(
+      new Errors.IdeaAlreadyPublished(id, user),
+    );
   });
 
   it('deletes idea', () => {
@@ -111,7 +115,7 @@ describe('Idea', () => {
   });
 
   it('rejects commands from users other than the owner', () => {
-    const error = Errors.NoPermissionToAccessIdea;
+    const error = new Errors.NoPermissionToAccessIdea(id, otherUser);
     const idea = Idea.create(id, user, createdAt);
     expect(() => idea.rename(title, otherUser)).toThrowError(error);
     expect(() => idea.editDescription(description, otherUser)).toThrowError(error);
@@ -121,8 +125,8 @@ describe('Idea', () => {
   });
 
   it('can not be changed if it was already deleted', () => {
-    const error = Errors.IdeaAlreadyDeleted;
     const idea = Idea.create(id, user, createdAt);
+    const error = new Errors.IdeaAlreadyDeleted(id, user);
     idea.delete(ISODate.now(), user);
     expect(() => idea.rename(title, user)).toThrowError(error);
     expect(() => idea.editDescription(description, user)).toThrowError(error);

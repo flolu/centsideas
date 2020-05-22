@@ -16,12 +16,12 @@ describe('IdeaTitle', () => {
   });
 
   it('recognizes titles, that are too short', () => {
-    expect(() => IdeaTitle.fromString('no')).toThrowError(IdeaTitleTooShort);
-    expect(() => IdeaTitle.fromString('')).toThrowError(IdeaTitleTooShort);
+    expect(() => IdeaTitle.fromString('no')).toThrowError(new IdeaTitleTooShort());
+    expect(() => IdeaTitle.fromString('')).toThrowError(new IdeaTitleTooShort());
   });
 
   it('recognizes titles, that are too long', () => {
-    expect(() => IdeaTitle.fromString('to long '.repeat(50))).toThrowError(IdeaTitleTooLong);
+    expect(() => IdeaTitle.fromString('to long '.repeat(50))).toThrowError(new IdeaTitleTooLong());
   });
 
   it('it sanitizes input strings', () => {

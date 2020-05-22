@@ -16,7 +16,7 @@ describe('IdeaDescription', () => {
 
   it('recognizes descriptions, that are too long', () => {
     expect(() => IdeaDescription.fromString('to long '.repeat(500))).toThrowError(
-      IdeaDescriptionTooLong,
+      new IdeaDescriptionTooLong(),
     );
   });
 

@@ -7,6 +7,7 @@
     "client": "yarn env:setup && bazelisk run //services/client",
     "admin": "yarn env:setup && bazelisk run //services/admin-client",
     "test": "yarn env:setup && bazelisk test //...",
+    "test:unit": "jest --testPathIgnorePatterns=services/client",
     "deploy": "yarn env:setup:prod && bazelisk run :k8s.apply",
     "deploy:microk8s": "yarn env:setup:staging && bazelisk run :microk8s.apply",
     "lint": "tslint --project .",
@@ -24,6 +25,7 @@
     "postinstall": "patch-package --patch-dir misc/patches && ngcc && yarn env:setup"
   },
   "scriptsComments": {
+    "test:dev": "# TODO make angular jest tests work",
     "docker": "# FIXME disable logger prefixes https://github.com/docker/compose/issues/7416"
   },
   "dependencies": {
@@ -100,7 +102,7 @@
     "@types/inversify": "2.0.33",
     "@types/jasmine": "3.5.10",
     "@types/jasminewd2": "2.0.8",
-    "@types/jest": "25.2.3",
+    "@types/jest": "^25.2.3",
     "@types/jsonwebtoken": "8.5.0",
     "@types/kafkajs": "1.9.0",
     "@types/module-alias": "2.0.0",
@@ -136,7 +138,7 @@
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "terser": "4.7.0",
-    "ts-jest": "26.0.0",
+    "ts-jest": "^26.0.0",
     "ts-node-dev": "1.0.0-pre.44",
     "tslint": "6.1.2",
     "tslint-config-prettier": "1.18.0",

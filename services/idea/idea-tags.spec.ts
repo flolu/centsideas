@@ -21,15 +21,19 @@ describe('IdeaTags', () => {
     for (let i = 0; i < 10; i++) {
       tags.forEach(t => tooMany.push(`${t}${i}`));
     }
-    expect(() => IdeaTags.fromArray(tooMany)).toThrowError(TooManyIdeaTags);
+    expect(() => IdeaTags.fromArray(tooMany)).toThrowError(new TooManyIdeaTags());
   });
 
   it('recognizes tags, that are too short', () => {
-    expect(() => IdeaTags.fromArray(['has', 't', 'short', 'tags'])).toThrowError(IdeaTagTooShort);
+    const tooShort = 't';
+    expect(() => IdeaTags.fromArray(['has', tooShort, 'short', 'tags'])).toThrowError(
+      new IdeaTagTooShort(tooShort),
+    );
   });
 
   it('recognizes tags, that are too long', () => {
-    expect(() => IdeaTags.fromArray(['has', 'too long'.repeat(10)])).toThrowError(IdeaTagTooLong);
+    const tooLong = 'too long'.repeat(10);
+    expect(() => IdeaTags.fromArray(['has', tooLong])).toThrowError(new IdeaTagTooLong(tooLong));
   });
 
   it('sanitizes tags', () => {
@@ -78,7 +82,7 @@ describe('IdeaTags', () => {
     for (let i = 0; i < IdeaTagsCount.Max; i++) {
       tooMany.push(`dummy${i}`);
     }
-    expect(() => base.add(IdeaTags.fromArray(tooMany))).toThrowError(TooManyIdeaTags);
+    expect(() => base.add(IdeaTags.fromArray(tooMany))).toThrowError(new TooManyIdeaTags());
   });
 
   it('creates empty tag list', () => {
