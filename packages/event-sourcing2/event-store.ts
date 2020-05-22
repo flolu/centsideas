@@ -1,10 +1,15 @@
-/* import {Id} from '@centsideas/types';
+import {Id} from '@centsideas/types';
 
-import {StreamEvent} from './stream-event';
+import {StreamEvents} from './stream-event';
+import {DomainEvent, DomainEventInstance} from './domain-event';
+import {Aggregate} from './aggregate';
 
-export class EventStore {
-  getStream(id: Id) {}
+type AggregateClassConstructor<T extends Aggregate> = new (events: DomainEvent[]) => T;
 
-  store(events: StreamEvent[]) {}
+export abstract class EventStore<T extends Aggregate> {
+  protected abstract eventMap: Record<string, DomainEventInstance>;
+  protected abstract aggregate: AggregateClassConstructor<T>;
+
+  protected abstract getStream(id: Id): Promise<DomainEvent[]>;
+  protected abstract store(events: StreamEvents, lastVersion: number): Promise<void>;
 }
- */

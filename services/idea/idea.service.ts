@@ -11,48 +11,41 @@ export class IdeaService {
 
   async create(id: IdeaId, userId: string) {
     const idea = Idea.create(id, UserId.fromString(userId), ISODate.now());
-    const lastVersion = idea.aggregateVersion;
-
-    await this.eventStore.store(idea.pendingEvents(), lastVersion);
+    return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async rename(id: string, userId: string, title: string) {
-    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
-    const lastVersion = idea.aggregateVersion;
-
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.rename(IdeaTitle.fromString(title), UserId.fromString(userId));
-    await this.eventStore.store(idea.pendingEvents(), lastVersion);
+    return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async editDescription(id: string, userId: string, description: string) {
-    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
-    const lastVersion = idea.aggregateVersion;
-
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.editDescription(IdeaDescription.fromString(description), UserId.fromString(userId));
-    await this.eventStore.store(idea.pendingEvents(), lastVersion);
+    return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async updateTags(id: string, userId: string, tags: string[]) {
-    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
-    const lastVersion = idea.aggregateVersion;
-
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.updateTags(IdeaTags.fromArray(tags), UserId.fromString(userId));
-    await this.eventStore.store(idea.pendingEvents(), lastVersion);
+    return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async publish(id: string, userId: string) {
-    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
-    const lastVersion = idea.aggregateVersion;
-
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.publish(ISODate.now(), UserId.fromString(userId));
-    await this.eventStore.store(idea.pendingEvents(), lastVersion);
+    return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async delete(id: string, userId: string) {
-    const idea = await this.eventStore.buildFromStream(IdeaId.fromString(id));
-    const lastVersion = idea.aggregateVersion;
-
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.delete(ISODate.now(), UserId.fromString(userId));
-    await this.eventStore.store(idea.pendingEvents(), lastVersion);
+    return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 }

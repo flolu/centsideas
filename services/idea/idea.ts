@@ -16,7 +16,7 @@ export class Idea extends Aggregate {
   private publishedAt: ISODate | undefined;
   private deletedAt: ISODate | undefined;
 
-  static buildFrom(events: any[]) {
+  static buildFrom(events: DomainEvent[]) {
     const idea = new Idea();
     idea.replay(events);
     return idea;

@@ -1,9 +1,9 @@
 import {UserId, IdeaId} from '@centsideas/types';
 import {expectNoAsyncError} from '@centsideas/testing';
-import {OptimisticConcurrencyIssue} from '@centsideas/event-sourcing2';
 
 import {IdeaService} from './idea.service';
 
+// TODO this tesing to expect not to throw errors seems useless?!
 describe('IdeaService', () => {
   const service = new IdeaService();
   const userId = UserId.generate().toString();
@@ -53,6 +53,7 @@ describe('IdeaService', () => {
     const id = IdeaId.generate();
     await expectNoAsyncError(async () => {
       await service.create(id, userId);
+      await service.rename(id.toString(), userId, 'first title');
       await service.rename(id.toString(), userId, title);
       await service.editDescription(id.toString(), userId, description);
       await service.updateTags(id.toString(), userId, tags);
@@ -61,16 +62,5 @@ describe('IdeaService', () => {
       await service.editDescription(id.toString(), userId, description2);
       await service.delete(id.toString(), userId);
     });
-  });
-
-  it('should throw concurrecny error', async () => {
-    expect.assertions(1);
-    const id = IdeaId.generate();
-    await service.create(id, userId);
-    // two commands trying to change one aggregate at the same time...
-    await Promise.all([
-      service.rename(id.toString(), userId, title),
-      service.editDescription(id.toString(), userId, description),
-    ]).catch(err => expect(err).toBeInstanceOf(OptimisticConcurrencyIssue));
   });
 });
