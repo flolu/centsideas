@@ -35,9 +35,9 @@ export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore
       throw new OptimisticConcurrencyIssue();
     }
 
-    events.toArray().forEach(e => {
+    const toInsert = events.toArray().map(e => {
       this.sequence++;
-      this.events.push({
+      return {
         id: EventId.generate().toString(),
         streamId: events.aggregateId.toString(),
         version: e.version.toNumber(),
@@ -46,15 +46,18 @@ export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore
         insertedAt: ISODate.now().toString(),
         sequence: this.sequence,
         metadata: {},
-      });
+      };
     });
+
+    toInsert.forEach(e => this.events.push(e));
 
     await this.dispatcher.dispatch(
       this.topic,
-      events.toArray().map(e => ({
+      toInsert.map(e => ({
         key: events.aggregateId.toString(),
-        value: JSON.stringify(e.event.serialize()),
-        headers: {eventName: e.event.eventName},
+        // TODO serializer for whole event
+        value: JSON.stringify(e),
+        headers: {eventName: e.name},
       })),
     );
   }

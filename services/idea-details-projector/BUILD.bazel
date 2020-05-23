@@ -1,4 +1,7 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("@centsideas//packages/jest:jest.bzl", "ts_jest")
 
 package(default_visibility = ["//visibility:public"])
@@ -15,14 +18,28 @@ ts_library(
         "//packages/environment",
         "//packages/event-sourcing2",
         "//packages/models",
-        "//packages/rpc",
-        "//packages/types",
         "//packages/utils",
         "@npm//@types/node",
-        "@npm//@types/sanitize-html",
         "@npm//inversify",
-        "@npm//sanitize-html",
     ],
+)
+
+nodejs_image(
+    name = "image",
+    data = [":lib"],
+    entry_point = ":index.ts",
+)
+
+k8s_deploy(
+    name = "k8s",
+    images = {"idea-detail-projector:placeholder_name": ":image"},
+    template = ":idea-detail-projector.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s",
+    images = {"idea-detail-projector:placeholder_name": ":image"},
+    template = ":idea-detail-projector.yaml",
 )
 
 ts_jest(
@@ -33,12 +50,4 @@ ts_jest(
     ),
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
-    deps = [
-        "//packages/dependency-injection",
-        "//packages/enums",
-        "//packages/environment",
-        "//packages/event-sourcing2",
-        "//packages/testing",
-        "//packages/types",
-    ],
 )

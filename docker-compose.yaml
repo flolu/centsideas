@@ -53,6 +53,19 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/idea --colors
 
+  idea-details-projector:
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./misc/register-aliases.ts:/register-aliases.ts
+      - ./services/idea-details-projector:/services/idea-details-projector
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/idea-details-projector --colors
+
   ideas:
     image: node:lts-alpine
     working_dir: /

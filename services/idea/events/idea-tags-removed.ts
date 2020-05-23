@@ -1,13 +1,9 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
+import {IdeaTagsRemovedData} from '@centsideas/models';
 
 import {IdeaTags} from '../idea-tags';
-
-interface IdeaTagsRemovedData {
-  id: string;
-  tags: string[];
-}
 
 export class IdeaTagsRemoved implements DomainEvent {
   readonly eventName = IdeaEventNames.TagsRemoved;

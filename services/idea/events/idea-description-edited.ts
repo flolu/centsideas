@@ -1,13 +1,9 @@
 import {IdeaId} from '@centsideas/types';
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaEventNames} from '@centsideas/enums';
+import {IdeaDescriptionEditedData} from '@centsideas/models';
 
 import {IdeaDescription} from '../idea-description';
-
-interface IdeaDescriptionEditedData {
-  id: string;
-  description: string;
-}
 
 export class IdeaDescriptionEdited implements DomainEvent {
   readonly eventName = IdeaEventNames.DescriptionEdited;

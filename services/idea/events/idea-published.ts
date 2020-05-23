@@ -1,11 +1,7 @@
 import {IdeaId, ISODate} from '@centsideas/types';
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaEventNames} from '@centsideas/enums';
-
-interface IdeaPublishedData {
-  id: string;
-  publishedAt: string;
-}
+import {IdeaPublishedData} from '@centsideas/models';
 
 export class IdeaPublished implements DomainEvent {
   readonly eventName = IdeaEventNames.Published;

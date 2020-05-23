@@ -18,5 +18,5 @@ export class IdeaEventStore extends InMemoryEventStore<Idea> {
     [IdeaEventNames.Deleted]: Events.IdeaDeleted,
   };
   aggregate = Idea;
-  topic = EventTopics.Ideas;
+  topic = EventTopics.Idea;
 }

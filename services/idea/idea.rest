@@ -9,7 +9,6 @@ Authorization: Bearer {{userId}}
 
 ###
 
-# @name rename
 PUT http://localhost:3000/idea/{{ideaId}}/rename
 content-type: application/json
 Authorization: Bearer {{userId}}
@@ -18,7 +17,6 @@ Authorization: Bearer {{userId}}
 
 ###
 
-# @name edit_description
 PUT http://localhost:3000/idea/{{ideaId}}/description
 content-type: application/json
 Authorization: Bearer {{userId}}
@@ -27,7 +25,6 @@ Authorization: Bearer {{userId}}
 
 ###
 
-# @name update-tags
 PUT http://localhost:3000/idea/{{ideaId}}/tags
 content-type: application/json
 Authorization: Bearer {{userId}}
@@ -36,12 +33,18 @@ Authorization: Bearer {{userId}}
 
 ###
 
-# @name publish
+PUT http://localhost:3000/idea/{{ideaId}}/tags
+content-type: application/json
+Authorization: Bearer {{userId}}
+
+{"tags": ["awesome","cool","beset"]}
+
+###
+
 PUT http://localhost:3000/idea/{{ideaId}}/publish
 Authorization: Bearer {{userId}}
 
 ###
 
-# @name delete
 DELETE http://localhost:3000/idea/{{ideaId}}
 Authorization: Bearer {{userId}}

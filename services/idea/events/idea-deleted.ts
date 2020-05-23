@@ -1,11 +1,7 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId, ISODate} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
-
-interface IdeaDeletedData {
-  id: string;
-  deletedAt: string;
-}
+import {IdeaDeletedData} from '@centsideas/models';
 
 export class IdeaDeleted implements DomainEvent {
   readonly eventName = IdeaEventNames.Deleted;

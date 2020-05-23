@@ -1,7 +1,7 @@
 import * as grpc from '@grpc/grpc-js';
 import {injectable, interfaces} from 'inversify';
 
-import {MessageBroker} from '@centsideas/event-sourcing';
+// import {MessageBroker} from '@centsideas/event-sourcing';
 import {Logger, InternalError} from '@centsideas/utils';
 
 import {loadProtoPackage} from './util';
@@ -20,10 +20,10 @@ export class RpcServer {
       grpc.ServerCredentials.createInsecure(),
       (err, listeningPort) => {
         if (err) {
-          const errorPayload = this.logger.error(
+          /* const errorPayload = this.logger.error(
             err,
             `while binding rpc server (port: ${listeningPort})`,
-          );
+          ); */
           //  TODO really here?!
           // this.messageBroker.dispatchError(errorPayload);
           throw err;
@@ -80,7 +80,7 @@ export class RpcServer {
           callback({code, details, metadata, stack: error.stack}, null);
         else callback({code, details, metadata}, null);
 
-        const errorPayload = this.logger.error(error);
+        // const errorPayload = this.logger.error(error);
         //  TODO really here?!
         // await this.messageBroker.dispatchError(errorPayload);
       }
