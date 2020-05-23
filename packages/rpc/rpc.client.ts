@@ -44,6 +44,7 @@ export class RpcClient<IClientService = any> {
 
 export type RpcClientFactory = (
   host: string,
+  // TODO set port to 40000 by default
   port: number,
   packageName: string,
   serviceName: string,

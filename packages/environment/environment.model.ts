@@ -17,6 +17,8 @@ export interface IEnvironment {
   ideasDatabaseUrl: string;
   ideaRpcPort: number;
   ideaHost: string;
+  ideaDetailsHost: string;
+  ideaDetailsRpcPort: number;
 
   usersRpcPort: number;
   usersDatabaseUrl: string;

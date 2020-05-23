@@ -23,6 +23,7 @@ interface IdeaDetail {
   createdAt: string;
   publishedAt: string;
   deletedAt: string;
+  // NOW consider storing last event id or something similar?!
 }
 
 @injectable()
@@ -31,6 +32,7 @@ export class IdeaDetailsProjector {
   documents: Record<string, IdeaDetail> = {};
 
   constructor(
+    // NOW factory + set consumenr group id
     private eventListener: EventListener,
     private logger: Logger,
     private globalEnv: GlobalEnvironment,

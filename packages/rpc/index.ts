@@ -9,3 +9,5 @@ export * from './admin';
 export * from './review';
 export * from './rpc-types';
 export * from './rpc-status';
+// NOW rename to idea-details... find better way of referencing proto files (maybe no subfolders)
+export * from './ideaDetails';

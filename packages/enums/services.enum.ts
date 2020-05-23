@@ -6,7 +6,7 @@ export enum Services {
   Consumer = 'consumer',
   Ideas = 'ideas',
   Idea = 'idea',
-  IdeaDetailsProjector = 'idea-details-projector',
+  IdeaDetailsProjector = 'idea-details',
   Notifications = 'notifications',
   Reviews = 'reviews',
   Users = 'users',

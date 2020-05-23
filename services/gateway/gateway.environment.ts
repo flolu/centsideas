@@ -21,6 +21,9 @@ export class GatewayEnvironment {
   ideaRpcHost = environment.ideaHost;
   ideaRpcPort = environment.ideaRpcPort;
 
+  ideaDetailsRpcHost = environment.ideaDetailsHost;
+  ideaDetailsRpcPort = environment.ideaDetailsRpcPort;
+
   frontendServerExchangeSecret = environment.frontendServerExchangeSecret;
   port = 3000;
   corsWhitelist = [environment.mainClientUrl, environment.adminClientUrl];
