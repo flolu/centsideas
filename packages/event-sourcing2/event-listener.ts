@@ -11,10 +11,12 @@ export class EventListener {
 
   constructor(private globalEnv: GlobalEnvironment) {}
 
-  listen(topic: string | RegExp): Observable<KafkaMessage> {
+  listen(
+    topic: string | RegExp,
+    consumerGroup = `centsideas-${Identifier.makeLongId()}`,
+  ): Observable<KafkaMessage> {
     const consumer = this.kafka.consumer({
-      // TODO handle consumers properly
-      groupId: `centsideas-consumer-${Identifier.makeLongId()}`,
+      groupId: consumerGroup,
       rebalanceTimeout: 1000,
     });
     return Observable.create(async (observer: Observer<KafkaMessage>) => {

@@ -14,7 +14,7 @@ export class RpcServer {
 
   constructor(private logger: Logger /* , private messageBroker: MessageBroker */) {}
 
-  initialize(port: number, host = '0.0.0.0') {
+  initialize(port: number = 40000, host = '0.0.0.0') {
     this.server.bindAsync(
       `${host}:${port}`,
       grpc.ServerCredentials.createInsecure(),
@@ -88,7 +88,7 @@ export class RpcServer {
   }
 }
 
-export type RpcServerFactory = (port: number, host?: string) => RpcServer;
+export type RpcServerFactory = (port?: number, host?: string) => RpcServer;
 
 export const rpcServerFactory = (context: interfaces.Context): RpcServerFactory => {
   return (port, host) => {

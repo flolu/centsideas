@@ -1,5 +1,6 @@
 import {Environments} from '@centsideas/enums';
 
+// TODO clean up
 export interface IEnvironment {
   environment: Environments;
   gatewayUrl: string;

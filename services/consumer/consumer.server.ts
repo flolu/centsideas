@@ -5,23 +5,19 @@ import {MessageBroker} from '@centsideas/event-sourcing';
 import {Logger} from '@centsideas/utils';
 import {EventTopics} from '@centsideas/enums';
 import {GlobalEnvironment} from '@centsideas/environment';
-import {RpcServer, IIdeaQueries, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
+import {RpcServer, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
 
-import {QueryService} from './query.service';
 import {IdeasProjection} from './ideas.projection';
 import {ReviewsProjection} from './reviews.projection';
 import {UsersProjection} from './users.projection';
-import {ConsumerEnvironment} from './consumer.environment';
 
 @injectable()
 export class ConsumerServer {
-  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+  private rpcServer: RpcServer = this.rpcServerFactory();
 
   constructor(
-    private env: ConsumerEnvironment,
     private globalEnv: GlobalEnvironment,
     private messageBroker: MessageBroker,
-    private queryService: QueryService,
     private ideasProjection: IdeasProjection,
     private reviewsProjection: ReviewsProjection,
     private usersProjection: UsersProjection,
@@ -37,11 +33,5 @@ export class ConsumerServer {
     this.messageBroker.events(EventTopics.Ideas).subscribe(this.ideasProjection.handleEvent);
     this.messageBroker.events(EventTopics.Reviews).subscribe(this.reviewsProjection.handleEvent);
     this.messageBroker.events(EventTopics.Users).subscribe(this.usersProjection.handleEvent);
-
-    const ideaService = this.rpcServer.loadService('idea', 'IdeaQueries');
-    this.rpcServer.addService<IIdeaQueries>(ideaService, {
-      getAll: this.queryService.getAllIdeas,
-      getById: this.queryService.getIdeaById,
-    });
   }
 }

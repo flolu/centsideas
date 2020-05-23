@@ -1,3 +1,5 @@
+import {IdeaDetailModel} from '@centsideas/models';
+
 interface CreateIdeaCommand {
   userId: string;
 }
@@ -47,4 +49,10 @@ export interface IdeaCommands {
   updateTags: UpdateIdeaTags;
   publish: PublishIdea;
   delete: DeleteIdea;
+}
+
+type GetIdeaById = (payload: {id: string}) => Promise<IdeaDetailModel>;
+
+export interface IdeaDetails {
+  getById: GetIdeaById;
 }

@@ -6,14 +6,12 @@ import {RpcServer, IReviewCommands, RPC_TYPES, RpcServerFactory} from '@centside
 import {GlobalEnvironment} from '@centsideas/environment';
 
 import {ReviewsHandler} from './reviews.handler';
-import {ReviewsEnvironment} from './reviews.environment';
 
 @injectable()
 export class ReviewsServer {
-  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+  private rpcServer: RpcServer = this.rpcServerFactory();
 
   constructor(
-    private env: ReviewsEnvironment,
     private globalEnv: GlobalEnvironment,
     private handler: ReviewsHandler,
     private logger: Logger,

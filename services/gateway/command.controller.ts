@@ -19,7 +19,6 @@ import {
   AuthApiRoutes,
 } from '@centsideas/enums';
 import {
-  IIdeaCommands,
   RpcClient,
   IUserCommands,
   IAuthCommands,
@@ -35,35 +34,26 @@ import {AuthMiddleware} from './middlewares';
 
 @controller('')
 export class CommandController implements interfaces.Controller {
-  private ideasRpc: RpcClient<IIdeaCommands> = this.rpcFactory(
-    this.env.ideasHost,
-    this.env.ideasRpcPort,
-    'idea',
-    'IdeaCommands',
-  );
+  private ideasRpc: RpcClient<any> = this.rpcFactory(this.env.ideasHost, 'idea', 'IdeaCommands');
   private usersRpc: RpcClient<IUserCommands> = this.rpcFactory(
     this.env.usersHost,
-    this.env.usersRpcPort,
     'user',
     'UserCommands',
   );
   private authRpc: RpcClient<IAuthCommands> = this.rpcFactory(
     this.env.usersHost,
-    this.env.usersRpcPort,
     'auth',
     'AuthCommands',
   );
   private notificationsRpc: RpcClient<INotificationCommands> = this.rpcFactory(
     this.env.notificationsRpcHost,
-    this.env.notificationsRpcPort,
     'notification',
     'NotificationCommands',
   );
   private idea2Rpc: RpcClient<IdeaCommands> = this.rpcFactory(
     this.env.ideaRpcHost,
-    this.env.ideaRpcPort,
-    'idea2',
-    'Idea2Commands',
+    'idea',
+    'IdeaCommands',
   );
 
   constructor(

@@ -12,33 +12,21 @@ import {
   IdeaRenamedData,
   IdeaTagsAddedData,
   IdeaTagsRemovedData,
+  IdeaDetailModel,
 } from '@centsideas/models';
-
-interface IdeaDetail {
-  id: string;
-  userId: string;
-  title: string;
-  description: string;
-  tags: string[];
-  createdAt: string;
-  publishedAt: string;
-  deletedAt: string;
-  // NOW consider storing last event id or something similar?!
-}
 
 @injectable()
 export class IdeaDetailsProjector {
   bookmark = -1;
-  documents: Record<string, IdeaDetail> = {};
+  documents: Record<string, IdeaDetailModel> = {};
 
   constructor(
-    // NOW factory + set consumenr group id
     private eventListener: EventListener,
     private logger: Logger,
     private globalEnv: GlobalEnvironment,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
-    this.eventListener.listen(EventTopics.Idea).subscribe(message => {
+    this.eventListener.listen(EventTopics.Idea, 'centsideas-idea-details').subscribe(message => {
       const eventName = message.headers?.eventName.toString();
       if (!eventName) return;
 

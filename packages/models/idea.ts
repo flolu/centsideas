@@ -1,3 +1,14 @@
+export interface IdeaDetailModel {
+  id: string;
+  userId: string;
+  title: string;
+  description: string;
+  tags: string[];
+  createdAt: string;
+  publishedAt: string;
+  deletedAt: string;
+}
+
 export interface IdeaCreatedData {
   id: string;
   userId: string;

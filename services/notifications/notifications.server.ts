@@ -10,14 +10,12 @@ import {GlobalEnvironment} from '@centsideas/environment';
 
 import {NotificationSettingsHandlers} from './notification-settings.handlers';
 import {NotificationsHandlers} from './notifications.handlers';
-import {NotificationEnvironment} from './notifications.environment';
 
 @injectable()
 export class NotificationsServer {
-  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+  private rpcServer: RpcServer = this.rpcServerFactory();
 
   constructor(
-    private env: NotificationEnvironment,
     private globalEnv: GlobalEnvironment,
     private notificationSettingsHandlers: NotificationSettingsHandlers,
     private messageBroker: MessageBroker,

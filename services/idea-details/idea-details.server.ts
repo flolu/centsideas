@@ -5,15 +5,13 @@ import {RpcServer, RpcServerFactory, RPC_TYPES, IdeaDetails} from '@centsideas/r
 import {GlobalEnvironment} from '@centsideas/environment';
 import {Logger} from '@centsideas/utils';
 
-import {IdeaDetailsEnvironment} from './idea-details.environment';
 import {IdeaDetailsProjector} from './idea-details.projector';
 
 @injectable()
 export class IdeaDetailsServer {
-  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+  private rpcServer: RpcServer = this.rpcServerFactory();
 
   constructor(
-    private env: IdeaDetailsEnvironment,
     private globalEnv: GlobalEnvironment,
     private logger: Logger,
     private projector: IdeaDetailsProjector,
@@ -25,11 +23,11 @@ export class IdeaDetailsServer {
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);
 
-    const commandsService = this.rpcServer.loadService('ideaDetails', 'IdeaDetails');
+    const commandsService = this.rpcServer.loadService('idea', 'IdeaDetails');
     this.rpcServer.addService<IdeaDetails>(commandsService, {
       getById: async ({id}) => {
         // TODO auth
-        // NOW not found response?! (especially for deleted and not published ideas)
+        // TODO not found response (especially for deleted and not published ideas)
         return this.projector.documents[id];
       },
     });

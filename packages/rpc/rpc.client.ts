@@ -8,9 +8,9 @@ export class RpcClient<IClientService = any> {
   private internalRpcClient!: grpc.Client;
   client!: IClientService;
 
-  initialize(host: string, port: number, packageName: string, serviceName: string) {
-    const protoPackage = loadProtoPackage(packageName);
-    const serviceDefinition = (protoPackage as any)[serviceName];
+  initialize(host: string, name: string, service: string, port: number) {
+    const protoPackage = loadProtoPackage(name);
+    const serviceDefinition = (protoPackage as any)[service];
     this.internalRpcClient = new serviceDefinition(
       `${host}:${port}`,
       grpc.credentials.createInsecure(),
@@ -44,16 +44,15 @@ export class RpcClient<IClientService = any> {
 
 export type RpcClientFactory = (
   host: string,
-  // TODO set port to 40000 by default
-  port: number,
-  packageName: string,
+  protoFilePath: string,
   serviceName: string,
+  port?: number,
 ) => RpcClient<any>;
 
 export const rpcClientFactory = (context: interfaces.Context): RpcClientFactory => {
-  return (host, port, packageName, serviceName) => {
+  return (host, protoFilePath, serviceName, port = 40000) => {
     const rpcClient = context.container.get(RpcClient);
-    rpcClient.initialize(host, port, packageName, serviceName);
+    rpcClient.initialize(host, protoFilePath, serviceName, port);
     return rpcClient;
   };
 };

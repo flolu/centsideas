@@ -1,17 +1,17 @@
 import {injectable} from 'inversify';
 
 import {sanitizeHtml, UnauthenticatedError, PermissionDeniedError} from '@centsideas/utils';
-import {CreateIdea, UpdateIdea, DeleteIdea} from '@centsideas/rpc';
 
 import {IdeaErrors} from './errors';
 import {Idea} from './idea.entity';
 import {IdeaRepository} from './idea.repository';
 
+// TODO migrate and remove eventually
 @injectable()
 export class IdeasHandler {
   constructor(private repository: IdeaRepository) {}
 
-  create: CreateIdea = async ({userId, title, description}) => {
+  create = async ({userId, title, description}: any) => {
     if (!userId) throw new UnauthenticatedError();
 
     title = sanitizeHtml(title || '');
@@ -28,7 +28,7 @@ export class IdeasHandler {
     return created.persistedState;
   };
 
-  update: UpdateIdea = async ({userId, description, title, ideaId}) => {
+  update = async ({userId, description, title, ideaId}: any) => {
     if (!userId) throw new UnauthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
 
@@ -52,7 +52,7 @@ export class IdeasHandler {
     return updated.persistedState;
   };
 
-  delete: DeleteIdea = async ({userId, ideaId}) => {
+  delete = async ({userId, ideaId}: any) => {
     if (!userId) throw new UnauthenticatedError();
     IdeaErrors.IdeaIdRequiredError.validate(ideaId);
 

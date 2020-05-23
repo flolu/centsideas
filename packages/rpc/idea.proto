@@ -3,9 +3,9 @@ import "google/protobuf/any.proto";
 
 syntax = "proto3";
 
-package idea2;
+package idea;
 
-service Idea2Commands {
+service IdeaCommands {
   rpc create(CreateIdea) returns (IdeaCreated);
   rpc rename(RenameIdea) returns (google.protobuf.Empty);
   rpc editDescription(EditIdeaDescription) returns (google.protobuf.Empty);
@@ -14,22 +14,9 @@ service Idea2Commands {
   rpc delete(DeleteIdea) returns (google.protobuf.Empty);
 }
 
-/*
-message IdeaEvent {
-  string id = 1;
-  string streamId = 2;
-  int32 version = 3;
-  string name = 4;
-  google.protobuf.Any data = 5;
-  string insertedAt = 6;
-  int32 sequence = 7;
-  google.protobuf.Any metadata = 8;
+service IdeaDetails {
+  rpc getById(GetIdeaById) returns (IdeaWithDetails);
 }
-
-message IdeaEvents {
-  repeated IdeaEvent events = 1;
-}
-*/
 
 message CreateIdea {
   string userId = 1;
@@ -64,4 +51,19 @@ message PublishIdea {
   message DeleteIdea {
   string id = 1;
   string userId = 2;
+}
+
+message GetIdeaById {
+  string id = 1;
+}
+
+message IdeaWithDetails {
+  string id = 1;
+  string userId = 2;
+  string title = 3;
+  string description = 4;
+  repeated string tags = 5;
+  string createdAt = 6;
+  string publishedAt = 7;
+  string deletedAt = 8;
 }

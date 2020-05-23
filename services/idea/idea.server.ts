@@ -11,7 +11,7 @@ import {IdeaId} from '@centsideas/types';
 
 @injectable()
 export class IdeaServer {
-  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+  private rpcServer: RpcServer = this.rpcServerFactory();
 
   constructor(
     private env: IdeaEnvironment,
@@ -27,7 +27,7 @@ export class IdeaServer {
       .listen(3000);
 
     // TODO error handling (also retry on concurrency issue)
-    const commandsService = this.rpcServer.loadService('idea2', 'Idea2Commands');
+    const commandsService = this.rpcServer.loadService('idea', 'IdeaCommands');
     this.rpcServer.addService<IdeaCommands>(commandsService, {
       create: async ({userId}) => {
         const id = IdeaId.generate();

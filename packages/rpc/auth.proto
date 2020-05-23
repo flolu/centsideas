@@ -1,5 +1,5 @@
 import "google/protobuf/empty.proto";
-import "../user/user.proto";
+import "user.proto";
 
 syntax = "proto3";
 

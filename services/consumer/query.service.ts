@@ -2,7 +2,6 @@ import {injectable} from 'inversify';
 
 import {InternalError} from '@centsideas/utils';
 import {ErrorNames, RpcStatus} from '@centsideas/enums';
-import {GetIdeaById, GetAllIdeas} from '@centsideas/rpc';
 
 import {ProjectionDatabase} from './projection-database';
 
@@ -10,13 +9,13 @@ import {ProjectionDatabase} from './projection-database';
 export class QueryService {
   constructor(private projectionDatabase: ProjectionDatabase) {}
 
-  getAllIdeas: GetAllIdeas = async () => {
+  getAllIdeas = async () => {
     const ideasCollection = await this.projectionDatabase.ideas();
     const ideas = await ideasCollection.find({deleted: false}).toArray();
     return {ideas};
   };
 
-  getIdeaById: GetIdeaById = async ({id}) => {
+  getIdeaById = async ({id}: any) => {
     const ideasCollection = await this.projectionDatabase.ideas();
     const reviewsCollection = await this.projectionDatabase.reviews();
 

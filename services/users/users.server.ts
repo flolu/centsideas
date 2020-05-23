@@ -13,14 +13,12 @@ import {
 
 import {UsersHandler} from './users.handler';
 import {AuthHandler} from './auth.handler';
-import {UsersEnvironment} from './users.environment';
 
 @injectable()
 export class UsersServer {
-  private rpcServer: RpcServer = this.rpcServerFactory(this.env.rpcPort);
+  private rpcServer: RpcServer = this.rpcServerFactory();
 
   constructor(
-    private env: UsersEnvironment,
     private globalEnv: GlobalEnvironment,
     private usersHandler: UsersHandler,
     private authHandler: AuthHandler,
