@@ -1,5 +1,6 @@
 export const defaultCommonEnv = {
   ideasRpcPort: 40000,
+  ideaRpcPort: 40000,
   consumerRpcPort: 40000,
   usersRpcPort: 40000,
   notificationsRpcPort: 40000,
@@ -10,6 +11,7 @@ export const defaultCommonEnv = {
 export const defaultKubernetesEnv = {
   ideasHost: 'centsideas-ideas',
   ideasDatabaseUrl: 'mongodb://centsideas-ideas-event-store:27017',
+  ideaHost: 'centsideas-idea',
 
   usersHost: 'centsideas-users',
   usersDatabaseUrl: 'mongodb://centsideas-users-event-store:27017',
@@ -34,6 +36,7 @@ export const defaultKubernetesEnv = {
 
 export const defaultDockerComposeEnv = {
   ideasHost: 'ideas',
+  ideaHost: 'idea',
   ideasDatabaseUrl: 'mongodb://mongo-database:27017',
 
   consumerHost: 'consumer',

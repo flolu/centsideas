@@ -11,6 +11,6 @@ export abstract class EventStore<T extends Aggregate> {
   protected abstract aggregate: AggregateClassConstructor<T>;
   protected abstract topic: string;
 
-  protected abstract getStream(id: Id): Promise<DomainEvent[]>;
+  protected abstract getStream(id?: Id): Promise<DomainEvent[]>;
   protected abstract store(events: StreamEvents, lastVersion: number): Promise<void>;
 }

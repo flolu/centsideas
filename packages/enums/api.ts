@@ -6,6 +6,7 @@ export enum ApiEndpoints {
   Alive = 'alive',
   Notifications = 'notifications',
   Admin = 'admin',
+  Idea = 'idea',
 }
 
 export enum NotificationsApiRoutes {

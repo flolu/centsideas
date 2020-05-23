@@ -1,0 +1,47 @@
+@userId = Md9Q6fwHY
+@ideaId = {{create.response.body.id}}
+
+###
+
+# @name create
+POST http://localhost:3000/idea
+Authorization: Bearer {{userId}}
+
+###
+
+# @name rename
+PUT http://localhost:3000/idea/{{ideaId}}/rename
+content-type: application/json
+Authorization: Bearer {{userId}}
+
+{"title":"The best idea ever"}
+
+###
+
+# @name edit_description
+PUT http://localhost:3000/idea/{{ideaId}}/description
+content-type: application/json
+Authorization: Bearer {{userId}}
+
+{"description":"Not really describing the idea."}
+
+###
+
+# @name update-tags
+PUT http://localhost:3000/idea/{{ideaId}}/tags
+content-type: application/json
+Authorization: Bearer {{userId}}
+
+{"tags": ["powerful", "awesome","cool"]}
+
+###
+
+# @name publish
+PUT http://localhost:3000/idea/{{ideaId}}/publish
+Authorization: Bearer {{userId}}
+
+###
+
+# @name delete
+DELETE http://localhost:3000/idea/{{ideaId}}
+Authorization: Bearer {{userId}}

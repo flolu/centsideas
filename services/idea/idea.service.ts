@@ -8,6 +8,10 @@ import {IdeaTitle} from './idea-title';
 import {IdeaDescription} from './idea-description';
 import {IdeaTags} from './idea-tags';
 
+/**
+ * TODO maybe return event version, so that frontend can send this version to
+ * projectors for better querying (probably something for read model)
+ */
 @injectable()
 export class IdeaService {
   constructor(private eventStore: IdeaEventStore) {}

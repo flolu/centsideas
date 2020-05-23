@@ -22,7 +22,6 @@ export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore
     const rawEvents = this.events
       .filter(e => id.toString() === e.streamId)
       .sort((a, b) => a.version - b.version);
-
     const events: DomainEvent[] = rawEvents.map((e: PersistedEvent) =>
       this.deserialize(e.name, e.data),
     );

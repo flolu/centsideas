@@ -1,3 +1,5 @@
+// TODO move if possible
+
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',

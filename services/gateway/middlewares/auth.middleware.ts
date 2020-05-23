@@ -3,29 +3,33 @@ import {injectable} from 'inversify';
 import {BaseMiddleware} from 'inversify-express-utils';
 
 import {IAccessTokenPayload} from '@centsideas/models';
-import {HeaderKeys} from '@centsideas/enums';
+import {GlobalEnvironment} from '@centsideas/environment';
+import {decodeToken} from '@centsideas/utils';
+import {HeaderKeys, Environments} from '@centsideas/enums';
 
 import {GatewayEnvironment} from '../gateway.environment';
-import {decodeToken} from '@centsideas/utils';
 
 @injectable()
 export class AuthMiddleware extends BaseMiddleware {
-  constructor(private env: GatewayEnvironment) {
+  constructor(private env: GatewayEnvironment, private globalEnv: GlobalEnvironment) {
     super();
   }
 
   public handler(req: express.Request, res: express.Response, next: express.NextFunction) {
-    res.locals.userId = null;
     const authHeader = req.headers[HeaderKeys.Auth];
-    if (!authHeader) return next();
+    const accessToken = authHeader?.split(' ')[1];
+    if (!accessToken) return next();
+
+    let userId = '';
+    if (this.globalEnv.environment === Environments.Dev) userId = accessToken;
 
     try {
-      const accessToken = (authHeader as string).split(' ')[1];
-      const {userId} = decodeToken<IAccessTokenPayload>(accessToken, this.env.accessTokenSecret);
-      res.locals.userId = userId;
+      const data = decodeToken<IAccessTokenPayload>(accessToken, this.env.accessTokenSecret);
+      userId = data.userId;
       // tslint:disable-next-line:no-empty
     } catch (error) {}
 
+    res.locals.userId = userId;
     next();
   }
 }

@@ -17,6 +17,10 @@ export class GatewayEnvironment {
   notificationsRpcPort = environment.notificationsRpcPort;
   adminRpcHost = environment.adminHost;
   adminRpcPort = environment.adminRpcPort;
+
+  ideaRpcHost = environment.ideaHost;
+  ideaRpcPort = environment.ideaRpcPort;
+
   frontendServerExchangeSecret = environment.frontendServerExchangeSecret;
   port = 3000;
   corsWhitelist = [environment.mainClientUrl, environment.adminClientUrl];

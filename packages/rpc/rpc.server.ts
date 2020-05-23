@@ -12,7 +12,7 @@ export class RpcServer {
 
   private server = new grpc.Server();
 
-  constructor(private logger: Logger, private messageBroker: MessageBroker) {}
+  constructor(private logger: Logger /* , private messageBroker: MessageBroker */) {}
 
   initialize(port: number, host = '0.0.0.0') {
     this.server.bindAsync(
@@ -24,7 +24,8 @@ export class RpcServer {
             err,
             `while binding rpc server (port: ${listeningPort})`,
           );
-          this.messageBroker.dispatchError(errorPayload);
+          //  TODO really here?!
+          // this.messageBroker.dispatchError(errorPayload);
           throw err;
         }
         this.logger.info(`rpc server running on ${listeningPort}`);
@@ -80,7 +81,8 @@ export class RpcServer {
         else callback({code, details, metadata}, null);
 
         const errorPayload = this.logger.error(error);
-        await this.messageBroker.dispatchError(errorPayload);
+        //  TODO really here?!
+        // await this.messageBroker.dispatchError(errorPayload);
       }
     };
   }

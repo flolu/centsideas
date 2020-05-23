@@ -14,6 +14,9 @@ export class IdeaTagsRemoved implements DomainEvent {
 
   constructor(public readonly id: IdeaId, public readonly tags: IdeaTags) {}
 
+  // TODO to json object function for client response
+  // toObject() {}
+
   // TODO would be awesome to do this with protobuf
   serialize(): IdeaTagsRemovedData {
     return {

@@ -10,6 +10,8 @@ import {Services} from '@centsideas/enums';
 
 import {IdeaServer} from './idea.server';
 import {IdeaService} from './idea.service';
+import {IdeaEnvironment} from './idea.environment';
+import {IdeaEventStore} from './idea.event-store';
 
 DependencyInjection.registerProviders(
   GlobalEnvironment,
@@ -18,8 +20,8 @@ DependencyInjection.registerProviders(
   IdeaServer,
   RpcServer,
   IdeaService,
-  IdeaServer,
-  RpcServer,
+  IdeaEnvironment,
+  IdeaEventStore,
 );
 DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.Idea);
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [60, 100, 80]);

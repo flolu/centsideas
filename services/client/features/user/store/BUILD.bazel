@@ -43,7 +43,7 @@ ts_library(
     ],
 )
 
-# TODO now sure why but this throws error after d29a083d944ee44caca4df10c8ddecdf4bcd8929
+# TODO not sure why but this throws error after d29a083d944ee44caca4df10c8ddecdf4bcd8929
 # karma_web_test_suite(
 #     name = "test",
 #     bootstrap = [
