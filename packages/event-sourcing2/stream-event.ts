@@ -1,10 +1,10 @@
 import {Id} from '@centsideas/types';
 
 import {StreamVersion} from './stream-version';
-import {DomainEvent} from './domain-event';
+import {IDomainEvent} from './domain-event';
 
 class StreamEvent {
-  constructor(public readonly event: DomainEvent, public readonly version: StreamVersion) {}
+  constructor(public readonly event: IDomainEvent, public readonly version: StreamVersion) {}
 }
 
 export class StreamEvents {
@@ -14,7 +14,7 @@ export class StreamEvents {
     return new StreamEvents(id, []);
   }
 
-  add(event: DomainEvent, version: StreamVersion) {
+  add(event: IDomainEvent, version: StreamVersion) {
     /**
      * create a copy of the `StreamVersion` because it would otherwise
      * continue counting when this.version.next() is invoked

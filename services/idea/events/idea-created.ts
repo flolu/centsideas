@@ -1,11 +1,10 @@
-import {DomainEvent} from '@centsideas/event-sourcing2';
+import {IDomainEvent, DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels} from '@centsideas/models';
 
-export class IdeaCreated implements DomainEvent {
-  readonly eventName = IdeaEventNames.Created;
-
+@DomainEvent(IdeaEventNames.Created)
+export class IdeaCreated implements IDomainEvent {
   constructor(
     public readonly id: IdeaId,
     public readonly userId: UserId,

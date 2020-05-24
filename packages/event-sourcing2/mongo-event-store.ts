@@ -5,12 +5,12 @@ import * as asyncRetry from 'async-retry';
 import {Id, ISODate} from '@centsideas/types';
 
 import {EventStore} from './event-store';
-import {DomainEvent} from './domain-event';
 import {PersistedEvent} from './persisted-event';
 import {StreamEvents} from './stream-event';
 import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
 import {EventId} from './event-id';
 import {EventDispatcher} from './event-dispatcher';
+import {EVENT_NAME_METADATA} from './domain-event';
 
 // TODO consider factory
 export abstract class MongoEventStore implements EventStore {
@@ -33,22 +33,23 @@ export abstract class MongoEventStore implements EventStore {
   }
 
   async store(events: StreamEvents, lastVersion: number) {
-    const lastEvent = await this.getLastEvent(events.aggregateId);
+    if (!events.toArray().length) return;
 
+    const lastEvent = await this.getLastEvent(events.aggregateId);
     if (lastEvent && lastEvent.version !== lastVersion) {
       // TODO retry command (maybe orchestrated by command bus?!)
       throw new OptimisticConcurrencyIssue();
     }
 
     let currentSequence = await this.getSequenceBookmark();
-    const inserts = events.toArray().map(event => {
+    const inserts = events.toArray().map(streamEvent => {
       currentSequence++;
       const persisted: PersistedEvent = {
         id: EventId.generate().toString(),
         streamId: events.aggregateId.toString(),
-        version: event.version.toNumber(),
-        name: event.event.eventName,
-        data: event.event.serialize(),
+        version: streamEvent.version.toNumber(),
+        name: Reflect.getMetadata(EVENT_NAME_METADATA, streamEvent.event),
+        data: streamEvent.event.serialize(),
         insertedAt: ISODate.now().toString(),
         sequence: currentSequence,
       };

@@ -9,3 +9,4 @@ export * from './event-dispatcher';
 export * from './event-listener';
 export * from './event-dispatcher.mock';
 export * from './persisted-event';
+export * from './apply-method';

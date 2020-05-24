@@ -1,11 +1,10 @@
-import {DomainEvent} from '@centsideas/event-sourcing2';
+import {IDomainEvent, DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId, ISODate} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels} from '@centsideas/models';
 
-export class IdeaDeleted implements DomainEvent {
-  readonly eventName = IdeaEventNames.Deleted;
-
+@DomainEvent(IdeaEventNames.Deleted)
+export class IdeaDeleted implements IDomainEvent {
   constructor(public readonly id: IdeaId, public readonly deletedAt: ISODate) {}
 
   serialize(): IdeaModels.IdeaDeletedData {

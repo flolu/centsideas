@@ -1,6 +1,5 @@
-import {Aggregate, DomainEvent, PersistedEvent} from '@centsideas/event-sourcing2';
+import {Aggregate, PersistedEvent, Apply} from '@centsideas/event-sourcing2';
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
-import {IdeaEventNames} from '@centsideas/enums';
 
 import * as Events from './events';
 import * as Errors from './errors';
@@ -11,14 +10,15 @@ import {IdeaDescription} from './idea-description';
 export class Idea extends Aggregate {
   protected id!: IdeaId;
   private userId!: UserId;
-  private title!: IdeaTitle;
   private tags = IdeaTags.empty();
+  private title: IdeaTitle | undefined;
+  private description: IdeaDescription | undefined;
   private publishedAt: ISODate | undefined;
   private deletedAt: ISODate | undefined;
 
   static buildFrom(events: PersistedEvent[]) {
     const idea = new Idea();
-    idea.replay(events.map(idea.deserializeEvent));
+    idea.replay(events);
     return idea;
   }
 
@@ -30,12 +30,13 @@ export class Idea extends Aggregate {
 
   rename(title: IdeaTitle, user: UserId) {
     this.checkGeneralConditions(user);
-    // FIXME don't rasie if not changed
+    if (this.title?.toString() === title.toString()) return;
     this.raise(new Events.IdeaRenamed(this.id, title));
   }
 
   editDescription(description: IdeaDescription, user: UserId) {
     this.checkGeneralConditions(user);
+    if (this.description?.toString() === description.toString()) return;
     this.raise(new Events.IdeaDescriptionEdited(this.id, description));
   }
 
@@ -63,68 +64,39 @@ export class Idea extends Aggregate {
     if (this.deletedAt) throw new Errors.IdeaAlreadyDeleted(this.id, user);
   }
 
-  // TODO please better implementation!
-  protected deserializeEvent(event: PersistedEvent) {
-    const data = event.data as any;
-    switch (event.name) {
-      case IdeaEventNames.Created:
-        return Events.IdeaCreated.deserialize(data);
-      case IdeaEventNames.Renamed:
-        return Events.IdeaRenamed.deserialize(data);
-      case IdeaEventNames.DescriptionEdited:
-        return Events.IdeaDescriptionEdited.deserialize(data);
-      case IdeaEventNames.TagsAdded:
-        return Events.IdeaTagsAdded.deserialize(data);
-      case IdeaEventNames.TagsRemoved:
-        return Events.IdeaTagsRemoved.deserialize(data);
-      case IdeaEventNames.Published:
-        return Events.IdeaPublished.deserialize(data);
-      case IdeaEventNames.Deleted:
-        return Events.IdeaDeleted.deserialize(data);
-      default:
-        throw new Error(`No deserialization method for event with name: ${event.name}`);
-    }
+  @Apply(Events.IdeaCreated)
+  created(event: Events.IdeaCreated) {
+    this.id = event.id;
+    this.userId = event.userId;
   }
 
-  // TODO maybe implementation that doesn't need this helper method? (maybe with dectorators + reflection)
-  // https://github.com/nestjs/cqrs/blob/master/src/decorators/command-handler.decorator.ts
-  protected invokeApplyMethod(someEvent: DomainEvent) {
-    switch (someEvent.eventName) {
-      case IdeaEventNames.Created: {
-        const event = someEvent as Events.IdeaCreated;
-        this.id = event.id;
-        this.userId = event.userId;
-        break;
-      }
-      case IdeaEventNames.Renamed: {
-        const event = someEvent as Events.IdeaRenamed;
-        this.title = event.title;
-        break;
-      }
-      case IdeaEventNames.DescriptionEdited:
-        break;
-      case IdeaEventNames.TagsAdded: {
-        const event = someEvent as Events.IdeaTagsAdded;
-        this.tags.add(event.tags);
-        break;
-      }
-      case IdeaEventNames.TagsRemoved: {
-        const event = someEvent as Events.IdeaTagsRemoved;
-        this.tags.remove(event.tags);
-        break;
-      }
-      case IdeaEventNames.Published: {
-        const event = someEvent as Events.IdeaPublished;
-        this.publishedAt = event.publishedAt;
-        break;
-      }
-      case IdeaEventNames.Deleted: {
-        const event = someEvent as Events.IdeaDeleted;
-        this.deletedAt = event.deletedAt;
-        break;
-      }
-      default:
-        throw new Error(`No apply method for event with name: ${someEvent.eventName}`);
-    }
+  @Apply(Events.IdeaRenamed)
+  renamed(event: Events.IdeaRenamed) {
+    this.title = event.title;
+  }
+
+  @Apply(Events.IdeaDescriptionEdited)
+  descriptionEdited(event: Events.IdeaDescriptionEdited) {
+    this.description = event.description;
+  }
+
+  @Apply(Events.IdeaTagsAdded)
+  tagsAdded(event: Events.IdeaTagsAdded) {
+    this.tags.add(event.tags);
+  }
+
+  @Apply(Events.IdeaTagsRemoved)
+  tagsRemoved(event: Events.IdeaTagsRemoved) {
+    this.tags.remove(event.tags);
+  }
+
+  @Apply(Events.IdeaPublished)
+  published(event: Events.IdeaPublished) {
+    this.publishedAt = event.publishedAt;
+  }
+
+  @Apply(Events.IdeaDeleted)
+  deleted(event: Events.IdeaDeleted) {
+    this.deletedAt = event.deletedAt;
   }
 }

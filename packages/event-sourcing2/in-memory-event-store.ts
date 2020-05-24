@@ -8,6 +8,7 @@ import {StreamEvents} from './stream-event';
 import {EventId} from './event-id';
 import {PersistedEvent} from './persisted-event';
 import {EventDispatcher} from './event-dispatcher';
+import {EVENT_NAME_METADATA} from './domain-event';
 
 export abstract class InMemoryEventStore implements EventStore {
   abstract topic: string;
@@ -24,23 +25,26 @@ export abstract class InMemoryEventStore implements EventStore {
   }
 
   async store(events: StreamEvents, lastVersion: number) {
+    if (!events.toArray().length) return;
+
     const lastStoredEvent = await this.getLastEvent(events.aggregateId);
     if (lastStoredEvent && lastStoredEvent.version !== lastVersion) {
       // TODO retry command (maybe orchestrated by command bus?!)
       throw new OptimisticConcurrencyIssue();
     }
 
-    const toInsert = events.toArray().map(event => {
+    const toInsert = events.toArray().map(streamEvent => {
       this.sequence++;
-      return {
+      const insert: PersistedEvent = {
         id: EventId.generate().toString(),
         streamId: events.aggregateId.toString(),
-        version: event.version.toNumber(),
-        name: event.event.eventName,
-        data: event.event.serialize(),
+        version: streamEvent.version.toNumber(),
+        name: Reflect.getMetadata(EVENT_NAME_METADATA, streamEvent.event),
+        data: streamEvent.event.serialize(),
         insertedAt: ISODate.now().toString(),
         sequence: this.sequence,
       };
+      return insert;
     });
 
     toInsert.forEach(e => this.events.push(e));
