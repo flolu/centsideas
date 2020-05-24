@@ -14,8 +14,12 @@ ts_library(
         "//packages/environment",
         "//packages/types",
         "//packages/utils",
+        "@npm//@types/async-retry",
+        "@npm//@types/mongodb",
+        "@npm//async-retry",
         "@npm//inversify",
         "@npm//kafkajs",
+        "@npm//mongodb",
         "@npm//rxjs",
     ],
 )

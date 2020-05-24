@@ -1,4 +1,4 @@
-import {Aggregate, DomainEvent} from '@centsideas/event-sourcing2';
+import {Aggregate, DomainEvent, PersistedEvent} from '@centsideas/event-sourcing2';
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
 
@@ -16,9 +16,9 @@ export class Idea extends Aggregate {
   private publishedAt: ISODate | undefined;
   private deletedAt: ISODate | undefined;
 
-  static buildFrom(events: DomainEvent[]) {
+  static buildFrom(events: PersistedEvent[]) {
     const idea = new Idea();
-    idea.replay(events);
+    idea.replay(events.map(idea.deserializeEvent));
     return idea;
   }
 
@@ -61,6 +61,29 @@ export class Idea extends Aggregate {
   private checkGeneralConditions(user: UserId) {
     if (!this.userId.equals(user)) throw new Errors.NoPermissionToAccessIdea(this.id, user);
     if (this.deletedAt) throw new Errors.IdeaAlreadyDeleted(this.id, user);
+  }
+
+  // TODO please better implementation!
+  protected deserializeEvent(event: PersistedEvent) {
+    const data = event.data as any;
+    switch (event.name) {
+      case IdeaEventNames.Created:
+        return Events.IdeaCreated.deserialize(data);
+      case IdeaEventNames.Renamed:
+        return Events.IdeaRenamed.deserialize(data);
+      case IdeaEventNames.DescriptionEdited:
+        return Events.IdeaDescriptionEdited.deserialize(data);
+      case IdeaEventNames.TagsAdded:
+        return Events.IdeaTagsAdded.deserialize(data);
+      case IdeaEventNames.TagsRemoved:
+        return Events.IdeaTagsRemoved.deserialize(data);
+      case IdeaEventNames.Published:
+        return Events.IdeaPublished.deserialize(data);
+      case IdeaEventNames.Deleted:
+        return Events.IdeaDeleted.deserialize(data);
+      default:
+        throw new Error(`No deserialization method for event with name: ${event.name}`);
+    }
   }
 
   // TODO maybe implementation that doesn't need this helper method? (maybe with dectorators + reflection)

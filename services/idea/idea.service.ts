@@ -23,31 +23,36 @@ export class IdeaService {
   }
 
   async rename(id: string, userId: string, title: string) {
-    const idea = await this.eventStore.buildAggregate(IdeaId.fromString(id));
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.rename(IdeaTitle.fromString(title), UserId.fromString(userId));
     return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async editDescription(id: string, userId: string, description: string) {
-    const idea = await this.eventStore.buildAggregate(IdeaId.fromString(id));
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.editDescription(IdeaDescription.fromString(description), UserId.fromString(userId));
     return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async updateTags(id: string, userId: string, tags: string[]) {
-    const idea = await this.eventStore.buildAggregate(IdeaId.fromString(id));
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.updateTags(IdeaTags.fromArray(tags), UserId.fromString(userId));
     return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async publish(id: string, userId: string) {
-    const idea = await this.eventStore.buildAggregate(IdeaId.fromString(id));
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.publish(ISODate.now(), UserId.fromString(userId));
     return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }
 
   async delete(id: string, userId: string) {
-    const idea = await this.eventStore.buildAggregate(IdeaId.fromString(id));
+    const events = await this.eventStore.getStream(IdeaId.fromString(id));
+    const idea = Idea.buildFrom(events);
     idea.delete(ISODate.now(), UserId.fromString(userId));
     return this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }

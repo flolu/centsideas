@@ -3,10 +3,12 @@ import {Id} from '@centsideas/types';
 import {StreamVersion} from './stream-version';
 import {StreamEvents} from './stream-event';
 import {DomainEvent} from './domain-event';
+import {PersistedEvent} from './persisted-event';
 
 export abstract class Aggregate {
   protected abstract id: Id;
   protected abstract invokeApplyMethod(event: DomainEvent): void;
+  protected abstract deserializeEvent(event: PersistedEvent): DomainEvent;
 
   private events: StreamEvents | undefined;
   private version = StreamVersion.start();
@@ -16,14 +18,6 @@ export abstract class Aggregate {
     const events = this.events || StreamEvents.empty(this.id);
     this.events = StreamEvents.empty(this.id);
     return events;
-  }
-
-  get persistedAggregateVersion() {
-    return this.persistedVersion.toNumber();
-  }
-
-  get aggregateVersion() {
-    return this.version.toNumber();
   }
 
   protected replay(events: DomainEvent[]) {
@@ -41,4 +35,14 @@ export abstract class Aggregate {
     if (inReplay) this.persistedVersion.next();
     this.version.next();
   }
+
+  get persistedAggregateVersion() {
+    return this.persistedVersion.toNumber();
+  }
+
+  get aggregateVersion() {
+    return this.version.toNumber();
+  }
 }
+
+export type AggregateClassConstructor<T extends Aggregate> = new (events: DomainEvent[]) => T;
