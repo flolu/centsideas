@@ -38,6 +38,7 @@ ts_jest(
         "//packages/enums",
         "//packages/environment",
         "//packages/event-sourcing2",
+        "//packages/rpc",
         "//packages/testing",
         "//packages/types",
     ],

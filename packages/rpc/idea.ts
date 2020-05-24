@@ -1,4 +1,5 @@
-import {IdeaDetailModel} from '@centsideas/models';
+import {IdeaModels} from '@centsideas/models';
+import {PersistedEvent} from '@centsideas/event-sourcing2';
 
 interface CreateIdeaCommand {
   userId: string;
@@ -35,6 +36,7 @@ interface DeleteIdeaCommand {
   userId: string;
 }
 
+// TODO maybe don't declare serperately, but instead just anonymously on interface
 type CreateIdea = (payload: CreateIdeaCommand) => Promise<IdeaCreatedResponse>;
 type RenameIdea = (payload: RenameIdeaCommand) => Promise<void>;
 type EditIdeaDescription = (payload: EditIdeaDescriptionCommand) => Promise<void>;
@@ -51,8 +53,14 @@ export interface IdeaCommands {
   delete: DeleteIdea;
 }
 
-type GetIdeaById = (payload: {id: string}) => Promise<IdeaDetailModel>;
+type GetIdeaById = (payload: {id: string}) => Promise<IdeaModels.IdeaDetailModel>;
 
 export interface IdeaDetails {
   getById: GetIdeaById;
+}
+
+type GetEvents = (payload: {from: number}) => Promise<{events: PersistedEvent[]}>;
+
+export interface IdeaEventStore {
+  getEvents: GetEvents;
 }

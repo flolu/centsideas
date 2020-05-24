@@ -6,5 +6,4 @@ export interface PersistedEvent {
   data: object;
   insertedAt: string;
   sequence: number;
-  metadata: object;
 }

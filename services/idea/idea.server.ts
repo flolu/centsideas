@@ -1,21 +1,28 @@
 import {injectable, inject} from 'inversify';
 import * as http from 'http';
 
-import {RpcServer, RPC_TYPES, RpcServerFactory, IdeaCommands} from '@centsideas/rpc';
+import {
+  RpcServer,
+  RPC_TYPES,
+  RpcServerFactory,
+  IdeaCommands,
+  IdeaEventStore,
+} from '@centsideas/rpc';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {Logger} from '@centsideas/utils';
 
 import {IdeaService} from './idea.service';
-import {IdeaEnvironment} from './idea.environment';
 import {IdeaId} from '@centsideas/types';
+import {IdeaEnvironment} from './idea.environment';
 
 @injectable()
 export class IdeaServer {
   private rpcServer: RpcServer = this.rpcServerFactory();
+  private rpcEventStoreServer: RpcServer = this.rpcServerFactory(this.env.ideaEventStoreRpcPort);
 
   constructor(
-    private env: IdeaEnvironment,
     private globalEnv: GlobalEnvironment,
+    private env: IdeaEnvironment,
     private service: IdeaService,
     private logger: Logger,
     @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
@@ -23,7 +30,11 @@ export class IdeaServer {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 
     http
-      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
+      .createServer((_, res) =>
+        res
+          .writeHead(this.rpcServer.isRunning && this.rpcEventStoreServer.isRunning ? 200 : 500)
+          .end(),
+      )
       .listen(3000);
 
     // TODO error handling (also retry on concurrency issue)
@@ -40,6 +51,14 @@ export class IdeaServer {
       updateTags: ({id, userId, tags}) => this.service.updateTags(id, userId, tags),
       publish: ({id, userId}) => this.service.publish(id, userId),
       delete: ({id, userId}) => this.service.delete(id, userId),
+    });
+
+    const eventStoreService = this.rpcServer.loadService('idea', 'IdeaEventStore');
+    this.rpcEventStoreServer.addService<IdeaEventStore>(eventStoreService, {
+      getEvents: async ({from}) => {
+        const events = await this.service.getEvents(from);
+        return {events};
+      },
     });
   }
 }

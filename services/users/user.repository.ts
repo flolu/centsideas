@@ -14,6 +14,7 @@ export class UserRepository extends EventRepository<User> {
     super(User, env.databaseUrl, env.userDatabaseName, EventTopics.Users, 100);
   }
 
+  // TODO those mappings belong to a read model!
   emailMapping = new EntityMapping<IUserIdEmailMapping>(
     this.env.databaseUrl,
     'emails',

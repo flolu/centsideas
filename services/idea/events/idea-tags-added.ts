@@ -1,7 +1,7 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
-import {IdeaTagsAddedData} from '@centsideas/models';
+import {IdeaModels} from '@centsideas/models';
 
 import {IdeaTags} from '../idea-tags';
 
@@ -10,11 +10,11 @@ export class IdeaTagsAdded implements DomainEvent {
 
   constructor(public readonly id: IdeaId, public readonly tags: IdeaTags) {}
 
-  serialize(): IdeaTagsAddedData {
+  serialize(): IdeaModels.IdeaTagsAddedData {
     return {id: this.id.toString(), tags: this.tags.toArray()};
   }
 
-  static deserialize({id, tags}: IdeaTagsAddedData) {
+  static deserialize({id, tags}: IdeaModels.IdeaTagsAddedData) {
     return new IdeaTagsAdded(IdeaId.fromString(id), IdeaTags.fromArray(tags));
   }
 }

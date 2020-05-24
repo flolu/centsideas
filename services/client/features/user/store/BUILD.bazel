@@ -44,6 +44,7 @@ ts_library(
 )
 
 # TODO not sure why but this throws error after d29a083d944ee44caca4df10c8ddecdf4bcd8929
+# UncaughtException:: file.detectType is not a function
 # karma_web_test_suite(
 #     name = "test",
 #     bootstrap = [

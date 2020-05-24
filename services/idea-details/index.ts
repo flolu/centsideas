@@ -6,7 +6,7 @@ import {GlobalEnvironment} from '@centsideas/environment';
 import {EventListener} from '@centsideas/event-sourcing2';
 import {Logger, UTILS_TYPES} from '@centsideas/utils';
 import {Services} from '@centsideas/enums';
-import {RpcServer, RPC_TYPES, rpcServerFactory} from '@centsideas/rpc';
+import {RpcServer, RPC_TYPES, rpcServerFactory, rpcClientFactory, RpcClient} from '@centsideas/rpc';
 
 import {IdeaDetailsProjector} from './idea-details.projector';
 import {IdeaDetailsServer} from './idea-details.server';
@@ -20,9 +20,11 @@ DependencyInjection.registerProviders(
   IdeaDetailsEnvironment,
   Logger,
   RpcServer,
+  RpcClient,
 );
 
 DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.IdeaDetailsProjector);
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [60, 100, 80]);
 DependencyInjection.registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
+DependencyInjection.registerFactory(RPC_TYPES.RPC_CLIENT_FACTORY, rpcClientFactory);
 DependencyInjection.bootstrap(IdeaDetailsServer);

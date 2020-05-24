@@ -1,7 +1,7 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
-import {IdeaTagsRemovedData} from '@centsideas/models';
+import {IdeaModels} from '@centsideas/models';
 
 import {IdeaTags} from '../idea-tags';
 
@@ -10,18 +10,15 @@ export class IdeaTagsRemoved implements DomainEvent {
 
   constructor(public readonly id: IdeaId, public readonly tags: IdeaTags) {}
 
-  // TODO to json object function for client response
-  // toObject() {}
-
   // TODO would be awesome to do this with protobuf
-  serialize(): IdeaTagsRemovedData {
+  serialize(): IdeaModels.IdeaTagsRemovedData {
     return {
       id: this.id.toString(),
       tags: this.tags.toArray(),
     };
   }
 
-  static deserialize({id, tags}: IdeaTagsRemovedData) {
+  static deserialize({id, tags}: IdeaModels.IdeaTagsRemovedData) {
     return new IdeaTagsRemoved(IdeaId.fromString(id), IdeaTags.fromArray(tags));
   }
 }

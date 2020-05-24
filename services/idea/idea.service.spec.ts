@@ -3,6 +3,8 @@ import {expectNoAsyncError} from '@centsideas/testing';
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {EventDispatcher, EventDispatcherMock} from '@centsideas/event-sourcing2';
 import {GlobalEnvironment} from '@centsideas/environment';
+import {IdeaEventNames} from '@centsideas/enums';
+import {extractKeyFromEventName} from '@centsideas/rpc';
 
 import {IdeaService} from './idea.service';
 import {IdeaEventStore} from './idea.event-store';
@@ -18,7 +20,7 @@ describe('IdeaService', () => {
   );
   DependencyInjection.overrideProvider(EventDispatcher, EventDispatcherMock);
 
-  const service = DependencyInjection.getProvider(IdeaService);
+  const service: IdeaService = DependencyInjection.getProvider(IdeaService);
   const userId = UserId.generate().toString();
   const title = 'My awesome title';
   const description = 'This is idea is meant to be great, but also a dummy mock test description!';
@@ -75,5 +77,28 @@ describe('IdeaService', () => {
       await service.editDescription(id.toString(), userId, description2);
       await service.delete(id.toString(), userId);
     });
+  });
+
+  it('events works', async () => {
+    const newService: IdeaService = DependencyInjection.getProvider(IdeaService);
+    const id = IdeaId.generate();
+
+    await newService.create(id, userId);
+    let events = await newService.getEvents(1);
+    const createdEvent = events[0];
+    expect(createdEvent.name).toEqual(IdeaEventNames.Created);
+    expect(createdEvent.data[extractKeyFromEventName(IdeaEventNames.Created)]).toBeDefined();
+    expect(createdEvent.sequence).toEqual(1);
+    expect(createdEvent.version).toEqual(1);
+
+    await newService.editDescription(id.toString(), userId, description);
+    events = await newService.getEvents(2);
+    const editedEvent = events[0];
+    expect(editedEvent.name).toEqual(IdeaEventNames.DescriptionEdited);
+    expect(
+      editedEvent.data[extractKeyFromEventName(IdeaEventNames.DescriptionEdited)],
+    ).toBeDefined();
+    expect(editedEvent.sequence).toEqual(2);
+    expect(editedEvent.version).toEqual(2);
   });
 });

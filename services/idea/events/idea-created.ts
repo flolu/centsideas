@@ -1,7 +1,7 @@
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
-import {IdeaCreatedData} from '@centsideas/models';
+import {IdeaModels} from '@centsideas/models';
 
 export class IdeaCreated implements DomainEvent {
   readonly eventName = IdeaEventNames.Created;
@@ -12,7 +12,7 @@ export class IdeaCreated implements DomainEvent {
     public readonly createdAt: ISODate,
   ) {}
 
-  serialize(): IdeaCreatedData {
+  serialize(): IdeaModels.IdeaCreatedData {
     return {
       id: this.id.toString(),
       userId: this.userId.toString(),
@@ -20,7 +20,7 @@ export class IdeaCreated implements DomainEvent {
     };
   }
 
-  static deserialize({id, userId, createdAt}: IdeaCreatedData) {
+  static deserialize({id, userId, createdAt}: IdeaModels.IdeaCreatedData) {
     return new IdeaCreated(
       IdeaId.fromString(id),
       UserId.fromString(userId),

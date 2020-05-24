@@ -1,7 +1,7 @@
 import {IdeaId} from '@centsideas/types';
 import {DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaEventNames} from '@centsideas/enums';
-import {IdeaDescriptionEditedData} from '@centsideas/models';
+import {IdeaModels} from '@centsideas/models';
 
 import {IdeaDescription} from '../idea-description';
 
@@ -10,14 +10,14 @@ export class IdeaDescriptionEdited implements DomainEvent {
 
   constructor(public readonly id: IdeaId, public readonly description: IdeaDescription) {}
 
-  serialize(): IdeaDescriptionEditedData {
+  serialize(): IdeaModels.IdeaDescriptionEditedData {
     return {
       id: this.id.toString(),
       description: this.description.toString(),
     };
   }
 
-  static deserialize({id, description}: IdeaDescriptionEditedData) {
+  static deserialize({id, description}: IdeaModels.IdeaDescriptionEditedData) {
     return new IdeaDescriptionEdited(
       IdeaId.fromString(id),
       IdeaDescription.fromString(description),

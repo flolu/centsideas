@@ -18,14 +18,12 @@ export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore
 
   @inject(EventDispatcher) private dispatcher!: EventDispatcher;
 
-  async getStream(id: Id) {
+  async buildAggregate(id: Id) {
     const rawEvents = this.events
       .filter(e => id.toString() === e.streamId)
       .sort((a, b) => a.version - b.version);
-    const events: DomainEvent[] = rawEvents.map((e: PersistedEvent) =>
-      this.deserialize(e.name, e.data),
-    );
-    return events;
+    const domainEvents = rawEvents.map(e => this.deserialize(e.name, e.data));
+    return (this.aggregate as any).buildFrom(domainEvents);
   }
 
   async store(events: StreamEvents, lastVersion: number) {
@@ -35,17 +33,16 @@ export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore
       throw new OptimisticConcurrencyIssue();
     }
 
-    const toInsert = events.toArray().map(e => {
+    const toInsert = events.toArray().map(event => {
       this.sequence++;
       return {
         id: EventId.generate().toString(),
         streamId: events.aggregateId.toString(),
-        version: e.version.toNumber(),
-        name: e.event.eventName,
-        data: e.event.serialize(),
+        version: event.version.toNumber(),
+        name: event.event.eventName,
+        data: event.event.serialize(),
         insertedAt: ISODate.now().toString(),
         sequence: this.sequence,
-        metadata: {},
       };
     });
 
@@ -53,13 +50,19 @@ export abstract class InMemoryEventStore<T extends Aggregate> extends EventStore
 
     await this.dispatcher.dispatch(
       this.topic,
-      toInsert.map(e => ({
+      toInsert.map(event => ({
         key: events.aggregateId.toString(),
         // TODO serializer for whole event
-        value: JSON.stringify(e),
-        headers: {eventName: e.name},
+        value: JSON.stringify(event),
+        headers: {eventName: event.name},
       })),
     );
+  }
+
+  async getEvents(from: number = 0) {
+    return this.events
+      .filter(event => event.sequence >= from)
+      .sort((a, b) => a.version - b.version);
   }
 
   private async getLastEvent(streamId: Id) {

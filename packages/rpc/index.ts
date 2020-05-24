@@ -8,3 +8,4 @@ export * from './review';
 export * from './rpc-types';
 export * from './rpc-status';
 export * from './idea';
+export * from './event-serialization';

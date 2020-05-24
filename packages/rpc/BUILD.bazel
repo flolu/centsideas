@@ -13,6 +13,7 @@ ts_library(
     module_name = "@centsideas/rpc",
     deps = [
         "//packages/event-sourcing",
+        "//packages/event-sourcing2",
         "//packages/models",
         "//packages/utils",
         "@npm//@grpc/grpc-js",

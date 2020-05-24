@@ -10,6 +10,7 @@ export class EventDispatcher {
 
   constructor(private globalEnv: GlobalEnvironment) {}
 
+  // TODO should consumers ack messages?
   async dispatch(topic: string, messages: Message[]) {
     await this.prodcuer.connect();
     return this.prodcuer.send({topic, messages});
