@@ -19,7 +19,7 @@ import {IdeaEnvironment} from './idea.environment';
 export class IdeaService {
   private eventStore = this.eventStoreFactory({
     url: this.env.ideaEventStoreDatabaseUrl,
-    name: 'idea_event_store', // TODO hardcode or into env vars?
+    name: this.env.ideaEventStoreDatabaseName,
     topic: EventTopics.Idea,
   });
 
@@ -29,6 +29,7 @@ export class IdeaService {
   ) {}
 
   async create(id: IdeaId, userId: string) {
+    // FIXME check if userId exists
     const idea = Idea.create(id, UserId.fromString(userId), ISODate.now());
     await this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
   }

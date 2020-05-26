@@ -25,12 +25,7 @@ export class IdeaDetailsServer {
 
     const commandsService = this.rpcServer.loadService('idea', 'IdeaDetails');
     this.rpcServer.addService<IdeaDetails>(commandsService, {
-      getById: async ({id}) => {
-        // TODO auth
-        // TODO not found response (especially for deleted and not published ideas)
-        if (!this.projector.documents[id]) throw new Error('idea not found');
-        return this.projector.documents[id];
-      },
+      getById: async ({id, userId}) => this.projector.getById(id, userId),
     });
   }
 }

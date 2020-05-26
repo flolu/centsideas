@@ -1,4 +1,3 @@
-// TODO rename those files
 import {IdeaModels} from '@centsideas/models';
 import {PersistedEvent} from '@centsideas/event-sourcing2';
 
@@ -37,27 +36,17 @@ interface DeleteIdeaCommand {
   userId: string;
 }
 
-// TODO maybe don't declare serperately, but instead just anonymously on interface
-type CreateIdea = (payload: CreateIdeaCommand) => Promise<IdeaCreatedResponse>;
-type RenameIdea = (payload: RenameIdeaCommand) => Promise<void>;
-type EditIdeaDescription = (payload: EditIdeaDescriptionCommand) => Promise<void>;
-type UpdateIdeaTags = (payload: UpdateIdeaTagsCommand) => Promise<void>;
-type PublishIdea = (payload: PublishIdeaCommand) => Promise<void>;
-type DeleteIdea = (payload: DeleteIdeaCommand) => Promise<void>;
-
 export interface IdeaCommands {
-  create: CreateIdea;
-  rename: RenameIdea;
-  editDescription: EditIdeaDescription;
-  updateTags: UpdateIdeaTags;
-  publish: PublishIdea;
-  delete: DeleteIdea;
+  create: (payload: CreateIdeaCommand) => Promise<IdeaCreatedResponse>;
+  rename: (payload: RenameIdeaCommand) => Promise<void>;
+  editDescription: (payload: EditIdeaDescriptionCommand) => Promise<void>;
+  updateTags: (payload: UpdateIdeaTagsCommand) => Promise<void>;
+  publish: (payload: PublishIdeaCommand) => Promise<void>;
+  delete: (payload: DeleteIdeaCommand) => Promise<void>;
 }
 
-type GetIdeaById = (payload: {id: string}) => Promise<IdeaModels.IdeaDetailModel>;
-
 export interface IdeaDetails {
-  getById: GetIdeaById;
+  getById: (payload: {id: string; userId: string}) => Promise<IdeaModels.IdeaDetailModel>;
 }
 
 type GetEvents = (payload: {from: number}) => Promise<{events: PersistedEvent[]}>;

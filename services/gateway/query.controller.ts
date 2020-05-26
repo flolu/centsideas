@@ -12,6 +12,7 @@ import {
 } from '@centsideas/rpc';
 
 import {GatewayEnvironment} from './gateway.environment';
+import {AuthMiddleware} from './middlewares';
 
 @controller('')
 export class QueryController implements interfaces.Controller {
@@ -41,9 +42,10 @@ export class QueryController implements interfaces.Controller {
     return 'gateway is alive';
   }
 
-  @httpGet(`/${ApiEndpoints.Idea}/:id`)
-  getIdeaById2(req: express.Request) {
-    return this.ideaDetailsRpc.client.getById({id: req.params.id});
+  @httpGet(`/${ApiEndpoints.Idea}/:id`, AuthMiddleware)
+  getIdeaById2(req: express.Request, res: express.Response) {
+    const {userId} = res.locals;
+    return this.ideaDetailsRpc.client.getById({id: req.params.id, userId});
   }
 
   @httpGet(`/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)

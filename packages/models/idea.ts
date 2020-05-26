@@ -7,6 +7,7 @@ export interface IdeaDetailModel {
   createdAt: string;
   publishedAt: string;
   deletedAt: string;
+  lastEventVersion: number;
 }
 
 export interface IdeaCreatedData {

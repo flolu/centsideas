@@ -61,6 +61,7 @@ message PublishIdea {
 
 message GetIdeaById {
   string id = 1;
+  optional string userId = 2;
 }
 
 message IdeaWithDetails {
