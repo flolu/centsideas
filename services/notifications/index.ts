@@ -6,7 +6,7 @@ import {UTILS_TYPES, Logger} from '@centsideas/utils';
 import {Services} from '@centsideas/enums';
 import {MessageBroker} from '@centsideas/event-sourcing';
 import {GlobalEnvironment} from '@centsideas/environment';
-import {RpcServer, RPC_TYPES, rpcServerFactory} from '@centsideas/rpc';
+import {RpcServer, RPC_SERVER_FACTORY, rpcServerFactory} from '@centsideas/rpc';
 
 import {NotificationsServer} from './notifications.server';
 import {NotificationSettingsRepository} from './notification-settings.repository';
@@ -31,5 +31,5 @@ DependencyInjection.registerProviders(
 DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.Notifications);
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [206, 100, 80]);
 DependencyInjection.registerSingleton(Logger);
-DependencyInjection.registerFactory(RPC_TYPES.RPC_SERVER_FACTORY, rpcServerFactory);
+DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DependencyInjection.bootstrap(NotificationsServer);

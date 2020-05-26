@@ -6,7 +6,7 @@ import {Logger} from '@centsideas/utils';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {IdeaModels} from '@centsideas/models';
 import {
-  RPC_TYPES,
+  RPC_CLIENT_FACTORY,
   RpcClientFactory,
   RpcClient,
   IdeaEventStore,
@@ -31,7 +31,7 @@ export class IdeaDetailsProjector {
     private logger: Logger,
     private env: IdeaDetailsEnvironment,
     private globalEnv: GlobalEnvironment,
-    @inject(RPC_TYPES.RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
+    @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 
@@ -53,26 +53,32 @@ export class IdeaDetailsProjector {
   }
 
   deleted({id, deletedAt}: IdeaModels.IdeaDeletedData) {
+    if (!this.documents[id]) return;
     this.documents[id].deletedAt = deletedAt;
   }
 
   descriptionEdited({id, description}: IdeaModels.IdeaDescriptionEditedData) {
+    if (!this.documents[id]) return;
     this.documents[id].description = description;
   }
 
   published({id, publishedAt}: IdeaModels.IdeaPublishedData) {
+    if (!this.documents[id]) return;
     this.documents[id].publishedAt = publishedAt;
   }
 
   renamed({id, title}: IdeaModels.IdeaRenamedData) {
+    if (!this.documents[id]) return;
     this.documents[id].title = title;
   }
 
   tagsAdded({id, tags}: IdeaModels.IdeaTagsAddedData) {
+    if (!this.documents[id]) return;
     this.documents[id].tags.push(...tags);
   }
 
   tagsRemoved({id, tags}: IdeaModels.IdeaTagsRemovedData) {
+    if (!this.documents[id]) return;
     this.documents[id].tags = this.documents[id].tags.filter(t => !tags.includes(t));
   }
 
@@ -87,6 +93,7 @@ export class IdeaDetailsProjector {
   }
 
   private trigger(event: PersistedEvent) {
+    // TODO throw error or what to do here?
     if (event.sequence <= this.bookmark) return;
 
     const data = event.data as any;
@@ -110,17 +117,21 @@ export class IdeaDetailsProjector {
     }
   }
 
+  // TODO read commments from ben
   private replay() {
     this.ideaEventStoreRpc.client.getEvents({from: this.bookmark}).then(({events}) => {
       if (!events) return;
+      const start = Number(new Date());
 
       const unknownEvents = events.map(deserializeEvent);
       this.logger.info('replay', unknownEvents.length, 'events');
+      this.logger.info('current bookmark is', this.bookmark);
 
-      unknownEvents.forEach(event => {
-        if (event.sequence <= this.bookmark) return;
-        this.trigger(event);
-      });
+      unknownEvents.forEach(event => this.trigger(event));
+
+      const end = Number(new Date());
+      this.logger.info('new bookmark is', this.bookmark);
+      this.logger.info('finished replaying', unknownEvents.length, 'events in', end - start, 'ms');
     });
   }
 }

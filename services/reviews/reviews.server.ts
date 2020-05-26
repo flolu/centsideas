@@ -2,7 +2,7 @@ import * as http from 'http';
 import {injectable, inject} from 'inversify';
 
 import {Logger} from '@centsideas/utils';
-import {RpcServer, IReviewCommands, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
+import {RpcServer, IReviewCommands, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
 import {GlobalEnvironment} from '@centsideas/environment';
 
 import {ReviewsHandler} from './reviews.handler';
@@ -15,7 +15,7 @@ export class ReviewsServer {
     private globalEnv: GlobalEnvironment,
     private handler: ReviewsHandler,
     private logger: Logger,
-    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
+    @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 

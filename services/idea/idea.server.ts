@@ -3,7 +3,7 @@ import * as http from 'http';
 
 import {
   RpcServer,
-  RPC_TYPES,
+  RPC_SERVER_FACTORY,
   RpcServerFactory,
   IdeaCommands,
   IdeaEventStore,
@@ -25,7 +25,7 @@ export class IdeaServer {
     private env: IdeaEnvironment,
     private service: IdeaService,
     private logger: Logger,
-    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
+    @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 

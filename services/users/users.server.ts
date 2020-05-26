@@ -7,7 +7,7 @@ import {
   RpcServer,
   IUserCommands,
   IAuthCommands,
-  RPC_TYPES,
+  RPC_SERVER_FACTORY,
   RpcServerFactory,
 } from '@centsideas/rpc';
 
@@ -23,7 +23,7 @@ export class UsersServer {
     private usersHandler: UsersHandler,
     private authHandler: AuthHandler,
     private logger: Logger,
-    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
+    @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 

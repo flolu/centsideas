@@ -24,7 +24,7 @@ import {
   IAuthCommands,
   INotificationCommands,
   RpcClientFactory,
-  RPC_TYPES,
+  RPC_CLIENT_FACTORY,
   IdeaCommands,
 } from '@centsideas/rpc';
 import {GlobalEnvironment} from '@centsideas/environment';
@@ -59,7 +59,7 @@ export class CommandController implements interfaces.Controller {
   constructor(
     private env: GatewayEnvironment,
     private globalEnv: GlobalEnvironment,
-    @inject(RPC_TYPES.RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
+    @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {}
 
   @httpPost(`/${ApiEndpoints.Ideas}`, AuthMiddleware)

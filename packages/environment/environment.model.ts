@@ -1,6 +1,6 @@
 import {Environments} from '@centsideas/enums';
 
-// TODO clean up
+// TODO clean up (split into a per-service level, more modular)
 export interface IEnvironment {
   environment: Environments;
   gatewayUrl: string;
@@ -21,6 +21,8 @@ export interface IEnvironment {
   ideaDetailsHost: string;
   ideaDetailsRpcPort: number;
   ideaEventStoreRpcPort: number;
+  ideaEventStoreDatabaseUrl: string;
+  ideaDetailsDatabaseUrl: string;
 
   usersRpcPort: number;
   usersDatabaseUrl: string;

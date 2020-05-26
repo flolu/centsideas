@@ -1,4 +1,4 @@
-import {inject} from 'inversify';
+import {inject, interfaces, injectable} from 'inversify';
 import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
@@ -11,19 +11,28 @@ import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
 import {EventId} from './event-id';
 import {EventDispatcher} from './event-dispatcher';
 import {EVENT_NAME_METADATA} from './domain-event';
+import {EventStoreFactoryOptions} from './interfaces';
 
-// TODO consider factory
-export abstract class MongoEventStore implements EventStore {
-  abstract topic: string;
-
-  private client = new MongoClient(this.databaseUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+@injectable()
+export class MongoEventStore implements EventStore {
+  private topic!: string;
+  private databaseUrl!: string;
+  private databaseName!: string;
+  private client!: MongoClient;
+  private collectionName = 'events';
 
   @inject(EventDispatcher) private dispatcher!: EventDispatcher;
 
-  constructor(private databaseUrl: string, private databaseName: string) {}
+  initilize(topic: string, url: string, name: string) {
+    this.topic = topic;
+    this.databaseUrl = url;
+    this.databaseName = name;
+    this.client = new MongoClient(this.databaseUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    this.client.connect();
+  }
 
   async getStream(id: Id) {
     const collection = await this.eventsCollection();
@@ -72,7 +81,7 @@ export abstract class MongoEventStore implements EventStore {
 
   async getEvents(from: number) {
     const collection = await this.eventsCollection();
-    const result = await collection.find({sequence: {$gte: from}}, {sort: {sequence: -1}});
+    const result = await collection.find({sequence: {$gte: from}}, {sort: {sequence: 1}});
     return result.toArray();
   }
 
@@ -80,6 +89,7 @@ export abstract class MongoEventStore implements EventStore {
     const collection = await this.eventsCollection();
     const result = await collection.find({}, {sort: {sequence: -1}, limit: 1});
     const events = await result.toArray();
+    if (!events.length) return 0;
     return events[0].sequence;
   }
 
@@ -87,7 +97,7 @@ export abstract class MongoEventStore implements EventStore {
     const collection = await this.eventsCollection();
     const result = await collection.find(
       {streamId: id.toString()},
-      {sort: {eventNumber: -1}, limit: 1},
+      {sort: {version: -1}, limit: 1},
     );
     const events = await result.toArray();
     return events[0];
@@ -95,7 +105,7 @@ export abstract class MongoEventStore implements EventStore {
 
   private async eventsCollection() {
     const db = await this.db();
-    return db.collection<PersistedEvent>('events');
+    return db.collection<PersistedEvent>(this.collectionName);
   }
 
   private async db() {
@@ -103,3 +113,12 @@ export abstract class MongoEventStore implements EventStore {
     return this.client.db(this.databaseName);
   }
 }
+
+export type MongoEventStoreFactory = (options: EventStoreFactoryOptions) => MongoEventStore;
+export const mongoEventStoreFactory = (context: interfaces.Context): MongoEventStoreFactory => {
+  return ({url, name, topic}) => {
+    const store = context.container.get(MongoEventStore);
+    store.initilize(topic, url, name);
+    return store;
+  };
+};

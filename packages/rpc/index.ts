@@ -5,7 +5,7 @@ export * from './auth';
 export * from './notification';
 export * from './admin';
 export * from './review';
-export * from './rpc-types';
+export * from './constants';
 export * from './rpc-status';
 export * from './idea';
 export * from './event-serialization';

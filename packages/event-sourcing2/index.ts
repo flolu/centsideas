@@ -10,3 +10,5 @@ export * from './event-listener';
 export * from './event-dispatcher.mock';
 export * from './persisted-event';
 export * from './apply-method';
+export * from './mongo-event-store';
+export * from './constants';

@@ -1,4 +1,4 @@
-import {inject} from 'inversify';
+import {inject, interfaces, injectable} from 'inversify';
 
 import {Id, ISODate} from '@centsideas/types';
 
@@ -9,9 +9,11 @@ import {EventId} from './event-id';
 import {PersistedEvent} from './persisted-event';
 import {EventDispatcher} from './event-dispatcher';
 import {EVENT_NAME_METADATA} from './domain-event';
+import {EventStoreFactoryOptions} from './interfaces';
 
-export abstract class InMemoryEventStore implements EventStore {
-  abstract topic: string;
+@injectable()
+export class InMemoryEventStore implements EventStore {
+  topic!: string;
 
   private events: PersistedEvent[] = [];
   private sequence: number = 0;
@@ -72,3 +74,14 @@ export abstract class InMemoryEventStore implements EventStore {
       .sort((a, b) => b.version - a.version)[0];
   }
 }
+
+export type InMemoryEventStoreFactory = (options: EventStoreFactoryOptions) => InMemoryEventStore;
+export const inMemoryEventStoreFactory = (
+  context: interfaces.Context,
+): InMemoryEventStoreFactory => {
+  return ({topic}) => {
+    const store = context.container.get(InMemoryEventStore);
+    store.topic = topic;
+    return store;
+  };
+};

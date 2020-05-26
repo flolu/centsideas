@@ -8,7 +8,7 @@ import {Logger} from '@centsideas/utils';
 import {
   RpcServer,
   IAdminQueries,
-  RPC_TYPES,
+  RPC_SERVER_FACTORY,
   RpcServerFactory,
   GetAdminEvents,
 } from '@centsideas/rpc';
@@ -34,7 +34,7 @@ export class AdminServer {
     private adminDatabase: AdminDatabase,
     private logger: Logger,
     private errorRepository: ErrorRepository,
-    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
+    @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 

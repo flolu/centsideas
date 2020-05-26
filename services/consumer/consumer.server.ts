@@ -5,7 +5,7 @@ import {MessageBroker} from '@centsideas/event-sourcing';
 import {Logger} from '@centsideas/utils';
 import {EventTopics} from '@centsideas/enums';
 import {GlobalEnvironment} from '@centsideas/environment';
-import {RpcServer, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
+import {RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
 
 import {IdeasProjection} from './ideas.projection';
 import {ReviewsProjection} from './reviews.projection';
@@ -22,7 +22,7 @@ export class ConsumerServer {
     private reviewsProjection: ReviewsProjection,
     private usersProjection: UsersProjection,
     private logger: Logger,
-    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
+    @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 

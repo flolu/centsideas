@@ -6,4 +6,5 @@ import environment from '@centsideas/environment';
 export class IdeaEnvironment {
   rpcPort = environment.ideasRpcPort;
   ideaEventStoreRpcPort = environment.ideaEventStoreRpcPort;
+  ideaEventStoreDatabaseUrl = environment.ideaEventStoreDatabaseUrl;
 }

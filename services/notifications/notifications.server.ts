@@ -5,7 +5,12 @@ import {Logger} from '@centsideas/utils';
 import {EventTopics, IdeaEvents, LoginEvents, UserEvents} from '@centsideas/enums';
 import {IEvent} from '@centsideas/models';
 import {MessageBroker} from '@centsideas/event-sourcing';
-import {RpcServer, INotificationCommands, RPC_TYPES, RpcServerFactory} from '@centsideas/rpc';
+import {
+  RpcServer,
+  INotificationCommands,
+  RPC_SERVER_FACTORY,
+  RpcServerFactory,
+} from '@centsideas/rpc';
 import {GlobalEnvironment} from '@centsideas/environment';
 
 import {NotificationSettingsHandlers} from './notification-settings.handlers';
@@ -21,7 +26,7 @@ export class NotificationsServer {
     private messageBroker: MessageBroker,
     private notificationsHandler: NotificationsHandlers,
     private logger: Logger,
-    @inject(RPC_TYPES.RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
+    @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 

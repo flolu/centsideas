@@ -1,13 +1,19 @@
 import {UserId, IdeaId} from '@centsideas/types';
 import {expectNoAsyncError} from '@centsideas/testing';
 import {DependencyInjection} from '@centsideas/dependency-injection';
-import {EventDispatcher, EventDispatcherMock} from '@centsideas/event-sourcing2';
+import {
+  EventDispatcher,
+  EventDispatcherMock,
+  MONGO_EVENT_STORE_FACTORY,
+  inMemoryEventStoreFactory,
+  InMemoryEventStore,
+} from '@centsideas/event-sourcing2';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {IdeaEventNames} from '@centsideas/enums';
 import {extractKeyFromEventName} from '@centsideas/rpc';
 
 import {IdeaService} from './idea.service';
-import {IdeaEventStore} from './idea.event-store';
+import {IdeaEnvironment} from './idea.environment';
 
 // TODO this tesing to expect not to throw errors seems useless?!
 // TODO listen for events dispatched by mock event dispatcher in tests? (maybe in an integration test)
@@ -16,9 +22,11 @@ describe('IdeaService', () => {
     IdeaService,
     EventDispatcher,
     GlobalEnvironment,
-    IdeaEventStore,
+    IdeaEnvironment,
+    InMemoryEventStore,
   );
   DependencyInjection.overrideProvider(EventDispatcher, EventDispatcherMock);
+  DependencyInjection.registerFactory(MONGO_EVENT_STORE_FACTORY, inMemoryEventStoreFactory);
 
   const service: IdeaService = DependencyInjection.getProvider(IdeaService);
   const userId = UserId.generate().toString();
