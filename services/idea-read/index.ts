@@ -15,23 +15,23 @@ import {
   RpcClient,
 } from '@centsideas/rpc';
 
-import {IdeaDetailsProjector} from './idea-details.projector';
-import {IdeaDetailsServer} from './idea-details.server';
-import {IdeaDetailsEnvironment} from './idea-details.environment';
+import {IdeaProjector} from './idea.projector';
+import {IdeaReadServer} from './idea-read.server';
+import {IdeaReadEnvironment} from './idea-read.environment';
 
 DependencyInjection.registerProviders(
   GlobalEnvironment,
   EventListener,
-  IdeaDetailsProjector,
-  IdeaDetailsServer,
-  IdeaDetailsEnvironment,
+  IdeaProjector,
+  IdeaReadServer,
+  IdeaReadEnvironment,
   Logger,
   RpcServer,
   RpcClient,
 );
 
-DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.IdeaDetailsProjector);
+DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.IdeaRead);
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [60, 100, 80]);
 DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
-DependencyInjection.bootstrap(IdeaDetailsServer);
+DependencyInjection.bootstrap(IdeaReadServer);

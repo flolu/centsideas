@@ -2,7 +2,12 @@ import {Id} from '@centsideas/types';
 
 import {StreamVersion} from './stream-version';
 import {StreamEvents} from './stream-event';
-import {IDomainEvent, EVENT_NAME_METADATA, eventDeserializerMap} from './domain-event';
+import {
+  IDomainEvent,
+  EVENT_NAME_METADATA,
+  eventDeserializerMap,
+  DomainEventInstance,
+} from './domain-event';
 import {PersistedEvent} from './persisted-event';
 
 export abstract class Aggregate {
@@ -32,7 +37,18 @@ export abstract class Aggregate {
   }
 
   protected apply(event: IDomainEvent, inReplay = false) {
+    /**
+     * The event name metadata is set by the @DomainEvent decorator
+     * on application start for each event class
+     */
     const eventName = Reflect.getMetadata(EVENT_NAME_METADATA, event);
+    /**
+     * Get the method name of the event handler method
+     * based on the event's name from @param this class instance
+     *
+     * This metadata is set by the @Apply decorator from of the
+     * handler method
+     */
     const methodName = Reflect.getMetadata(eventName, this);
     if (methodName) (this as any)[methodName](event);
 
@@ -50,3 +66,27 @@ export abstract class Aggregate {
 }
 
 export type AggregateClassConstructor<T extends Aggregate> = new (events: IDomainEvent[]) => T;
+
+/**
+ * Takes an event class as an argument of the decorator
+ * The method which is decorated will be called to handle
+ * the aggregates state update
+ */
+export const Apply = (Event: DomainEventInstance<any>) => {
+  return function ApplyDecorator(target: any, methodName: string) {
+    /**
+     * Get the event's name from the metadata saved on the
+     * class of the event
+     */
+    const eventName = Reflect.getMetadata(EVENT_NAME_METADATA, Event.prototype);
+    /**
+     * Save the @param methodName of the handler method
+     * on the @param target class and associate it with the
+     * @param eventName
+     *
+     * This metadata is used in the @method apply of the
+     * aggragate base class
+     */
+    Reflect.defineMetadata(eventName, methodName, target);
+  };
+};

@@ -5,16 +5,16 @@ import {RpcServer, RpcServerFactory, RPC_SERVER_FACTORY, IdeaDetails} from '@cen
 import {GlobalEnvironment} from '@centsideas/environment';
 import {Logger} from '@centsideas/utils';
 
-import {IdeaDetailsProjector} from './idea-details.projector';
+import {IdeaProjector} from './idea.projector';
 
 @injectable()
-export class IdeaDetailsServer {
+export class IdeaReadServer {
   private rpcServer: RpcServer = this.rpcServerFactory();
 
   constructor(
     private globalEnv: GlobalEnvironment,
     private logger: Logger,
-    private projector: IdeaDetailsProjector,
+    private projector: IdeaProjector,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');

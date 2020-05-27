@@ -1,3 +1,4 @@
+// TODO it might be redundant to save id on every event!
 export interface IdeaDetailModel {
   id: string;
   userId: string;

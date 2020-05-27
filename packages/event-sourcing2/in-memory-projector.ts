@@ -64,7 +64,7 @@ export abstract class InMemoryProjector<T> implements Projector {
     this.bookmark++;
   }
 
-  private handleEvent(event: PersistedEvent) {
+  private async handleEvent(event: PersistedEvent) {
     /**
      * The event name metadata is saved by the @Project decorator
      * and it returns the name of the event handler method
@@ -72,6 +72,6 @@ export abstract class InMemoryProjector<T> implements Projector {
     const projectorMethodName = Reflect.getMetadata(event.name, this);
     if (!projectorMethodName) return;
 
-    (this as any)[projectorMethodName](event);
+    await (this as any)[projectorMethodName](event);
   }
 }

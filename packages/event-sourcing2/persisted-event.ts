@@ -1,9 +1,9 @@
-export interface PersistedEvent {
+export interface PersistedEvent<T = object> {
   id: string;
   streamId: string;
   version: number;
   name: string;
-  data: object;
+  data: T;
   insertedAt: string;
   sequence: number;
 }

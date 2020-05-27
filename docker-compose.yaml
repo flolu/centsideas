@@ -1,9 +1,9 @@
-version: "3"
+version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - "2181"
+      - '2181'
     hostname: zookeeper
     logging:
       driver: none
@@ -20,7 +20,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - "zookeeper"
+      - 'zookeeper'
     logging:
       driver: none
 
@@ -53,18 +53,18 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/idea --colors
 
-  idea-details:
+  idea-read:
     image: node:lts-alpine
     working_dir: /
     volumes:
       - ./package.json:/package.json
       - ./tsconfig.json:/tsconfig.json
       - ./misc/register-aliases.ts:/register-aliases.ts
-      - ./services/idea-details:/services/idea-details
+      - ./services/idea-read:/services/idea-read
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: .env
-    command: yarn run ts-node-dev services/idea-details --colors
+    command: yarn run ts-node-dev services/idea-read --colors
 
   ideas:
     image: node:lts-alpine
@@ -118,7 +118,7 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/consumer --colors
     depends_on:
-      - "kafka"
+      - 'kafka'
 
   notifications:
     image: node:lts-alpine
@@ -133,7 +133,7 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/notifications --colors
     depends_on:
-      - "kafka"
+      - 'kafka'
 
   admin:
     image: node:lts-alpine
@@ -148,7 +148,7 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/admin --colors
     depends_on:
-      - "kafka"
+      - 'kafka'
     ports:
       - 3001:3000
 
