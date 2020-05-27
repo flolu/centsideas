@@ -1,4 +1,4 @@
-import {UserId, IdeaId} from '@centsideas/types';
+import {UserId, IdeaId, ISODate} from '@centsideas/types';
 import {expectNoAsyncError} from '@centsideas/testing';
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {
@@ -10,7 +10,7 @@ import {
 } from '@centsideas/event-sourcing2';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {IdeaEventNames} from '@centsideas/enums';
-import {extractKeyFromEventName} from '@centsideas/rpc';
+import {deserializeEvent} from '@centsideas/rpc';
 
 import {IdeaService} from './idea.service';
 import {IdeaEnvironment} from './idea.environment';
@@ -87,7 +87,7 @@ describe('IdeaService', () => {
     });
   });
 
-  it('events works', async () => {
+  it('store events and (de)serialize them', async () => {
     const newService: IdeaService = DependencyInjection.getProvider(IdeaService);
     const id = IdeaId.generate();
 
@@ -95,7 +95,7 @@ describe('IdeaService', () => {
     let events = await newService.getEvents(1);
     const createdEvent = events[0];
     expect(createdEvent.name).toEqual(IdeaEventNames.Created);
-    expect(createdEvent.data[extractKeyFromEventName(IdeaEventNames.Created)]).toBeDefined();
+    expect(deserializeEvent(createdEvent).data).toMatchObject({id: id.toString(), userId});
     expect(createdEvent.sequence).toEqual(1);
     expect(createdEvent.version).toEqual(1);
 
@@ -103,9 +103,7 @@ describe('IdeaService', () => {
     events = await newService.getEvents(2);
     const editedEvent = events[0];
     expect(editedEvent.name).toEqual(IdeaEventNames.DescriptionEdited);
-    expect(
-      editedEvent.data[extractKeyFromEventName(IdeaEventNames.DescriptionEdited)],
-    ).toBeDefined();
+    expect(deserializeEvent(editedEvent).data).toEqual({id: id.toString(), description});
     expect(editedEvent.sequence).toEqual(2);
     expect(editedEvent.version).toEqual(2);
   });

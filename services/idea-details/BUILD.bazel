@@ -22,6 +22,7 @@ ts_library(
         "//packages/utils",
         "@npm//@types/node",
         "@npm//inversify",
+        "@npm//rxjs",
     ],
 )
 

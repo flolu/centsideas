@@ -1,13 +1,13 @@
 import {injectable} from 'inversify';
 import {Observable, Observer} from 'rxjs';
-import {KafkaMessage, Kafka} from 'kafkajs';
+import {KafkaMessage, Kafka, logLevel} from 'kafkajs';
 
 import {GlobalEnvironment} from '@centsideas/environment';
 import {Identifier} from '@centsideas/utils';
 
 @injectable()
 export class EventListener {
-  private kafka = new Kafka({brokers: [this.globalEnv.kafkaBrokerHost]});
+  private kafka = new Kafka({brokers: [this.globalEnv.kafkaBrokerHost], logLevel: logLevel.WARN});
 
   constructor(private globalEnv: GlobalEnvironment) {}
 

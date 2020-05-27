@@ -4,21 +4,19 @@ export function extractKeyFromEventName(eventName: string) {
   return eventName.substring(eventName.indexOf('.') + 1, eventName.length);
 }
 
-export function serializeEvent(event: PersistedEvent) {
+export function serializeEvent(event: PersistedEvent): PersistedEvent {
   const data = event.data;
-  const ser = {
+  return {
     ...event,
     data: {
       [extractKeyFromEventName(event.name)]: data,
     },
   };
-  return ser;
 }
 
-export function deserializeEvent(event: PersistedEvent) {
-  const deser = {
+export function deserializeEvent(event: PersistedEvent): PersistedEvent {
+  return {
     ...event,
     data: (event.data as any)[extractKeyFromEventName(event.name)],
   };
-  return deser;
 }

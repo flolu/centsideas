@@ -54,6 +54,10 @@ export class Logger {
     console.log(this.prefix, this.timestamp, ...text);
   }
 
+  warn(...text: unknown[]) {
+    console.warn(this.chalk.yellow.bold(this.prefix, this.timestamp, ...text));
+  }
+
   event(event: IEvent) {
     console.log(this.chalk.bold(event.name));
     console.log(this.chalk.dim(JSON.stringify(event.data)));
