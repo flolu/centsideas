@@ -34,6 +34,7 @@ export class MongoEventStore implements EventStore {
     this.client.connect();
   }
 
+  // TODO what if stream with this id does not exist?
   async getStream(id: Id) {
     const collection = await this.eventsCollection();
     const result = await collection.find({streamId: id.toString()}).sort({version: -1});

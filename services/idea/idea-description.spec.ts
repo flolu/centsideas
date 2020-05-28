@@ -1,5 +1,5 @@
+import * as Errors from './idea.errors';
 import {IdeaDescription} from './idea-description';
-import {IdeaDescriptionTooLong} from './errors/idea-description-too-long';
 
 describe('IdeaDescription', () => {
   const description = 'This is idea is meant to be great, but also a dummy mock test description!';
@@ -15,8 +15,9 @@ describe('IdeaDescription', () => {
   });
 
   it('recognizes descriptions, that are too long', () => {
-    expect(() => IdeaDescription.fromString('to long '.repeat(500))).toThrowError(
-      new IdeaDescriptionTooLong(),
+    const tooLong = 'too long '.repeat(500);
+    expect(() => IdeaDescription.fromString(tooLong)).toThrowError(
+      new Errors.IdeaDescriptionTooLong(tooLong),
     );
   });
 

@@ -1,5 +1,6 @@
 import {IdeaModels} from '@centsideas/models';
 import {PersistedEvent} from '@centsideas/event-sourcing2';
+import {loadService} from './util';
 
 interface CreateIdeaCommand {
   userId: string;
@@ -49,8 +50,12 @@ export interface IdeaDetails {
   getById: (payload: {id: string; userId: string}) => Promise<IdeaModels.IdeaDetailModel>;
 }
 
-type GetEvents = (payload: {from: number}) => Promise<{events: PersistedEvent[]}>;
-
 export interface IdeaEventStore {
-  getEvents: GetEvents;
+  getEvents: (payload: {from: number}) => Promise<{events: PersistedEvent[]}>;
 }
+
+const ideaProtoFileName = 'idea';
+export const ideaRpcServices = {
+  eventStoreService: loadService(ideaProtoFileName, 'IdeaEventStore'),
+  commandService: loadService(ideaProtoFileName, 'IdeaCommands'),
+};

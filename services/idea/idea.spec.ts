@@ -1,11 +1,17 @@
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 
-import * as Events from './events';
-import * as Errors from './errors';
+import * as Errors from './idea.errors';
 import {Idea} from './idea';
 import {IdeaTitle} from './idea-title';
 import {IdeaDescription} from './idea-description';
 import {IdeaTags} from './idea-tags';
+import {IdeaCreated} from './idea-created';
+import {IdeaRenamed} from './idea-renamed';
+import {IdeaDescriptionEdited} from './idea-description-edited';
+import {IdeaTagsAdded} from './idea-tags-added';
+import {IdeaTagsRemoved} from './idea-tags-removed';
+import {IdeaPublished} from './idea-published';
+import {IdeaDeleted} from './idea-deleted';
 
 describe('Idea', () => {
   const id = IdeaId.generate();
@@ -25,7 +31,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new Events.IdeaCreated(id, user, createdAt));
+    ).toContainEqual(new IdeaCreated(id, user, createdAt));
   });
 
   it('renames idea', () => {
@@ -36,7 +42,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new Events.IdeaRenamed(id, title));
+    ).toContainEqual(new IdeaRenamed(id, title));
   });
 
   it('edits idea description', () => {
@@ -47,7 +53,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new Events.IdeaDescriptionEdited(id, description));
+    ).toContainEqual(new IdeaDescriptionEdited(id, description));
   });
 
   it('adds and removes tags to / from idea', () => {
@@ -59,16 +65,14 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new Events.IdeaTagsAdded(id, tags));
+    ).toContainEqual(new IdeaTagsAdded(id, tags));
     idea.updateTags(updatedTags, user);
     const flushed = idea
       .flushEvents()
       .toArray()
       .map(e => e.event);
-    expect(flushed).toContainEqual(new Events.IdeaTagsAdded(id, IdeaTags.fromArray(['legendary'])));
-    expect(flushed).toContainEqual(
-      new Events.IdeaTagsRemoved(id, IdeaTags.fromArray(['test', 'idea'])),
-    );
+    expect(flushed).toContainEqual(new IdeaTagsAdded(id, IdeaTags.fromArray(['legendary'])));
+    expect(flushed).toContainEqual(new IdeaTagsRemoved(id, IdeaTags.fromArray(['test', 'idea'])));
   });
 
   it('publishes idea', () => {
@@ -81,7 +85,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new Events.IdeaPublished(id, publishedAt));
+    ).toContainEqual(new IdeaPublished(id, publishedAt));
   });
 
   it('can not publish ideas without a title', () => {
@@ -111,7 +115,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new Events.IdeaDeleted(id, deletedAt));
+    ).toContainEqual(new IdeaDeleted(id, deletedAt));
   });
 
   it('rejects commands from users other than the owner', () => {

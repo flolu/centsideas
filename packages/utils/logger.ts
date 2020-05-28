@@ -26,6 +26,7 @@ export class Logger {
     private color: [number, number, number] = [Math.random() * 360, 100, 50],
   ) {}
 
+  // TODO this function shouldnt return anything
   error(error: any, details: string = ''): IErrorOccurredPayload {
     console.log(this.timestamp + this.chalk.red.bold(`error: ${error.name}`));
     const unexpected = InternalError.isUnexpected(error.name);

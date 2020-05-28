@@ -7,3 +7,4 @@ export * from './logger';
 export * from './utils-types';
 export * from './http-query-string';
 export * from './http-request';
+export * from './exception';

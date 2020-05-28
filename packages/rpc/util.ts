@@ -10,3 +10,8 @@ export const loadProtoPackage = (name: string) => {
   const grpcObject = grpc.loadPackageDefinition(packageDef);
   return grpcObject[name];
 };
+
+export const loadService = (packageName: string, serviceName: string): grpc.ServiceDefinition => {
+  const protoPackage = loadProtoPackage(packageName);
+  return (protoPackage as any)[serviceName].service;
+};

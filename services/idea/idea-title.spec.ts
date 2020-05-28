@@ -1,6 +1,5 @@
+import * as Errors from './idea.errors';
 import {IdeaTitle} from './idea-title';
-import {IdeaTitleTooShort} from './errors/idea-title-too-short';
-import {IdeaTitleTooLong} from './errors/idea-title-too-long';
 
 describe('IdeaTitle', () => {
   const title = 'My awesome idea';
@@ -16,12 +15,16 @@ describe('IdeaTitle', () => {
   });
 
   it('recognizes titles, that are too short', () => {
-    expect(() => IdeaTitle.fromString('no')).toThrowError(new IdeaTitleTooShort());
-    expect(() => IdeaTitle.fromString('')).toThrowError(new IdeaTitleTooShort());
+    const tooShort = 'no';
+    expect(() => IdeaTitle.fromString(tooShort)).toThrowError(
+      new Errors.IdeaTitleTooShort(tooShort),
+    );
+    expect(() => IdeaTitle.fromString('')).toThrowError(new Errors.IdeaTitleTooShort(''));
   });
 
   it('recognizes titles, that are too long', () => {
-    expect(() => IdeaTitle.fromString('to long '.repeat(50))).toThrowError(new IdeaTitleTooLong());
+    const tooLong = 'too long '.repeat(50);
+    expect(() => IdeaTitle.fromString(tooLong)).toThrowError(new Errors.IdeaTitleTooLong(tooLong));
   });
 
   it('it sanitizes input strings', () => {

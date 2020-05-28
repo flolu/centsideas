@@ -2,13 +2,11 @@ import * as sanitize from 'sanitize-html';
 
 import {IdeaTagsCount, IdeaTagsLength} from '@centsideas/enums';
 
-import {TooManyIdeaTags} from './errors/too-many-idea-tags';
-import {IdeaTagTooLong} from './errors/idea-tag-too-long';
-import {IdeaTagTooShort} from './errors/idea-tag-too-short';
+import * as Errors from './idea.errors';
 
 export class IdeaTags {
   constructor(private tags: string[] = []) {
-    if (tags.length > IdeaTagsCount.Max) throw new TooManyIdeaTags();
+    if (tags.length > IdeaTagsCount.Max) throw new Errors.TooManyIdeaTags(tags);
     this.tags = this.cleanTags(this.tags);
     tags.forEach(this.validateTag);
   }
@@ -25,7 +23,7 @@ export class IdeaTags {
     const updatedTags = [...this.tags, ...toAdd.toArray()];
     const cleaned = this.cleanTags(updatedTags);
     cleaned.forEach(this.validateTag);
-    if (cleaned.length > IdeaTagsCount.Max) throw new TooManyIdeaTags();
+    if (cleaned.length > IdeaTagsCount.Max) throw new Errors.TooManyIdeaTags(cleaned);
     this.tags = cleaned;
   }
 
@@ -52,7 +50,7 @@ export class IdeaTags {
   }
 
   private validateTag(tag: string) {
-    if (tag.length > IdeaTagsLength.Max) throw new IdeaTagTooLong(tag);
-    if (tag.length < IdeaTagsLength.Min) throw new IdeaTagTooShort(tag);
+    if (tag.length > IdeaTagsLength.Max) throw new Errors.IdeaTagTooLong(tag);
+    if (tag.length < IdeaTagsLength.Min) throw new Errors.IdeaTagTooShort(tag);
   }
 }

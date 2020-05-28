@@ -1,7 +1,7 @@
 load("@npm//jest-cli:index.bzl", _jest_test = "jest_test")
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
-def jest_test(name, srcs, deps, jest_config, **kwargs):
+def jest_test(name, srcs, deps, jest_config, data = [], **kwargs):
     """Wrapper for running jest tests with the jest cli
 
     Args:
@@ -9,6 +9,7 @@ def jest_test(name, srcs, deps, jest_config, **kwargs):
         srcs: javascript source test files
         deps: test dependencies
         jest_config: jest config file
+        data: additional data (e.g. .proto files)
         **kwargs:
     """
     args = [
@@ -22,12 +23,12 @@ def jest_test(name, srcs, deps, jest_config, **kwargs):
 
     _jest_test(
         name = name,
-        data = [jest_config] + srcs + deps,
+        data = [jest_config] + srcs + deps + data,
         args = args,
         **kwargs
     )
 
-def ts_jest(name, srcs, tsconfig, test_lib, deps = [], **kwargs):
+def ts_jest(name, srcs, tsconfig, test_lib, deps = [], data = [], **kwargs):
     """Runs jest tests over a typescript library
 
     Args:
@@ -36,6 +37,7 @@ def ts_jest(name, srcs, tsconfig, test_lib, deps = [], **kwargs):
         tsconfig: typescript config file
         test_lib: typescript library
         deps: typescript test_lib dependencies
+        data: additional data (e.g. .proto files)
         **kwargs:
     """
     test_lib_name = "%s_lib" % name
@@ -59,4 +61,5 @@ def ts_jest(name, srcs, tsconfig, test_lib, deps = [], **kwargs):
         srcs = [filegroup_name],
         jest_config = "//packages/jest:jest.config.js",
         deps = [test_lib] + deps,
+        data = data,
     )

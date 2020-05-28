@@ -3,7 +3,7 @@ import {IDomainEvent, DomainEvent} from '@centsideas/event-sourcing2';
 import {IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels} from '@centsideas/models';
 
-import {IdeaDescription} from '../idea-description';
+import {IdeaDescription} from './idea-description';
 
 @DomainEvent(IdeaEventNames.DescriptionEdited)
 export class IdeaDescriptionEdited implements IDomainEvent {

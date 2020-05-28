@@ -18,7 +18,7 @@ import {
 import {EventTopics, IdeaEventNames} from '@centsideas/enums';
 
 import {IdeaReadEnvironment} from './idea-read.environment';
-import {IdeaNotFound} from './errors/idea-not-found';
+import * as Errors from './idea-read.errors';
 
 @injectable()
 export class IdeaProjector extends InMemoryProjector<IdeaModels.IdeaDetailModel> {
@@ -125,9 +125,9 @@ export class IdeaProjector extends InMemoryProjector<IdeaModels.IdeaDetailModel>
   // TODO querying is probably not a task for the projector
   async getById(id: string, userId?: string) {
     const idea = this.documents[id];
-    if (!idea) throw new IdeaNotFound(id);
-    if (!idea.publishedAt && idea.userId !== userId) throw new IdeaNotFound(id);
-    if (idea.deletedAt && idea.userId !== userId) throw new IdeaNotFound(id);
+    if (!idea) throw new Errors.IdeaNotFound(id);
+    if (!idea.publishedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
+    if (idea.deletedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
     return idea;
   }
 }

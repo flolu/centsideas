@@ -1,11 +1,17 @@
 import {Aggregate, PersistedEvent, Apply} from '@centsideas/event-sourcing2';
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 
-import * as Events from './events';
-import * as Errors from './errors';
+import * as Errors from './idea.errors';
 import {IdeaTitle} from './idea-title';
 import {IdeaTags} from './idea-tags';
 import {IdeaDescription} from './idea-description';
+import {IdeaRenamed} from './idea-renamed';
+import {IdeaCreated} from './idea-created';
+import {IdeaDescriptionEdited} from './idea-description-edited';
+import {IdeaTagsAdded} from './idea-tags-added';
+import {IdeaTagsRemoved} from './idea-tags-removed';
+import {IdeaPublished} from './idea-published';
+import {IdeaDeleted} from './idea-deleted';
 
 export class Idea extends Aggregate {
   protected id!: IdeaId;
@@ -24,39 +30,39 @@ export class Idea extends Aggregate {
 
   static create(id: IdeaId, user: UserId, createdAt: ISODate) {
     const idea = new Idea();
-    idea.raise(new Events.IdeaCreated(id, user, createdAt));
+    idea.raise(new IdeaCreated(id, user, createdAt));
     return idea;
   }
 
   rename(title: IdeaTitle, user: UserId) {
     this.checkGeneralConditions(user);
     if (this.title?.toString() === title.toString()) return;
-    this.raise(new Events.IdeaRenamed(this.id, title));
+    this.raise(new IdeaRenamed(this.id, title));
   }
 
   editDescription(description: IdeaDescription, user: UserId) {
     this.checkGeneralConditions(user);
     if (this.description?.toString() === description.toString()) return;
-    this.raise(new Events.IdeaDescriptionEdited(this.id, description));
+    this.raise(new IdeaDescriptionEdited(this.id, description));
   }
 
   updateTags(tags: IdeaTags, user: UserId) {
     this.checkGeneralConditions(user);
     const {added, removed} = this.tags.findDifference(tags);
-    if (added.toArray().length) this.raise(new Events.IdeaTagsAdded(this.id, added));
-    if (removed.toArray().length) this.raise(new Events.IdeaTagsRemoved(this.id, removed));
+    if (added.toArray().length) this.raise(new IdeaTagsAdded(this.id, added));
+    if (removed.toArray().length) this.raise(new IdeaTagsRemoved(this.id, removed));
   }
 
   publish(publishedAt: ISODate, user: UserId) {
     this.checkGeneralConditions(user);
     if (this.publishedAt) throw new Errors.IdeaAlreadyPublished(this.id, user);
     if (!this.title) throw new Errors.IdeaTitleRequired(this.id, user);
-    this.raise(new Events.IdeaPublished(this.id, publishedAt));
+    this.raise(new IdeaPublished(this.id, publishedAt));
   }
 
   delete(deletedAt: ISODate, user: UserId) {
     this.checkGeneralConditions(user);
-    this.raise(new Events.IdeaDeleted(this.id, deletedAt));
+    this.raise(new IdeaDeleted(this.id, deletedAt));
   }
 
   private checkGeneralConditions(user: UserId) {
@@ -64,39 +70,39 @@ export class Idea extends Aggregate {
     if (this.deletedAt) throw new Errors.IdeaAlreadyDeleted(this.id, user);
   }
 
-  @Apply(Events.IdeaCreated)
-  created(event: Events.IdeaCreated) {
+  @Apply(IdeaCreated)
+  created(event: IdeaCreated) {
     this.id = event.id;
     this.userId = event.userId;
   }
 
-  @Apply(Events.IdeaRenamed)
-  renamed(event: Events.IdeaRenamed) {
+  @Apply(IdeaRenamed)
+  renamed(event: IdeaRenamed) {
     this.title = event.title;
   }
 
-  @Apply(Events.IdeaDescriptionEdited)
-  descriptionEdited(event: Events.IdeaDescriptionEdited) {
+  @Apply(IdeaDescriptionEdited)
+  descriptionEdited(event: IdeaDescriptionEdited) {
     this.description = event.description;
   }
 
-  @Apply(Events.IdeaTagsAdded)
-  tagsAdded(event: Events.IdeaTagsAdded) {
+  @Apply(IdeaTagsAdded)
+  tagsAdded(event: IdeaTagsAdded) {
     this.tags.add(event.tags);
   }
 
-  @Apply(Events.IdeaTagsRemoved)
-  tagsRemoved(event: Events.IdeaTagsRemoved) {
+  @Apply(IdeaTagsRemoved)
+  tagsRemoved(event: IdeaTagsRemoved) {
     this.tags.remove(event.tags);
   }
 
-  @Apply(Events.IdeaPublished)
-  published(event: Events.IdeaPublished) {
+  @Apply(IdeaPublished)
+  published(event: IdeaPublished) {
     this.publishedAt = event.publishedAt;
   }
 
-  @Apply(Events.IdeaDeleted)
-  deleted(event: Events.IdeaDeleted) {
+  @Apply(IdeaDeleted)
+  deleted(event: IdeaDeleted) {
     this.deletedAt = event.deletedAt;
   }
 }

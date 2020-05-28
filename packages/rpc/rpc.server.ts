@@ -24,7 +24,7 @@ export class RpcServer {
             err,
             `while binding rpc server (port: ${listeningPort})`,
           ); */
-          //  TODO really here?!
+          //  TODO send error to error service (rpc or kafka?)
           // this.messageBroker.dispatchError(errorPayload);
           throw err;
         }
@@ -43,6 +43,7 @@ export class RpcServer {
     this.server.addService(service, grpcImpl);
   }
 
+  // TODO remove eventually
   loadService(packageName: string, serviceName: string): grpc.ServiceDefinition {
     const protoPackage = loadProtoPackage(packageName);
     return (protoPackage as any)[serviceName].service;
@@ -74,14 +75,14 @@ export class RpcServer {
         const code = error.code || grpc.status.UNKNOWN;
         const metadata = new grpc.Metadata();
 
-        if (error.name) metadata.add('name', error.name);
+        if (name) metadata.add('name', name);
 
         if (InternalError.isUnexpected(name))
           callback({code, details, metadata, stack: error.stack}, null);
         else callback({code, details, metadata}, null);
 
         // const errorPayload = this.logger.error(error);
-        //  TODO really here?!
+        //  TODO send error to error service
         // await this.messageBroker.dispatchError(errorPayload);
       }
     };

@@ -3,7 +3,7 @@ import {IdeaId} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels} from '@centsideas/models';
 
-import {IdeaTitle} from '../idea-title';
+import {IdeaTitle} from './idea-title';
 
 @DomainEvent(IdeaEventNames.Renamed)
 export class IdeaRenamed implements IDomainEvent {

@@ -31,6 +31,7 @@ ts_jest(
         include = ["**/*.spec.ts"],
         exclude = ["ideas.handler.spec.ts"],
     ),
+    data = ["//packages/rpc:proto_files"],
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
     deps = [

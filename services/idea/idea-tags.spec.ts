@@ -1,9 +1,7 @@
 import {IdeaTagsCount} from '@centsideas/enums';
 
+import * as Errors from './idea.errors';
 import {IdeaTags} from './idea-tags';
-import {TooManyIdeaTags} from './errors/too-many-idea-tags';
-import {IdeaTagTooShort} from './errors/idea-tag-too-short';
-import {IdeaTagTooLong} from './errors/idea-tag-too-long';
 
 describe('IdeaTags', () => {
   const tags = ['mock', 'test', 'idea', 'awesome'];
@@ -21,19 +19,21 @@ describe('IdeaTags', () => {
     for (let i = 0; i < 10; i++) {
       tags.forEach(t => tooMany.push(`${t}${i}`));
     }
-    expect(() => IdeaTags.fromArray(tooMany)).toThrowError(new TooManyIdeaTags());
+    expect(() => IdeaTags.fromArray(tooMany)).toThrowError(new Errors.TooManyIdeaTags(tooMany));
   });
 
   it('recognizes tags, that are too short', () => {
     const tooShort = 't';
     expect(() => IdeaTags.fromArray(['has', tooShort, 'short', 'tags'])).toThrowError(
-      new IdeaTagTooShort(tooShort),
+      new Errors.IdeaTagTooShort(tooShort),
     );
   });
 
   it('recognizes tags, that are too long', () => {
     const tooLong = 'too long'.repeat(10);
-    expect(() => IdeaTags.fromArray(['has', tooLong])).toThrowError(new IdeaTagTooLong(tooLong));
+    expect(() => IdeaTags.fromArray(['has', tooLong])).toThrowError(
+      new Errors.IdeaTagTooLong(tooLong),
+    );
   });
 
   it('sanitizes tags', () => {
@@ -82,7 +82,9 @@ describe('IdeaTags', () => {
     for (let i = 0; i < IdeaTagsCount.Max; i++) {
       tooMany.push(`dummy${i}`);
     }
-    expect(() => base.add(IdeaTags.fromArray(tooMany))).toThrowError(new TooManyIdeaTags());
+    expect(() => base.add(IdeaTags.fromArray(tooMany))).toThrowError(
+      new Errors.TooManyIdeaTags(tooMany),
+    );
   });
 
   it('creates empty tag list', () => {
