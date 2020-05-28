@@ -18,3 +18,7 @@ export enum IdeaErrorNames {
 export enum IdeaReadErrorNames {
   NotFound = 'idea.notFound',
 }
+
+export enum EventSourcingErrorNames {
+  OptimisticConcurrencyIssue = 'eventsourcing.optimisticConcurrency',
+}

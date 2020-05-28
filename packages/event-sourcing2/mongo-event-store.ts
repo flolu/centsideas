@@ -47,8 +47,13 @@ export class MongoEventStore implements EventStore {
 
     const lastEvent = await this.getLastEvent(events.aggregateId);
     if (lastEvent && lastEvent.version !== lastVersion) {
-      // TODO retry command (maybe orchestrated by command bus?!)
-      throw new OptimisticConcurrencyIssue();
+      throw new OptimisticConcurrencyIssue(
+        this.databaseUrl,
+        events.aggregateId.toString(),
+        lastVersion,
+        lastEvent.sequence,
+        lastEvent.id,
+      );
     }
 
     let currentSequence = await this.getSequenceBookmark();

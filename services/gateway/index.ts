@@ -1,3 +1,5 @@
+// TODO handle process.on('uncaughtException') in all node services?!
+
 // tslint:disable-next-line:no-var-requires
 if (!process.env.environment) require('../../register-aliases').registerAliases();
 

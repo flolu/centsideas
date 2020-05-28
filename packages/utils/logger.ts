@@ -2,17 +2,17 @@
 import * as fromChalk from 'chalk';
 import {injectable, inject} from 'inversify';
 
-import {Environments} from '@centsideas/enums';
-import {IEvent, IErrorOccurredPayload} from '@centsideas/models';
+import {Environments, RpcStatus} from '@centsideas/enums';
+import {IEvent} from '@centsideas/models';
 import {GlobalEnvironment} from '@centsideas/environment';
 
 import {UTILS_TYPES} from './utils-types';
-import {InternalError} from './errors';
 
+// FIXME log persistence in production mode
 @injectable()
 export class Logger {
   private env = this.globalEnv.environment;
-  private chalk = new fromChalk.Instance({level: this.env === Environments.Prod ? 0 : 3});
+  private chalk = new fromChalk.Instance({level: this.env === Environments.Prod ? 1 : 3});
   private prefixStyle = this.chalk.hsl(...this.color).bold;
 
   /**
@@ -26,29 +26,19 @@ export class Logger {
     private color: [number, number, number] = [Math.random() * 360, 100, 50],
   ) {}
 
-  // TODO this function shouldnt return anything
-  error(error: any, details: string = ''): IErrorOccurredPayload {
-    console.log(this.timestamp + this.chalk.red.bold(`error: ${error.name}`));
-    const unexpected = InternalError.isUnexpected(error.name);
+  error(error: any) {
+    console.log(this.prefix, this.chalk.red.bold(`error: ${error.name}`));
+    const code = error.code || RpcStatus.UNKNOWN;
 
-    if (unexpected) {
+    if (code === RpcStatus.UNKNOWN) {
+      console.log(this.chalk.red.bold('\nunexpected error'));
       console.log(this.chalk.redBright(error.message));
-      if (!error.details) error.details = details;
-
       if (error.details) console.log(this.chalk.red(`details: ${error.details}`));
       if (error.service) console.log(this.chalk.red(`service: ${error.service}`));
       console.log(this.chalk.red.dim(error.stack));
+      console.log(this.chalk.red.bold('\n'));
+      console.log(this.chalk.red.bold('\n'));
     }
-
-    return {
-      unexpected,
-      occurredAt: new Date().toISOString(),
-      service: this.service,
-      stack: error.stack,
-      details,
-      name: error.name,
-      message: error.message,
-    };
   }
 
   info(...text: unknown[]) {
@@ -56,7 +46,7 @@ export class Logger {
   }
 
   warn(...text: unknown[]) {
-    console.warn(this.chalk.yellow.bold(this.prefix, this.timestamp, ...text));
+    console.warn(this.prefix, this.chalk.yellow.bold(this.timestamp, ...text));
   }
 
   event(event: IEvent) {

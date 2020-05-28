@@ -10,6 +10,7 @@ interface InternalErrorOptions {
   details?: string;
 }
 
+// TODO remove eventually
 export class InternalError extends Error {
   code = RpcStatus.UNKNOWN;
   timestamp = new Date().toISOString();

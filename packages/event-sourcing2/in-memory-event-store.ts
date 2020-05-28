@@ -29,10 +29,15 @@ export class InMemoryEventStore implements EventStore {
   async store(events: StreamEvents, lastVersion: number) {
     if (!events.toArray().length) return;
 
-    const lastStoredEvent = await this.getLastEvent(events.aggregateId);
-    if (lastStoredEvent && lastStoredEvent.version !== lastVersion) {
-      // TODO retry command (maybe orchestrated by command bus?!)
-      throw new OptimisticConcurrencyIssue();
+    const lastEvent = await this.getLastEvent(events.aggregateId);
+    if (lastEvent && lastEvent.version !== lastVersion) {
+      throw new OptimisticConcurrencyIssue(
+        this.topic,
+        events.aggregateId.toString(),
+        lastVersion,
+        lastEvent.sequence,
+        lastEvent.id,
+      );
     }
 
     const toInsert = events.toArray().map(streamEvent => {

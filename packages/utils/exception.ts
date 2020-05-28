@@ -4,21 +4,10 @@ export abstract class Exception extends Error {
   abstract code: RpcStatus;
   abstract name: string;
 
-  private timestamp = new Date().toISOString;
+  public timestamp = new Date().toISOString();
 
-  constructor(public message: string, private details?: any) {
+  constructor(public message: string, public details?: any) {
     super(message);
-  }
-
-  serialize() {
-    return {
-      name: this.name,
-      code: this.code,
-      timestamp: this.timestamp,
-      message: this.message,
-      details: this.details,
-      stack: this.stack,
-    };
   }
 }
 

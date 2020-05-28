@@ -11,6 +11,7 @@ ts_library(
     ),
     module_name = "@centsideas/event-sourcing2",
     deps = [
+        "//packages/enums",
         "//packages/environment",
         "//packages/types",
         "//packages/utils",

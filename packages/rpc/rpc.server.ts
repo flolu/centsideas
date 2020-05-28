@@ -1,8 +1,9 @@
 import * as grpc from '@grpc/grpc-js';
-import {injectable, interfaces} from 'inversify';
+import {injectable, interfaces, inject} from 'inversify';
+import * as retry from 'async-retry';
 
-// import {MessageBroker} from '@centsideas/event-sourcing';
-import {Logger, InternalError} from '@centsideas/utils';
+import {Logger, UTILS_TYPES, UnexpectedException} from '@centsideas/utils';
+import {EventSourcingErrorNames, RpcStatus} from '@centsideas/enums';
 
 import {loadProtoPackage} from './util';
 
@@ -12,22 +13,20 @@ export class RpcServer {
 
   private server = new grpc.Server();
 
-  constructor(private logger: Logger /* , private messageBroker: MessageBroker */) {}
+  constructor(private logger: Logger, @inject(UTILS_TYPES.SERVICE_NAME) private service: string) {}
 
   initialize(port: number = 40000, host = '0.0.0.0') {
     this.server.bindAsync(
       `${host}:${port}`,
       grpc.ServerCredentials.createInsecure(),
       (err, listeningPort) => {
-        if (err) {
-          /* const errorPayload = this.logger.error(
-            err,
-            `while binding rpc server (port: ${listeningPort})`,
-          ); */
-          //  TODO send error to error service (rpc or kafka?)
-          // this.messageBroker.dispatchError(errorPayload);
-          throw err;
-        }
+        // TODO where are such errors handled? ...maybe in process.on("uncaughtException")
+        if (err)
+          throw new UnexpectedException(`while starting rpc server`, {
+            port,
+            host,
+            service: this.service,
+          });
         this.logger.info(`rpc server running on ${listeningPort}`);
         this.server.start();
         this.isRunning = true;
@@ -67,21 +66,43 @@ export class RpcServer {
   ): grpc.handleUnaryCall<any, any> {
     return async (call, callback) => {
       try {
-        const response = await handler(call.request);
-        callback(null, response);
+        await retry(
+          async bail => {
+            const response = await handler(call.request).catch(err => {
+              /**
+               * Retry the command twice if the optimistic concurrency
+               * error is thrown by the event store
+               */
+              if (err.name && err.name === EventSourcingErrorNames.OptimisticConcurrencyIssue)
+                throw err;
+              bail(err);
+            });
+            callback(null, response);
+          },
+          {retries: 2, minTimeout: 50},
+        );
       } catch (error) {
         const name = error.name;
         const details = error.message;
-        const code = error.code || grpc.status.UNKNOWN;
+        const code = error.code || RpcStatus.UNKNOWN;
         const metadata = new grpc.Metadata();
 
         if (name) metadata.add('name', name);
 
-        if (InternalError.isUnexpected(name))
+        if (code === RpcStatus.UNKNOWN)
           callback({code, details, metadata, stack: error.stack}, null);
         else callback({code, details, metadata}, null);
 
-        // const errorPayload = this.logger.error(error);
+        this.logger.error(error);
+        const _data = {
+          name,
+          code,
+          timestamp: error.timestamp,
+          message: error.message,
+          details: error.details,
+          stack: error.stack,
+          service: this.service,
+        };
         //  TODO send error to error service
         // await this.messageBroker.dispatchError(errorPayload);
       }

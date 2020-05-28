@@ -50,6 +50,7 @@ export class IdeaProjector extends InMemoryProjector<IdeaModels.IdeaDetailModel>
   }
 
   async getEvents(from: number) {
+    // TODO retry until got response
     const result = await this.ideaEventStoreRpc.client.getEvents({from});
     if (!result.events) return [];
     return result.events.map(deserializeEvent);

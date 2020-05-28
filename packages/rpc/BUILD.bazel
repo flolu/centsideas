@@ -12,13 +12,16 @@ ts_library(
     srcs = glob(["**/*.ts"]),
     module_name = "@centsideas/rpc",
     deps = [
+        "//packages/enums",
         "//packages/event-sourcing",
         "//packages/event-sourcing2",
         "//packages/models",
         "//packages/utils",
         "@npm//@grpc/grpc-js",
         "@npm//@grpc/proto-loader",
+        "@npm//@types/async-retry",
         "@npm//@types/node",
+        "@npm//async-retry",
         "@npm//inversify",
     ],
 )
