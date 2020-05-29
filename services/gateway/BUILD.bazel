@@ -19,6 +19,7 @@ ts_library(
         "//packages/event-sourcing",
         "//packages/models",
         "//packages/rpc",
+        "//packages/schemas",
         "//packages/utils",
         "@npm//@types/body-parser",
         "@npm//@types/cookie-parser",

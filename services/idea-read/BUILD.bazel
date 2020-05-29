@@ -19,6 +19,7 @@ ts_library(
         "//packages/event-sourcing2",
         "//packages/models",
         "//packages/rpc",
+        "//packages/schemas",
         "//packages/utils",
         "@npm//@types/node",
         "@npm//inversify",

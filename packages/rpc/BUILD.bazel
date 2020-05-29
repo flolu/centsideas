@@ -16,6 +16,7 @@ ts_library(
         "//packages/event-sourcing",
         "//packages/event-sourcing2",
         "//packages/models",
+        "//packages/schemas",
         "//packages/utils",
         "@npm//@grpc/grpc-js",
         "@npm//@grpc/proto-loader",

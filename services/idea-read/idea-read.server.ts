@@ -1,9 +1,10 @@
 import {injectable, inject} from 'inversify';
 import * as http from 'http';
 
-import {RpcServer, RpcServerFactory, RPC_SERVER_FACTORY, IdeaDetails} from '@centsideas/rpc';
+import {RpcServer, RpcServerFactory, RPC_SERVER_FACTORY} from '@centsideas/rpc';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {Logger} from '@centsideas/utils';
+import {IdeaRead, loadProtoService, IdeaReadService} from '@centsideas/schemas';
 
 import {IdeaProjector} from './idea.projector';
 
@@ -23,8 +24,7 @@ export class IdeaReadServer {
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);
 
-    const commandsService = this.rpcServer.loadService('idea', 'IdeaDetails');
-    this.rpcServer.addService<IdeaDetails>(commandsService, {
+    this.rpcServer.addService<IdeaRead>(loadProtoService(IdeaReadService).service, {
       getById: ({id, userId}) => this.projector.getById(id, userId),
       getAll: async () => {
         const ideas = await this.projector.getAll();

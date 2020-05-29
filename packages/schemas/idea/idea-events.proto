@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package ideaEvents;
+package idea;
 
 message IdeaEvents {
   repeated IdeaEvent events = 1;

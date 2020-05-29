@@ -13,9 +13,9 @@ ts_library(
     srcs = glob(["**/*.ts"]),
     module_name = "@centsideas/schemas",
     deps = [
-        # NOW remove this dep
-        "//packages/event-sourcing2",
         "//packages/models",
+        "@npm//@grpc/grpc-js",
+        "@npm//@grpc/proto-loader",
         "@npm//@types/async-retry",
         "@npm//@types/node",
     ],

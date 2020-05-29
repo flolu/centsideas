@@ -9,10 +9,10 @@ import {Services} from '@centsideas/enums';
 import {
   RpcServer,
   RPC_SERVER_FACTORY,
-  RPC_CLIENT_FACTORY,
   rpcServerFactory,
-  rpcClientFactory,
   RpcClient,
+  NEW_RPC_CLIENT_FACTORY,
+  newRpcClientFactory,
 } from '@centsideas/rpc';
 
 import {IdeaReadServer} from './idea-read.server';
@@ -33,5 +33,5 @@ DependencyInjection.registerProviders(
 DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.IdeaRead);
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [60, 100, 80]);
 DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
-DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
+DependencyInjection.registerFactory(NEW_RPC_CLIENT_FACTORY, newRpcClientFactory);
 DependencyInjection.bootstrap(IdeaReadServer);

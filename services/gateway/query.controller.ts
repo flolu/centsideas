@@ -8,18 +8,19 @@ import {
   RpcClient,
   RpcClientFactory,
   RPC_CLIENT_FACTORY,
-  IdeaDetails,
+  NEW_RPC_CLIENT_FACTORY,
+  NewRpcClientFactory,
 } from '@centsideas/rpc';
+import {IdeaReadService, IdeaRead} from '@centsideas/schemas';
 
 import {GatewayEnvironment} from './gateway.environment';
 import {AuthMiddleware} from './middlewares';
 
 @controller('')
 export class QueryController implements interfaces.Controller {
-  private ideaDetailsRpc: RpcClient<IdeaDetails> = this.rpcFactory(
+  private ideaDetailsRpc: RpcClient<IdeaRead> = this.newRpcFactory(
     this.env.ideaDetailsRpcHost,
-    'idea',
-    'IdeaDetails',
+    IdeaReadService,
   );
   private adminRpc: RpcClient<IAdminQueries> = this.rpcFactory(
     this.env.adminRpcHost,
@@ -30,6 +31,7 @@ export class QueryController implements interfaces.Controller {
   constructor(
     private env: GatewayEnvironment,
     @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
+    @inject(NEW_RPC_CLIENT_FACTORY) private newRpcFactory: NewRpcClientFactory,
   ) {}
 
   @httpGet(``)

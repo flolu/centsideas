@@ -2,7 +2,7 @@ import "google/protobuf/empty.proto";
 
 syntax = "proto3";
 
-package ideaCommands;
+package idea;
 
 service IdeaCommands {
   rpc create(CreateIdea) returns (IdeaCreated);

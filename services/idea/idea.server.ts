@@ -1,17 +1,17 @@
 import {injectable, inject} from 'inversify';
 import * as http from 'http';
 
-import {
-  RpcServer,
-  RPC_SERVER_FACTORY,
-  RpcServerFactory,
-  IdeaCommands,
-  IdeaEventStore,
-  ideaRpcServices,
-} from '@centsideas/rpc';
+import {RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {Logger} from '@centsideas/utils';
 import {IdeaId} from '@centsideas/types';
+import {
+  loadProtoService,
+  IdeaEventStoreService,
+  IdeaEventStore,
+  IdeaCommandsService,
+  IdeaCommands,
+} from '@centsideas/schemas';
 
 import {IdeaService} from './idea.service';
 import {IdeaEnvironment} from './idea.environment';
@@ -40,7 +40,7 @@ export class IdeaServer {
 
     // TODO nicer implementation with @Decorators like (https://docs.nestjs.com/microservices/grpc) would be appreciated
     // TODO error handling (also retry on concurrency issue)
-    this.rpcServer.addService<IdeaCommands>(ideaRpcServices.commandService, {
+    this.rpcServer.addService<IdeaCommands>(loadProtoService(IdeaCommandsService).service, {
       create: async ({userId}) => {
         const id = IdeaId.generate();
         await this.service.create(id, userId);
@@ -54,11 +54,14 @@ export class IdeaServer {
       delete: ({id, userId}) => this.service.delete(id, userId),
     });
 
-    this.rpcEventStoreServer.addService<IdeaEventStore>(ideaRpcServices.eventStoreService, {
-      getEvents: async ({from}) => {
-        const events = await this.service.getEvents(from);
-        return {events};
+    this.rpcEventStoreServer.addService<IdeaEventStore>(
+      loadProtoService(IdeaEventStoreService).service,
+      {
+        getEvents: async ({from}) => {
+          const events = await this.service.getEvents(from);
+          return {events};
+        },
       },
-    });
+    );
   }
 }

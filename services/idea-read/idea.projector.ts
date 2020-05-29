@@ -3,13 +3,13 @@ import {injectable, inject} from 'inversify';
 import {MongoProjector, EventListener, Project} from '@centsideas/event-sourcing2';
 import {
   RpcClient,
-  IdeaEventStore,
-  RpcClientFactory,
-  RPC_CLIENT_FACTORY,
   deserializeEvent,
+  NEW_RPC_CLIENT_FACTORY,
+  NewRpcClientFactory,
 } from '@centsideas/rpc';
 import {EventTopics, IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels, PersistedEvent} from '@centsideas/models';
+import {IdeaEventStoreService, IdeaEventStore} from '@centsideas/schemas';
 
 import {IdeaReadEnvironment} from './idea-read.environment';
 import * as Errors from './idea-read.errors';
@@ -19,9 +19,7 @@ export class IdeaProjector extends MongoProjector {
   private consumerGroupName = 'centsideas-idea-read';
   private ideaEventStoreRpc: RpcClient<IdeaEventStore> = this.rpcFactory(
     this.env.ideaRpcHost,
-    // TODO dont hardcode those string!
-    'idea',
-    'IdeaEventStore',
+    IdeaEventStoreService,
     this.env.ideaEventStoreRpcPort,
   );
   private ideaCollectionName = 'ideas';
@@ -31,7 +29,7 @@ export class IdeaProjector extends MongoProjector {
   constructor(
     private eventListener: EventListener,
     private env: IdeaReadEnvironment,
-    @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
+    @inject(NEW_RPC_CLIENT_FACTORY) private rpcFactory: NewRpcClientFactory,
   ) {
     super();
   }

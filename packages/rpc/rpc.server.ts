@@ -111,7 +111,6 @@ export class RpcServer {
 }
 
 export type RpcServerFactory = (port?: number, host?: string) => RpcServer;
-
 export const rpcServerFactory = (context: interfaces.Context): RpcServerFactory => {
   return (port, host) => {
     const rpcServer = context.container.get(RpcServer);

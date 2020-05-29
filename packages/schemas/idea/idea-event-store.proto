@@ -3,8 +3,12 @@ import "idea-events.proto";
 
 syntax = "proto3";
 
-package ideaEventStore;
+package idea;
 
 service IdeaEventStore {
   rpc getEvents(GetEvents) returns (IdeaEvents);
+}
+
+message GetEvents {
+  int32 from = 1;
 }

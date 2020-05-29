@@ -25,16 +25,17 @@ import {
   INotificationCommands,
   RpcClientFactory,
   RPC_CLIENT_FACTORY,
-  IdeaCommands,
+  NewRpcClientFactory,
+  NEW_RPC_CLIENT_FACTORY,
 } from '@centsideas/rpc';
 import {GlobalEnvironment} from '@centsideas/environment';
+import {IdeaCommands, IdeaCommandsService} from '@centsideas/schemas';
 
 import {GatewayEnvironment} from './gateway.environment';
 import {AuthMiddleware} from './middlewares';
 
 @controller('')
 export class CommandController implements interfaces.Controller {
-  private ideasRpc: RpcClient<any> = this.rpcFactory(this.env.ideasHost, 'idea', 'IdeaCommands');
   private usersRpc: RpcClient<IUserCommands> = this.rpcFactory(
     this.env.usersHost,
     'user',
@@ -50,39 +51,17 @@ export class CommandController implements interfaces.Controller {
     'notification',
     'NotificationCommands',
   );
-  private idea2Rpc: RpcClient<IdeaCommands> = this.rpcFactory(
+  private idea2Rpc: RpcClient<IdeaCommands> = this.newRpcFactory(
     this.env.ideaRpcHost,
-    'idea',
-    'IdeaCommands',
+    IdeaCommandsService,
   );
 
   constructor(
     private env: GatewayEnvironment,
     private globalEnv: GlobalEnvironment,
     @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
+    @inject(NEW_RPC_CLIENT_FACTORY) private newRpcFactory: NewRpcClientFactory,
   ) {}
-
-  @httpPost(`/${ApiEndpoints.Ideas}`, AuthMiddleware)
-  async createIdea(req: express.Request, res: express.Response) {
-    const {title, description} = req.body;
-    const {userId} = res.locals;
-    return this.ideasRpc.client.create({userId, title, description});
-  }
-
-  @httpPut(`/${ApiEndpoints.Ideas}/:id`, AuthMiddleware)
-  updateIdea(req: express.Request, res: express.Response) {
-    const ideaId = req.params.id;
-    const {title, description} = req.body;
-    const {userId} = res.locals;
-    return this.ideasRpc.client.update({userId, title, description, ideaId});
-  }
-
-  @httpDelete(`/${ApiEndpoints.Ideas}/:id`, AuthMiddleware)
-  deleteIdea(req: express.Request, res: express.Response) {
-    const ideaId = req.params.id;
-    const {userId} = res.locals;
-    return this.ideasRpc.client.delete({userId, ideaId});
-  }
 
   @httpPut(`/${ApiEndpoints.Users}/:id`, AuthMiddleware)
   updateUser(req: express.Request, res: express.Response) {

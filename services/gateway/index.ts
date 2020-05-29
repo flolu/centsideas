@@ -7,7 +7,13 @@ import {UTILS_TYPES, Logger} from '@centsideas/utils';
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {Services} from '@centsideas/enums';
 import {GlobalEnvironment} from '@centsideas/environment';
-import {RpcClient, rpcClientFactory, RPC_CLIENT_FACTORY} from '@centsideas/rpc';
+import {
+  RpcClient,
+  rpcClientFactory,
+  RPC_CLIENT_FACTORY,
+  NEW_RPC_CLIENT_FACTORY,
+  newRpcClientFactory,
+} from '@centsideas/rpc';
 import {MessageBroker} from '@centsideas/event-sourcing';
 
 import {GatewayServer} from './gateway.server';
@@ -31,4 +37,5 @@ DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.Gateway)
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [334, 100, 80]);
 DependencyInjection.registerSingleton(Logger);
 DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
+DependencyInjection.registerFactory(NEW_RPC_CLIENT_FACTORY, newRpcClientFactory);
 DependencyInjection.bootstrap(GatewayServer);

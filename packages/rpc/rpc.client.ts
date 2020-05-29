@@ -1,6 +1,8 @@
 import * as grpc from '@grpc/grpc-js';
 import {injectable, interfaces} from 'inversify';
 
+import {SchemaService, loadProtoService} from '@centsideas/schemas';
+
 import {loadProtoPackage} from './util';
 
 @injectable()
@@ -11,6 +13,16 @@ export class RpcClient<IClientService = any> {
   initialize(host: string, name: string, service: string, port: number) {
     const protoPackage = loadProtoPackage(name);
     const serviceDefinition = (protoPackage as any)[service];
+    this.internalRpcClient = new serviceDefinition(
+      `${host}:${port}`,
+      grpc.credentials.createInsecure(),
+    );
+
+    this.registerMethods(Object.keys(serviceDefinition.service));
+  }
+
+  newInitialzie(host: string, service: SchemaService, port: number) {
+    const serviceDefinition = loadProtoService(service);
     this.internalRpcClient = new serviceDefinition(
       `${host}:${port}`,
       grpc.credentials.createInsecure(),
@@ -53,6 +65,20 @@ export const rpcClientFactory = (context: interfaces.Context): RpcClientFactory 
   return (host, protoFilePath, serviceName, port = 40000) => {
     const rpcClient = context.container.get(RpcClient);
     rpcClient.initialize(host, protoFilePath, serviceName, port);
+    return rpcClient;
+  };
+};
+
+export type NewRpcClientFactory = (
+  host: string,
+  service: SchemaService,
+  port?: number,
+) => RpcClient<any>;
+// TODO eventually migrate to only using this one
+export const newRpcClientFactory = (context: interfaces.Context): NewRpcClientFactory => {
+  return (host, service: SchemaService, port = 40000) => {
+    const rpcClient = context.container.get(RpcClient);
+    rpcClient.newInitialzie(host, service, port);
     return rpcClient;
   };
 };

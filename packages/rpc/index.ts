@@ -7,5 +7,4 @@ export * from './admin';
 export * from './review';
 export * from './constants';
 export * from './rpc-status';
-export * from './idea.rpc';
 export * from './event-serialization';
