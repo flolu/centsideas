@@ -3,10 +3,10 @@ import {expectNoAsyncError} from '@centsideas/testing';
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {
   EventDispatcher,
-  EventDispatcherMock,
   MONGO_EVENT_STORE_FACTORY,
   inMemoryEventStoreFactory,
   InMemoryEventStore,
+  EventDispatcherMock,
 } from '@centsideas/event-sourcing2';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {IdeaEventNames} from '@centsideas/enums';

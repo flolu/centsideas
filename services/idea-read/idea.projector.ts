@@ -1,5 +1,4 @@
 import {injectable, inject} from 'inversify';
-import {map, filter} from 'rxjs/operators';
 
 import {MongoProjector, EventListener, PersistedEvent, Project} from '@centsideas/event-sourcing2';
 import {
@@ -20,6 +19,7 @@ export class IdeaProjector extends MongoProjector {
   private consumerGroupName = 'centsideas-idea-read';
   private ideaEventStoreRpc: RpcClient<IdeaEventStore> = this.rpcFactory(
     this.env.ideaRpcHost,
+    // TODO dont hardcode those string!
     'idea',
     'IdeaEventStore',
     this.env.ideaEventStoreRpcPort,
@@ -41,14 +41,7 @@ export class IdeaProjector extends MongoProjector {
     await collection.createIndex({id: 1}, {unique: true});
   }
 
-  listen = this.eventListener.listen(EventTopics.Idea, this.consumerGroupName).pipe(
-    filter(message => !!message.headers?.eventName.toString()),
-    map(message => {
-      // TODO util for deserialzing kafka event message
-      const value: PersistedEvent = JSON.parse(message.value.toString());
-      return value;
-    }),
-  );
+  eventStream = this.eventListener.listen(EventTopics.Idea, this.consumerGroupName);
 
   async getEvents(from: number) {
     // TODO retry until got response

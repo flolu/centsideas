@@ -7,7 +7,7 @@ import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
 import {StreamEvents} from './stream-event';
 import {EventId} from './event-id';
 import {PersistedEvent} from './persisted-event';
-import {EventDispatcher} from './event-dispatcher';
+import {EventDispatcher} from './event-bus';
 import {EVENT_NAME_METADATA} from './domain-event';
 import {EventStoreFactoryOptions} from './interfaces';
 
@@ -56,15 +56,7 @@ export class InMemoryEventStore implements EventStore {
 
     toInsert.forEach(e => this.events.push(e));
 
-    await this.dispatcher.dispatch(
-      this.topic,
-      toInsert.map(event => ({
-        key: events.aggregateId.toString(),
-        // TODO serializer for whole event
-        value: JSON.stringify(event),
-        headers: {eventName: event.name},
-      })),
-    );
+    await this.dispatcher.dispatch(this.topic, toInsert);
   }
 
   async getEvents(from: number = 0) {

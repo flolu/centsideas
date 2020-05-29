@@ -69,106 +69,107 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/idea-read --colors
     depends_on:
+      - idea
       - kafka
       - mongo-database
 
-  ideas:
-    image: node:lts-alpine
-    working_dir: /
-    volumes:
-      - ./package.json:/package.json
-      - ./tsconfig.json:/tsconfig.json
-      - ./misc/register-aliases.ts:/register-aliases.ts
-      - ./services/ideas:/services/ideas
-      - ./packages:/packages
-      - ./node_modules:/node_modules
-    env_file: .env
-    command: yarn run ts-node-dev services/ideas --colors
-    depends_on:
-      - kafka
-      - mongo-database
+  # ideas:
+  #   image: node:lts-alpine
+  #   working_dir: /
+  #   volumes:
+  #     - ./package.json:/package.json
+  #     - ./tsconfig.json:/tsconfig.json
+  #     - ./misc/register-aliases.ts:/register-aliases.ts
+  #     - ./services/ideas:/services/ideas
+  #     - ./packages:/packages
+  #     - ./node_modules:/node_modules
+  #   env_file: .env
+  #   command: yarn run ts-node-dev services/ideas --colors
+  #   depends_on:
+  #     - kafka
+  #     - mongo-database
 
-  reviews:
-    image: node:lts-alpine
-    working_dir: /
-    volumes:
-      - ./package.json:/package.json
-      - ./tsconfig.json:/tsconfig.json
-      - ./misc/register-aliases.ts:/register-aliases.ts
-      - ./services/reviews:/services/reviews
-      - ./packages:/packages
-      - ./node_modules:/node_modules
-    env_file: .env
-    command: yarn run ts-node-dev services/reviews --colors
-    depends_on:
-      - kafka
-      - mongo-database
+  # reviews:
+  #   image: node:lts-alpine
+  #   working_dir: /
+  #   volumes:
+  #     - ./package.json:/package.json
+  #     - ./tsconfig.json:/tsconfig.json
+  #     - ./misc/register-aliases.ts:/register-aliases.ts
+  #     - ./services/reviews:/services/reviews
+  #     - ./packages:/packages
+  #     - ./node_modules:/node_modules
+  #   env_file: .env
+  #   command: yarn run ts-node-dev services/reviews --colors
+  #   depends_on:
+  #     - kafka
+  #     - mongo-database
 
-  users:
-    image: node:lts-alpine
-    working_dir: /
-    volumes:
-      - ./package.json:/package.json
-      - ./tsconfig.json:/tsconfig.json
-      - ./misc/register-aliases.ts:/register-aliases.ts
-      - ./services/users:/services/users
-      - ./packages:/packages
-      - ./node_modules:/node_modules
-    env_file: .env
-    command: yarn run ts-node-dev services/users --colors
-    depends_on:
-      - kafka
-      - mongo-database
+  # users:
+  #   image: node:lts-alpine
+  #   working_dir: /
+  #   volumes:
+  #     - ./package.json:/package.json
+  #     - ./tsconfig.json:/tsconfig.json
+  #     - ./misc/register-aliases.ts:/register-aliases.ts
+  #     - ./services/users:/services/users
+  #     - ./packages:/packages
+  #     - ./node_modules:/node_modules
+  #   env_file: .env
+  #   command: yarn run ts-node-dev services/users --colors
+  #   depends_on:
+  #     - kafka
+  #     - mongo-database
 
-  consumer:
-    image: node:lts-alpine
-    working_dir: /
-    volumes:
-      - ./package.json:/package.json
-      - ./tsconfig.json:/tsconfig.json
-      - ./misc/register-aliases.ts:/register-aliases.ts
-      - ./services/consumer:/services/consumer
-      - ./packages:/packages
-      - ./node_modules:/node_modules
-    env_file: .env
-    command: yarn run ts-node-dev services/consumer --colors
-    depends_on:
-      - kafka
-      - mongo-database
+  # consumer:
+  #   image: node:lts-alpine
+  #   working_dir: /
+  #   volumes:
+  #     - ./package.json:/package.json
+  #     - ./tsconfig.json:/tsconfig.json
+  #     - ./misc/register-aliases.ts:/register-aliases.ts
+  #     - ./services/consumer:/services/consumer
+  #     - ./packages:/packages
+  #     - ./node_modules:/node_modules
+  #   env_file: .env
+  #   command: yarn run ts-node-dev services/consumer --colors
+  #   depends_on:
+  #     - kafka
+  #     - mongo-database
 
-  notifications:
-    image: node:lts-alpine
-    working_dir: /
-    volumes:
-      - ./package.json:/package.json
-      - ./tsconfig.json:/tsconfig.json
-      - ./misc/register-aliases.ts:/register-aliases.ts
-      - ./services/notifications:/services/notifications
-      - ./packages:/packages
-      - ./node_modules:/node_modules
-    env_file: .env
-    command: yarn run ts-node-dev services/notifications --colors
-    depends_on:
-      - kafka
-      - mongo-database
+  # notifications:
+  #   image: node:lts-alpine
+  #   working_dir: /
+  #   volumes:
+  #     - ./package.json:/package.json
+  #     - ./tsconfig.json:/tsconfig.json
+  #     - ./misc/register-aliases.ts:/register-aliases.ts
+  #     - ./services/notifications:/services/notifications
+  #     - ./packages:/packages
+  #     - ./node_modules:/node_modules
+  #   env_file: .env
+  #   command: yarn run ts-node-dev services/notifications --colors
+  #   depends_on:
+  #     - kafka
+  #     - mongo-database
 
-  admin:
-    image: node:lts-alpine
-    working_dir: /
-    volumes:
-      - ./package.json:/package.json
-      - ./tsconfig.json:/tsconfig.json
-      - ./misc/register-aliases.ts:/register-aliases.ts
-      - ./services/admin:/services/admin
-      - ./packages:/packages
-      - ./node_modules:/node_modules
-    env_file: .env
-    command: yarn run ts-node-dev services/admin --colors
-    ports:
-      - 3001:3000
-    depends_on:
-      - kafka
-      - mongo-database
+  # admin:
+  #   image: node:lts-alpine
+  #   working_dir: /
+  #   volumes:
+  #     - ./package.json:/package.json
+  #     - ./tsconfig.json:/tsconfig.json
+  #     - ./misc/register-aliases.ts:/register-aliases.ts
+  #     - ./services/admin:/services/admin
+  #     - ./packages:/packages
+  #     - ./node_modules:/node_modules
+  #   env_file: .env
+  #   command: yarn run ts-node-dev services/admin --colors
+  #   ports:
+  #     - 3001:3000
+  #   depends_on:
+  #     - kafka
+  #     - mongo-database
 
   mongo-database:
     image: mongo:4

@@ -5,7 +5,7 @@ import {Projector} from './projector';
 import {PersistedEvent} from './persisted-event';
 
 export abstract class InMemoryProjector extends Projector {
-  abstract listen: Observable<PersistedEvent>;
+  abstract eventStream: Observable<PersistedEvent>;
   abstract async getEvents(from: number): Promise<PersistedEvent[]>;
 
   private bookmark = 0;
@@ -14,7 +14,7 @@ export abstract class InMemoryProjector extends Projector {
   @postConstruct()
   initializeProjector() {
     this.replay();
-    this.listen.subscribe(this.trigger);
+    this.eventStream.subscribe(this.trigger);
   }
 
   async replay() {

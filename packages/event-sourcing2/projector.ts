@@ -5,7 +5,7 @@ import {inject} from 'inversify';
 import {Logger} from '@centsideas/utils';
 
 export interface IProjector {
-  listen: Observable<PersistedEvent>;
+  eventStream: Observable<PersistedEvent>;
   getBookmark(): Promise<number>;
   increaseBookmark(): Promise<void>;
   trigger(event: PersistedEvent): Promise<boolean>;
@@ -17,7 +17,7 @@ export interface IProjector {
 export abstract class Projector implements IProjector {
   @inject(Logger) logger!: Logger;
 
-  abstract listen: Observable<PersistedEvent>;
+  abstract eventStream: Observable<PersistedEvent>;
   abstract getBookmark(): Promise<number>;
   abstract increaseBookmark(): Promise<void>;
   abstract getEvents(from: number): Promise<PersistedEvent[]>;

@@ -13,7 +13,7 @@ interface SequenceCounter {
 }
 
 export abstract class MongoProjector extends Projector {
-  abstract listen: Observable<PersistedEvent>;
+  abstract eventStream: Observable<PersistedEvent>;
   abstract async getEvents(from: number): Promise<PersistedEvent[]>;
   abstract databaseUrl: string;
   abstract databaseName: string;
@@ -29,7 +29,7 @@ export abstract class MongoProjector extends Projector {
     await this.initialize();
     await this.initializeSequenceCounter();
     await this.replay();
-    this.listen.pipe(concatMap(event => from(this.trigger(event)))).subscribe();
+    this.eventStream.pipe(concatMap(event => from(this.trigger(event)))).subscribe();
   }
 
   async getBookmark() {

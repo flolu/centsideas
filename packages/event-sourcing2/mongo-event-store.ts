@@ -9,7 +9,7 @@ import {PersistedEvent} from './persisted-event';
 import {StreamEvents} from './stream-event';
 import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
 import {EventId} from './event-id';
-import {EventDispatcher} from './event-dispatcher';
+import {EventDispatcher} from './event-bus';
 import {EVENT_NAME_METADATA} from './domain-event';
 import {EventStoreFactoryOptions} from './interfaces';
 
@@ -74,15 +74,7 @@ export class MongoEventStore implements EventStore {
     const collection = await this.eventsCollection();
     await collection.insertMany(inserts);
 
-    await this.dispatcher.dispatch(
-      this.topic,
-      inserts.map(event => ({
-        key: events.aggregateId.toString(),
-        // TODO serializer for whole event
-        value: JSON.stringify(event),
-        headers: {eventName: event.name},
-      })),
-    );
+    await this.dispatcher.dispatch(this.topic, inserts);
   }
 
   async getEvents(from: number) {
