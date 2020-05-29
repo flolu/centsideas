@@ -2,7 +2,6 @@ import "google/protobuf/empty.proto";
 
 syntax = "proto3";
 
-// NOW is it possible to give all proto files the package name "idea"?
 package idea;
 
 service IdeaRead {

@@ -2,6 +2,7 @@ import {inject, interfaces, injectable} from 'inversify';
 
 import {Id, ISODate} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
+import {EventTopics} from '@centsideas/enums';
 
 import {EventStore} from './event-store';
 import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
@@ -13,7 +14,7 @@ import {EventStoreFactoryOptions} from './interfaces';
 
 @injectable()
 export class InMemoryEventStore implements EventStore {
-  topic!: string;
+  topic!: EventTopics;
 
   private events: PersistedEvent[] = [];
   private sequence: number = 0;

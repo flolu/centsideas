@@ -4,6 +4,7 @@ import * as asyncRetry from 'async-retry';
 
 import {Id, ISODate} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
+import {EventTopics} from '@centsideas/enums';
 
 import {EventStore} from './event-store';
 import {StreamEvents} from './stream-event';
@@ -15,7 +16,7 @@ import {EventStoreFactoryOptions} from './interfaces';
 
 @injectable()
 export class MongoEventStore implements EventStore {
-  private topic!: string;
+  private topic!: EventTopics;
   private databaseUrl!: string;
   private databaseName!: string;
   private client!: MongoClient;
@@ -23,7 +24,7 @@ export class MongoEventStore implements EventStore {
 
   @inject(EventDispatcher) private dispatcher!: EventDispatcher;
 
-  initilize(topic: string, url: string, name: string) {
+  initilize(topic: EventTopics, url: string, name: string) {
     this.topic = topic;
     this.databaseUrl = url;
     this.databaseName = name;

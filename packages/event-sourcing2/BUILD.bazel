@@ -14,6 +14,7 @@ ts_library(
         "//packages/enums",
         "//packages/environment",
         "//packages/models",
+        "//packages/schemas",
         "//packages/types",
         "//packages/utils",
         "@npm//@types/async-retry",

@@ -8,6 +8,7 @@ export const IdeaCommandsService: SchemaService = {
 };
 
 export * from './idea-event-store.schema';
+export * from './idea-events.schema';
 export const IdeaEventStoreService: SchemaService = {
   proto: 'idea-event-store.proto',
   package: 'idea',

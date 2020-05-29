@@ -4,6 +4,8 @@ import {Kafka, logLevel, Message} from 'kafkajs';
 
 import {GlobalEnvironment} from '@centsideas/environment';
 import {PersistedEvent} from '@centsideas/models';
+import {serializeEventMessage, deserializeEventMessage} from '@centsideas/schemas';
+import {EventTopics} from '@centsideas/enums';
 
 const EVENT_NAME_HEADER = 'eventName';
 
@@ -14,12 +16,11 @@ export class EventDispatcher {
 
   constructor(private globalEnv: GlobalEnvironment) {}
 
-  async dispatch(topic: string, events: PersistedEvent[]) {
+  async dispatch(topic: EventTopics, events: PersistedEvent[]) {
     await this.prodcuer.connect();
     const messages: Message[] = events.map(event => ({
       key: event.streamId,
-      // TODO propper event serializer
-      value: JSON.stringify(event),
+      value: serializeEventMessage(event, topic),
       headers: {[EVENT_NAME_HEADER]: event.name},
     }));
     return this.prodcuer.send({topic, messages});
@@ -44,9 +45,8 @@ export class EventListener {
         eachMessage: async ({message}) => {
           const eventName = message.headers && message.headers[EVENT_NAME_HEADER];
           if (!eventName) return;
-          // TODO propper event deserializer
-          const event = JSON.parse(message.value.toString());
-          observer.next(event);
+          const des = deserializeEventMessage(message.value, eventName.toString());
+          observer.next(des);
         },
       });
     });
