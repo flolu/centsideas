@@ -8,7 +8,7 @@ services:
     logging:
       driver: none
   kafka:
-    image: wurstmeister/kafka:2.12-2.4.0
+    image: wurstmeister/kafka
     hostname: kafka
     ports:
       - 9092:9092
@@ -20,7 +20,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - 'zookeeper'
+      - zookeeper
     logging:
       driver: none
 
@@ -52,6 +52,9 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/idea --colors
+    depends_on:
+      - kafka
+      - mongo-database
 
   idea-read:
     image: node:lts-alpine
@@ -65,6 +68,9 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/idea-read --colors
+    depends_on:
+      - kafka
+      - mongo-database
 
   ideas:
     image: node:lts-alpine
@@ -78,6 +84,9 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/ideas --colors
+    depends_on:
+      - kafka
+      - mongo-database
 
   reviews:
     image: node:lts-alpine
@@ -91,6 +100,9 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/reviews --colors
+    depends_on:
+      - kafka
+      - mongo-database
 
   users:
     image: node:lts-alpine
@@ -104,6 +116,9 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/users --colors
+    depends_on:
+      - kafka
+      - mongo-database
 
   consumer:
     image: node:lts-alpine
@@ -118,7 +133,8 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/consumer --colors
     depends_on:
-      - 'kafka'
+      - kafka
+      - mongo-database
 
   notifications:
     image: node:lts-alpine
@@ -133,7 +149,8 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/notifications --colors
     depends_on:
-      - 'kafka'
+      - kafka
+      - mongo-database
 
   admin:
     image: node:lts-alpine
@@ -147,12 +164,13 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/admin --colors
-    depends_on:
-      - 'kafka'
     ports:
       - 3001:3000
+    depends_on:
+      - kafka
+      - mongo-database
 
   mongo-database:
-    image: mongo:4.2.6
+    image: mongo:4
     logging:
       driver: none

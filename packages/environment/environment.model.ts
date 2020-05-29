@@ -22,7 +22,7 @@ export interface IEnvironment {
   ideaDetailsRpcPort: number;
   ideaEventStoreRpcPort: number;
   ideaEventStoreDatabaseUrl: string;
-  ideaDetailsDatabaseUrl: string;
+  ideaReadDatabaseUrl: string;
 
   usersRpcPort: number;
   usersDatabaseUrl: string;

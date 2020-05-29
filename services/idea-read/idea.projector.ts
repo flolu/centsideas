@@ -25,27 +25,30 @@ export class IdeaProjector extends MongoProjector {
     this.env.ideaEventStoreRpcPort,
   );
   private ideaCollectionName = 'ideas';
+  databaseUrl = this.env.ideaReadDatabaseUrl;
+  databaseName = this.env.ideaReadDatabaseName;
 
   constructor(
     private eventListener: EventListener,
     private env: IdeaReadEnvironment,
     @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {
-    // NOW dont hardcode
-    super('mongodb://mongo-database:27017', 'idea_read_v2');
-    this.initializeDb();
+    super();
   }
 
-  listen() {
-    return this.eventListener.listen(EventTopics.Idea, this.consumerGroupName).pipe(
-      filter(message => !!message.headers?.eventName.toString()),
-      map(message => {
-        // TODO util for deserialzing kafka event message
-        const value: PersistedEvent = JSON.parse(message.value.toString());
-        return value;
-      }),
-    );
+  async initialize() {
+    const collection = await this.ideaCollection();
+    await collection.createIndex({id: 1}, {unique: true});
   }
+
+  listen = this.eventListener.listen(EventTopics.Idea, this.consumerGroupName).pipe(
+    filter(message => !!message.headers?.eventName.toString()),
+    map(message => {
+      // TODO util for deserialzing kafka event message
+      const value: PersistedEvent = JSON.parse(message.value.toString());
+      return value;
+    }),
+  );
 
   async getEvents(from: number) {
     // TODO retry until got response
@@ -137,15 +140,6 @@ export class IdeaProjector extends MongoProjector {
     return db.collection<IdeaModels.IdeaModel>(this.ideaCollectionName);
   }
 
-  private async initializeDb() {
-    // NOW id index unique
-    /* const collection = await this.ideaCollection();
-    collection.createIndex({id: -1}, {unique: true}, (err, result) => {
-      // NOW what to do here?
-      this.logger.info('created index', {err, result});
-    }); */
-  }
-
   // TODO consider triggering replay before returning the document (or after, depending on the importance of consistency)
   // TODO querying is probably not a task for the projector
   async getById(id: string, userId?: string) {
@@ -158,10 +152,9 @@ export class IdeaProjector extends MongoProjector {
   }
   async getAll() {
     const collection = await this.ideaCollection();
-    // NOW test this!
     const result = await collection.find({
-      publishedAt: {$exists: true, $ne: undefined},
-      deletedAt: undefined,
+      publishedAt: {$exists: true, $ne: ''},
+      deletedAt: '',
     });
     return result.toArray();
   }

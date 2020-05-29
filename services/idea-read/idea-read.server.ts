@@ -14,7 +14,6 @@ export class IdeaReadServer {
   constructor(
     private globalEnv: GlobalEnvironment,
     private logger: Logger,
-    // NOW remove private projector: IdeaInMemProjector,
     private projector: IdeaProjector,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {

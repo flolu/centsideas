@@ -16,7 +16,7 @@ export const defaultKubernetesEnv = {
   ideaHost: 'centsideas-idea',
   ideaDetailsHost: 'centsideas-idea-read',
   ideaEventStoreDatabaseUrl: 'mongodb://centsideas-event-store:27017',
-  ideaDetailsDatabaseUrl: 'mongodb://centsideas-idea-read:27017',
+  ideaReadDatabaseUrl: 'mongodb://centsideas-idea-read:27017',
 
   usersHost: 'centsideas-users',
   usersDatabaseUrl: 'mongodb://centsideas-users-event-store:27017',
@@ -45,7 +45,7 @@ export const defaultDockerComposeEnv = {
   ideasDatabaseUrl: 'mongodb://mongo-database:27017', // TODO remove
   ideaDetailsHost: 'idea-read',
   ideaEventStoreDatabaseUrl: 'mongodb://mongo-database:27017',
-  ideaDetailsDatabaseUrl: 'mongodb://mongo-database:27017',
+  ideaReadDatabaseUrl: 'mongodb://mongo-database:27017',
 
   consumerHost: 'consumer',
   projectionDatabaseUrl: 'mongodb://mongo-database:27017',

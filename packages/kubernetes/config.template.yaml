@@ -28,7 +28,7 @@ data:
   ideasRpcPort: "${ideasRpcPort}"
   ideasDatabaseUrl: ${ideasDatabaseUrl}
   ideaEventStoreDatabaseUrl: ${ideaEventStoreDatabaseUrl}
-  ideaDetailsDatabaseUrl: ${ideaDetailsDatabaseUrl}
+  ideaReadDatabaseUrl: ${ideaReadDatabaseUrl}
 
   consumerRpcPort: "${consumerRpcPort}"
   projectionDatabaseUrl: ${projectionDatabaseUrl}
