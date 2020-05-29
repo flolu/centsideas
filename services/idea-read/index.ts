@@ -15,19 +15,19 @@ import {
   RpcClient,
 } from '@centsideas/rpc';
 
-import {IdeaProjector} from './idea.projector';
 import {IdeaReadServer} from './idea-read.server';
 import {IdeaReadEnvironment} from './idea-read.environment';
+import {IdeaProjector} from './idea.projector';
 
 DependencyInjection.registerProviders(
   GlobalEnvironment,
   EventListener,
-  IdeaProjector,
   IdeaReadServer,
   IdeaReadEnvironment,
   Logger,
   RpcServer,
   RpcClient,
+  IdeaProjector,
 );
 
 DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.IdeaRead);

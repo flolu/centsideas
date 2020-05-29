@@ -17,7 +17,8 @@ service IdeaCommands {
 }
 
 service IdeaDetails {
-  rpc getById(GetIdeaById) returns (IdeaWithDetails);
+  rpc getById(GetIdeaById) returns (Idea);
+  rpc getAll(google.protobuf.Empty) returns (Ideas);
 }
 
 service IdeaEventStore {
@@ -64,7 +65,7 @@ message GetIdeaById {
   optional string userId = 2;
 }
 
-message IdeaWithDetails {
+message Idea {
   string id = 1;
   string userId = 2;
   string title = 3;
@@ -73,6 +74,10 @@ message IdeaWithDetails {
   string createdAt = 6;
   string publishedAt = 7;
   string deletedAt = 8;
+}
+
+message Ideas {
+  repeated Idea ideas = 1;
 }
 
 message GetEvents {

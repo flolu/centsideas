@@ -2,6 +2,7 @@ import {Observable} from 'rxjs';
 
 import {PersistedEvent} from './persisted-event';
 
+// NOW consider abstract base class (lot's of duplicate code in projectors!)
 export interface Projector {
   // TODO enforce to return an Observable<PersistedEvent>
   listen(): Observable<PersistedEvent>;
@@ -10,6 +11,7 @@ export interface Projector {
   trigger(event: PersistedEvent): Promise<boolean>;
   getEvents(from: number): Promise<PersistedEvent[]>;
   replay(): Promise<void>;
+  handleEvent(event: PersistedEvent): Promise<void>;
 }
 
 /**

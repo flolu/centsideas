@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 import {injectable, interfaces, inject} from 'inversify';
-import * as retry from 'async-retry';
+import * as asyncRetry from 'async-retry';
 
 import {Logger, UTILS_TYPES, UnexpectedException} from '@centsideas/utils';
 import {EventSourcingErrorNames, RpcStatus} from '@centsideas/enums';
@@ -66,7 +66,7 @@ export class RpcServer {
   ): grpc.handleUnaryCall<any, any> {
     return async (call, callback) => {
       try {
-        await retry(
+        await asyncRetry(
           async bail => {
             const response = await handler(call.request).catch(err => {
               /**

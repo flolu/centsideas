@@ -13,3 +13,4 @@ export * from './mongo-event-store';
 export * from './constants';
 export * from './projector';
 export * from './in-memory-projector';
+export * from './mongo-projector';

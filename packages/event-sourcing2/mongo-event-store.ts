@@ -87,7 +87,7 @@ export class MongoEventStore implements EventStore {
 
   async getEvents(from: number) {
     const collection = await this.eventsCollection();
-    const result = await collection.find({sequence: {$gte: from}}, {sort: {sequence: 1}});
+    const result = await collection.find({sequence: {$gt: from}}, {sort: {sequence: 1}});
     return result.toArray();
   }
 

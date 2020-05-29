@@ -6,14 +6,14 @@ import {Logger} from '@centsideas/utils';
 import {Projector} from './projector';
 import {PersistedEvent} from './persisted-event';
 
-export abstract class InMemoryProjector<T> implements Projector {
+export abstract class InMemoryProjector implements Projector {
+  abstract listen(): Observable<PersistedEvent>;
+  abstract async getEvents(from: number): Promise<PersistedEvent[]>;
+
   @inject(Logger) protected logger!: Logger;
 
   private bookmark = 0;
-  protected documents: Record<string, T> = {};
-
-  abstract listen(): Observable<PersistedEvent>;
-  abstract async getEvents(from: number): Promise<PersistedEvent[]>;
+  protected documents: Record<string, any> = {};
 
   /**
    * `@postConstruct` to wait for the dependency injection of
@@ -29,7 +29,7 @@ export abstract class InMemoryProjector<T> implements Projector {
    * Need arrow function here, otherwise `this` is undefined
    * Not sure why, but I think it has something to do with `inversify`
    */
-  trigger = async (event: PersistedEvent): Promise<boolean> => {
+  trigger = async (event: PersistedEvent) => {
     const bookmark = await this.getBookmark();
     if (event.sequence !== bookmark + 1) {
       this.logger.warn(`sequence(${event.sequence}) is not one bigger than bookmark(${bookmark})`);
@@ -47,13 +47,8 @@ export abstract class InMemoryProjector<T> implements Projector {
     if (!events) return;
 
     for (const event of events) {
-      const success = await this.trigger(event);
-      if (!success) {
-        this.logger.warn(`did not replay all ${events.length} events`);
-        return;
-      }
+      await this.trigger(event);
     }
-    this.logger.info(`successfully replayed ${events.length} events`);
   }
 
   async getBookmark() {
@@ -64,7 +59,7 @@ export abstract class InMemoryProjector<T> implements Projector {
     this.bookmark++;
   }
 
-  private async handleEvent(event: PersistedEvent) {
+  async handleEvent(event: PersistedEvent) {
     /**
      * The event name metadata is saved by the @Project decorator
      * and it returns the name of the event handler method

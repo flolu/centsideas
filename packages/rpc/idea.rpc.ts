@@ -47,7 +47,8 @@ export interface IdeaCommands {
 }
 
 export interface IdeaDetails {
-  getById: (payload: {id: string; userId: string}) => Promise<IdeaModels.IdeaDetailModel>;
+  getById: (payload: {id: string; userId: string}) => Promise<IdeaModels.IdeaModel>;
+  getAll: (payload: void) => Promise<{ideas: IdeaModels.IdeaModel[]}>;
 }
 
 export interface IdeaEventStore {

@@ -1,27 +1,22 @@
 import {injectable, inject} from 'inversify';
 import {map, filter} from 'rxjs/operators';
 
+import {MongoProjector, EventListener, PersistedEvent, Project} from '@centsideas/event-sourcing2';
 import {
-  InMemoryProjector,
-  EventListener,
-  PersistedEvent,
-  Project,
-} from '@centsideas/event-sourcing2';
-import {IdeaModels} from '@centsideas/models';
-import {
-  deserializeEvent,
-  RpcClientFactory,
-  RPC_CLIENT_FACTORY,
   RpcClient,
   IdeaEventStore,
+  RpcClientFactory,
+  RPC_CLIENT_FACTORY,
+  deserializeEvent,
 } from '@centsideas/rpc';
 import {EventTopics, IdeaEventNames} from '@centsideas/enums';
+import {IdeaModels} from '@centsideas/models';
 
 import {IdeaReadEnvironment} from './idea-read.environment';
 import * as Errors from './idea-read.errors';
 
 @injectable()
-export class IdeaProjector extends InMemoryProjector<IdeaModels.IdeaDetailModel> {
+export class IdeaProjector extends MongoProjector {
   private consumerGroupName = 'centsideas-idea-read';
   private ideaEventStoreRpc: RpcClient<IdeaEventStore> = this.rpcFactory(
     this.env.ideaRpcHost,
@@ -29,13 +24,16 @@ export class IdeaProjector extends InMemoryProjector<IdeaModels.IdeaDetailModel>
     'IdeaEventStore',
     this.env.ideaEventStoreRpcPort,
   );
+  private ideaCollectionName = 'ideas';
 
   constructor(
     private eventListener: EventListener,
     private env: IdeaReadEnvironment,
     @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {
-    super();
+    // NOW dont hardcode
+    super('mongodb://mongo-database:27017', 'idea_read_v2');
+    this.initializeDb();
   }
 
   listen() {
@@ -56,14 +54,11 @@ export class IdeaProjector extends InMemoryProjector<IdeaModels.IdeaDetailModel>
     return result.events.map(deserializeEvent);
   }
 
-  /**
-   * TODO current design doesn't allow to switch between in memory and other storage
-   * would be better to design like a pure reudcer function (state, event) => newState
-   */
   @Project(IdeaEventNames.Created)
   async created({data, streamId, version}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
     const {userId, createdAt} = data;
-    this.documents[streamId] = {
+    const collection = await this.ideaCollection();
+    await collection.insertOne({
       id: streamId,
       userId,
       createdAt,
@@ -73,14 +68,14 @@ export class IdeaProjector extends InMemoryProjector<IdeaModels.IdeaDetailModel>
       publishedAt: '',
       deletedAt: '',
       lastEventVersion: version,
-    };
+    });
   }
 
   @Project(IdeaEventNames.Renamed)
   async renamed({data, streamId, version}: PersistedEvent<IdeaModels.IdeaRenamedData>) {
     const {title} = data;
-    this.documents[streamId].title = title;
-    this.documents[streamId].lastEventVersion = version;
+    const collection = await this.ideaCollection();
+    await collection.findOneAndUpdate({id: streamId}, {$set: {title, lastEventVersion: version}});
   }
 
   @Project(IdeaEventNames.DescriptionEdited)
@@ -90,45 +85,84 @@ export class IdeaProjector extends InMemoryProjector<IdeaModels.IdeaDetailModel>
     data,
   }: PersistedEvent<IdeaModels.IdeaDescriptionEditedData>) {
     const {description} = data;
-    this.documents[streamId].description = description;
-    this.documents[streamId].lastEventVersion = version;
+    const collection = await this.ideaCollection();
+    await collection.findOneAndUpdate(
+      {id: streamId},
+      {$set: {description, lastEventVersion: version}},
+    );
   }
 
   @Project(IdeaEventNames.TagsAdded)
   async tagsAdded({version, streamId, data}: PersistedEvent<IdeaModels.IdeaTagsAddedData>) {
     const {tags} = data;
-    this.documents[streamId].tags.push(...tags);
-    this.documents[streamId].lastEventVersion = version;
+    const collection = await this.ideaCollection();
+    await collection.findOneAndUpdate(
+      {id: streamId},
+      {$push: {tags: {$each: tags}}, $set: {lastEventVersion: version}},
+    );
   }
 
   @Project(IdeaEventNames.TagsRemoved)
   async tagsRemoved({version, streamId, data}: PersistedEvent<IdeaModels.IdeaTagsRemovedData>) {
     const {tags} = data;
-    this.documents[streamId].tags = this.documents[streamId].tags.filter(t => !tags.includes(t));
-    this.documents[streamId].lastEventVersion = version;
+    const collection = await this.ideaCollection();
+    await collection.findOneAndUpdate(
+      {id: streamId},
+      {$pull: {fruits: {$in: tags}}, $set: {lastEventVersion: version}},
+    );
   }
 
   @Project(IdeaEventNames.Published)
   async published({version, streamId, data}: PersistedEvent<IdeaModels.IdeaPublishedData>) {
     const {publishedAt} = data;
-    this.documents[streamId].publishedAt = publishedAt;
-    this.documents[streamId].lastEventVersion = version;
+    const collection = await this.ideaCollection();
+    await collection.findOneAndUpdate(
+      {id: streamId},
+      {$set: {publishedAt, lastEventVersion: version}},
+    );
   }
 
   @Project(IdeaEventNames.Deleted)
   async deleted({version, streamId, data}: PersistedEvent<IdeaModels.IdeaDeletedData>) {
     const {deletedAt} = data;
-    this.documents[streamId].deletedAt = deletedAt;
-    this.documents[streamId].lastEventVersion = version;
+    const collection = await this.ideaCollection();
+    await collection.findOneAndUpdate(
+      {id: streamId},
+      {$set: {deletedAt, lastEventVersion: version}},
+    );
+  }
+
+  private async ideaCollection() {
+    const db = await this.db();
+    return db.collection<IdeaModels.IdeaModel>(this.ideaCollectionName);
+  }
+
+  private async initializeDb() {
+    // NOW id index unique
+    /* const collection = await this.ideaCollection();
+    collection.createIndex({id: -1}, {unique: true}, (err, result) => {
+      // NOW what to do here?
+      this.logger.info('created index', {err, result});
+    }); */
   }
 
   // TODO consider triggering replay before returning the document (or after, depending on the importance of consistency)
   // TODO querying is probably not a task for the projector
   async getById(id: string, userId?: string) {
-    const idea = this.documents[id];
+    const collection = await this.ideaCollection();
+    const idea = await collection.findOne({id});
     if (!idea) throw new Errors.IdeaNotFound(id);
     if (!idea.publishedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
     if (idea.deletedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
     return idea;
+  }
+  async getAll() {
+    const collection = await this.ideaCollection();
+    // NOW test this!
+    const result = await collection.find({
+      publishedAt: {$exists: true, $ne: undefined},
+      deletedAt: undefined,
+    });
+    return result.toArray();
   }
 }

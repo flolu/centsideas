@@ -1,7 +1,11 @@
-@id=xuOhpbLSY
+@id=WBq2Rcc8T
 @userId = Md9Q6fwHY
 
 ###
 
 GET http://localhost:3000/idea/{{id}}
 Authorization: Bearer {{userId}}
+
+###
+
+GET http://localhost:3000/idea

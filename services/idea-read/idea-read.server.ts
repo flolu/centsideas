@@ -14,6 +14,7 @@ export class IdeaReadServer {
   constructor(
     private globalEnv: GlobalEnvironment,
     private logger: Logger,
+    // NOW remove private projector: IdeaInMemProjector,
     private projector: IdeaProjector,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
@@ -25,7 +26,11 @@ export class IdeaReadServer {
 
     const commandsService = this.rpcServer.loadService('idea', 'IdeaDetails');
     this.rpcServer.addService<IdeaDetails>(commandsService, {
-      getById: async ({id, userId}) => this.projector.getById(id, userId),
+      getById: ({id, userId}) => this.projector.getById(id, userId),
+      getAll: async () => {
+        const ideas = await this.projector.getAll();
+        return {ideas};
+      },
     });
   }
 }

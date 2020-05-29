@@ -1,5 +1,4 @@
-// TODO it might be redundant to save id on every event!
-export interface IdeaDetailModel {
+export interface IdeaModel {
   id: string;
   userId: string;
   title: string;
@@ -11,6 +10,7 @@ export interface IdeaDetailModel {
   lastEventVersion: number;
 }
 
+// TODO it might be redundant to save id on every event!
 export interface IdeaCreatedData {
   id: string;
   userId: string;

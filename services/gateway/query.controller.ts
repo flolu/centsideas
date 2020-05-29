@@ -48,6 +48,11 @@ export class QueryController implements interfaces.Controller {
     return this.ideaDetailsRpc.client.getById({id: req.params.id, userId});
   }
 
+  @httpGet(`/${ApiEndpoints.Idea}`)
+  getIdeas(req: express.Request) {
+    return this.ideaDetailsRpc.client.getAll();
+  }
+
   @httpGet(`/${ApiEndpoints.Admin}/${AdminApiRoutes.Events}`)
   async getAdminEvents() {
     const {events} = await this.adminRpc.client.getEvents(undefined);
