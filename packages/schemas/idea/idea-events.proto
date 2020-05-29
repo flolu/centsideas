@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package ideaEvents;
+
+message IdeaEvents {
+  repeated IdeaEvent events = 1;
+}
+
+message IdeaEvent {
+  string id = 1;
+  string streamId = 2;
+  int32 version = 3;
+  string name = 4;
+  string insertedAt = 5;
+  int32 sequence = 6;
+  IdeaEventData data = 7;
+}
+
+message IdeaEventData {
+  oneof data {
+    IdeaCreatedEvent created = 1;
+    IdeaRenamed renamed = 2;
+    IdeaDescriptionEdited descriptionEdited = 3;
+    IdeaTagsAdded tagsAdded = 4;
+    IdeaTagsRemoved tagsRemoved = 5;
+    IdeaPublished published = 6;
+    IdeaDeleted deleted = 7;
+  }
+}
+
+message IdeaCreatedEvent {
+  string id = 1;
+  string userId = 2;
+  string createdAt = 3;
+}
+
+message IdeaRenamed {
+  string id = 1;
+  string title = 2;
+}
+
+message IdeaDescriptionEdited {
+  string id = 1;
+  string description = 2;
+}
+
+message IdeaTagsAdded {
+  string id = 1;
+  repeated string tags = 2;
+}
+
+message IdeaTagsRemoved {
+  string id = 1;
+  repeated string tags = 2;
+}
+
+message IdeaPublished {
+  string id = 1;
+  string publishedAt = 2;
+}
+
+message IdeaDeleted {
+  string id = 1;
+  string deletedAt = 2;
+}

@@ -1,0 +1,10 @@
+import "google/protobuf/empty.proto";
+import "idea-events.proto";
+
+syntax = "proto3";
+
+package ideaEventStore;
+
+service IdeaEventStore {
+  rpc getEvents(GetEvents) returns (IdeaEvents);
+}

@@ -1,0 +1,22 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+
+package(default_visibility = ["//:__subpackages__"])
+
+# TODO consider more fine-grained control
+filegroup(
+    name = "proto_files",
+    srcs = glob(["**/*.proto"]),
+)
+
+ts_library(
+    name = "schemas",
+    srcs = glob(["**/*.ts"]),
+    module_name = "@centsideas/schemas",
+    deps = [
+        # NOW remove this dep
+        "//packages/event-sourcing2",
+        "//packages/models",
+        "@npm//@types/async-retry",
+        "@npm//@types/node",
+    ],
+)

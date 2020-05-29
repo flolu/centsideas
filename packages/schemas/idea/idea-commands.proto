@@ -1,0 +1,49 @@
+import "google/protobuf/empty.proto";
+
+syntax = "proto3";
+
+package ideaCommands;
+
+service IdeaCommands {
+  rpc create(CreateIdea) returns (IdeaCreated);
+  rpc rename(RenameIdea) returns (google.protobuf.Empty);
+  rpc editDescription(EditIdeaDescription) returns (google.protobuf.Empty);
+  rpc updateTags(UpdateIdeaTags) returns (google.protobuf.Empty);
+  rpc publish(PublishIdea) returns (google.protobuf.Empty);
+  rpc delete(DeleteIdea) returns (google.protobuf.Empty);
+}
+
+message CreateIdea {
+  string userId = 1;
+}
+message IdeaCreated {
+  string id = 1;
+}
+
+message RenameIdea {
+  string id = 1;
+  string userId = 2;
+  string title = 3;
+}
+
+message EditIdeaDescription {
+  string id = 1;
+  string userId = 2;
+  string description = 3;
+}
+
+message UpdateIdeaTags {
+  string id = 1;
+  string userId = 2;
+  repeated string tags = 3;
+}
+
+message PublishIdea {
+  string id = 1;
+  string userId = 2;
+}
+
+  message DeleteIdea {
+  string id = 1;
+  string userId = 2;
+}
