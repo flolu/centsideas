@@ -3,9 +3,9 @@ import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
 import {Id, ISODate} from '@centsideas/types';
+import {PersistedEvent} from '@centsideas/models';
 
 import {EventStore} from './event-store';
-import {PersistedEvent} from './persisted-event';
 import {StreamEvents} from './stream-event';
 import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
 import {EventId} from './event-id';

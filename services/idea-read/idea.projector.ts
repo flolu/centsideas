@@ -1,6 +1,6 @@
 import {injectable, inject} from 'inversify';
 
-import {MongoProjector, EventListener, PersistedEvent, Project} from '@centsideas/event-sourcing2';
+import {MongoProjector, EventListener, Project} from '@centsideas/event-sourcing2';
 import {
   RpcClient,
   IdeaEventStore,
@@ -9,7 +9,7 @@ import {
   deserializeEvent,
 } from '@centsideas/rpc';
 import {EventTopics, IdeaEventNames} from '@centsideas/enums';
-import {IdeaModels} from '@centsideas/models';
+import {IdeaModels, PersistedEvent} from '@centsideas/models';
 
 import {IdeaReadEnvironment} from './idea-read.environment';
 import * as Errors from './idea-read.errors';

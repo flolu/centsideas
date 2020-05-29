@@ -1,8 +1,9 @@
 import {postConstruct} from 'inversify';
 import {Observable} from 'rxjs';
 
+import {PersistedEvent} from '@centsideas/models';
+
 import {Projector} from './projector';
-import {PersistedEvent} from './persisted-event';
 
 export abstract class InMemoryProjector extends Projector {
   abstract eventStream: Observable<PersistedEvent>;

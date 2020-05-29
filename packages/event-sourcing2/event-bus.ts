@@ -3,8 +3,7 @@ import {Observable, Observer} from 'rxjs';
 import {Kafka, logLevel, Message} from 'kafkajs';
 
 import {GlobalEnvironment} from '@centsideas/environment';
-
-import {PersistedEvent} from './persisted-event';
+import {PersistedEvent} from '@centsideas/models';
 
 const EVENT_NAME_HEADER = 'eventName';
 

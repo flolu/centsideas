@@ -1,4 +1,5 @@
 import {Id} from '@centsideas/types';
+import {PersistedEvent} from '@centsideas/models';
 
 import {StreamVersion} from './stream-version';
 import {StreamEvents} from './stream-event';
@@ -8,7 +9,6 @@ import {
   eventDeserializerMap,
   DomainEventInstance,
 } from './domain-event';
-import {PersistedEvent} from './persisted-event';
 
 export abstract class Aggregate {
   protected abstract id: Id;

@@ -1,8 +1,8 @@
 import {Observable} from 'rxjs';
-
-import {PersistedEvent} from './persisted-event';
 import {inject} from 'inversify';
+
 import {Logger} from '@centsideas/utils';
+import {PersistedEvent} from '@centsideas/models';
 
 export interface IProjector {
   eventStream: Observable<PersistedEvent>;

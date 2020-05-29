@@ -1,12 +1,12 @@
 import {inject, interfaces, injectable} from 'inversify';
 
 import {Id, ISODate} from '@centsideas/types';
+import {PersistedEvent} from '@centsideas/models';
 
 import {EventStore} from './event-store';
 import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
 import {StreamEvents} from './stream-event';
 import {EventId} from './event-id';
-import {PersistedEvent} from './persisted-event';
 import {EventDispatcher} from './event-bus';
 import {EVENT_NAME_METADATA} from './domain-event';
 import {EventStoreFactoryOptions} from './interfaces';

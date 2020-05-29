@@ -1,4 +1,4 @@
-import {PersistedEvent} from '@centsideas/event-sourcing2';
+import {PersistedEvent} from '@centsideas/models';
 
 export function extractKeyFromEventName(eventName: string) {
   return eventName.substring(eventName.indexOf('.') + 1, eventName.length);

@@ -13,6 +13,7 @@ ts_library(
     deps = [
         "//packages/enums",
         "//packages/environment",
+        "//packages/models",
         "//packages/types",
         "//packages/utils",
         "@npm//@types/async-retry",

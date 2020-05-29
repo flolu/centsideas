@@ -1,5 +1,5 @@
-import {IdeaModels} from '@centsideas/models';
-import {PersistedEvent} from '@centsideas/event-sourcing2';
+import {IdeaModels, PersistedEvent} from '@centsideas/models';
+
 import {loadService} from './util';
 
 interface CreateIdeaCommand {

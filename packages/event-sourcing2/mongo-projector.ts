@@ -4,8 +4,9 @@ import * as asyncRetry from 'async-retry';
 import {Observable, from} from 'rxjs';
 import {concatMap} from 'rxjs/operators';
 
+import {PersistedEvent} from '@centsideas/models';
+
 import {Projector} from './projector';
-import {PersistedEvent} from './persisted-event';
 
 interface SequenceCounter {
   name: string;

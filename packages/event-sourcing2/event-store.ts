@@ -1,7 +1,7 @@
 import {Id} from '@centsideas/types';
+import {PersistedEvent} from '@centsideas/models';
 
 import {StreamEvents} from './stream-event';
-import {PersistedEvent} from './persisted-event';
 
 /**
  * TODO snapshots (but probably not into event store)

@@ -1,5 +1,4 @@
-// TODO import persisted event from models
-import {PersistedEvent} from '@centsideas/event-sourcing2';
+import {PersistedEvent} from '@centsideas/models';
 
 export interface IdeaEventStore {
   getEvents: (payload: {from: number}) => Promise<{events: PersistedEvent[]}>;
