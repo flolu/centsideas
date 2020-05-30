@@ -11,10 +11,6 @@ import {IdeaDescription} from './idea-description';
 import {IdeaTags} from './idea-tags';
 import {IdeaEnvironment} from './idea.environment';
 
-/**
- * TODO maybe return event version, so that frontend can send this version to
- * projectors for better querying (probably something for read model)
- */
 @injectable()
 export class IdeaService {
   private eventStore = this.eventStoreFactory({

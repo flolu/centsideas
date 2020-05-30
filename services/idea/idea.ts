@@ -38,32 +38,32 @@ export class Idea extends Aggregate {
   rename(title: IdeaTitle, user: UserId) {
     this.checkGeneralConditions(user);
     if (this.title?.toString() === title.toString()) return;
-    this.raise(new IdeaRenamed(this.id, title));
+    this.raise(new IdeaRenamed(title));
   }
 
   editDescription(description: IdeaDescription, user: UserId) {
     this.checkGeneralConditions(user);
     if (this.description?.toString() === description.toString()) return;
-    this.raise(new IdeaDescriptionEdited(this.id, description));
+    this.raise(new IdeaDescriptionEdited(description));
   }
 
   updateTags(tags: IdeaTags, user: UserId) {
     this.checkGeneralConditions(user);
     const {added, removed} = this.tags.findDifference(tags);
-    if (added.toArray().length) this.raise(new IdeaTagsAdded(this.id, added));
-    if (removed.toArray().length) this.raise(new IdeaTagsRemoved(this.id, removed));
+    if (added.toArray().length) this.raise(new IdeaTagsAdded(added));
+    if (removed.toArray().length) this.raise(new IdeaTagsRemoved(removed));
   }
 
   publish(publishedAt: ISODate, user: UserId) {
     this.checkGeneralConditions(user);
     if (this.publishedAt) throw new Errors.IdeaAlreadyPublished(this.id, user);
     if (!this.title) throw new Errors.IdeaTitleRequired(this.id, user);
-    this.raise(new IdeaPublished(this.id, publishedAt));
+    this.raise(new IdeaPublished(publishedAt));
   }
 
   delete(deletedAt: ISODate, user: UserId) {
     this.checkGeneralConditions(user);
-    this.raise(new IdeaDeleted(this.id, deletedAt));
+    this.raise(new IdeaDeleted(deletedAt));
   }
 
   private checkGeneralConditions(user: UserId) {

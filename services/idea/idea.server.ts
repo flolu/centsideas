@@ -39,7 +39,6 @@ export class IdeaServer {
       .listen(3000);
 
     // TODO nicer implementation with @Decorators like (https://docs.nestjs.com/microservices/grpc) would be appreciated
-    // TODO error handling (also retry on concurrency issue)
     this.rpcServer.addService<IdeaCommands>(loadProtoService(IdeaCommandsService).service, {
       create: async ({userId}) => {
         const id = IdeaId.generate();

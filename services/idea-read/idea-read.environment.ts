@@ -9,4 +9,5 @@ export class IdeaReadEnvironment {
   ideaEventStoreRpcPort = environment.ideaEventStoreRpcPort;
   ideaReadDatabaseUrl = environment.ideaReadDatabaseUrl;
   ideaReadDatabaseName = 'idea_read';
+  ideaCollectionName = 'ideas';
 }

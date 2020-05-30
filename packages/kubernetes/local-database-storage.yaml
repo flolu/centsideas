@@ -22,7 +22,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/ideas-event-store'
+    path: "/mnt/data/ideas-event-store"
     type: DirectoryOrCreate
 
 ---
@@ -49,7 +49,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/users-event-store'
+    path: "/mnt/data/users-event-store"
     type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -76,7 +76,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/reviews-event-store'
+    path: "/mnt/data/reviews-event-store"
     type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -103,7 +103,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/projection-database'
+    path: "/mnt/data/projection-database"
     type: DirectoryOrCreate
 ---
 apiVersion: v1
@@ -130,7 +130,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/notifications-event-store'
+    path: "/mnt/data/notifications-event-store"
     type: DirectoryOrCreate
 
 ---
@@ -145,7 +145,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/admin-database'
+    path: "/mnt/data/admin-database"
     type: DirectoryOrCreate
 
 ---
@@ -155,6 +155,33 @@ metadata:
   name: amdin-database-pvc
 spec:
   storageClassName: amdin-database-local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: idea-read-pv-volume
+spec:
+  storageClassName: idea-read-db-local-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/admin-database"
+    type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: idea-read-db-pvc
+spec:
+  storageClassName: idea-read-db-local-storage
   accessModes:
     - ReadWriteOnce
   resources:

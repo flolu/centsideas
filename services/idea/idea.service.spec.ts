@@ -15,7 +15,6 @@ import {deserializeEvent} from '@centsideas/rpc';
 import {IdeaService} from './idea.service';
 import {IdeaEnvironment} from './idea.environment';
 
-// TODO this tesing to expect not to throw errors seems useless?!
 // TODO listen for events dispatched by mock event dispatcher in tests? (maybe in an integration test)
 describe('IdeaService', () => {
   DependencyInjection.registerProviders(
@@ -103,7 +102,7 @@ describe('IdeaService', () => {
     events = await newService.getEvents(2);
     const editedEvent = events[0];
     expect(editedEvent.name).toEqual(IdeaEventNames.DescriptionEdited);
-    expect(deserializeEvent(editedEvent).data).toEqual({id: id.toString(), description});
+    expect(deserializeEvent(editedEvent).data).toEqual({description});
     expect(editedEvent.sequence).toEqual(2);
     expect(editedEvent.version).toEqual(2);
   });

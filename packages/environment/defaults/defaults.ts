@@ -42,7 +42,7 @@ export const defaultKubernetesEnv = {
 export const defaultDockerComposeEnv = {
   ideasHost: 'ideas',
   ideaHost: 'idea',
-  ideasDatabaseUrl: 'mongodb://mongo-database:27017', // TODO remove
+  ideasDatabaseUrl: 'mongodb://mongo-database:27017', // TODO remove eventually
   ideaDetailsHost: 'idea-read',
   ideaEventStoreDatabaseUrl: 'mongodb://mongo-database:27017',
   ideaReadDatabaseUrl: 'mongodb://mongo-database:27017',

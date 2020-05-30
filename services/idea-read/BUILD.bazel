@@ -35,22 +35,19 @@ nodejs_image(
 
 k8s_deploy(
     name = "k8s",
-    images = {"idea-detail-projector:placeholder_name": ":image"},
+    images = {"idea-read:placeholder_name": ":image"},
     template = ":idea-read.yaml",
 )
 
 microk8s_deploy(
     name = "microk8s",
-    images = {"idea-detail-projector:placeholder_name": ":image"},
+    images = {"idea-read:placeholder_name": ":image"},
     template = ":idea-read.yaml",
 )
 
 ts_jest(
     name = "test",
-    srcs = glob(
-        include = ["**/*.spec.ts"],
-        exclude = ["ideas.handler.spec.ts"],
-    ),
+    srcs = glob(["**/*.spec.ts"]),
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
 )

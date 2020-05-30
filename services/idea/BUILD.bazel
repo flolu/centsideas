@@ -26,12 +26,27 @@ ts_library(
     ],
 )
 
+nodejs_image(
+    name = "image",
+    data = [":lib"],
+    entry_point = ":index.ts",
+)
+
+k8s_deploy(
+    name = "k8s",
+    images = {"idea:placeholder_name": ":image"},
+    template = ":idea.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s",
+    images = {"idea:placeholder_name": ":image"},
+    template = ":idea.yaml",
+)
+
 ts_jest(
     name = "test",
-    srcs = glob(
-        include = ["**/*.spec.ts"],
-        exclude = ["ideas.handler.spec.ts"],
-    ),
+    srcs = glob(["**/*.spec.ts"]),
     data = ["//packages/rpc:proto_files"],
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",

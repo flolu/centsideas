@@ -77,6 +77,19 @@ spec:
       storage: 1Gi
 
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: idea-read-db-pvc
+spec:
+  storageClassName: cloud-ssd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:

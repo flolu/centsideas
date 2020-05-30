@@ -6,7 +6,7 @@ import {GlobalEnvironment} from '@centsideas/environment';
 import {Logger} from '@centsideas/utils';
 import {IdeaRead, loadProtoService, IdeaReadService} from '@centsideas/schemas';
 
-import {IdeaProjector} from './idea.projector';
+import {IdeaRepository} from './idea.repository';
 
 @injectable()
 export class IdeaReadServer {
@@ -15,7 +15,7 @@ export class IdeaReadServer {
   constructor(
     private globalEnv: GlobalEnvironment,
     private logger: Logger,
-    private projector: IdeaProjector,
+    private repository: IdeaRepository,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
@@ -25,9 +25,9 @@ export class IdeaReadServer {
       .listen(3000);
 
     this.rpcServer.addService<IdeaRead>(loadProtoService(IdeaReadService).service, {
-      getById: ({id, userId}) => this.projector.getById(id, userId),
+      getById: ({id, userId}) => this.repository.getById(id, userId),
       getAll: async () => {
-        const ideas = await this.projector.getAll();
+        const ideas = await this.repository.getAll();
         return {ideas};
       },
     });

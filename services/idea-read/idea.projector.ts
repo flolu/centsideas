@@ -1,4 +1,5 @@
 import {injectable, inject} from 'inversify';
+import * as asynRetry from 'async-retry';
 
 import {MongoProjector, EventListener, Project} from '@centsideas/event-sourcing2';
 import {
@@ -12,7 +13,6 @@ import {IdeaModels, PersistedEvent} from '@centsideas/models';
 import {IdeaEventStoreService, IdeaEventStore} from '@centsideas/schemas';
 
 import {IdeaReadEnvironment} from './idea-read.environment';
-import * as Errors from './idea-read.errors';
 
 @injectable()
 export class IdeaProjector extends MongoProjector {
@@ -22,7 +22,6 @@ export class IdeaProjector extends MongoProjector {
     IdeaEventStoreService,
     this.env.ideaEventStoreRpcPort,
   );
-  private ideaCollectionName = 'ideas';
   databaseUrl = this.env.ideaReadDatabaseUrl;
   databaseName = this.env.ideaReadDatabaseName;
 
@@ -42,8 +41,10 @@ export class IdeaProjector extends MongoProjector {
   eventStream = this.eventListener.listen(EventTopics.Idea, this.consumerGroupName);
 
   async getEvents(from: number) {
-    // TODO retry until got response
-    const result = await this.ideaEventStoreRpc.client.getEvents({from});
+    const result = await asynRetry(() => this.ideaEventStoreRpc.client.getEvents({from}), {
+      minTimeout: 500,
+      retries: 5,
+    });
     if (!result.events) return [];
     return result.events.map(deserializeEvent);
   }
@@ -128,25 +129,6 @@ export class IdeaProjector extends MongoProjector {
 
   private async ideaCollection() {
     const db = await this.db();
-    return db.collection<IdeaModels.IdeaModel>(this.ideaCollectionName);
-  }
-
-  // TODO consider triggering replay before returning the document (or after, depending on the importance of consistency)
-  // TODO querying is probably not a task for the projector
-  async getById(id: string, userId?: string) {
-    const collection = await this.ideaCollection();
-    const idea = await collection.findOne({id});
-    if (!idea) throw new Errors.IdeaNotFound(id);
-    if (!idea.publishedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
-    if (idea.deletedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
-    return idea;
-  }
-  async getAll() {
-    const collection = await this.ideaCollection();
-    const result = await collection.find({
-      publishedAt: {$exists: true, $ne: ''},
-      deletedAt: '',
-    });
-    return result.toArray();
+    return db.collection<IdeaModels.IdeaModel>(this.env.ideaCollectionName);
   }
 }

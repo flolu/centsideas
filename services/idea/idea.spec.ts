@@ -42,7 +42,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new IdeaRenamed(id, title));
+    ).toContainEqual(new IdeaRenamed(title));
   });
 
   it('edits idea description', () => {
@@ -53,7 +53,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new IdeaDescriptionEdited(id, description));
+    ).toContainEqual(new IdeaDescriptionEdited(description));
   });
 
   it('adds and removes tags to / from idea', () => {
@@ -65,14 +65,14 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new IdeaTagsAdded(id, tags));
+    ).toContainEqual(new IdeaTagsAdded(tags));
     idea.updateTags(updatedTags, user);
     const flushed = idea
       .flushEvents()
       .toArray()
       .map(e => e.event);
-    expect(flushed).toContainEqual(new IdeaTagsAdded(id, IdeaTags.fromArray(['legendary'])));
-    expect(flushed).toContainEqual(new IdeaTagsRemoved(id, IdeaTags.fromArray(['test', 'idea'])));
+    expect(flushed).toContainEqual(new IdeaTagsAdded(IdeaTags.fromArray(['legendary'])));
+    expect(flushed).toContainEqual(new IdeaTagsRemoved(IdeaTags.fromArray(['test', 'idea'])));
   });
 
   it('publishes idea', () => {
@@ -85,7 +85,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new IdeaPublished(id, publishedAt));
+    ).toContainEqual(new IdeaPublished(publishedAt));
   });
 
   it('can not publish ideas without a title', () => {
@@ -115,7 +115,7 @@ describe('Idea', () => {
         .flushEvents()
         .toArray()
         .map(e => e.event),
-    ).toContainEqual(new IdeaDeleted(id, deletedAt));
+    ).toContainEqual(new IdeaDeleted(deletedAt));
   });
 
   it('rejects commands from users other than the owner', () => {

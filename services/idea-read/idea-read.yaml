@@ -1,1 +1,99 @@
-# TODO k8s config for idea read service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idea-read-deployment
+spec:
+  selector:
+    matchLabels:
+      app: idea-read
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: idea-read
+    spec:
+      containers:
+        - name: idea-read
+          image: idea-read:placeholder_name
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: global-config
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 10m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: centsideas-idea-read
+spec:
+  selector:
+    app: idea-read
+  ports:
+    - name: http
+      port: 3000
+    - name: grpc
+      port: 40000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idea-read-db-deployment
+spec:
+  selector:
+    matchLabels:
+      app: idea-read-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: idea-read-db
+    spec:
+      containers:
+        - name: idea-read-db
+          image: mongo:4
+          volumeMounts:
+            - name: persistent-db-storage
+              mountPath: /data/db
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 10m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+      volumes:
+        - name: persistent-db-storage
+          persistentVolumeClaim:
+            claimName: idea-read-db-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: centsideas-idea-read-db
+spec:
+  selector:
+    app: idea-read-db
+  ports:
+    - name: mongo
+      port: 27017
+  type: ClusterIP

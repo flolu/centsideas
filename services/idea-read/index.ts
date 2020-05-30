@@ -18,6 +18,7 @@ import {
 import {IdeaReadServer} from './idea-read.server';
 import {IdeaReadEnvironment} from './idea-read.environment';
 import {IdeaProjector} from './idea.projector';
+import {IdeaRepository} from './idea.repository';
 
 DependencyInjection.registerProviders(
   GlobalEnvironment,
@@ -28,10 +29,13 @@ DependencyInjection.registerProviders(
   RpcServer,
   RpcClient,
   IdeaProjector,
+  IdeaRepository,
 );
 
 DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.IdeaRead);
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [60, 100, 80]);
 DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DependencyInjection.registerFactory(NEW_RPC_CLIENT_FACTORY, newRpcClientFactory);
+
 DependencyInjection.bootstrap(IdeaReadServer);
+DependencyInjection.bootstrap(IdeaProjector);
