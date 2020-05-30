@@ -2,7 +2,6 @@ import {KafkaMessage} from 'kafkajs';
 import {injectable, inject} from 'inversify';
 
 import {EventRepository} from '@centsideas/event-sourcing';
-import {EventTopics} from '@centsideas/enums';
 import {IErrorOccurredPayload} from '@centsideas/models';
 
 import {ErrorEntity} from './error.entity';
@@ -11,7 +10,7 @@ import {AdminEnvironment} from './admin.environment';
 @injectable()
 export class ErrorRepository extends EventRepository<ErrorEntity> {
   constructor(@inject(AdminEnvironment) env: AdminEnvironment) {
-    super(ErrorEntity, env.adminDatabaseUrl, env.errorDatabaseName, EventTopics.Ideas);
+    super(ErrorEntity, env.adminDatabaseUrl, env.errorDatabaseName, '');
   }
 
   handleErrorOccurred = async (kafkaMessage: KafkaMessage) => {

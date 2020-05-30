@@ -4,7 +4,6 @@ import {Environments} from '@centsideas/enums';
 export interface IEnvironment {
   environment: Environments;
   gatewayUrl: string;
-  ideasHost: string;
   usersHost: string;
   reviewsHost: string;
   adminHost: string;
@@ -14,8 +13,6 @@ export interface IEnvironment {
   mainClientUrl: string;
   frontendServerExchangeSecret: string;
 
-  ideasRpcPort: number;
-  ideasDatabaseUrl: string;
   ideaRpcPort: number;
   ideaHost: string;
   ideaDetailsHost: string;

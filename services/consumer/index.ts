@@ -13,7 +13,6 @@ import {RpcServer, RPC_SERVER_FACTORY, rpcServerFactory} from '@centsideas/rpc';
 import {ConsumerServer} from './consumer.server';
 import {ProjectionDatabase} from './projection-database';
 import {QueryService} from './query.service';
-import {IdeasProjection} from './ideas.projection';
 import {ReviewsProjection} from './reviews.projection';
 import {UsersProjection} from './users.projection';
 import {ConsumerEnvironment} from './consumer.environment';
@@ -23,7 +22,6 @@ DependencyInjection.registerProviders(
   ConsumerServer,
   ProjectionDatabase,
   QueryService,
-  IdeasProjection,
   ReviewsProjection,
   UsersProjection,
   ConsumerEnvironment,

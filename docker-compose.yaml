@@ -27,7 +27,6 @@ services:
   gateway:
     image: node:lts-alpine
     working_dir: /
-    # FIXME simplify volumes if possible https://stackoverflow.com/questions/61547472
     volumes:
       - ./package.json:/package.json
       - ./tsconfig.json:/tsconfig.json
@@ -72,22 +71,6 @@ services:
       - idea
       - kafka
       - mongo-database
-
-  # ideas:
-  #   image: node:lts-alpine
-  #   working_dir: /
-  #   volumes:
-  #     - ./package.json:/package.json
-  #     - ./tsconfig.json:/tsconfig.json
-  #     - ./misc/register-aliases.ts:/register-aliases.ts
-  #     - ./services/ideas:/services/ideas
-  #     - ./packages:/packages
-  #     - ./node_modules:/node_modules
-  #   env_file: .env
-  #   command: yarn run ts-node-dev services/ideas --colors
-  #   depends_on:
-  #     - kafka
-  #     - mongo-database
 
   # reviews:
   #   image: node:lts-alpine

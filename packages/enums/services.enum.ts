@@ -4,7 +4,6 @@ export enum Services {
   Client = 'client',
   AdminClient = 'admin-client',
   Consumer = 'consumer',
-  Ideas = 'ideas',
   Idea = 'idea',
   IdeaRead = 'idea-read',
   Notifications = 'notifications',

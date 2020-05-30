@@ -1,9 +1,3 @@
-export enum IdeaEvents {
-  IdeaCreated = 'idea-created',
-  IdeaDeleted = 'idea-deleted',
-  IdeaUpdated = 'idea-updated',
-}
-
 export enum ReviewEvents {
   ReviewCreated = 'review-created',
   ReviewDraftSaved = 'review-draft-saved',

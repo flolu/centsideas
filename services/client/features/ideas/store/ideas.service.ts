@@ -39,6 +39,6 @@ export class IdeasService {
   }
 
   private get baseUrl() {
-    return `${this.environment.gatewayUrl}/${ApiEndpoints.Ideas}`;
+    return `${this.environment.gatewayUrl}/${ApiEndpoints.Idea}`;
   }
 }

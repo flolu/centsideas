@@ -21,8 +21,12 @@ ts_library(
         "//packages/rpc",
         "//packages/schemas",
         "//packages/utils",
+        "@npm//@types/async-retry",
+        "@npm//@types/mongodb",
         "@npm//@types/node",
+        "@npm//async-retry",
         "@npm//inversify",
+        "@npm//mongodb",
         "@npm//rxjs",
     ],
 )

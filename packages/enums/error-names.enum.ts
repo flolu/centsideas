@@ -7,12 +7,6 @@ export enum ErrorNames {
   Unauthenticated = 'unauthenticated',
   TokenInvalid = 'token-invalid',
 
-  IdeaDescriptionLength = 'ideas-description-length',
-  IdeaIdRequired = 'idea-id-required',
-  IdeaNotFound = 'idea-not-found',
-  IdeaTitleLength = 'idea-title-length',
-  SaveIdeaPayloadRequired = 'idea-payload-required',
-
   NoNotificationSettingsWithUserIdFound = 'no-notification-settings-with-user-id-found',
   NotificationSettingsNotFound = 'notification-settings-not-found',
   NotificationSettingsPayloadInvalid = 'notification-settings-payload-invalid',

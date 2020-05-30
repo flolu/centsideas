@@ -45,7 +45,7 @@ export class QueryController implements interfaces.Controller {
   }
 
   @httpGet(`/${ApiEndpoints.Idea}/:id`, AuthMiddleware)
-  getIdeaById2(req: express.Request, res: express.Response) {
+  getIdeaById(req: express.Request, res: express.Response) {
     const {userId} = res.locals;
     return this.ideaDetailsRpc.client.getById({id: req.params.id, userId});
   }

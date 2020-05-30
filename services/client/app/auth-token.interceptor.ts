@@ -11,7 +11,7 @@ import {Store} from '@ngrx/store';
 import {first, flatMap, catchError} from 'rxjs/operators';
 import {Actions, ofType} from '@ngrx/effects';
 
-import {HeaderKeys, HttpStatusCodes} from '@centsideas/enums';
+import {HeaderKeys} from '@centsideas/enums';
 import {AuthSelectors, AuthActions} from '@cic/store';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
           catchError(error => {
             console.log('error in intercetpor', error);
-            if (error instanceof HttpErrorResponse && error.status === HttpStatusCodes.Unauthorized)
+            if (error instanceof HttpErrorResponse && error.status === 401)
               return this.handleAccessTokenRefresh(req, next);
             return throwError(error);
           }),

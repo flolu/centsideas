@@ -2,7 +2,7 @@ import * as http from 'http';
 import {injectable, inject} from 'inversify';
 
 import {Logger} from '@centsideas/utils';
-import {EventTopics, IdeaEvents, LoginEvents, UserEvents} from '@centsideas/enums';
+import {EventTopics, LoginEvents, UserEvents} from '@centsideas/enums';
 import {IEvent} from '@centsideas/models';
 import {MessageBroker} from '@centsideas/event-sourcing';
 import {
@@ -44,20 +44,12 @@ export class NotificationsServer {
 
     // FIXME better error handling
     try {
-      this.messageBroker.events(EventTopics.Ideas).subscribe(this.handleIdeasEvents);
       this.messageBroker.events(EventTopics.Logins).subscribe(this.handleLoginEvents);
       this.messageBroker.events(EventTopics.Users).subscribe(this.handleUsersEvents);
     } catch (error) {
       this.logger.error(error);
     }
   }
-
-  private handleIdeasEvents = async (event: IEvent<any>) => {
-    switch (event.name) {
-      case IdeaEvents.IdeaCreated:
-        return this.notificationsHandler.handleIdeaCreatedNotification(event);
-    }
-  };
 
   private handleLoginEvents = async (event: IEvent<any>) => {
     switch (event.name) {

@@ -5,8 +5,6 @@ import environment from '@centsideas/environment';
 @injectable()
 export class GatewayEnvironment {
   accessTokenSecret = environment.accessTokenSecret;
-  ideasRpcPort = environment.ideasRpcPort;
-  ideasHost = environment.ideasHost;
   consumerRpcPort = environment.consumerRpcPort;
   consumerRpcHost = environment.consumerHost;
   mainClientUrl = environment.mainClientUrl;

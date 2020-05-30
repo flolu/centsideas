@@ -7,7 +7,6 @@ import {EventTopics} from '@centsideas/enums';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
 
-import {IdeasProjection} from './ideas.projection';
 import {ReviewsProjection} from './reviews.projection';
 import {UsersProjection} from './users.projection';
 
@@ -18,7 +17,6 @@ export class ConsumerServer {
   constructor(
     private globalEnv: GlobalEnvironment,
     private messageBroker: MessageBroker,
-    private ideasProjection: IdeasProjection,
     private reviewsProjection: ReviewsProjection,
     private usersProjection: UsersProjection,
     private logger: Logger,
@@ -30,7 +28,6 @@ export class ConsumerServer {
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);
 
-    this.messageBroker.events(EventTopics.Ideas).subscribe(this.ideasProjection.handleEvent);
     this.messageBroker.events(EventTopics.Reviews).subscribe(this.reviewsProjection.handleEvent);
     this.messageBroker.events(EventTopics.Users).subscribe(this.usersProjection.handleEvent);
   }

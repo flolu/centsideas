@@ -1,16 +1,10 @@
 import {injectable} from 'inversify';
 import * as webpush from 'web-push';
 
-import {
-  HttpStatusCodes,
-  NotificationMedium,
-  TopLevelFrontendRoutes,
-  EventTopics,
-} from '@centsideas/enums';
+import {NotificationMedium, EventTopics} from '@centsideas/enums';
 import {Identifier} from '@centsideas/utils';
 import {
   IPushSubscription,
-  IIdeaCreatedEvent,
   ILoginRequestedEvent,
   IEmailChangeRequestedEvent,
   IEmailChangeConfirmedEvent,
@@ -63,7 +57,7 @@ export class NotificationsHandlers {
     await Promise.all(
       ns.persistedState.pushSubscriptions.map(sub =>
         webpush.sendNotification(sub, JSON.stringify(payload)).catch(error => {
-          if (error.statusCode === HttpStatusCodes.Gone) invalidSubscriptions.push(sub);
+          if (error.statusCode === 410) invalidSubscriptions.push(sub);
           else throw error;
         }),
       ),
@@ -74,25 +68,6 @@ export class NotificationsHandlers {
     if (invalidSubscriptions.length)
       await this.notificationSettingsHandlers.removeSubscriptions(ns, invalidSubscriptions);
     return true;
-  }
-
-  handleIdeaCreatedNotification(event: IEvent<IIdeaCreatedEvent>) {
-    const pushPayload: IPushPayload = {
-      notification: {
-        title: 'Your Idea has been Published',
-        body: event.data.title,
-        data: {
-          url: `/${TopLevelFrontendRoutes.Ideas}/${event.aggregateId}`,
-        },
-      },
-    };
-
-    return this.sendPushNotificationToUser(
-      event.data.userId,
-      pushPayload,
-      event,
-      EventTopics.Ideas,
-    );
   }
 
   async handleLoginNotification(event: IEvent<ILoginRequestedEvent>) {

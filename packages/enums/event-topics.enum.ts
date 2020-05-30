@@ -1,5 +1,4 @@
 export enum EventTopics {
-  Ideas = 'centsideas.events.ideas',
   Idea = 'centsideas.events.idea',
   Reviews = 'centsideas.events.reviews',
   Users = 'centsideas.events.users',
