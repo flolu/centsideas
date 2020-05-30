@@ -7,7 +7,7 @@ import {
   MongoEventStore,
   MONGO_EVENT_STORE_FACTORY,
   mongoEventStoreFactory,
-} from '@centsideas/event-sourcing2';
+} from '@centsideas/event-sourcing';
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {UTILS_TYPES, Logger} from '@centsideas/utils';

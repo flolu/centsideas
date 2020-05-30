@@ -3,7 +3,6 @@ import * as fromChalk from 'chalk';
 import {injectable, inject} from 'inversify';
 
 import {Environments, RpcStatus} from '@centsideas/enums';
-import {IEvent} from '@centsideas/models';
 import {GlobalEnvironment} from '@centsideas/environment';
 
 import {UTILS_TYPES} from './utils-types';
@@ -47,11 +46,6 @@ export class Logger {
 
   warn(...text: unknown[]) {
     console.warn(this.prefix, this.chalk.yellow.bold(this.timestamp, ...text));
-  }
-
-  event(event: IEvent) {
-    console.log(this.chalk.bold(event.name));
-    console.log(this.chalk.dim(JSON.stringify(event.data)));
   }
 
   private get timestamp() {

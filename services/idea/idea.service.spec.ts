@@ -7,7 +7,7 @@ import {
   inMemoryEventStoreFactory,
   InMemoryEventStore,
   EventDispatcherMock,
-} from '@centsideas/event-sourcing2';
+} from '@centsideas/event-sourcing';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {IdeaEventNames} from '@centsideas/enums';
 import {deserializeEvent} from '@centsideas/rpc';
@@ -15,7 +15,6 @@ import {deserializeEvent} from '@centsideas/rpc';
 import {IdeaService} from './idea.service';
 import {IdeaEnvironment} from './idea.environment';
 
-// TODO listen for events dispatched by mock event dispatcher in tests? (maybe in an integration test)
 describe('IdeaService', () => {
   DependencyInjection.registerProviders(
     IdeaService,

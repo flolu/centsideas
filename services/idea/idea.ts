@@ -1,4 +1,4 @@
-import {Aggregate, Apply} from '@centsideas/event-sourcing2';
+import {Aggregate, Apply} from '@centsideas/event-sourcing';
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
 

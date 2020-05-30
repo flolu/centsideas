@@ -1,3 +1,5 @@
+# NOW remove redundant packages from package.json
+
 load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//services:__subpackages__"])
@@ -12,14 +14,7 @@ k8s_objects(
     objects = [
         "//packages/kubernetes:defaults",
         "//services/gateway:k8s",
-        "//services/consumer:k8s",
         "//services/idea:k8s",
-        "//services/reviews:k8s",
-        "//services/users:k8s",
-        "//services/client:k8s",
-        "//services/admin-client:k8s",
-        "//services/notifications:k8s",
-        "//services/admin:k8s",
     ],
 )
 
@@ -28,13 +23,6 @@ k8s_objects(
     objects = [
         "//packages/kubernetes:microk8s_defaults",
         "//services/gateway:microk8s",
-        "//services/admin-client:microk8s",
-        "//services/consumer:microk8s",
         "//services/idea:microk8s",
-        "//services/reviews:microk8s",
-        "//services/users:microk8s",
-        "//services/client:microk8s",
-        "//services/notifications:microk8s",
-        "//services/admin:microk8s",
     ],
 )

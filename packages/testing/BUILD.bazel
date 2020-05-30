@@ -7,10 +7,7 @@ ts_library(
     name = "testing",
     srcs = glob(
         include = ["**/*.ts"],
-        exclude = [
-            "**/*.spec.ts",
-            "test/**",
-        ],
+        exclude = ["**/*.spec.ts"],
     ),
     module_name = "@centsideas/testing",
     deps = ["@npm//@types/jest"],

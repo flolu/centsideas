@@ -1,4 +1,3 @@
-# TODO make up to date
 steps:
   # FIXME only rebuild image when necessary ann delete previous version from gcr
   # - name: 'gcr.io/cloud-builders/docker'
@@ -17,22 +16,16 @@ steps:
     args: ["test", "//services/idea/..."]
 
   - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/reviews/..."]
-
-  - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/users/..."]
-
-  - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/notifications/..."]
-
-  - name: gcr.io/centsideas/bazelisk
-    args: ["test", "//services/admin/..."]
-
-  - name: gcr.io/centsideas/bazelisk
     args: ["test", "//packages/event-sourcing/..."]
 
   - name: gcr.io/centsideas/bazelisk
     args: ["test", "//packages/utils/..."]
+
+  - name: gcr.io/centsideas/bazelisk
+    args: ["test", "//packages/testing/..."]
+
+  - name: gcr.io/centsideas/bazelisk
+    args: ["test", "//packages/types/..."]
 timeout: 3600s
 #options:
 #  machineType: "N1_HIGHCPU_8"

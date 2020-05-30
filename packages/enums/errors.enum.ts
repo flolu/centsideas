@@ -1,5 +1,6 @@
 export enum GenericErrorNames {
   Unexpected = 'unexpected',
+  InvalidAuthToken = 'invalidAuthToken',
 }
 
 export enum IdeaErrorNames {

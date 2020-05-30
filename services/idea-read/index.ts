@@ -3,7 +3,7 @@ if (!process.env.environment) require('../../register-aliases').registerAliases(
 
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {GlobalEnvironment} from '@centsideas/environment';
-import {EventListener} from '@centsideas/event-sourcing2';
+import {EventListener} from '@centsideas/event-sourcing';
 import {Logger, UTILS_TYPES} from '@centsideas/utils';
 import {Services} from '@centsideas/enums';
 import {
@@ -11,8 +11,8 @@ import {
   RPC_SERVER_FACTORY,
   rpcServerFactory,
   RpcClient,
-  NEW_RPC_CLIENT_FACTORY,
-  newRpcClientFactory,
+  RPC_CLIENT_FACTORY,
+  rpcClientFactory,
 } from '@centsideas/rpc';
 
 import {IdeaReadServer} from './idea-read.server';
@@ -35,7 +35,7 @@ DependencyInjection.registerProviders(
 DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.IdeaRead);
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [60, 100, 80]);
 DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
-DependencyInjection.registerFactory(NEW_RPC_CLIENT_FACTORY, newRpcClientFactory);
+DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
 
 DependencyInjection.bootstrap(IdeaReadServer);
 DependencyInjection.bootstrap(IdeaProjector);

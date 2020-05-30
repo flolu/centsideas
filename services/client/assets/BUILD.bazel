@@ -1,9 +1,0 @@
-package(default_visibility = ["//services/client:__subpackages__"])
-
-filegroup(
-    name = "assets",
-    srcs = glob([
-        "**/*.png",
-        "**/*.ogg",
-    ]),
-)

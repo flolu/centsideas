@@ -1,13 +1,13 @@
 import * as jwt from 'jsonwebtoken';
 
-import {TokenInvalidError} from './errors/token-invalid.error';
+import {InvalidAuthToken} from './exception';
 
 export const decodeToken = <T = any>(token: string, jwtSecret: string): T => {
   let decoded: any;
   try {
     decoded = jwt.verify(token, jwtSecret);
   } catch (err) {
-    throw new TokenInvalidError(token, err.message);
+    throw new InvalidAuthToken(err.message, {token});
   }
   return decoded;
 };

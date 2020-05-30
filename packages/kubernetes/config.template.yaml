@@ -8,38 +8,12 @@ data:
 
   gatewayUrl: ${gatewayUrl}
   ideasHost: ${ideasHost}
-  usersHost: ${usersHost}
-  reviewsHost: ${reviewsHost}
-  adminHost: ${adminHost}
-  consumerHost: ${consumerHost}
-  notificationsHost: ${notificationsHost}
 
   mainClientUrl: ${mainClientUrl}
   frontendServerExchangeSecret: ${frontendServerExchangeSecret}
-
-  usersRpcPort: "${usersRpcPort}"
-  usersDatabaseUrl: ${usersDatabaseUrl}
   googleClientId: ${googleClientId}
 
-  notificationsRpcPort: "${notificationsRpcPort}"
-  notificationsDatabaseUrl: ${notificationsDatabaseUrl}
   vapidPublicKey: ${vapidPublicKey}
-
-  ideasRpcPort: "${ideasRpcPort}"
-  ideasDatabaseUrl: ${ideasDatabaseUrl}
-  ideaEventStoreDatabaseUrl: ${ideaEventStoreDatabaseUrl}
-  ideaReadDatabaseUrl: ${ideaReadDatabaseUrl}
-
-  consumerRpcPort: "${consumerRpcPort}"
-  projectionDatabaseUrl: ${projectionDatabaseUrl}
-
-  adminClientUrl: ${adminClientUrl}
-  adminSocketUrl: ${adminSocketUrl}
-  adminDatabaseUrl: ${adminDatabaseUrl}
-  adminRpcPort: "${adminRpcPort}"
-
-  reviewsDatabaseUrl: ${reviewsDatabaseUrl}
-  reviewsRpcPort: "${reviewsRpcPort}"
 
   kafkaAdvertisedHostName: ${kafkaAdvertisedHostName}
   kafkaZookeeperConnect: ${kafkaZookeeperConnect}

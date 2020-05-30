@@ -16,7 +16,7 @@ ts_library(
         "//packages/dependency-injection",
         "//packages/enums",
         "//packages/environment",
-        "//packages/event-sourcing2",
+        "//packages/event-sourcing",
         "//packages/models",
         "//packages/rpc",
         "//packages/schemas",
@@ -27,7 +27,6 @@ ts_library(
         "@npm//async-retry",
         "@npm//inversify",
         "@npm//mongodb",
-        "@npm//rxjs",
     ],
 )
 

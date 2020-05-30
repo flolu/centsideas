@@ -1,13 +1,8 @@
 import {injectable, inject} from 'inversify';
 import * as asynRetry from 'async-retry';
 
-import {MongoProjector, EventListener, Project} from '@centsideas/event-sourcing2';
-import {
-  RpcClient,
-  deserializeEvent,
-  NEW_RPC_CLIENT_FACTORY,
-  NewRpcClientFactory,
-} from '@centsideas/rpc';
+import {MongoProjector, EventListener, Project} from '@centsideas/event-sourcing';
+import {RpcClient, deserializeEvent, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
 import {EventTopics, IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels, PersistedEvent} from '@centsideas/models';
 import {IdeaEventStoreService, IdeaEventStore} from '@centsideas/schemas';
@@ -28,7 +23,7 @@ export class IdeaProjector extends MongoProjector {
   constructor(
     private eventListener: EventListener,
     private env: IdeaReadEnvironment,
-    @inject(NEW_RPC_CLIENT_FACTORY) private rpcFactory: NewRpcClientFactory,
+    @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {
     super();
   }

@@ -5,8 +5,6 @@ import * as asyncRetry from 'async-retry';
 import {Logger, UTILS_TYPES, UnexpectedException} from '@centsideas/utils';
 import {EventSourcingErrorNames, RpcStatus} from '@centsideas/enums';
 
-import {loadProtoPackage} from './util';
-
 @injectable()
 export class RpcServer {
   isRunning = false;
@@ -40,12 +38,6 @@ export class RpcServer {
   ) {
     const grpcImpl = this.convertToGrpcImplementation(implementation);
     this.server.addService(service, grpcImpl);
-  }
-
-  // TODO remove eventually
-  loadService(packageName: string, serviceName: string): grpc.ServiceDefinition {
-    const protoPackage = loadProtoPackage(packageName);
-    return (protoPackage as any)[serviceName].service;
   }
 
   /**

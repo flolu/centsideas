@@ -1,7 +1,0 @@
-{
-  "extends": "../../packages/angular-bazel/tslint-base.json",
-  "rules": {
-    "directive-selector": [true, "attribute", "cia", "camelCase"],
-    "component-selector": [true, "element", "cia", "kebab-case"]
-  }
-}

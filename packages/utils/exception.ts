@@ -19,3 +19,12 @@ export class UnexpectedException extends Exception {
     super(message || 'Unexpected error occurred!', details);
   }
 }
+
+export class InvalidAuthToken extends Exception {
+  code = RpcStatus.INVALID_ARGUMENT;
+  name = GenericErrorNames.InvalidAuthToken;
+
+  constructor(message: string, details?: any) {
+    super(message, details);
+  }
+}

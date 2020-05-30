@@ -2,12 +2,9 @@
   "name": "centsideas",
   "scripts": {
     "dev": "yarn env:setup && yarn docker",
-    "client:dev": "yarn env:setup && ibazel run //services/client:dev_server",
-    "admin:dev": "yarn env:setup && ibazel run //services/admin-client:dev_server",
-    "client": "yarn env:setup && bazelisk run //services/client",
-    "admin": "yarn env:setup && bazelisk run //services/admin-client",
     "test": "yarn env:setup && bazelisk test //...",
-    "test:unit": "jest --testPathIgnorePatterns=services/client",
+    "test:unit": "jest",
+    "test:coverage": "jest --coverage",
     "deploy": "yarn env:setup:prod && bazelisk run :k8s.apply",
     "deploy:microk8s": "yarn env:setup:staging && bazelisk run :microk8s.apply",
     "lint": "tslint --project .",
@@ -23,10 +20,6 @@
     "env:setup:staging": "ts-node packages/environment/setups/staging",
     "env:setup:prod": "ts-node packages/environment/setups/prod",
     "postinstall": "patch-package --patch-dir misc/patches && ngcc && yarn env:setup"
-  },
-  "scriptsComments": {
-    "test:dev": "# TODO make angular jest tests work",
-    "docker": "# FIXME disable logger prefixes https://github.com/docker/compose/issues/7416"
   },
   "dependencies": {
     "@angular/animations": "9.1.8",

@@ -18,12 +18,6 @@ export async function setupEnv(environment: IEnvironment) {
 
     console.log(chalk.greenBright('✔'), chalk.bold(dotenvFilePath));
 
-    await setupTemplateFile(templatePaths.mainClient, genPaths.mainClient, environment);
-    console.log(chalk.greenBright('✔'), chalk.bold(genPaths.mainClient));
-
-    await setupTemplateFile(templatePaths.adminClient, genPaths.adminClient, environment);
-    console.log(chalk.greenBright('✔'), chalk.bold(genPaths.adminClient));
-
     await setupTemplateFile(templatePaths.k8sConfig, genPaths.k8sConfig, environment);
     console.log(chalk.greenBright('✔'), chalk.bold(genPaths.k8sConfig));
 

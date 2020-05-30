@@ -1,5 +1,5 @@
 import {ISODate} from '@centsideas/types';
-import {IDomainEvent, DomainEvent} from '@centsideas/event-sourcing2';
+import {IDomainEvent, DomainEvent} from '@centsideas/event-sourcing';
 import {IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels} from '@centsideas/models';
 

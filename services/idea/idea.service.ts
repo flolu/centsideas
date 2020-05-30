@@ -1,6 +1,6 @@
 import {injectable, inject} from 'inversify';
 
-import {MONGO_EVENT_STORE_FACTORY, MongoEventStoreFactory} from '@centsideas/event-sourcing2';
+import {MONGO_EVENT_STORE_FACTORY, MongoEventStoreFactory} from '@centsideas/event-sourcing';
 import {UserId, IdeaId, ISODate} from '@centsideas/types';
 import {serializeEvent} from '@centsideas/rpc';
 import {EventTopics} from '@centsideas/enums';

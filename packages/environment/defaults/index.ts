@@ -16,8 +16,6 @@ export const defaultDevEnv: IEnvironment = {
 
   gatewayUrl: 'http://localhost:3000',
   mainClientUrl: 'http://localhost:4200',
-  adminClientUrl: 'http://localhost:8080',
-  adminSocketUrl: 'http://localhost:3001',
 };
 
 export const defaultStagingEnv: IEnvironment = {
@@ -28,8 +26,6 @@ export const defaultStagingEnv: IEnvironment = {
 
   gatewayUrl: 'http://api.localhost',
   mainClientUrl: 'http://localhost',
-  adminClientUrl: 'http://admin.localhost',
-  adminSocketUrl: 'http://socket.admin.localhost',
 };
 
 export const defaultProdEnv: IEnvironment = {
@@ -40,6 +36,4 @@ export const defaultProdEnv: IEnvironment = {
 
   gatewayUrl: 'https://api.centsideas.com',
   mainClientUrl: 'https://centsideas.com',
-  adminClientUrl: 'https://admin.centsideas.com',
-  adminSocketUrl: 'https://socket.admin.centsideas.com',
 };
