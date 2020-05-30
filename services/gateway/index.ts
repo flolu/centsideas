@@ -1,4 +1,4 @@
-// TODO handle process.on('uncaughtException') in all node services?!
+// FIXME handle process.on('uncaughtException') in all node services?!
 
 // tslint:disable-next-line:no-var-requires
 if (!process.env.environment) require('../../register-aliases').registerAliases();
@@ -24,7 +24,7 @@ DependencyInjection.registerProviders(
   AuthMiddleware,
   RpcClient,
 );
-// FIXME which providers should be singletons?
+
 DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.Gateway);
 DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [334, 100, 80]);
 DependencyInjection.registerSingleton(Logger);

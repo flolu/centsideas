@@ -13,6 +13,10 @@ import {IdeaEnvironment} from './idea.environment';
 
 @injectable()
 export class IdeaService {
+  /**
+   * TODO snapshots (but probably not into event store, but still in same service!)
+   * https://eventstore.com/docs/event-sourcing-basics/rolling-snapshots/index.html
+   */
   private eventStore = this.eventStoreFactory({
     url: this.env.ideaEventStoreDatabaseUrl,
     name: this.env.ideaEventStoreDatabaseName,

@@ -18,7 +18,6 @@ export class RpcServer {
       `${host}:${port}`,
       grpc.ServerCredentials.createInsecure(),
       (err, listeningPort) => {
-        // TODO where are such errors handled? ...maybe in process.on("uncaughtException")
         if (err)
           throw new UnexpectedException(`while starting rpc server`, {
             port,

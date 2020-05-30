@@ -2,7 +2,6 @@ export * from './api';
 export * from './events';
 export * from './event-topics.enum';
 export * from './headers.enum';
-export * from './frontend-routing';
 export * from './query-params.enum';
 export * from './expiration-times.enum';
 export * from './cookie-names.enum';

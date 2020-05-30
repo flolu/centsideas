@@ -1,3 +1,5 @@
+# FIXME research integration testing (maybe with docker-compose or microk8s)
+
 version: "3"
 services:
   zookeeper:
