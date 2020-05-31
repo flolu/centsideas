@@ -5,17 +5,16 @@ import {MongoProjector, EventListener, Project} from '@centsideas/event-sourcing
 import {RpcClient, deserializeEvent, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
 import {EventTopics, IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels, PersistedEvent} from '@centsideas/models';
-import {IdeaEventStoreService, IdeaEventStore} from '@centsideas/schemas';
+import {IdeaCommands, IdeaCommandsService} from '@centsideas/schemas';
 
 import {IdeaReadEnvironment} from './idea-read.environment';
 
 @injectable()
 export class IdeaProjector extends MongoProjector {
   private consumerGroupName = 'centsideas-idea-read';
-  private ideaEventStoreRpc: RpcClient<IdeaEventStore> = this.rpcFactory(
+  private ideaEventStoreRpc: RpcClient<IdeaCommands> = this.rpcFactory(
     this.env.ideaRpcHost,
-    IdeaEventStoreService,
-    this.env.ideaEventStoreRpcPort,
+    IdeaCommandsService,
   );
   databaseUrl = this.env.ideaReadDatabaseUrl;
   databaseName = this.env.ideaReadDatabaseName;

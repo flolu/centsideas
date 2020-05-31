@@ -1,3 +1,5 @@
+import {PersistedEvent} from '@centsideas/models';
+
 interface CreateIdeaCommand {
   userId: string;
 }
@@ -41,4 +43,6 @@ export interface IdeaCommands {
   updateTags: (payload: UpdateIdeaTagsCommand) => Promise<void>;
   publish: (payload: PublishIdeaCommand) => Promise<void>;
   delete: (payload: DeleteIdeaCommand) => Promise<void>;
+
+  getEvents: (payload: {from: number}) => Promise<{events: PersistedEvent[]}>;
 }

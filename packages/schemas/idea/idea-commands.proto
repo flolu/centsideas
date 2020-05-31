@@ -1,4 +1,5 @@
 import "google/protobuf/empty.proto";
+import "idea-events.proto";
 
 syntax = "proto3";
 
@@ -11,6 +12,8 @@ service IdeaCommands {
   rpc updateTags(UpdateIdeaTags) returns (google.protobuf.Empty);
   rpc publish(PublishIdea) returns (google.protobuf.Empty);
   rpc delete(DeleteIdea) returns (google.protobuf.Empty);
+
+  rpc getEvents(GetEvents) returns (IdeaEvents);
 }
 
 message CreateIdea {
@@ -46,4 +49,8 @@ message PublishIdea {
   message DeleteIdea {
   string id = 1;
   string userId = 2;
+}
+
+message GetEvents {
+  int32 from = 1;
 }

@@ -23,7 +23,6 @@ export abstract class Projector implements IProjector {
   abstract getEvents(from: number): Promise<PersistedEvent[]>;
 
   trigger = async (event: PersistedEvent) => {
-    this.logger.info('trigger', event.name);
     const bookmark = await this.getBookmark();
     if (event.sequence !== bookmark + 1) {
       this.logger.warn(`sequence(${event.sequence}) is not one bigger than bookmark(${bookmark})`);

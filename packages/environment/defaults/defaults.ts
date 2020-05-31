@@ -6,7 +6,6 @@ export const defaultCommonEnv = {
   adminRpcPort: 40000,
   reviewsRpcPort: 40000,
   ideaDetailsRpcPort: 40000,
-  ideaEventStoreRpcPort: 40001,
 };
 
 export const defaultKubernetesEnv = {

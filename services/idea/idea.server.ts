@@ -5,25 +5,16 @@ import {RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
 import {GlobalEnvironment} from '@centsideas/environment';
 import {Logger} from '@centsideas/utils';
 import {IdeaId} from '@centsideas/types';
-import {
-  loadProtoService,
-  IdeaEventStoreService,
-  IdeaEventStore,
-  IdeaCommandsService,
-  IdeaCommands,
-} from '@centsideas/schemas';
+import {loadProtoService, IdeaCommandsService, IdeaCommands} from '@centsideas/schemas';
 
 import {IdeaService} from './idea.service';
-import {IdeaEnvironment} from './idea.environment';
 
 @injectable()
 export class IdeaServer {
   private rpcServer: RpcServer = this.rpcServerFactory();
-  private rpcEventStoreServer: RpcServer = this.rpcServerFactory(this.env.ideaEventStoreRpcPort);
 
   constructor(
     private globalEnv: GlobalEnvironment,
-    private env: IdeaEnvironment,
     private service: IdeaService,
     private logger: Logger,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
@@ -31,11 +22,7 @@ export class IdeaServer {
     this.logger.info('launch in', this.globalEnv.environment, 'mode');
 
     http
-      .createServer((_, res) =>
-        res
-          .writeHead(this.rpcServer.isRunning && this.rpcEventStoreServer.isRunning ? 200 : 500)
-          .end(),
-      )
+      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);
 
     // TODO nicer implementation with @Decorators like (https://docs.nestjs.com/microservices/grpc) would be appreciated
@@ -51,16 +38,10 @@ export class IdeaServer {
       updateTags: ({id, userId, tags}) => this.service.updateTags(id, userId, tags),
       publish: ({id, userId}) => this.service.publish(id, userId),
       delete: ({id, userId}) => this.service.delete(id, userId),
-    });
-
-    this.rpcEventStoreServer.addService<IdeaEventStore>(
-      loadProtoService(IdeaEventStoreService).service,
-      {
-        getEvents: async ({from}) => {
-          const events = await this.service.getEvents(from);
-          return {events};
-        },
+      getEvents: async ({from}) => {
+        const events = await this.service.getEvents(from);
+        return {events};
       },
-    );
+    });
   }
 }
