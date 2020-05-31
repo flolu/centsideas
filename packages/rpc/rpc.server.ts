@@ -1,8 +1,8 @@
 import * as grpc from '@grpc/grpc-js';
-import {injectable, interfaces, inject} from 'inversify';
+import {injectable, interfaces} from 'inversify';
 import * as asyncRetry from 'async-retry';
 
-import {Logger, UTILS_TYPES, UnexpectedException} from '@centsideas/utils';
+import {Logger, UnexpectedException} from '@centsideas/utils';
 import {EventSourcingErrorNames, RpcStatus} from '@centsideas/enums';
 
 @injectable()
@@ -11,24 +11,18 @@ export class RpcServer {
 
   private server = new grpc.Server();
 
-  constructor(private logger: Logger, @inject(UTILS_TYPES.SERVICE_NAME) private service: string) {}
+  constructor(private logger: Logger) {}
 
   initialize(port: number = 40000, host = '0.0.0.0') {
-    this.server.bindAsync(
-      `${host}:${port}`,
-      grpc.ServerCredentials.createInsecure(),
-      (err, listeningPort) => {
-        if (err)
-          throw new UnexpectedException(`while starting rpc server`, {
-            port,
-            host,
-            service: this.service,
-          });
-        this.logger.info(`rpc server running on ${listeningPort}`);
-        this.server.start();
-        this.isRunning = true;
-      },
-    );
+    this.server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), err => {
+      if (err)
+        throw new UnexpectedException(`while starting rpc server`, {
+          port,
+          host,
+        });
+      this.server.start();
+      this.isRunning = true;
+    });
   }
 
   addService<IServiceImplementation>(
@@ -92,7 +86,6 @@ export class RpcServer {
           message: error.message,
           details: error.details,
           stack: error.stack,
-          service: this.service,
         };
         //  TODO send error to error service
         // await this.messageBroker.dispatchError(errorPayload);

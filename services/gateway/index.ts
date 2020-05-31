@@ -5,9 +5,8 @@ import 'reflect-metadata';
 // tslint:disable-next-line:no-var-requires
 if (!process.env.environment) require('../../register-aliases').registerAliases();
 
-import {UTILS_TYPES, Logger} from '@centsideas/utils';
+import {Logger} from '@centsideas/utils';
 import {DependencyInjection} from '@centsideas/dependency-injection';
-import {Services} from '@centsideas/enums';
 import {RpcClient, RPC_CLIENT_FACTORY, rpcClientFactory} from '@centsideas/rpc';
 import {GlobalConfig} from '@centsideas/config';
 
@@ -27,8 +26,6 @@ DependencyInjection.registerProviders(
   GlobalConfig,
 );
 
-DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.Gateway);
-DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [334, 100, 80]);
 DependencyInjection.registerSingleton(Logger);
 DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
 DependencyInjection.bootstrap(GatewayServer);

@@ -1,11 +1,11 @@
 # FIXME research integration testing (maybe with docker-compose or microk8s)
 
-version: "3"
+version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - "2181"
+      - '2181'
     hostname: zookeeper
     logging:
       driver: none
@@ -27,6 +27,7 @@ services:
       driver: none
 
   gateway:
+    container_name: gateway
     image: node:lts-alpine
     working_dir: /
     volumes:
@@ -42,6 +43,7 @@ services:
       - 3000:3000
 
   idea:
+    container_name: idea
     image: node:lts-alpine
     working_dir: /
     volumes:
@@ -58,6 +60,7 @@ services:
       - mongo-database
 
   idea-read:
+    container_name: idea-read
     image: node:lts-alpine
     working_dir: /
     volumes:
@@ -75,6 +78,7 @@ services:
       - mongo-database
 
   mongo-database:
+    container_name: mongo-database
     image: mongo:4
     logging:
       driver: none

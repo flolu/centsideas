@@ -10,7 +10,7 @@
     "lint": "tslint --project .",
     "format": "prettier --write .",
     "up": "yarn upgrade-interactive --latest",
-    "docker": "docker-compose up --no-color 2>&1 | sed 's/^[^ ]*  *| //'",
+    "docker": "docker-compose up",
     "docker:stop": "docker stop $(docker ps -a -q)",
     "docker:remove": "docker rm $(docker ps -a -q)",
     "docker:clean": "yarn docker:stop && yarn docker:remove && docker system prune --volumes",

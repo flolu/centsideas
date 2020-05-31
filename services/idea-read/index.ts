@@ -3,8 +3,7 @@ if (!process.env.environment) require('../../register-aliases').registerAliases(
 
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {EventListener} from '@centsideas/event-sourcing';
-import {Logger, UTILS_TYPES} from '@centsideas/utils';
-import {Services} from '@centsideas/enums';
+import {Logger} from '@centsideas/utils';
 import {
   RpcServer,
   RPC_SERVER_FACTORY,
@@ -32,8 +31,6 @@ DependencyInjection.registerProviders(
   GlobalConfig,
 );
 
-DependencyInjection.registerConstant(UTILS_TYPES.SERVICE_NAME, Services.IdeaRead);
-DependencyInjection.registerConstant(UTILS_TYPES.LOGGER_COLOR, [60, 100, 80]);
 DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
 
