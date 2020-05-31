@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 
 import * as Errors from './idea.errors';

@@ -9,7 +9,7 @@ import {Idea} from './idea';
 import {IdeaTitle} from './idea-title';
 import {IdeaDescription} from './idea-description';
 import {IdeaTags} from './idea-tags';
-import {IdeaEnvironment} from './idea.environment';
+import {IdeaConfig} from './idea.config';
 
 @injectable()
 export class IdeaService {
@@ -18,13 +18,13 @@ export class IdeaService {
    * https://eventstore.com/docs/event-sourcing-basics/rolling-snapshots/index.html
    */
   private eventStore = this.eventStoreFactory({
-    url: this.env.ideaEventStoreDatabaseUrl,
-    name: this.env.ideaEventStoreDatabaseName,
+    url: this.config.get('idea.database.url'),
+    name: this.config.get('idea.database.name'),
     topic: EventTopics.Idea,
   });
 
   constructor(
-    private env: IdeaEnvironment,
+    private config: IdeaConfig,
     @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory: MongoEventStoreFactory,
   ) {}
 

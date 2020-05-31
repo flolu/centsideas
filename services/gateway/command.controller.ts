@@ -6,18 +6,19 @@ import {ApiEndpoints} from '@centsideas/enums';
 import {RpcClient, RpcClientFactory, RPC_CLIENT_FACTORY} from '@centsideas/rpc';
 import {IdeaCommands, IdeaCommandsService} from '@centsideas/schemas';
 
-import {GatewayEnvironment} from './gateway.environment';
+import {GatewayConfig} from './gateway.config';
 import {AuthMiddleware} from './middlewares';
 
 @controller('')
 export class CommandController implements interfaces.Controller {
   private idea2Rpc: RpcClient<IdeaCommands> = this.newRpcFactory(
-    this.env.ideaRpcHost,
+    this.config.get('idea.rpc.host'),
     IdeaCommandsService,
+    Number(this.config.get('idea.rpc.port')),
   );
 
   constructor(
-    private env: GatewayEnvironment,
+    private config: GatewayConfig,
     @inject(RPC_CLIENT_FACTORY) private newRpcFactory: RpcClientFactory,
   ) {}
 

@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import * as Errors from './idea.errors';
 import {IdeaTitle} from './idea-title';
 

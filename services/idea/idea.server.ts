@@ -2,7 +2,6 @@ import {injectable, inject} from 'inversify';
 import * as http from 'http';
 
 import {RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
-import {GlobalEnvironment} from '@centsideas/environment';
 import {Logger} from '@centsideas/utils';
 import {IdeaId} from '@centsideas/types';
 import {loadProtoService, IdeaCommandsService, IdeaCommands} from '@centsideas/schemas';
@@ -14,12 +13,11 @@ export class IdeaServer {
   private rpcServer: RpcServer = this.rpcServerFactory();
 
   constructor(
-    private globalEnv: GlobalEnvironment,
     private service: IdeaService,
     private logger: Logger,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
-    this.logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch');
 
     http
       .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())

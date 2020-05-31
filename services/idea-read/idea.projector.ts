@@ -7,21 +7,22 @@ import {EventTopics, IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels, PersistedEvent} from '@centsideas/models';
 import {IdeaCommands, IdeaCommandsService} from '@centsideas/schemas';
 
-import {IdeaReadEnvironment} from './idea-read.environment';
+import {IdeaReadConfig} from './idea-read.config';
 
 @injectable()
 export class IdeaProjector extends MongoProjector {
   private consumerGroupName = 'centsideas-idea-read';
   private ideaEventStoreRpc: RpcClient<IdeaCommands> = this.rpcFactory(
-    this.env.ideaRpcHost,
+    this.config.get('idea.rpc.host'),
     IdeaCommandsService,
+    Number(this.config.get('idea.rpc.port')),
   );
-  databaseUrl = this.env.ideaReadDatabaseUrl;
-  databaseName = this.env.ideaReadDatabaseName;
+  databaseUrl = this.config.get('idea-read.database.url');
+  databaseName = this.config.get('idea-read.database.name');
 
   constructor(
     private eventListener: EventListener,
-    private env: IdeaReadEnvironment,
+    private config: IdeaReadConfig,
     @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {
     super();
@@ -123,6 +124,6 @@ export class IdeaProjector extends MongoProjector {
 
   private async ideaCollection() {
     const db = await this.db();
-    return db.collection<IdeaModels.IdeaModel>(this.env.ideaCollectionName);
+    return db.collection<IdeaModels.IdeaModel>(this.config.get('idea-read.database.collection'));
   }
 }

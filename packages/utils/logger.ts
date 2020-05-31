@@ -3,14 +3,14 @@ import * as fromChalk from 'chalk';
 import {injectable, inject} from 'inversify';
 
 import {Environments, RpcStatus} from '@centsideas/enums';
-import {GlobalEnvironment} from '@centsideas/environment';
 
 import {UTILS_TYPES} from './utils-types';
+import {GlobalConfig} from '@centsideas/config';
 
 // FIXME log persistence in production mode
 @injectable()
 export class Logger {
-  private env = this.globalEnv.environment;
+  private env = this.globalConfig.get('global.environment');
   private chalk = new fromChalk.Instance({level: this.env === Environments.Prod ? 1 : 3});
   private prefixStyle = this.chalk.hsl(...this.color).bold;
 
@@ -19,7 +19,7 @@ export class Logger {
    * themselve! Otherwise we will run into circular dependency issues.
    */
   constructor(
-    private globalEnv: GlobalEnvironment,
+    private globalConfig: GlobalConfig,
     @inject(UTILS_TYPES.SERVICE_NAME) private service: string,
     @inject(UTILS_TYPES.LOGGER_COLOR)
     private color: [number, number, number] = [Math.random() * 360, 100, 50],

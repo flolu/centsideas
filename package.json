@@ -1,12 +1,12 @@
 {
   "name": "centsideas",
   "scripts": {
-    "dev": "yarn env:setup && yarn docker",
-    "test": "yarn env:setup && bazelisk test //...",
+    "dev": "yarn docker",
+    "test": "bazelisk test //...",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
-    "deploy": "yarn env:setup:prod && bazelisk run :k8s.apply",
-    "deploy:microk8s": "yarn env:setup:staging && bazelisk run :microk8s.apply",
+    "deploy": "bazelisk run :k8s.apply",
+    "deploy:microk8s": "bazelisk run :microk8s.apply",
     "lint": "tslint --project .",
     "format": "prettier --write .",
     "up": "yarn upgrade-interactive --latest",
@@ -14,12 +14,8 @@
     "docker:stop": "docker stop $(docker ps -a -q)",
     "docker:remove": "docker rm $(docker ps -a -q)",
     "docker:clean": "yarn docker:stop && yarn docker:remove && docker system prune --volumes",
-    "clean": "yarn env:clean && rm -rf node_modules && bazelisk clean",
-    "env:clean": "ts-node packages/environment/clean",
-    "env:setup": "ts-node packages/environment/setups/dev",
-    "env:setup:staging": "ts-node packages/environment/setups/staging",
-    "env:setup:prod": "ts-node packages/environment/setups/prod",
-    "postinstall": "patch-package --patch-dir misc/patches && ngcc && yarn env:setup"
+    "clean": "rm -rf node_modules && bazelisk clean",
+    "postinstall": "patch-package --patch-dir misc/patches && ngcc"
   },
   "dependencies": {
     "@angular/animations": "9.1.8",

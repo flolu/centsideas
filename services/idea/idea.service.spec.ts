@@ -8,22 +8,22 @@ import {
   InMemoryEventStore,
   EventDispatcherMock,
 } from '@centsideas/event-sourcing';
-import {GlobalEnvironment} from '@centsideas/environment';
 import {IdeaEventNames} from '@centsideas/enums';
 import {deserializeEvent} from '@centsideas/rpc';
+import {MockConfig} from '@centsideas/config';
 
 import {IdeaService} from './idea.service';
-import {IdeaEnvironment} from './idea.environment';
+import {IdeaConfig} from './idea.config';
 
 describe('IdeaService', () => {
   DependencyInjection.registerProviders(
     IdeaService,
     EventDispatcher,
-    GlobalEnvironment,
-    IdeaEnvironment,
     InMemoryEventStore,
+    IdeaConfig,
   );
   DependencyInjection.overrideProvider(EventDispatcher, EventDispatcherMock);
+  DependencyInjection.overrideProvider(IdeaConfig, MockConfig);
   DependencyInjection.registerFactory(MONGO_EVENT_STORE_FACTORY, inMemoryEventStoreFactory);
 
   const service: IdeaService = DependencyInjection.getProvider(IdeaService);

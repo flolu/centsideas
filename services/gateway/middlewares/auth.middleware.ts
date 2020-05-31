@@ -3,15 +3,15 @@ import {injectable} from 'inversify';
 import {BaseMiddleware} from 'inversify-express-utils';
 
 import {IAccessTokenPayload} from '@centsideas/models';
-import {GlobalEnvironment} from '@centsideas/environment';
 import {decodeToken} from '@centsideas/utils';
 import {HeaderKeys, Environments} from '@centsideas/enums';
+import {GlobalConfig} from '@centsideas/config';
 
-import {GatewayEnvironment} from '../gateway.environment';
+import {GatewayConfig} from '../gateway.config';
 
 @injectable()
 export class AuthMiddleware extends BaseMiddleware {
-  constructor(private env: GatewayEnvironment, private globalEnv: GlobalEnvironment) {
+  constructor(private config: GatewayConfig, private globalConfig: GlobalConfig) {
     super();
   }
 
@@ -21,10 +21,14 @@ export class AuthMiddleware extends BaseMiddleware {
     if (!accessToken) return next();
 
     let userId = '';
-    if (this.globalEnv.environment === Environments.Dev) userId = accessToken;
+    if (this.globalConfig.get('global.environment') === Environments.Dev) userId = accessToken;
 
     try {
-      const data = decodeToken<IAccessTokenPayload>(accessToken, this.env.accessTokenSecret);
+      const data = decodeToken<IAccessTokenPayload>(
+        accessToken,
+        // FIXME eventually add access token secret
+        'temp' || this.config.get('accessTokenSecret'),
+      );
       userId = data.userId;
       // tslint:disable-next-line:no-empty
     } catch (error) {}

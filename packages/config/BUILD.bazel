@@ -3,16 +3,12 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 package(default_visibility = ["//visibility:public"])
 
 ts_library(
-    name = "environment",
+    name = "config",
     srcs = glob(["**/*.ts"]),
-    module_name = "@centsideas/environment",
+    module_name = "@centsideas/config",
     deps = [
-        "//packages/enums",
         "@npm//@types/node",
-        "@npm//@types/web-push",
-        "@npm//chalk",
         "@npm//dotenv",
         "@npm//inversify",
-        "@npm//web-push",
     ],
 )

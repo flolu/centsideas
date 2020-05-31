@@ -2,19 +2,22 @@ import {injectable} from 'inversify';
 import {Observable, Observer} from 'rxjs';
 import {Kafka, logLevel, Message} from 'kafkajs';
 
-import {GlobalEnvironment} from '@centsideas/environment';
 import {PersistedEvent} from '@centsideas/models';
 import {serializeEventMessage, deserializeEventMessage} from '@centsideas/schemas';
 import {EventTopics} from '@centsideas/enums';
+import {GlobalConfig} from '@centsideas/config';
 
 const EVENT_NAME_HEADER = 'eventName';
 
 @injectable()
 export class EventDispatcher {
-  private kafka = new Kafka({brokers: [this.globalEnv.kafkaBrokerHost], logLevel: logLevel.WARN});
+  private kafka = new Kafka({
+    brokers: this.globalConfig.getArray('global.kafka.brokers'),
+    logLevel: logLevel.WARN,
+  });
   private prodcuer = this.kafka.producer();
 
-  constructor(private globalEnv: GlobalEnvironment) {}
+  constructor(private globalConfig: GlobalConfig) {}
 
   async dispatch(topic: EventTopics, events: PersistedEvent[]) {
     await this.prodcuer.connect();
@@ -29,9 +32,12 @@ export class EventDispatcher {
 
 @injectable()
 export class EventListener {
-  private kafka = new Kafka({brokers: [this.globalEnv.kafkaBrokerHost], logLevel: logLevel.WARN});
+  private kafka = new Kafka({
+    brokers: this.globalConfig.getArray('global.kafka.brokers'),
+    logLevel: logLevel.WARN,
+  });
 
-  constructor(private globalEnv: GlobalEnvironment) {}
+  constructor(private globalConfig: GlobalConfig) {}
 
   listen(topic: string | RegExp, consumerGroup: string): Observable<PersistedEvent> {
     const consumer = this.kafka.consumer({

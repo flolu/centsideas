@@ -13,9 +13,9 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
+        "//packages/config",
         "//packages/dependency-injection",
         "//packages/enums",
-        "//packages/environment",
         "//packages/event-sourcing",
         "//packages/models",
         "//packages/rpc",

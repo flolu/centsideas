@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import {IdeaTagsCount} from '@centsideas/enums';
 
 import * as Errors from './idea.errors';

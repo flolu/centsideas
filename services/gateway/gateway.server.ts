@@ -9,19 +9,22 @@ import {InversifyExpressServer} from 'inversify-express-utils';
 import {RpcStatusHttpMap} from '@centsideas/rpc';
 import {Logger} from '@centsideas/utils';
 import {Environments} from '@centsideas/enums';
-import {GlobalEnvironment} from '@centsideas/environment';
 import {DependencyInjection} from '@centsideas/dependency-injection';
+import {GlobalConfig} from '@centsideas/config';
 
-import {GatewayEnvironment} from './gateway.environment';
+import {GatewayConfig} from './gateway.config';
 
 @injectable()
 export class GatewayServer {
+  // FIXME eventually add frontend to cors whitelist
+  private corsWhitelist: string[] = [];
+
   constructor(
-    private globalEnv: GlobalEnvironment,
-    private env: GatewayEnvironment,
+    private globalConfig: GlobalConfig,
+    private config: GatewayConfig,
     private logger: Logger,
   ) {
-    this.logger.info('launch in', this.globalEnv.environment, 'mode');
+    this.logger.info('launch in', this.globalConfig.get('global.environment'), 'mode');
 
     const server = new InversifyExpressServer(DependencyInjection.getContainer());
     server.setConfig((app: express.Application) => {
@@ -54,12 +57,12 @@ export class GatewayServer {
         },
       );
     });
-    server.build().listen(this.env.port);
+    server.build().listen(this.config.get('gateway.port'));
   }
 
   private isOriginAllowed = (origin: string | undefined) => {
-    if (this.globalEnv.environment === Environments.Dev) return true;
-    if (origin && this.env.corsWhitelist.includes(origin)) return true;
+    if (this.globalConfig.get('global.environment') === Environments.Dev) return true;
+    if (origin && this.corsWhitelist.includes(origin)) return true;
     if (origin === undefined) return true;
 
     return false;

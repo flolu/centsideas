@@ -14,8 +14,8 @@ ts_library(
     ),
     module_name = "@centsideas/utils",
     deps = [
+        "//packages/config",
         "//packages/enums",
-        "//packages/environment",
         "//packages/models",
         "@npm//@types/jsonwebtoken",
         "@npm//chalk",

@@ -13,9 +13,9 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
+        "//packages/config",
         "//packages/dependency-injection",
         "//packages/enums",
-        "//packages/environment",
         "//packages/models",
         "//packages/rpc",
         "//packages/schemas",
@@ -33,6 +33,7 @@ ts_library(
         "@npm//helmet",
         "@npm//inversify",
         "@npm//inversify-express-utils",
+        "@npm//reflect-metadata",
     ],
 )
 
