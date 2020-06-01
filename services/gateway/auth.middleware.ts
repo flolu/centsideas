@@ -7,7 +7,7 @@ import {decodeToken} from '@centsideas/utils';
 import {HeaderKeys, Environments} from '@centsideas/enums';
 import {GlobalConfig} from '@centsideas/config';
 
-import {GatewayConfig} from '../gateway.config';
+import {GatewayConfig} from './gateway.config';
 
 @injectable()
 export class AuthMiddleware extends BaseMiddleware {
@@ -22,6 +22,8 @@ export class AuthMiddleware extends BaseMiddleware {
 
     let userId = '';
     if (this.globalConfig.get('global.environment') === Environments.Dev) userId = accessToken;
+    // TODO remove eventually
+    if (this.globalConfig.get('global.environment') === Environments.MicroK8s) userId = accessToken;
 
     try {
       const data = decodeToken<IAccessTokenPayload>(

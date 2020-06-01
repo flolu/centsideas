@@ -6,7 +6,7 @@ import {ApiEndpoints} from '@centsideas/enums';
 import {RpcClient, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
 import {IdeaReadService, IdeaRead} from '@centsideas/schemas';
 
-import {AuthMiddleware} from './middlewares';
+import {AuthMiddleware} from './auth.middleware';
 import {GatewayConfig} from './gateway.config';
 
 @controller('')

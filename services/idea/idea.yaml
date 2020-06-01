@@ -19,6 +19,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
+            - configMapRef:
+                name: idea-config
           readinessProbe:
             httpGet:
               path: /
@@ -42,7 +44,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: centsideas-idea
+  name: idea-service
 spec:
   selector:
     app: idea
@@ -89,7 +91,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: centsideas-idea-event-store
+  name: idea-event-store-service
 spec:
   selector:
     app: idea-event-store

@@ -5,8 +5,8 @@
     "test": "bazelisk test //...",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
-    "deploy": "bazelisk run :k8s.apply",
-    "deploy:microk8s": "bazelisk run :microk8s.apply",
+    "deploy": "ts-node packages/config/config-generator prod && bazelisk run :k8s.apply",
+    "deploy:microk8s": "ts-node packages/config/config-generator microk8s && bazelisk run :microk8s.apply",
     "lint": "tslint --project .",
     "format": "prettier --write .",
     "up": "yarn upgrade-interactive --latest",
@@ -156,13 +156,11 @@
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "*.{ts,tsx}": [
       "tslint --fix",
-      "prettier --write --parser=typescript",
-      "git add"
+      "prettier --write --parser=typescript"
     ]
   },
   "prettier": {
@@ -180,5 +178,17 @@
       "^@centsideas/(.*)$": "<rootDir>/packages/$1",
       "^@cic/(.*)$": "<rootDir>/services/client/$1"
     }
+  },
+  "_moduleAliases": {
+    "@centsideas/config": "./packages/config",
+    "@centsideas/dependency-injection": "./packages/dependency-injection",
+    "@centsideas/enums": "./packages/enums",
+    "@centsideas/event-sourcing": "./packages/event-sourcing",
+    "@centsideas/models": "./packages/models",
+    "@centsideas/rpc": "./packages/rpc",
+    "@centsideas/schemas": "./packages/schemas",
+    "@centsideas/testing": "./packages/testing",
+    "@centsideas/types": "./packages/types",
+    "@centsideas/utils": "./packages/utils"
   }
 }

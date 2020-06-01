@@ -1,15 +1,17 @@
 @userId = Md9Q6fwHY
 @ideaId = {{create.response.body.id}}
+@apiUrl = http://api.localhost
+# @apiUrl = http://localhost:3000
 
 ###
 
 # @name create
-POST http://localhost:3000/idea
+POST {{apiUrl}}/idea
 Authorization: Bearer {{userId}}
 
 ###
 
-PUT http://localhost:3000/idea/{{ideaId}}/rename
+PUT {{apiUrl}}/idea/{{ideaId}}/rename
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -17,7 +19,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT http://localhost:3000/idea/{{ideaId}}/rename
+PUT {{apiUrl}}/idea/{{ideaId}}/rename
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -25,7 +27,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT http://localhost:3000/idea/{{ideaId}}/description
+PUT {{apiUrl}}/idea/{{ideaId}}/description
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -33,7 +35,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT http://localhost:3000/idea/{{ideaId}}/tags
+PUT {{apiUrl}}/idea/{{ideaId}}/tags
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -41,7 +43,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT http://localhost:3000/idea/{{ideaId}}/tags
+PUT {{apiUrl}}/idea/{{ideaId}}/tags
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -49,10 +51,10 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT http://localhost:3000/idea/{{ideaId}}/publish
+PUT {{apiUrl}}/idea/{{ideaId}}/publish
 Authorization: Bearer {{userId}}
 
 ###
 
-DELETE http://localhost:3000/idea/{{ideaId}}
+DELETE {{apiUrl}}/idea/{{ideaId}}
 Authorization: Bearer {{userId}}

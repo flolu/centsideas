@@ -17,11 +17,5 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: centsideas-gateway
+              serviceName: gateway
               servicePort: 3000
-    - host: centsideas.com
-      http:
-        paths:
-          - backend:
-              serviceName: centsideas-client
-              servicePort: 8080

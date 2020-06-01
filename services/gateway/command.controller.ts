@@ -7,7 +7,7 @@ import {RpcClient, RpcClientFactory, RPC_CLIENT_FACTORY} from '@centsideas/rpc';
 import {IdeaCommands, IdeaCommandsService} from '@centsideas/schemas';
 
 import {GatewayConfig} from './gateway.config';
-import {AuthMiddleware} from './middlewares';
+import {AuthMiddleware} from './auth.middleware';
 
 @controller('')
 export class CommandController implements interfaces.Controller {

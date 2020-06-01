@@ -1,11 +1,13 @@
 @id=vEUG47VAo
 @userId = Md9Q6fwHY
+@apiUrl = http://api.localhost
+# @apiUrl = http://localhost:3000
 
 ###
 
-GET http://localhost:3000/idea/{{id}}
+GET {{apiUrl}}/idea/{{id}}
 Authorization: Bearer {{userId}}
 
 ###
 
-GET http://localhost:3000/idea
+GET {{apiUrl}}/idea

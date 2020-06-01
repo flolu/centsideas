@@ -1,5 +1,5 @@
 // tslint:disable-next-line:no-var-requires
-if (!process.env.environment) require('../../register-aliases').registerAliases();
+if (process.env['global.environment'] === 'dev') require('module-alias/register');
 
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {EventListener} from '@centsideas/event-sourcing';

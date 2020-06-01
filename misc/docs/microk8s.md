@@ -10,7 +10,7 @@ Now we will start the local Kubernetes cluster and enable some addons.
 
 ```bash
 microk8s start
-microk8s enable dns storage ingress registry helm3
+microk8s enable dns storage ingress registry
 ```
 
 not sure if needed but might be:
@@ -31,7 +31,7 @@ yarn deploy:microk8s
 After everything has been deployed you can visit http://localhost, where the main client application is running. The gateway will be running under http://api.localhost.
 This is the result of the configuration in `~/packages/kubernetes/local-ingress.yaml`.
 
-> Note that the environment variables in `~.env.microk8s` will be used for this deployment
+> Note that the environment variables in `~.microk8s.env` will be used for this deployment
 
 - _If you get an error like "kubectl toolchain was not properly configured" you can try to run the deployment command with `sudo`_
 

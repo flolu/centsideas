@@ -3,6 +3,7 @@ load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("@centsideas//packages/jest:jest.bzl", "ts_jest")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -41,21 +42,9 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
-        "//packages/rpc:proto_files",
+        "//packages/schemas:proto_files",
     ],
     entry_point = ":index.ts",
-)
-
-k8s_deploy(
-    name = "k8s",
-    images = {"gateway:placeholder_name": ":image"},
-    template = ":gateway.yaml",
-)
-
-microk8s_deploy(
-    name = "microk8s",
-    images = {"gateway:placeholder_name": ":image"},
-    template = ":gateway.yaml",
 )
 
 ts_jest(
@@ -63,4 +52,42 @@ ts_jest(
     srcs = glob(include = ["**/*.spec.ts"]),
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
+)
+
+k8s_deploy(
+    name = "gateway",
+    images = {"gateway:placeholder_name": ":image"},
+    template = ":gateway.yaml",
+)
+
+k8s_deploy(
+    name = "config",
+    template = ":gateway-config.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+        ":gateway",
+        ":config",
+    ],
+)
+
+microk8s_deploy(
+    name = "microk8s_gateway",
+    images = {"gateway:placeholder_name": ":image"},
+    template = ":gateway.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_config",
+    template = ":gateway-config.yaml",
+)
+
+k8s_objects(
+    name = "microk8s",
+    objects = [
+        ":microk8s_gateway",
+        ":microk8s_config",
+    ],
 )

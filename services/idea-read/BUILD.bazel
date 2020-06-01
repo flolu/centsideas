@@ -3,6 +3,7 @@ load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("@centsideas//packages/jest:jest.bzl", "ts_jest")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -32,20 +33,11 @@ ts_library(
 
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [
+        ":lib",
+        "//packages/schemas:proto_files",
+    ],
     entry_point = ":index.ts",
-)
-
-k8s_deploy(
-    name = "k8s",
-    images = {"idea-read:placeholder_name": ":image"},
-    template = ":idea-read.yaml",
-)
-
-microk8s_deploy(
-    name = "microk8s",
-    images = {"idea-read:placeholder_name": ":image"},
-    template = ":idea-read.yaml",
 )
 
 ts_jest(
@@ -53,4 +45,54 @@ ts_jest(
     srcs = glob(["**/*.spec.ts"]),
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
+)
+
+k8s_deploy(
+    name = "idea-read",
+    images = {"idea-read:placeholder_name": ":image"},
+    template = ":idea-read.yaml",
+)
+
+k8s_deploy(
+    name = "storage",
+    template = ":idea-read-storage.yaml",
+)
+
+k8s_deploy(
+    name = "config",
+    template = ":idea-read-config.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+        ":idea-read",
+        ":storage",
+        ":config",
+    ],
+)
+
+microk8s_deploy(
+    name = "microk8s_idea-read",
+    images = {"idea-read:placeholder_name": ":image"},
+    template = ":idea-read.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_storage",
+    template = ":idea-read-local-storage.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_config",
+    template = ":idea-read-config.yaml",
+)
+
+k8s_objects(
+    name = "microk8s",
+    objects = [
+        ":microk8s_idea-read",
+        ":microk8s_storage",
+        ":microk8s_config",
+    ],
 )

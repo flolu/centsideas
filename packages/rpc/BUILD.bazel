@@ -2,11 +2,6 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
 package(default_visibility = ["//services:__subpackages__"])
 
-filegroup(
-    name = "proto_files",
-    srcs = glob(["**/*.proto"]),
-)
-
 ts_library(
     name = "rpc",
     srcs = glob(["**/*.ts"]),

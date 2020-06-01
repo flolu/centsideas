@@ -1,5 +1,5 @@
 export enum Environments {
   Dev = 'dev',
   Prod = 'prod',
-  Staging = 'staging',
+  MicroK8s = 'microk8s',
 }

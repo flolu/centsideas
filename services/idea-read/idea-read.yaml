@@ -1,3 +1,5 @@
+# TODO k8s labeling
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,6 +21,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
+            - configMapRef:
+                name: idea-read-config
           readinessProbe:
             httpGet:
               path: /
@@ -42,7 +46,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: centsideas-idea-read
+  name: idea-read-service
 spec:
   selector:
     app: idea-read
@@ -83,13 +87,13 @@ spec:
       volumes:
         - name: persistent-db-storage
           persistentVolumeClaim:
-            claimName: idea-read-db-pvc
+            claimName: idea-read-pvc
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: centsideas-idea-read-db
+  name: idea-read-db-service
 spec:
   selector:
     app: idea-read-db

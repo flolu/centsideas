@@ -18,17 +18,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: global-config
-          env:
-            - name: accessTokenSecret
-              valueFrom:
-                secretKeyRef:
-                  name: centsideas-secret
-                  key: accessTokenSecret
-            - name: frontendServerExchangeSecret
-              valueFrom:
-                secretKeyRef:
-                  name: centsideas-secret
-                  key: frontendServerExchangeSecret
+            - configMapRef:
+                name: gateway-config
           readinessProbe:
             httpGet:
               path: /alive
@@ -53,7 +44,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: centsideas-gateway
+  name: gateway
 spec:
   selector:
     app: gateway

@@ -6,14 +6,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      component: kafka
+      component: kafkaa
   template:
     metadata:
       labels:
-        component: kafka
+        component: kafkaa
     spec:
       containers:
-        - name: kafka
+        - name: kafkaa
           image: wurstmeister/kafka
           ports:
             - containerPort: 9092
@@ -27,6 +27,12 @@ spec:
                   fieldPath: status.podIP
             - name: KAFKA_ADVERTISED_HOST_NAME
               value: $(MY_POD_IP)
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: $(global.kafka.zookeeper)
+            - name: KAFKA_ADVERTISED_PORT
+              value: $(global.kafka.advertised.port)
+            - name: KAFKA_BROKER_HOST
+              value: $(global.kafka.brokers)
           resources:
             requests:
               memory: 100Mi
@@ -43,9 +49,9 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    component: kafka
+    component: kafkaa
   ports:
-    - name: kafka
+    - name: kafkaa
       port: 9092
       targetPort: 9092
 ---

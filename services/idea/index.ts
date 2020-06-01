@@ -1,8 +1,7 @@
-import 'reflect-metadata';
-
 // tslint:disable-next-line:no-var-requires
-if (!process.env.environment) require('../../register-aliases').registerAliases();
+if (process.env['global.environment'] === 'dev') require('module-alias/register');
 
+import 'reflect-metadata';
 import {
   EventListener,
   EventDispatcher,

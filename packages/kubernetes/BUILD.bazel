@@ -1,5 +1,3 @@
-# TODO make k8s work again (also with new config)
-
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
@@ -17,23 +15,13 @@ k8s_deploy(
 )
 
 k8s_deploy(
-    name = "database_storage",
-    template = ":database-storage.yaml",
+    name = "ingress",
+    template = ":ingress.yaml",
 )
 
 k8s_deploy(
     name = "config",
-    template = ":config.yaml",
-)
-
-k8s_deploy(
-    name = "secret",
-    template = ":secret.yaml",
-)
-
-k8s_deploy(
-    name = "ingress",
-    template = ":ingress.yaml",
+    template = ":global-config.yaml",
 )
 
 k8s_objects(
@@ -41,9 +29,7 @@ k8s_objects(
     objects = [
         ":kafka",
         ":certificate_issuer",
-        ":database_storage",
         ":config",
-        ":secret",
         ":ingress",
     ],
 )
@@ -55,17 +41,7 @@ microk8s_deploy(
 
 microk8s_deploy(
     name = "microk8s_config",
-    template = ":config.yaml",
-)
-
-microk8s_deploy(
-    name = "microk8s_secret",
-    template = ":secret.yaml",
-)
-
-microk8s_deploy(
-    name = "microk8s_database_storage",
-    template = ":local-database-storage.yaml",
+    template = ":global-config.yaml",
 )
 
 microk8s_deploy(
@@ -78,8 +54,6 @@ k8s_objects(
     objects = [
         ":microk8s_kafka",
         ":microk8s_config",
-        ":microk8s_secret",
-        ":microk8s_database_storage",
         ":microk8s_ingress",
     ],
 )

@@ -3,6 +3,7 @@ load("@centsideas//packages/jest:jest.bzl", "ts_jest")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
 load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -32,26 +33,17 @@ ts_library(
 
 nodejs_image(
     name = "image",
-    data = [":lib"],
+    data = [
+        ":lib",
+        "//packages/schemas:proto_files",
+    ],
     entry_point = ":index.ts",
-)
-
-k8s_deploy(
-    name = "k8s",
-    images = {"idea:placeholder_name": ":image"},
-    template = ":idea.yaml",
-)
-
-microk8s_deploy(
-    name = "microk8s",
-    images = {"idea:placeholder_name": ":image"},
-    template = ":idea.yaml",
 )
 
 ts_jest(
     name = "test",
     srcs = glob(["**/*.spec.ts"]),
-    data = ["//packages/rpc:proto_files"],
+    data = ["//packages/schemas:proto_files"],
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
     deps = [
@@ -63,5 +55,55 @@ ts_jest(
         "//packages/testing",
         "//packages/types",
         "@npm//reflect-metadata",
+    ],
+)
+
+k8s_deploy(
+    name = "idea",
+    images = {"idea:placeholder_name": ":image"},
+    template = ":idea.yaml",
+)
+
+k8s_deploy(
+    name = "storage",
+    template = ":idea-storage.yaml",
+)
+
+k8s_deploy(
+    name = "config",
+    template = ":idea-config.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+        ":idea",
+        ":storage",
+        ":config",
+    ],
+)
+
+microk8s_deploy(
+    name = "microk8s_idea",
+    images = {"idea:placeholder_name": ":image"},
+    template = ":idea.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_storage",
+    template = ":idea-local-storage.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_config",
+    template = ":idea-config.yaml",
+)
+
+k8s_objects(
+    name = "microk8s",
+    objects = [
+        ":microk8s_idea",
+        ":microk8s_storage",
+        ":microk8s_config",
     ],
 )
