@@ -9,6 +9,7 @@ import {IdeaCommands, IdeaCommandsService} from '@centsideas/schemas';
 
 import {IdeaReadConfig} from './idea-read.config';
 
+// TODO make it possible clear the projector programmatically
 @injectable()
 export class IdeaProjector extends MongoProjector {
   private consumerGroupName = 'centsideas-idea-read';

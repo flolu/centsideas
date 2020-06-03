@@ -236,4 +236,4 @@
 
 ## Thanks to all people listed below for your help!
 
-[@rayman1104](https://github.com/rayman1104) [@marcus-sa](https://github.com/marcus-sa) [@joeljeske](https://github.com/joeljeske)
+[@rayman1104](https://github.com/rayman1104) [@xmontero](https://github.com/xmontero) [@marcus-sa](https://github.com/marcus-sa) [@joeljeske](https://github.com/joeljeske)

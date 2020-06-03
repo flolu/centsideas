@@ -1,4 +1,4 @@
-import {Aggregate, Apply} from '@centsideas/event-sourcing';
+import {Aggregate, Apply, PersistedSnapshot} from '@centsideas/event-sourcing';
 import {IdeaId, UserId, ISODate} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
 
@@ -14,7 +14,17 @@ import {IdeaTagsRemoved} from './idea-tags-removed';
 import {IdeaPublished} from './idea-published';
 import {IdeaDeleted} from './idea-deleted';
 
-export class Idea extends Aggregate {
+interface SerializedIdea {
+  id: string;
+  userId: string;
+  tags: string[];
+  title: string | undefined;
+  description: string | undefined;
+  publishedAt: string | undefined;
+  deletedAt: string | undefined;
+}
+
+export class Idea extends Aggregate<SerializedIdea> {
   protected id!: IdeaId;
   private userId!: UserId;
   private tags = IdeaTags.empty();
@@ -23,10 +33,33 @@ export class Idea extends Aggregate {
   private publishedAt: ISODate | undefined;
   private deletedAt: ISODate | undefined;
 
-  static buildFrom(events: PersistedEvent[]) {
+  static buildFrom(events: PersistedEvent[], snapshot?: PersistedSnapshot<SerializedIdea>) {
     const idea = new Idea();
-    idea.replay(events);
+    if (snapshot) idea.applySnapshot(snapshot, events);
+    else idea.replay(events);
     return idea;
+  }
+
+  protected deserialize(data: SerializedIdea) {
+    this.id = IdeaId.fromString(data.id);
+    this.userId = UserId.fromString(data.userId);
+    this.tags = IdeaTags.fromArray(data.tags);
+    this.title = data.title ? IdeaTitle.fromString(data.title) : undefined;
+    this.description = data.description ? IdeaDescription.fromString(data.description) : undefined;
+    this.publishedAt = data.publishedAt ? ISODate.fromString(data.publishedAt) : undefined;
+    this.deletedAt = data.deletedAt ? ISODate.fromString(data.deletedAt) : undefined;
+  }
+
+  protected serialize(): SerializedIdea {
+    return {
+      id: this.id.toString(),
+      userId: this.userId.toString(),
+      tags: this.tags.toArray(),
+      title: this.title?.toString(),
+      description: this.description?.toString(),
+      publishedAt: this.publishedAt?.toString(),
+      deletedAt: this.deletedAt?.toString(),
+    };
   }
 
   static create(id: IdeaId, user: UserId, createdAt: ISODate) {

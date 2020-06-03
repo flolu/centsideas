@@ -10,7 +10,6 @@ import {StreamEvents} from './stream-event';
 import {EventId} from './event-id';
 import {EventDispatcher} from './event-bus';
 import {EVENT_NAME_METADATA} from './domain-event';
-import {EventStoreFactoryOptions} from './interfaces';
 
 @injectable()
 export class InMemoryEventStore implements EventStore {
@@ -21,9 +20,10 @@ export class InMemoryEventStore implements EventStore {
 
   @inject(EventDispatcher) private dispatcher!: EventDispatcher;
 
-  async getStream(id: Id) {
+  async getStream(id: Id, after?: number) {
     return this.events
       .filter(e => id.toString() === e.streamId)
+      .filter(e => (after ? e.version > after : true))
       .sort((a, b) => a.version - b.version);
   }
 
@@ -73,7 +73,7 @@ export class InMemoryEventStore implements EventStore {
   }
 }
 
-export type InMemoryEventStoreFactory = (options: EventStoreFactoryOptions) => InMemoryEventStore;
+export type InMemoryEventStoreFactory = (options: {topic: EventTopics}) => InMemoryEventStore;
 export const inMemoryEventStoreFactory = (
   context: interfaces.Context,
 ): InMemoryEventStoreFactory => {

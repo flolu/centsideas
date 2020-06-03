@@ -10,7 +10,8 @@ const KUBERNETES = path.join('packages', 'kubernetes');
 
 const cliArgs = process.argv.slice(2);
 const envName = cliArgs[0];
-const {parsed} = dotenv.config({path: path.join(envName ? `.${envName}.env` : `.env)`)});
+// TODO create .env from template if not exist
+const {parsed} = dotenv.config({path: path.join(ROOT, envName ? `.${envName}.env` : `.env`)});
 
 // TODO secrets
 function main() {

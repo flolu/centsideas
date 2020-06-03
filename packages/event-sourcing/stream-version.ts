@@ -16,4 +16,8 @@ export class StreamVersion {
   toNumber() {
     return this.version;
   }
+
+  copy() {
+    return StreamVersion.fromNumber(this.version);
+  }
 }

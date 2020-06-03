@@ -7,6 +7,9 @@ import {
   inMemoryEventStoreFactory,
   InMemoryEventStore,
   EventDispatcherMock,
+  MONGO_SNAPSHOT_STORE_FACTORY,
+  inMemorySnapshotStoreFactory,
+  InMemorySnapshotStore,
 } from '@centsideas/event-sourcing';
 import {IdeaEventNames} from '@centsideas/enums';
 import {deserializeEvent} from '@centsideas/rpc';
@@ -18,13 +21,15 @@ import {IdeaConfig} from './idea.config';
 describe('IdeaService', () => {
   DependencyInjection.registerProviders(
     IdeaService,
+    IdeaConfig,
     EventDispatcher,
     InMemoryEventStore,
-    IdeaConfig,
+    InMemorySnapshotStore,
   );
   DependencyInjection.overrideProvider(EventDispatcher, EventDispatcherMock);
   DependencyInjection.overrideProvider(IdeaConfig, MockConfig);
   DependencyInjection.registerFactory(MONGO_EVENT_STORE_FACTORY, inMemoryEventStoreFactory);
+  DependencyInjection.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, inMemorySnapshotStoreFactory);
 
   const service: IdeaService = DependencyInjection.getProvider(IdeaService);
   const userId = UserId.generate().toString();

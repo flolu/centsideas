@@ -20,6 +20,7 @@ export class IdeaServer {
       .listen(3000);
 
     // TODO nicer implementation with @Decorators like (https://docs.nestjs.com/microservices/grpc) would be appreciated
+    // problem with metadata reflection: https://stackoverflow.com/questions/62172254
     this.rpcServer.addService<IdeaCommands>(loadProtoService(IdeaCommandsService).service, {
       create: async ({userId}) => {
         const id = IdeaId.generate();

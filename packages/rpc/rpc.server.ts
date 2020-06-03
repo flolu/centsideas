@@ -58,8 +58,10 @@ export class RpcServer {
                * Retry the command twice if the optimistic concurrency
                * error is thrown by the event store
                */
-              if (err.name && err.name === EventSourcingErrorNames.OptimisticConcurrencyIssue)
+              if (err.name && err.name === EventSourcingErrorNames.OptimisticConcurrencyIssue) {
+                this.logger.warn('concurrency issue... retry');
                 throw err;
+              }
               bail(err);
             });
             callback(null, response);

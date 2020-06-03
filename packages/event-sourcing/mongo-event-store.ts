@@ -12,7 +12,6 @@ import {OptimisticConcurrencyIssue} from './optimistic-concurrency-issue';
 import {EventId} from './event-id';
 import {EventDispatcher} from './event-bus';
 import {EVENT_NAME_METADATA} from './domain-event';
-import {EventStoreFactoryOptions} from './interfaces';
 
 @injectable()
 export class MongoEventStore implements EventStore {
@@ -28,6 +27,7 @@ export class MongoEventStore implements EventStore {
     this.topic = topic;
     this.databaseUrl = url;
     this.databaseName = name;
+
     this.client = new MongoClient(this.databaseUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -35,9 +35,11 @@ export class MongoEventStore implements EventStore {
     this.client.connect();
   }
 
-  async getStream(id: Id) {
-    const collection = await this.eventsCollection();
-    const result = await collection.find({streamId: id.toString()}).sort({version: -1});
+  async getStream(id: Id, after?: number) {
+    const collection = await this.collection();
+    const result = await collection
+      .find({streamId: id.toString(), version: {$gt: after ? after : 0}})
+      .sort({version: -1});
     const events = await result.toArray();
     return events;
   }
@@ -71,20 +73,20 @@ export class MongoEventStore implements EventStore {
       return persisted;
     });
 
-    const collection = await this.eventsCollection();
+    const collection = await this.collection();
     await collection.insertMany(inserts);
 
     await this.dispatcher.dispatch(this.topic, inserts);
   }
 
-  async getEvents(from: number) {
-    const collection = await this.eventsCollection();
-    const result = await collection.find({sequence: {$gt: from}}, {sort: {sequence: 1}});
+  async getEvents(after: number) {
+    const collection = await this.collection();
+    const result = await collection.find({sequence: {$gt: after}}, {sort: {sequence: 1}});
     return result.toArray();
   }
 
   private async getSequenceBookmark() {
-    const collection = await this.eventsCollection();
+    const collection = await this.collection();
     const result = await collection.find({}, {sort: {sequence: -1}, limit: 1});
     const events = await result.toArray();
     if (!events.length) return 0;
@@ -92,7 +94,7 @@ export class MongoEventStore implements EventStore {
   }
 
   private async getLastEvent(id: Id) {
-    const collection = await this.eventsCollection();
+    const collection = await this.collection();
     const result = await collection.find(
       {streamId: id.toString()},
       {sort: {version: -1}, limit: 1},
@@ -101,7 +103,7 @@ export class MongoEventStore implements EventStore {
     return events[0];
   }
 
-  private async eventsCollection() {
+  private async collection() {
     const db = await this.db();
     return db.collection<PersistedEvent>(this.collectionName);
   }
@@ -112,7 +114,13 @@ export class MongoEventStore implements EventStore {
   }
 }
 
-export type MongoEventStoreFactory = (options: EventStoreFactoryOptions) => MongoEventStore;
+interface MongoEventStoreFactoryOptions {
+  url: string;
+  name: string;
+  topic: EventTopics;
+}
+
+export type MongoEventStoreFactory = (options: MongoEventStoreFactoryOptions) => MongoEventStore;
 export const mongoEventStoreFactory = (context: interfaces.Context): MongoEventStoreFactory => {
   return ({url, name, topic}) => {
     const store = context.container.get(MongoEventStore);

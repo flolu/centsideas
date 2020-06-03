@@ -8,6 +8,9 @@ import {
   MongoEventStore,
   MONGO_EVENT_STORE_FACTORY,
   mongoEventStoreFactory,
+  MONGO_SNAPSHOT_STORE_FACTORY,
+  mongoSnapshotStoreFactory,
+  MongoSnapshotStore,
 } from '@centsideas/event-sourcing';
 import {DependencyInjection} from '@centsideas/dependency-injection';
 import {Logger} from '@centsideas/utils';
@@ -27,9 +30,11 @@ DependencyInjection.registerProviders(
   MongoEventStore,
   IdeaConfig,
   GlobalConfig,
+  MongoSnapshotStore,
 );
 DependencyInjection.registerSingleton(Logger);
 DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DependencyInjection.registerFactory(MONGO_EVENT_STORE_FACTORY, mongoEventStoreFactory);
+DependencyInjection.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, mongoSnapshotStoreFactory);
 
 DependencyInjection.bootstrap(IdeaServer);
