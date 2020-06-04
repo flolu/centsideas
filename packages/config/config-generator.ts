@@ -5,16 +5,27 @@ import {promises as fsPromises} from 'fs';
 import {Config} from './config';
 
 const ROOT = path.join(__dirname, '../../');
+const DOT_ENV_NAME = '.env';
 const SERVICES = 'services';
 const KUBERNETES = path.join('packages', 'kubernetes');
+const DOT_ENV = path.join(ROOT, DOT_ENV_NAME);
+const TEMPLATE = path.join(ROOT, `.template${DOT_ENV_NAME}`);
 
 const cliArgs = process.argv.slice(2);
 const envName = cliArgs[0];
-// TODO create .env from template if not exist
-const {parsed} = dotenv.config({path: path.join(ROOT, envName ? `.${envName}.env` : `.env`)});
+const {parsed} = dotenv.config({
+  path: path.join(ROOT, envName ? `.${envName}${DOT_ENV_NAME}` : DOT_ENV_NAME),
+});
 
 // TODO secrets
-function main() {
+async function main() {
+  try {
+    await fsPromises.access(DOT_ENV);
+  } catch (error) {
+    const template = await fsPromises.readFile(TEMPLATE);
+    await fsPromises.writeFile(DOT_ENV, template);
+  }
+
   if (!parsed) return;
   let services = Object.keys(parsed)
     .map(k => k.substring(0, k.indexOf('.')))
