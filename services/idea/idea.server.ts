@@ -24,8 +24,8 @@ export class IdeaServer {
     this.rpcServer.addService<IdeaCommands>(loadProtoService(IdeaCommandsService).service, {
       create: async ({userId}) => {
         const id = IdeaId.generate();
-        await this.service.create(id, userId);
-        return {id: id.toString()};
+        const upsertedId = await this.service.create(id, userId);
+        return {id: upsertedId};
       },
       rename: ({id, userId, title}) => this.service.rename(id, userId, title),
       editDescription: ({id, userId, description}) =>

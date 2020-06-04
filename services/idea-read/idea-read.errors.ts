@@ -6,6 +6,6 @@ export class IdeaNotFound extends Exception {
   name = IdeaReadErrorNames.NotFound;
 
   constructor(id: string) {
-    super(`Id with id ${id} not found`, {id});
+    super(`Id with id ${id ? id : '<not specified>'} not found`, {id});
   }
 }

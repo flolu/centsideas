@@ -6,9 +6,9 @@ import {SchemaService, loadProtoService} from '@centsideas/schemas';
 @injectable()
 export class RpcClient<T = any> {
   private internalRpcClient!: grpc.Client;
-  client!: T;
+  client: T = {} as any;
 
-  initialzie(host: string, service: SchemaService, port: number) {
+  initialize(host: string, service: SchemaService, port: number) {
     const serviceDefinition = loadProtoService(service);
     this.internalRpcClient = new serviceDefinition(
       `${host}:${port}`,
@@ -23,7 +23,6 @@ export class RpcClient<T = any> {
    * promises instead of the default callback
    */
   private registerMethods(methodNames: string[]) {
-    this.client = {} as any;
     methodNames.forEach(methodName => {
       (this.client as any)[methodName] = (payload: any) => {
         return new Promise((resolve, reject) => {
@@ -50,7 +49,7 @@ export type RpcClientFactory = (
 export const rpcClientFactory = (context: interfaces.Context): RpcClientFactory => {
   return (host, service: SchemaService, port = 40000) => {
     const rpcClient = context.container.get(RpcClient);
-    rpcClient.initialzie(host, service, port);
+    rpcClient.initialize(host, service, port);
     return rpcClient;
   };
 };

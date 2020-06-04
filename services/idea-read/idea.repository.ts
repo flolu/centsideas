@@ -34,6 +34,14 @@ export class IdeaRepository {
     return result.toArray();
   }
 
+  // FIXME consider refreshing projector with newest events before returning result
+  async getUnpublished(userId: string) {
+    const collection = await this.ideaCollection();
+    const found = await collection.findOne({userId, publishedAt: ''});
+    if (!found) throw new Errors.IdeaNotFound('');
+    return found;
+  }
+
   private async ideaCollection() {
     const db = await this.db();
     return db.collection<IdeaModels.IdeaModel>(this.config.get('idea-read.database.collection'));

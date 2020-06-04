@@ -24,6 +24,7 @@ export class IdeaReadServer {
         const ideas = await this.repository.getAll();
         return {ideas};
       },
+      getUnpublished: async ({userId}) => this.repository.getUnpublished(userId),
     });
   }
 }

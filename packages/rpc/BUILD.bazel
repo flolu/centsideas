@@ -4,7 +4,10 @@ package(default_visibility = ["//services:__subpackages__"])
 
 ts_library(
     name = "rpc",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = ["testing/**"],
+    ),
     module_name = "@centsideas/rpc",
     deps = [
         "//packages/enums",

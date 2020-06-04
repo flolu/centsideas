@@ -16,6 +16,7 @@ import {IdeaTitle} from './idea-title';
 import {IdeaDescription} from './idea-description';
 import {IdeaTags} from './idea-tags';
 import {IdeaConfig} from './idea.config';
+import {IdeaReadAdapter} from './idea-read.adapter';
 
 @injectable()
 export class IdeaService {
@@ -32,15 +33,19 @@ export class IdeaService {
 
   constructor(
     private config: IdeaConfig,
+    private ideaReadAdapter: IdeaReadAdapter,
     @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory: MongoEventStoreFactory,
     @inject(MONGO_SNAPSHOT_STORE_FACTORY) private snapshotStoreFactory: MongoSnapshotStoreFactory,
   ) {}
 
+  // FIXME check if user with id actually exists (query user service via adapter)
   async create(id: IdeaId, userId: string) {
-    // FIXME check if userId exists (query user service via adapter)
-    // FIXME there should only be one unpublished idea per user (don't create new idea if the user already has an upublished one)
-    const idea = Idea.create(id, UserId.fromString(userId), ISODate.now());
+    const user = UserId.fromString(userId);
+    const unpublished = await this.ideaReadAdapter.getUnpublishedIdea(user);
+    if (unpublished) return unpublished.id;
+    const idea = Idea.create(id, user, ISODate.now());
     await this.store(idea);
+    return id.toString();
   }
 
   async rename(id: string, userId: string, title: string) {

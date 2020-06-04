@@ -1,0 +1,13 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+
+package(default_visibility = ["//services:__subpackages__"])
+
+ts_library(
+    name = "testing",
+    srcs = glob(["*.ts"]),
+    module_name = "@centsideas/rpc/testing",
+    deps = [
+        "//packages/schemas",
+        "@npm//inversify",
+    ],
+)

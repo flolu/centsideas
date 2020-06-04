@@ -12,11 +12,13 @@ import {
   InMemorySnapshotStore,
 } from '@centsideas/event-sourcing';
 import {IdeaEventNames} from '@centsideas/enums';
-import {deserializeEvent} from '@centsideas/rpc';
+import {deserializeEvent, RPC_CLIENT_FACTORY, rpcClientFactory, RpcClient} from '@centsideas/rpc';
 import {MockConfig} from '@centsideas/config';
+import {RpcClientMock} from '@centsideas/rpc/testing';
 
 import {IdeaService} from './idea.service';
 import {IdeaConfig} from './idea.config';
+import {IdeaReadAdapter} from './idea-read.adapter';
 
 describe('IdeaService', () => {
   DependencyInjection.registerProviders(
@@ -25,9 +27,13 @@ describe('IdeaService', () => {
     EventDispatcher,
     InMemoryEventStore,
     InMemorySnapshotStore,
+    IdeaReadAdapter,
+    RpcClient,
   );
   DependencyInjection.overrideProvider(EventDispatcher, EventDispatcherMock);
+  DependencyInjection.overrideProvider(RpcClient, RpcClientMock);
   DependencyInjection.overrideProvider(IdeaConfig, MockConfig);
+  DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
   DependencyInjection.registerFactory(MONGO_EVENT_STORE_FACTORY, inMemoryEventStoreFactory);
   DependencyInjection.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, inMemorySnapshotStoreFactory);
 
@@ -39,43 +45,51 @@ describe('IdeaService', () => {
   const tags = ['mock', 'test', 'idea', 'awesome'];
   const tags2 = ['test', 'idea', 'nice', 'awesome'];
 
-  it('should create an idea', async () => {
+  it('creates an idea', async () => {
     const id = IdeaId.generate();
     await expectNoAsyncError(() => service.create(id, userId));
   });
 
-  it('should rename an idea', async () => {
+  // FIXME probably only possible via integration test
+  /* it('does not create a new idea if the user still has an unpublished idea', async () => {
+    const id = IdeaId.generate();
+    await expectNoAsyncError(() => service.create(id, userId));
+    const upsertedId = await service.create(id, userId);
+    expect(upsertedId).toEqual(id.toString());
+  }); */
+
+  it('renames an idea', async () => {
     const id = IdeaId.generate();
     await service.create(id, userId);
     await expectNoAsyncError(() => service.rename(id.toString(), userId, title));
   });
 
-  it('should edit an idea description', async () => {
+  it('edits an idea description', async () => {
     const id = IdeaId.generate();
     await service.create(id, userId);
     await expectNoAsyncError(() => service.editDescription(id.toString(), userId, description));
   });
 
-  it('should update idea tags', async () => {
+  it('updates idea tags', async () => {
     const id = IdeaId.generate();
     await service.create(id, userId);
     await expectNoAsyncError(() => service.updateTags(id.toString(), userId, tags));
   });
 
-  it('should publish an idea', async () => {
+  it('publishs an idea', async () => {
     const id = IdeaId.generate();
     await service.create(id, userId);
     await service.rename(id.toString(), userId, title);
     await expectNoAsyncError(() => service.publish(id.toString(), userId));
   });
 
-  it('should delete an idea', async () => {
+  it('deletes an idea', async () => {
     const id = IdeaId.generate();
     await service.create(id, userId);
     await expectNoAsyncError(() => service.delete(id.toString(), userId));
   });
 
-  it('should go through the whole idea lifecycle', async () => {
+  it('goes through the whole idea lifecycle', async () => {
     const id = IdeaId.generate();
     await expectNoAsyncError(async () => {
       await service.create(id, userId);
@@ -90,7 +104,7 @@ describe('IdeaService', () => {
     });
   });
 
-  it('store events and (de)serialize them', async () => {
+  it('stores events and (de)serialize them', async () => {
     const newService: IdeaService = DependencyInjection.getProvider(IdeaService);
     const id = IdeaId.generate();
 

@@ -23,7 +23,7 @@ export class Logger {
     console.log(this.chalk.red.bold(`error: ${error.name}`));
     const code = error.code || RpcStatus.UNKNOWN;
 
-    if (code === RpcStatus.UNKNOWN) {
+    if (code === RpcStatus.UNKNOWN || !error.name || error.name === 'Error') {
       console.log(this.chalk.red.bold('\nunexpected error'));
       console.log(this.chalk.redBright(error.message));
       if (error.details) console.log(this.chalk.red(`details: ${error.details}`));

@@ -52,6 +52,7 @@ ts_jest(
         "//packages/enums",
         "//packages/event-sourcing",
         "//packages/rpc",
+        "//packages/rpc/testing",
         "//packages/testing",
         "//packages/types",
         "@npm//reflect-metadata",

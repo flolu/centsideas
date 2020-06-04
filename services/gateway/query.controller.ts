@@ -11,7 +11,7 @@ import {GatewayConfig} from './gateway.config';
 
 @controller('')
 export class QueryController implements interfaces.Controller {
-  private ideaDetailsRpc: RpcClient<IdeaRead> = this.newRpcFactory(
+  private ideaReadRpc: RpcClient<IdeaRead> = this.newRpcFactory(
     this.config.get('idea-read.rpc.host'),
     IdeaReadService,
     Number(this.config.get('idea-read.rpc.port')),
@@ -35,11 +35,11 @@ export class QueryController implements interfaces.Controller {
   @httpGet(`/${ApiEndpoints.Idea}/:id`, AuthMiddleware)
   getIdeaById(req: express.Request, res: express.Response) {
     const {userId} = res.locals;
-    return this.ideaDetailsRpc.client.getById({id: req.params.id, userId});
+    return this.ideaReadRpc.client.getById({id: req.params.id, userId});
   }
 
   @httpGet(`/${ApiEndpoints.Idea}`)
-  getIdeas(req: express.Request) {
-    return this.ideaDetailsRpc.client.getAll();
+  getIdeas() {
+    return this.ideaReadRpc.client.getAll();
   }
 }
