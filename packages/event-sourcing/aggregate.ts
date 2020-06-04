@@ -5,6 +5,7 @@ import {StreamVersion} from './stream-version';
 import {StreamEvents} from './stream-event';
 import {IDomainEvent, EVENT_NAME_METADATA, eventDeserializerMap} from './domain-event';
 import {PersistedSnapshot} from './snapshot';
+import {ReplayVersionMismatch} from './replay-version-mismatch';
 
 export abstract class Aggregate<SerializedState = object> {
   protected abstract id: Id;
@@ -20,9 +21,10 @@ export abstract class Aggregate<SerializedState = object> {
   }
 
   protected replay(events: PersistedEvent[]) {
-    // TODO check if version matches
     events.forEach(event => {
       const deserialize = eventDeserializerMap.get(event.name);
+      if (this.version.toNumber() + 1 !== event.version)
+        throw new ReplayVersionMismatch(event, this.version);
       this.apply(deserialize(event.data), true);
     });
   }

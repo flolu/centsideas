@@ -22,4 +22,5 @@ export enum IdeaReadErrorNames {
 
 export enum EventSourcingErrorNames {
   OptimisticConcurrencyIssue = 'eventsourcing.optimisticConcurrency',
+  ReplayVersionMismatch = 'eventsourcing.replayVersionMismatch',
 }
