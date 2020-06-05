@@ -37,7 +37,7 @@ export class IdeaRepository {
   // FIXME consider refreshing projector with newest events before returning result
   async getUnpublished(userId: string) {
     const collection = await this.ideaCollection();
-    const found = await collection.findOne({userId, publishedAt: ''});
+    const found = await collection.findOne({userId, publishedAt: '', deletedAt: ''});
     if (!found) throw new Errors.IdeaNotFound('');
     return found;
   }

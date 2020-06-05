@@ -10,8 +10,10 @@ export class ReplayVersionMismatch extends Exception {
 
   constructor(event: PersistedEvent, aggregateVersion: StreamVersion) {
     super(
-      `Version mismatch while replaying event ${event.id} of aggregate with id ${event.streamId}.` +
-        `Aggregate version was at ${aggregateVersion.toNumber()}`,
+      `Version mismatch while replaying event ${event.id} of aggregate` +
+        `with id ${event.streamId}. Aggregate version was at ` +
+        `${aggregateVersion.toNumber()} and event version is ` +
+        `${event.version}`,
     );
   }
 }

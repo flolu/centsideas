@@ -39,7 +39,7 @@ export class MongoEventStore implements EventStore {
     const collection = await this.collection();
     const result = await collection
       .find({streamId: id.toString(), version: {$gt: after ? after : 0}})
-      .sort({version: -1});
+      .sort({version: 1});
     const events = await result.toArray();
     return events;
   }
