@@ -5,13 +5,11 @@ import {BaseMiddleware} from 'inversify-express-utils';
 import {IAccessTokenPayload} from '@centsideas/models';
 import {decodeToken} from '@centsideas/utils';
 import {HeaderKeys, Environments} from '@centsideas/enums';
-import {GlobalConfig} from '@centsideas/config';
-
-import {GatewayConfig} from './gateway.config';
+import {GlobalConfig, SecretsConfig} from '@centsideas/config';
 
 @injectable()
 export class AuthMiddleware extends BaseMiddleware {
-  constructor(private config: GatewayConfig, private globalConfig: GlobalConfig) {
+  constructor(private globalConfig: GlobalConfig, private secretsConfig: SecretsConfig) {
     super();
   }
 
@@ -22,14 +20,13 @@ export class AuthMiddleware extends BaseMiddleware {
 
     let userId = '';
     if (this.globalConfig.get('global.environment') === Environments.Dev) userId = accessToken;
-    // TODO remove eventually
+    // FIXME remove eventually (this is just for tesging without frontend)
     if (this.globalConfig.get('global.environment') === Environments.MicroK8s) userId = accessToken;
 
     try {
       const data = decodeToken<IAccessTokenPayload>(
         accessToken,
-        // FIXME eventually add access token secret
-        'temp' || this.config.get('accessTokenSecret'),
+        this.secretsConfig.get('secrets.tokens.access'),
       );
       userId = data.userId;
       // tslint:disable-next-line:no-empty

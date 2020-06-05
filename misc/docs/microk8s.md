@@ -4,6 +4,10 @@
 
 Make sure you have followed the installation [instructions](ubuntu.md) to install [MicroK8s](https://github.com/ubuntu/microk8s) on your machine.
 
+```bash
+sudo snap install microk8s --classic
+```
+
 ## Cluster Setup
 
 Now we will start the local Kubernetes cluster and enable some addons.

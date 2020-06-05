@@ -1,6 +1,6 @@
 import {UserId, IdeaId} from '@centsideas/types';
 import {expectNoAsyncError} from '@centsideas/testing';
-import {DependencyInjection} from '@centsideas/dependency-injection';
+import {DI} from '@centsideas/dependency-injection';
 import {
   EventDispatcher,
   MONGO_EVENT_STORE_FACTORY,
@@ -21,7 +21,7 @@ import {IdeaConfig} from './idea.config';
 import {IdeaReadAdapter} from './idea-read.adapter';
 
 describe('IdeaService', () => {
-  DependencyInjection.registerProviders(
+  DI.registerProviders(
     IdeaService,
     IdeaConfig,
     EventDispatcher,
@@ -30,14 +30,14 @@ describe('IdeaService', () => {
     IdeaReadAdapter,
     RpcClient,
   );
-  DependencyInjection.overrideProvider(EventDispatcher, EventDispatcherMock);
-  DependencyInjection.overrideProvider(RpcClient, RpcClientMock);
-  DependencyInjection.overrideProvider(IdeaConfig, MockConfig);
-  DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
-  DependencyInjection.registerFactory(MONGO_EVENT_STORE_FACTORY, inMemoryEventStoreFactory);
-  DependencyInjection.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, inMemorySnapshotStoreFactory);
+  DI.overrideProvider(EventDispatcher, EventDispatcherMock);
+  DI.overrideProvider(RpcClient, RpcClientMock);
+  DI.overrideProvider(IdeaConfig, MockConfig);
+  DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
+  DI.registerFactory(MONGO_EVENT_STORE_FACTORY, inMemoryEventStoreFactory);
+  DI.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, inMemorySnapshotStoreFactory);
 
-  const service: IdeaService = DependencyInjection.getProvider(IdeaService);
+  const service: IdeaService = DI.getProvider(IdeaService);
   const userId = UserId.generate().toString();
   const title = 'My awesome title';
   const description = 'This is idea is meant to be great, but also a dummy mock test description!';
@@ -105,7 +105,7 @@ describe('IdeaService', () => {
   });
 
   it('stores events and (de)serialize them', async () => {
-    const newService: IdeaService = DependencyInjection.getProvider(IdeaService);
+    const newService: IdeaService = DI.getProvider(IdeaService);
     const id = IdeaId.generate();
 
     await newService.create(id, userId);

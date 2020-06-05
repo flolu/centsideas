@@ -1,5 +1,3 @@
-# TODO k8s labeling
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:

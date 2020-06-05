@@ -8,7 +8,7 @@ import {InversifyExpressServer} from 'inversify-express-utils';
 
 import {RpcStatusHttpMap} from '@centsideas/rpc';
 import {Environments} from '@centsideas/enums';
-import {DependencyInjection} from '@centsideas/dependency-injection';
+import {DI} from '@centsideas/dependency-injection';
 import {GlobalConfig} from '@centsideas/config';
 
 import {GatewayConfig} from './gateway.config';
@@ -19,7 +19,7 @@ export class GatewayServer {
   private corsWhitelist: string[] = [];
 
   constructor(private globalConfig: GlobalConfig, private config: GatewayConfig) {
-    const server = new InversifyExpressServer(DependencyInjection.getContainer());
+    const server = new InversifyExpressServer(DI.getContainer());
     server.setConfig((app: express.Application) => {
       app.use(helmet());
       app.use(

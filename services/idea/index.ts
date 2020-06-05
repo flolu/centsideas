@@ -3,7 +3,6 @@ if (process.env['global.environment'] === 'dev') require('module-alias/register'
 
 import 'reflect-metadata';
 import {
-  EventListener,
   EventDispatcher,
   MongoEventStore,
   MONGO_EVENT_STORE_FACTORY,
@@ -12,7 +11,7 @@ import {
   mongoSnapshotStoreFactory,
   MongoSnapshotStore,
 } from '@centsideas/event-sourcing';
-import {DependencyInjection} from '@centsideas/dependency-injection';
+import {DI} from '@centsideas/dependency-injection';
 import {Logger} from '@centsideas/utils';
 import {
   RPC_SERVER_FACTORY,
@@ -29,23 +28,14 @@ import {IdeaService} from './idea.service';
 import {IdeaConfig} from './idea.config';
 import {IdeaReadAdapter} from './idea-read.adapter';
 
-DependencyInjection.registerProviders(
-  EventListener,
-  EventDispatcher,
-  IdeaServer,
-  RpcServer,
-  IdeaService,
-  MongoEventStore,
-  IdeaConfig,
-  GlobalConfig,
-  MongoSnapshotStore,
-  IdeaReadAdapter,
-  RpcClient,
-);
-DependencyInjection.registerSingleton(Logger);
-DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
-DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
-DependencyInjection.registerFactory(MONGO_EVENT_STORE_FACTORY, mongoEventStoreFactory);
-DependencyInjection.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, mongoSnapshotStoreFactory);
+DI.registerProviders(IdeaServer, IdeaService, IdeaReadAdapter);
+DI.registerSingletons(Logger, GlobalConfig, IdeaConfig);
 
-DependencyInjection.bootstrap(IdeaServer);
+DI.registerProviders(RpcServer, RpcClient);
+DI.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
+DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
+DI.registerProviders(EventDispatcher, MongoEventStore, MongoSnapshotStore);
+DI.registerFactory(MONGO_EVENT_STORE_FACTORY, mongoEventStoreFactory);
+DI.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, mongoSnapshotStoreFactory);
+
+DI.bootstrap(IdeaServer);

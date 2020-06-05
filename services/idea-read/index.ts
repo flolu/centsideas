@@ -1,7 +1,7 @@
 // tslint:disable-next-line:no-var-requires
 if (process.env['global.environment'] === 'dev') require('module-alias/register');
 
-import {DependencyInjection} from '@centsideas/dependency-injection';
+import {DI} from '@centsideas/dependency-injection';
 import {EventListener} from '@centsideas/event-sourcing';
 import {Logger} from '@centsideas/utils';
 import {
@@ -19,20 +19,13 @@ import {IdeaProjector} from './idea.projector';
 import {IdeaRepository} from './idea.repository';
 import {IdeaReadConfig} from './idea-read.config';
 
-DependencyInjection.registerProviders(
-  EventListener,
-  IdeaReadServer,
-  IdeaReadConfig,
-  Logger,
-  RpcServer,
-  RpcClient,
-  IdeaProjector,
-  IdeaRepository,
-  GlobalConfig,
-);
+DI.registerProviders(IdeaReadServer, IdeaProjector, IdeaRepository);
+DI.registerSingletons(Logger, IdeaReadConfig, GlobalConfig);
 
-DependencyInjection.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
-DependencyInjection.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
+DI.registerProviders(EventListener);
+DI.registerProviders(RpcClient, RpcServer);
+DI.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
+DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
 
-DependencyInjection.bootstrap(IdeaReadServer);
-DependencyInjection.bootstrap(IdeaProjector);
+DI.bootstrap(IdeaReadServer);
+DI.bootstrap(IdeaProjector);

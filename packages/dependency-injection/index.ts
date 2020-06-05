@@ -8,7 +8,7 @@ import {Container, interfaces} from 'inversify';
  */
 const container = new Container({skipBaseClassChecks: true});
 
-export const DependencyInjection = {
+export const DI = {
   registerProviders: (...providers: any[]) => providers.forEach(p => container.bind(p).toSelf()),
 
   registerFactory: (identifier: any, factory: (context: interfaces.Context) => any) =>
@@ -21,6 +21,9 @@ export const DependencyInjection = {
     provider
       ? container.bind(identifier).to(provider).inSingletonScope()
       : container.bind(identifier).toSelf().inSingletonScope(),
+
+  registerSingletons: (...providers: any[]) =>
+    providers.forEach(p => container.bind(p).to(p).inSingletonScope()),
 
   getProvider: (provider: any): any => container.get(provider),
   bootstrap: (provider: any): any => container.get(provider),

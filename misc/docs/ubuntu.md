@@ -63,8 +63,6 @@
 sudo snap install microk8s --classic && \
 #echo "alias kubectl='microk8s kubectl'" >> ~/.bash_aliases && \
 sudo snap alias microk8s.kubectl kubectl && \
-microk8s enable helm3 && \
-sudo snap alias microk8s.helm3 helm && \
 sudo usermod -a -G microk8s $USER && \
 sudo chown -f -R $USER ~/.kube && \
 su - $USER

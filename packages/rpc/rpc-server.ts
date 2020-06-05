@@ -89,7 +89,7 @@ export class RpcServer {
           details: error.details,
           stack: error.stack,
         };
-        //  TODO send error to error service
+        //  FIXME send error to error service
         // await this.messageBroker.dispatchError(errorPayload);
       }
     };
