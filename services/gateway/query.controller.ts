@@ -4,14 +4,14 @@ import {interfaces, controller, httpGet} from 'inversify-express-utils';
 
 import {ApiEndpoints} from '@centsideas/enums';
 import {RpcClient, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
-import {IdeaReadService, IdeaRead} from '@centsideas/schemas';
+import {IdeaReadService, IdeaReadQueries} from '@centsideas/schemas';
 
 import {AuthMiddleware} from './auth.middleware';
 import {GatewayConfig} from './gateway.config';
 
 @controller('')
 export class QueryController implements interfaces.Controller {
-  private ideaReadRpc: RpcClient<IdeaRead> = this.newRpcFactory(
+  private ideaReadRpc: RpcClient<IdeaReadQueries.Service> = this.newRpcFactory(
     this.config.get('idea-read.rpc.host'),
     IdeaReadService,
     Number(this.config.get('idea-read.rpc.port')),

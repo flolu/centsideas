@@ -1,48 +1,52 @@
 import {PersistedEvent} from '@centsideas/models';
 
-interface CreateIdeaCommand {
+export interface CreateIdea {
   userId: string;
 }
 
-interface RenameIdeaCommand {
+export interface RenameIdea {
   id: string;
   userId: string;
   title: string;
 }
 
-interface EditIdeaDescriptionCommand {
+export interface EditIdeaDescription {
   id: string;
   userId: string;
   description: string;
 }
 
-interface UpdateIdeaTagsCommand {
+export interface UpdateIdeaTags {
   id: string;
   userId: string;
   tags: string[];
 }
 
-interface PublishIdeaCommand {
+export interface PublishIdea {
   id: string;
   userId: string;
 }
 
-interface DeleteIdeaCommand {
+export interface DeleteIdea {
   id: string;
   userId: string;
+}
+
+export interface GetEvents {
+  after: number;
 }
 
 export interface IdeaCreatedResponse {
   id: string;
 }
 
-export interface IdeaCommands {
-  create: (payload: CreateIdeaCommand) => Promise<IdeaCreatedResponse>;
-  rename: (payload: RenameIdeaCommand) => Promise<void>;
-  editDescription: (payload: EditIdeaDescriptionCommand) => Promise<void>;
-  updateTags: (payload: UpdateIdeaTagsCommand) => Promise<void>;
-  publish: (payload: PublishIdeaCommand) => Promise<void>;
-  delete: (payload: DeleteIdeaCommand) => Promise<void>;
+export interface Service {
+  create: (payload: CreateIdea) => Promise<IdeaCreatedResponse>;
+  rename: (payload: RenameIdea) => Promise<void>;
+  editDescription: (payload: EditIdeaDescription) => Promise<void>;
+  updateTags: (payload: UpdateIdeaTags) => Promise<void>;
+  publish: (payload: PublishIdea) => Promise<void>;
+  delete: (payload: DeleteIdea) => Promise<void>;
 
-  getEvents: (payload: {from: number}) => Promise<{events: PersistedEvent[]}>;
+  getEvents: (payload: GetEvents) => Promise<{events: PersistedEvent[]}>;
 }

@@ -12,6 +12,6 @@ export const IdeaReadService: SchemaService = {
   service: 'IdeaRead',
 };
 
-export * from './idea-commands.schema';
+export * as IdeaCommands from './idea-commands.schema';
+export * as IdeaReadQueries from './idea-read.schema';
 export * from './idea-events.schema';
-export * from './idea-read.schema';

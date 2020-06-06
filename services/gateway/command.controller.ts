@@ -11,7 +11,7 @@ import {AuthMiddleware} from './auth.middleware';
 
 @controller('')
 export class CommandController implements interfaces.Controller {
-  private idea2Rpc: RpcClient<IdeaCommands> = this.newRpcFactory(
+  private ideaRpc: RpcClient<IdeaCommands.Service> = this.newRpcFactory(
     this.config.get('idea.rpc.host'),
     IdeaCommandsService,
     Number(this.config.get('idea.rpc.port')),
@@ -25,7 +25,7 @@ export class CommandController implements interfaces.Controller {
   @httpPost(`/${ApiEndpoints.Idea}`, AuthMiddleware)
   createIdea2(_req: express.Request, res: express.Response) {
     const {userId} = res.locals;
-    return this.idea2Rpc.client.create({userId});
+    return this.ideaRpc.client.create({userId});
   }
 
   @httpPut(`/${ApiEndpoints.Idea}/:id/rename`, AuthMiddleware)
@@ -33,7 +33,7 @@ export class CommandController implements interfaces.Controller {
     const {userId} = res.locals;
     const {id} = req.params;
     const {title} = req.body;
-    return this.idea2Rpc.client.rename({id, userId, title});
+    return this.ideaRpc.client.rename({id, userId, title});
   }
 
   @httpPut(`/${ApiEndpoints.Idea}/:id/description`, AuthMiddleware)
@@ -41,7 +41,7 @@ export class CommandController implements interfaces.Controller {
     const {userId} = res.locals;
     const {id} = req.params;
     const {description} = req.body;
-    return this.idea2Rpc.client.editDescription({id, userId, description});
+    return this.ideaRpc.client.editDescription({id, userId, description});
   }
 
   @httpPut(`/${ApiEndpoints.Idea}/:id/tags`, AuthMiddleware)
@@ -49,20 +49,20 @@ export class CommandController implements interfaces.Controller {
     const {userId} = res.locals;
     const {id} = req.params;
     const {tags} = req.body;
-    return this.idea2Rpc.client.updateTags({id, userId, tags});
+    return this.ideaRpc.client.updateTags({id, userId, tags});
   }
 
   @httpPut(`/${ApiEndpoints.Idea}/:id/publish`, AuthMiddleware)
   publishIdea(req: express.Request, res: express.Response) {
     const {userId} = res.locals;
     const {id} = req.params;
-    return this.idea2Rpc.client.publish({id, userId});
+    return this.ideaRpc.client.publish({id, userId});
   }
 
   @httpDelete(`/${ApiEndpoints.Idea}/:id`, AuthMiddleware)
   deleteIdea2(req: express.Request, res: express.Response) {
     const {userId} = res.locals;
     const {id} = req.params;
-    return this.idea2Rpc.client.delete({id, userId});
+    return this.ideaRpc.client.delete({id, userId});
   }
 }

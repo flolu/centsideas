@@ -80,8 +80,8 @@ export class IdeaService {
     await this.store(idea);
   }
 
-  async getEvents(from?: number) {
-    const events = await this.eventStore.getEvents(from || -1);
+  async getEvents(after?: number) {
+    const events = await this.eventStore.getEvents(after || -1);
     return events.map(serializeEvent);
   }
 

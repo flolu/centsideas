@@ -52,5 +52,5 @@ message PublishIdea {
 }
 
 message GetEvents {
-  int32 from = 1;
+  int32 after = 1;
 }

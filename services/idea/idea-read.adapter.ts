@@ -2,14 +2,14 @@ import {injectable, inject} from 'inversify';
 
 import {RpcClient, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
 import {UserId} from '@centsideas/types';
-import {IdeaRead, IdeaReadService} from '@centsideas/schemas';
+import {IdeaReadQueries, IdeaReadService} from '@centsideas/schemas';
 import {RpcStatus} from '@centsideas/enums';
 
 import {IdeaConfig} from './idea.config';
 
 @injectable()
 export class IdeaReadAdapter {
-  private ideaReadRpc: RpcClient<IdeaRead> = this.newRpcFactory(
+  private ideaReadRpc: RpcClient<IdeaReadQueries.Service> = this.newRpcFactory(
     this.config.get('idea-read.rpc.host'),
     IdeaReadService,
     Number(this.config.get('idea-read.rpc.port')),

@@ -4,33 +4,46 @@ import * as asyncRetry from 'async-retry';
 
 import {Logger, UnexpectedException} from '@centsideas/utils';
 import {EventSourcingErrorNames, RpcStatus} from '@centsideas/enums';
+import {SchemaService, loadProtoService} from '@centsideas/schemas';
+
+import {RPC_METHODS} from './rpc-method';
 
 @injectable()
 export class RpcServer {
   isRunning = false;
 
   private server = new grpc.Server();
+  private readonly defaultPort = 40000;
+  private readonly host = '0.0.0.0';
 
   constructor(private logger: Logger) {}
 
-  initialize(port: number = 40000, host = '0.0.0.0') {
-    this.server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), err => {
-      if (err)
-        throw new UnexpectedException(`while starting rpc server`, {
-          port,
-          host,
-        });
+  initialize(
+    services: SchemaService[],
+    handlerClassInstance: object,
+    port: number = this.defaultPort,
+  ) {
+    this.server.bindAsync(`${this.host}:${port}`, grpc.ServerCredentials.createInsecure(), err => {
+      if (err) throw new UnexpectedException(`while starting rpc server`, {port});
       this.server.start();
       this.isRunning = true;
     });
+
+    services.forEach(s => this.addService(s, handlerClassInstance));
   }
 
-  addService<IServiceImplementation>(
-    service: grpc.ServiceDefinition,
-    implementation: IServiceImplementation,
-  ) {
+  private addService(service: SchemaService, methodsContainingClassInstance: object) {
+    const methods = Reflect.getMetadata(RPC_METHODS, service);
+    const implementation: Record<string, any> = {};
+
+    if (!methods)
+      throw new Error(`Please provide at least one @RpcMethod for ${service.service} service`);
+    Object.keys(methods).forEach(method => {
+      implementation[method] = methods[method].bind(methodsContainingClassInstance);
+    });
+
     const grpcImpl = this.convertToGrpcImplementation(implementation);
-    this.server.addService(service, grpcImpl);
+    this.server.addService(loadProtoService(service).service, grpcImpl);
   }
 
   /**
@@ -96,11 +109,15 @@ export class RpcServer {
   }
 }
 
-export type RpcServerFactory = (port?: number, host?: string) => RpcServer;
+export type RpcServerFactory = (options: {
+  services: SchemaService[];
+  handlerClassInstance: object;
+  port?: number;
+}) => RpcServer;
 export const rpcServerFactory = (context: interfaces.Context): RpcServerFactory => {
-  return (port, host) => {
+  return ({services, handlerClassInstance, port}) => {
     const rpcServer = context.container.get(RpcServer);
-    rpcServer.initialize(port, host);
+    rpcServer.initialize(services, handlerClassInstance, port);
     return rpcServer;
   };
 };

@@ -12,14 +12,16 @@ import {IdeaReadConfig} from './idea-read.config';
 // FIXME make it possible clear the projector programmatically
 @injectable()
 export class IdeaProjector extends MongoProjector {
+  databaseUrl = this.config.get('idea-read.database.url');
+  databaseName = this.config.get('idea-read.database.name');
+
   private consumerGroupName = 'centsideas-idea-read';
-  private ideaEventStoreRpc: RpcClient<IdeaCommands> = this.rpcFactory(
+  private ideaEventStoreRpc: RpcClient<IdeaCommands.Service> = this.rpcFactory(
     this.config.get('idea.rpc.host'),
     IdeaCommandsService,
     Number(this.config.get('idea.rpc.port')),
   );
-  databaseUrl = this.config.get('idea-read.database.url');
-  databaseName = this.config.get('idea-read.database.name');
+  private collectionName = this.config.get('idea-read.database.collection');
 
   constructor(
     private eventListener: EventListener,
@@ -36,8 +38,8 @@ export class IdeaProjector extends MongoProjector {
 
   eventStream = this.eventListener.listen(EventTopics.Idea, this.consumerGroupName);
 
-  async getEvents(from: number) {
-    const result = await asynRetry(() => this.ideaEventStoreRpc.client.getEvents({from}), {
+  async getEvents(after: number) {
+    const result = await asynRetry(() => this.ideaEventStoreRpc.client.getEvents({after}), {
       minTimeout: 500,
       retries: 5,
     });
@@ -125,6 +127,6 @@ export class IdeaProjector extends MongoProjector {
 
   private async ideaCollection() {
     const db = await this.db();
-    return db.collection<IdeaModels.IdeaModel>(this.config.get('idea-read.database.collection'));
+    return db.collection<IdeaModels.IdeaModel>(this.collectionName);
   }
 }
