@@ -31,6 +31,8 @@ export class IdeaService {
     name: this.config.get('idea.database.name'),
   });
 
+  private readonly snapshotDistance = 10;
+
   constructor(
     private config: IdeaConfig,
     private ideaReadAdapter: IdeaReadAdapter,
@@ -93,9 +95,10 @@ export class IdeaService {
   }
 
   private async store(idea: Idea) {
-    await Promise.all([
-      this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion),
-      idea.aggregateVersion % 10 === 0 ? this.snapshotStore.store(idea.snapshot) : null,
-    ]);
+    await this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
+
+    const snapshot = await this.snapshotStore.get(idea.aggregateId);
+    if (idea.aggregateVersion - (snapshot?.version || 0) > this.snapshotDistance)
+      await this.snapshotStore.store(idea.snapshot);
   }
 }
