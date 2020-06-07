@@ -25,13 +25,11 @@ export class IdeaService {
     name: this.config.get('idea.database.name'),
     topic: EventTopics.Idea,
   });
-
   private snapshotStore = this.snapshotStoreFactory({
     url: this.config.get('idea.database.url'),
     name: this.config.get('idea.database.name'),
   });
-
-  private readonly snapshotDistance = 10;
+  private readonly snapshotDistance = 100;
 
   constructor(
     private config: IdeaConfig,
@@ -51,31 +49,31 @@ export class IdeaService {
   }
 
   async rename(id: string, userId: string, title: string) {
-    const idea = await this.build(id);
+    const idea = await this.build(IdeaId.fromString(id));
     idea.rename(IdeaTitle.fromString(title), UserId.fromString(userId));
     await this.store(idea);
   }
 
   async editDescription(id: string, userId: string, description: string) {
-    const idea = await this.build(id);
+    const idea = await this.build(IdeaId.fromString(id));
     idea.editDescription(IdeaDescription.fromString(description), UserId.fromString(userId));
     await this.store(idea);
   }
 
   async updateTags(id: string, userId: string, tags: string[]) {
-    const idea = await this.build(id);
+    const idea = await this.build(IdeaId.fromString(id));
     idea.updateTags(IdeaTags.fromArray(tags), UserId.fromString(userId));
     await this.store(idea);
   }
 
   async publish(id: string, userId: string) {
-    const idea = await this.build(id);
+    const idea = await this.build(IdeaId.fromString(id));
     idea.publish(ISODate.now(), UserId.fromString(userId));
     await this.store(idea);
   }
 
   async delete(id: string, userId: string) {
-    const idea = await this.build(id);
+    const idea = await this.build(IdeaId.fromString(id));
     idea.delete(ISODate.now(), UserId.fromString(userId));
     await this.store(idea);
   }
@@ -85,18 +83,18 @@ export class IdeaService {
     return events.map(serializeEvent);
   }
 
-  private async build(id: string) {
-    const ideaId = IdeaId.fromString(id);
-    const snapshot = await this.snapshotStore.get(ideaId);
+  private async build(id: IdeaId) {
+    const snapshot = await this.snapshotStore.get(id);
     const events: PersistedEvent[] = snapshot
-      ? await this.eventStore.getStream(ideaId, snapshot.version)
-      : await this.eventStore.getStream(ideaId);
+      ? await this.eventStore.getStream(id, snapshot.version)
+      : await this.eventStore.getStream(id);
     return Idea.buildFrom(events, snapshot);
   }
 
   private async store(idea: Idea) {
     await this.eventStore.store(idea.flushEvents(), idea.persistedAggregateVersion);
 
+    // FIXME idea aggregate is something where snashots might not be needed (how often will idea be edited?!)
     const snapshot = await this.snapshotStore.get(idea.aggregateId);
     if (idea.aggregateVersion - (snapshot?.version || 0) > this.snapshotDistance)
       await this.snapshotStore.store(idea.snapshot);

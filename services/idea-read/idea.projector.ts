@@ -47,6 +47,7 @@ export class IdeaProjector extends MongoProjector {
     return result.events.map(deserializeEvent);
   }
 
+  //  TODO rename to Listen would maybe be appropriate
   @Project(IdeaEventNames.Created)
   async created({data, streamId, version}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
     const {userId, createdAt} = data;
@@ -71,6 +72,7 @@ export class IdeaProjector extends MongoProjector {
     await collection.findOneAndUpdate({id: streamId}, {$set: {title, lastEventVersion: version}});
   }
 
+  // TODO set updatedAt
   @Project(IdeaEventNames.DescriptionEdited)
   async descriptionEdited({
     version,

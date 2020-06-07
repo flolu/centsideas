@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import {UserId, IdeaId} from '@centsideas/types';
 import {expectNoAsyncError} from '@centsideas/testing';
 import {DI} from '@centsideas/dependency-injection';

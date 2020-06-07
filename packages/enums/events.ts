@@ -7,3 +7,11 @@ export enum IdeaEventNames {
   Published = 'idea.published',
   Deleted = 'idea.deleted',
 }
+
+export enum AuthenticationEventNames {
+  SignInRequested = 'authentication.session.signInRequested',
+  SignInConfirmed = 'authentication.session.signInConfirmed',
+  SignedOut = 'authentication.session.signedOut',
+  TokensRefreshed = 'authentication.session.tokensRefreshed',
+  RefreshTokenRevoked = 'authentication.session.refreshTokenRevoked',
+}

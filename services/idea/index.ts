@@ -29,8 +29,9 @@ import {IdeaConfig} from './idea.config';
 import {IdeaReadAdapter} from './idea-read.adapter';
 
 DI.registerProviders(IdeaServer, IdeaService, IdeaReadAdapter);
-DI.registerSingletons(Logger, GlobalConfig, IdeaConfig);
+DI.registerSingletons(IdeaConfig);
 
+DI.registerSingletons(Logger, GlobalConfig);
 DI.registerProviders(RpcServer, RpcClient);
 DI.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);

@@ -9,6 +9,8 @@ import {ReplayVersionMismatch} from './replay-version-mismatch';
 
 export abstract class Aggregate<SerializedState = object> {
   protected abstract id: Id;
+  protected abstract deserialize(data: SerializedState): void;
+  protected abstract serialize(): SerializedState;
 
   private events: StreamEvents | undefined;
   private version = StreamVersion.start();
@@ -18,6 +20,26 @@ export abstract class Aggregate<SerializedState = object> {
     const events = this.events || StreamEvents.empty(this.id);
     this.events = StreamEvents.empty(this.id);
     return events;
+  }
+
+  get persistedAggregateVersion() {
+    return this.persistedVersion.toNumber();
+  }
+
+  get aggregateVersion() {
+    return this.version.toNumber();
+  }
+
+  get aggregateId() {
+    return this.id;
+  }
+
+  get snapshot(): PersistedSnapshot<SerializedState> {
+    return {
+      aggregateId: this.aggregateId.toString(),
+      version: this.version.toNumber(),
+      data: this.serialize(),
+    };
   }
 
   protected replay(events: PersistedEvent[]) {
@@ -64,29 +86,4 @@ export abstract class Aggregate<SerializedState = object> {
     this.persistedVersion = StreamVersion.fromNumber(snapshot.version);
     this.replay(eventsAfterSnapshot);
   }
-
-  protected abstract deserialize(data: SerializedState): void;
-  protected abstract serialize(): SerializedState;
-
-  get persistedAggregateVersion() {
-    return this.persistedVersion.toNumber();
-  }
-
-  get aggregateVersion() {
-    return this.version.toNumber();
-  }
-
-  get aggregateId() {
-    return this.id;
-  }
-
-  get snapshot(): PersistedSnapshot<SerializedState> {
-    return {
-      aggregateId: this.aggregateId.toString(),
-      version: this.version.toNumber(),
-      data: this.serialize(),
-    };
-  }
 }
-
-export type AggregateClassConstructor<T extends Aggregate> = new (events: IDomainEvent[]) => T;

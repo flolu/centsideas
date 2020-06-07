@@ -1,6 +1,14 @@
 export enum GenericErrorNames {
   Unexpected = 'unexpected',
   InvalidAuthToken = 'invalidAuthToken',
+  InvalidEmail = 'invalidEmail',
+  InvalidId = 'invalidId',
+  InvalidToken = 'invalidToken',
+}
+
+export enum EventSourcingErrorNames {
+  OptimisticConcurrencyIssue = 'eventsourcing.optimisticConcurrency',
+  ReplayVersionMismatch = 'eventsourcing.replayVersionMismatch',
 }
 
 export enum IdeaErrorNames {
@@ -20,7 +28,9 @@ export enum IdeaReadErrorNames {
   NotFound = 'idea.notFound',
 }
 
-export enum EventSourcingErrorNames {
-  OptimisticConcurrencyIssue = 'eventsourcing.optimisticConcurrency',
-  ReplayVersionMismatch = 'eventsourcing.replayVersionMismatch',
+export enum AuthenticationErrorNames {
+  SessionAlreadyConfirmed = 'authentication.session.alreadyConfirmed',
+  SessionRevoked = 'authentication.session.sessionRevoked',
+  SessionSignedOut = 'authentication.session.sessionSignedOut',
+  SessionUnconfirmed = 'authentication.session.sessionUnconfirmed',
 }

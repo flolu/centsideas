@@ -1,3 +1,5 @@
+// TODO remove eventually
+
 import * as jwt from 'jsonwebtoken';
 
 import {InvalidAuthToken} from './exception';
