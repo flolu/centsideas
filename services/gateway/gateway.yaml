@@ -20,6 +20,12 @@ spec:
                 name: global-config
             - configMapRef:
                 name: gateway-config
+          env:
+            - name: secrets.tokens.access
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: secrets.tokens.access
           readinessProbe:
             httpGet:
               path: /alive

@@ -6,7 +6,7 @@ import {
   MONGO_SNAPSHOT_STORE_FACTORY,
   MongoSnapshotStoreFactory,
 } from '@centsideas/event-sourcing';
-import {Email, ISODate, UserId, SessionId} from '@centsideas/types';
+import {Email, ISODate, UserId, SessionId, AccessToken} from '@centsideas/types';
 import {EventTopics, TokenExpirationTimes} from '@centsideas/enums';
 import {PersistedEvent} from '@centsideas/models';
 import {SecretsConfig} from '@centsideas/config';
@@ -14,7 +14,6 @@ import {SecretsConfig} from '@centsideas/config';
 import {Session} from './session';
 import {EmailSignInToken} from './email-sign-in-token';
 import {RefreshToken} from './refresh-token';
-import {AccessToken} from './access-token';
 import {UserReadAdapter} from './user-read.adapter';
 import {AuthenticationConfig} from './authentication.config';
 import {serializeEvent} from '@centsideas/rpc';

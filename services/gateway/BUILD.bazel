@@ -20,6 +20,7 @@ ts_library(
         "//packages/models",
         "//packages/rpc",
         "//packages/schemas",
+        "//packages/types",
         "//packages/utils",
         "@npm//@types/body-parser",
         "@npm//@types/cookie-parser",

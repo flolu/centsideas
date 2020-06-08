@@ -1,4 +1,6 @@
-import {Token, UserId, SessionId} from '@centsideas/types';
+import {UserId, SessionId} from '@centsideas/types';
+
+import {Token} from './token';
 
 interface AccessTokenData {
   userId: string;

@@ -41,9 +41,9 @@ export class GatewayServer {
           if (!err) return res.status(500);
           if (!err.code) return res.status(500);
 
-          const message = err.details;
+          const message = err.details || err.message;
           const httpCode = RpcStatusHttpMap[err.code] || 500;
-          const name = err.metadata?.get('name')[0] || '';
+          const name = err.metadata?.get('name')[0] || err.name || '';
           const unexpected = httpCode >= 500 ? true : false;
 
           res.status(httpCode).json({message, unexpected, name});
