@@ -1,7 +1,7 @@
 import {injectable, inject} from 'inversify';
 import * as asynRetry from 'async-retry';
 
-import {MongoProjector, EventListener, Project} from '@centsideas/event-sourcing';
+import {MongoProjector, EventListener, Listen} from '@centsideas/event-sourcing';
 import {RpcClient, deserializeEvent, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
 import {EventTopics, IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels, PersistedEvent} from '@centsideas/models';
@@ -47,9 +47,8 @@ export class IdeaProjector extends MongoProjector {
     return result.events.map(deserializeEvent);
   }
 
-  //  TODO rename to Listen would maybe be appropriate
-  @Project(IdeaEventNames.Created)
-  async created({data, streamId, version}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
+  @Listen(IdeaEventNames.Created)
+  async created({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
     const {userId, createdAt} = data;
     const collection = await this.ideaCollection();
     await collection.insertOne({
@@ -62,68 +61,87 @@ export class IdeaProjector extends MongoProjector {
       publishedAt: '',
       deletedAt: '',
       lastEventVersion: version,
+      updatedAt: insertedAt,
     });
   }
 
-  @Project(IdeaEventNames.Renamed)
-  async renamed({data, streamId, version}: PersistedEvent<IdeaModels.IdeaRenamedData>) {
+  @Listen(IdeaEventNames.Renamed)
+  async renamed({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaRenamedData>) {
     const {title} = data;
     const collection = await this.ideaCollection();
-    await collection.findOneAndUpdate({id: streamId}, {$set: {title, lastEventVersion: version}});
+    await collection.findOneAndUpdate(
+      {id: streamId},
+      {$set: {title, lastEventVersion: version, updatedAt: insertedAt}},
+    );
   }
 
-  // TODO set updatedAt
-  @Project(IdeaEventNames.DescriptionEdited)
+  @Listen(IdeaEventNames.DescriptionEdited)
   async descriptionEdited({
     version,
     streamId,
     data,
+    insertedAt,
   }: PersistedEvent<IdeaModels.IdeaDescriptionEditedData>) {
     const {description} = data;
     const collection = await this.ideaCollection();
     await collection.findOneAndUpdate(
       {id: streamId},
-      {$set: {description, lastEventVersion: version}},
+      {$set: {description, lastEventVersion: version, updatedAt: insertedAt}},
     );
   }
 
-  @Project(IdeaEventNames.TagsAdded)
-  async tagsAdded({version, streamId, data}: PersistedEvent<IdeaModels.IdeaTagsAddedData>) {
+  @Listen(IdeaEventNames.TagsAdded)
+  async tagsAdded({
+    version,
+    streamId,
+    data,
+    insertedAt,
+  }: PersistedEvent<IdeaModels.IdeaTagsAddedData>) {
     const {tags} = data;
     const collection = await this.ideaCollection();
     await collection.findOneAndUpdate(
       {id: streamId},
-      {$push: {tags: {$each: tags}}, $set: {lastEventVersion: version}},
+      {$push: {tags: {$each: tags}}, $set: {lastEventVersion: version, updatedAt: insertedAt}},
     );
   }
 
-  @Project(IdeaEventNames.TagsRemoved)
-  async tagsRemoved({version, streamId, data}: PersistedEvent<IdeaModels.IdeaTagsRemovedData>) {
+  @Listen(IdeaEventNames.TagsRemoved)
+  async tagsRemoved({
+    version,
+    streamId,
+    data,
+    insertedAt,
+  }: PersistedEvent<IdeaModels.IdeaTagsRemovedData>) {
     const {tags} = data;
     const collection = await this.ideaCollection();
     await collection.findOneAndUpdate(
       {id: streamId},
-      {$pull: {fruits: {$in: tags}}, $set: {lastEventVersion: version}},
+      {$pull: {fruits: {$in: tags}}, $set: {lastEventVersion: version, updatedAt: insertedAt}},
     );
   }
 
-  @Project(IdeaEventNames.Published)
-  async published({version, streamId, data}: PersistedEvent<IdeaModels.IdeaPublishedData>) {
+  @Listen(IdeaEventNames.Published)
+  async published({
+    version,
+    streamId,
+    data,
+    insertedAt,
+  }: PersistedEvent<IdeaModels.IdeaPublishedData>) {
     const {publishedAt} = data;
     const collection = await this.ideaCollection();
     await collection.findOneAndUpdate(
       {id: streamId},
-      {$set: {publishedAt, lastEventVersion: version}},
+      {$set: {publishedAt, lastEventVersion: version, updatedAt: insertedAt}},
     );
   }
 
-  @Project(IdeaEventNames.Deleted)
-  async deleted({version, streamId, data}: PersistedEvent<IdeaModels.IdeaDeletedData>) {
+  @Listen(IdeaEventNames.Deleted)
+  async deleted({version, streamId, data, insertedAt}: PersistedEvent<IdeaModels.IdeaDeletedData>) {
     const {deletedAt} = data;
     const collection = await this.ideaCollection();
     await collection.findOneAndUpdate(
       {id: streamId},
-      {$set: {deletedAt, lastEventVersion: version}},
+      {$set: {deletedAt, lastEventVersion: version, updatedAt: insertedAt}},
     );
   }
 

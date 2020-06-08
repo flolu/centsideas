@@ -28,6 +28,7 @@ message Idea {
   string createdAt = 6;
   string publishedAt = 7;
   string deletedAt = 8;
+  string updatedAt = 9;
 }
 
 message Ideas {

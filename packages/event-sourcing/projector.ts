@@ -62,7 +62,7 @@ export abstract class Projector implements IProjector {
  * The method, which is decorated will be called to handle
  * the projection of the event with the specified @param eventName
  */
-export const Project = (eventName: string) => {
+export const Listen = (eventName: string) => {
   return function ProjetDecorator(target: any, methodName: string) {
     /**
      * Save the @param methodName of the handler method
