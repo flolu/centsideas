@@ -13,6 +13,7 @@ export class AuthMiddleware extends BaseMiddleware {
     super();
   }
 
+  // TODO use new token type
   public handler(req: express.Request, res: express.Response, next: express.NextFunction) {
     const authHeader = req.headers[HeaderKeys.Auth];
     const accessToken = authHeader?.split(' ')[1];

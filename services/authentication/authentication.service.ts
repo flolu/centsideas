@@ -54,7 +54,7 @@ export class AuthenticationService {
     const session = await this.build(sessionId);
     const existingUser = await this.userReadAdapter.getUserByEmail(email);
     const userId = existingUser?.id || UserId.generate();
-    session.confirmEmailSignIn(userId, !existingUser);
+    session.confirmEmailSignIn(userId, !existingUser, ISODate.now());
     await this.store(session);
 
     const refreshToken = new RefreshToken(sessionId, userId);

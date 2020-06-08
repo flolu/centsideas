@@ -6,7 +6,6 @@ interface RefreshTokenData {
 }
 
 export class RefreshToken extends Token<RefreshTokenData> {
-  // NOW maybe userId not needed?
   constructor(public readonly sessionId: SessionId, public readonly userId: UserId) {
     super();
   }

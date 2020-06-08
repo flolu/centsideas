@@ -26,4 +26,8 @@ export class StreamEvents {
   toArray() {
     return this.events;
   }
+
+  toEvents() {
+    return this.events.map(e => e.event);
+  }
 }

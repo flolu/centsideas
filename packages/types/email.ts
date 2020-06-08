@@ -3,12 +3,12 @@ import * as sanitize from 'sanitize-html';
 import {Exception} from '@centsideas/utils';
 import {RpcStatus, GenericErrorNames} from '@centsideas/enums';
 
-export class Email {
-  private readonly regex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+const EMAIL_REGEX = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
+export class Email {
   private constructor(private email: string) {
     this.email = sanitize(this.email);
-    if (!this.regex.test(this.email)) throw new InvalidEmail(this.email);
+    if (!EMAIL_REGEX.test(this.email)) throw new InvalidEmail(this.email);
   }
 
   static fromString(email: string) {

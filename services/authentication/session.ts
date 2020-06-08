@@ -10,7 +10,7 @@ import {SignInConfirmed} from './sign-in-confirmed';
 import * as Errors from './session.errors';
 import {SignedOut} from './signed-out';
 
-interface SerializedSession {
+export interface SerializedSession {
   id: string;
   signInRequestedAt: string;
   signInMethod: string;
@@ -34,6 +34,7 @@ export class Session extends Aggregate<SerializedSession> {
   static buildFrom(events: PersistedEvent[], snapshot?: PersistedSnapshot<SerializedSession>) {
     const session = new Session();
     if (snapshot) session.applySnapshot(snapshot, events);
+    else session.replay(events);
     return session;
   }
 
@@ -83,10 +84,10 @@ export class Session extends Aggregate<SerializedSession> {
     // return session;
   }
 
-  confirmEmailSignIn(userId: UserId, isSignUp: boolean) {
+  confirmEmailSignIn(userId: UserId, isSignUp: boolean, confirmedAt: ISODate) {
     if (this.signInConfirmedAt) throw new Errors.SessionAlreadyConfirmed();
     if (this.isRefreshTokenRevoked) throw new Errors.SessionRevoked();
-    this.raise(new SignInConfirmed(isSignUp, userId, ISODate.now()));
+    this.raise(new SignInConfirmed(isSignUp, userId, confirmedAt));
   }
 
   confirmGoogleSignIn(userId: UserId, isSignUp: boolean) {
@@ -116,26 +117,26 @@ export class Session extends Aggregate<SerializedSession> {
   }
 
   @Apply(SignInRequested)
-  signInRequested(event: SignInRequested) {
+  protected signInRequested(event: SignInRequested) {
     this.id = event.sessionId;
     this.signInRequestedAt = event.requestedAt;
     this.signInMethod = event.method;
   }
 
   @Apply(SignInConfirmed)
-  signInConfirmed(event: SignInConfirmed) {
+  protected signInConfirmed(event: SignInConfirmed) {
     this.isSignUpSession = event.isSignUpSession;
     this.userId = event.userId;
     this.signInConfirmedAt = event.confirmedAt;
   }
 
   @Apply(SignedOut)
-  signedOut(event: SignedOut) {
+  protected signedOut(event: SignedOut) {
     this.signedOutAt = event.signedOutAt;
   }
 
   @Apply(RefreshTokenRevoked)
-  refreshTokenRevoked() {
+  protected refreshTokenRevoked() {
     this.isRefreshTokenRevoked = true;
   }
 }

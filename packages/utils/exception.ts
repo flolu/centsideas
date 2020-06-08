@@ -1,6 +1,6 @@
 import {RpcStatus, GenericErrorNames} from '@centsideas/enums';
 
-// TODO resolving the originator service would be nice
+// FIXME resolving the originator service would be nice
 export abstract class Exception extends Error {
   abstract code: RpcStatus;
   abstract name: string;

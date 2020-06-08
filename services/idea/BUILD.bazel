@@ -51,6 +51,7 @@ ts_jest(
         "//packages/dependency-injection",
         "//packages/enums",
         "//packages/event-sourcing",
+        "//packages/models",
         "//packages/rpc",
         "//packages/rpc/testing",
         "//packages/testing",

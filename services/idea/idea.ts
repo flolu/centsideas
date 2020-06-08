@@ -14,7 +14,7 @@ import {IdeaTagsRemoved} from './idea-tags-removed';
 import {IdeaPublished} from './idea-published';
 import {IdeaDeleted} from './idea-deleted';
 
-interface SerializedIdea {
+export interface SerializedIdea {
   id: string;
   userId: string;
   tags: string[];
@@ -105,38 +105,38 @@ export class Idea extends Aggregate<SerializedIdea> {
   }
 
   @Apply(IdeaCreated)
-  created(event: IdeaCreated) {
+  protected created(event: IdeaCreated) {
     this.id = event.id;
     this.userId = event.userId;
   }
 
   @Apply(IdeaRenamed)
-  renamed(event: IdeaRenamed) {
+  protected renamed(event: IdeaRenamed) {
     this.title = event.title;
   }
 
   @Apply(IdeaDescriptionEdited)
-  descriptionEdited(event: IdeaDescriptionEdited) {
+  protected descriptionEdited(event: IdeaDescriptionEdited) {
     this.description = event.description;
   }
 
   @Apply(IdeaTagsAdded)
-  tagsAdded(event: IdeaTagsAdded) {
+  protected tagsAdded(event: IdeaTagsAdded) {
     this.tags.add(event.tags);
   }
 
   @Apply(IdeaTagsRemoved)
-  tagsRemoved(event: IdeaTagsRemoved) {
+  protected tagsRemoved(event: IdeaTagsRemoved) {
     this.tags.remove(event.tags);
   }
 
   @Apply(IdeaPublished)
-  published(event: IdeaPublished) {
+  protected published(event: IdeaPublished) {
     this.publishedAt = event.publishedAt;
   }
 
   @Apply(IdeaDeleted)
-  deleted(event: IdeaDeleted) {
+  protected deleted(event: IdeaDeleted) {
     this.deletedAt = event.deletedAt;
   }
 }
