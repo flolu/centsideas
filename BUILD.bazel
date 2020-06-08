@@ -11,6 +11,7 @@ k8s_objects(
         "//services/gateway:k8s",
         "//services/idea:k8s",
         "//services/idea-read:k8s",
+        "//services/authentication:k8s",
     ],
 )
 
@@ -21,5 +22,6 @@ k8s_objects(
         "//services/gateway:microk8s",
         "//services/idea:microk8s",
         "//services/idea-read:microk8s",
+        "//services/authentication:microk8s",
     ],
 )

@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: local-ideas-event-store-pv-volume
+  name: local-idea-event-store-pv-volume
 spec:
   storageClassName: idea-event-store-local-storage
   capacity:
@@ -22,5 +22,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/mnt/data/idea-event-store'
+    path: "/mnt/data/idea-event-store"
     type: DirectoryOrCreate

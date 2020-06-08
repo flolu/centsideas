@@ -20,8 +20,9 @@ import {
 import {AuthenticationServer} from './authentication.server';
 import {AuthenticationService} from './authentication.service';
 import {AuthenticationConfig} from './authentication.config';
+import {UserReadAdapter} from './user-read.adapter';
 
-DI.registerProviders(AuthenticationServer, AuthenticationService);
+DI.registerProviders(AuthenticationServer, AuthenticationService, UserReadAdapter);
 DI.registerSingletons(AuthenticationConfig);
 
 DI.registerSingletons(Logger, GlobalConfig, SecretsConfig);

@@ -24,6 +24,11 @@ k8s_deploy(
     template = ":global-config.yaml",
 )
 
+k8s_deploy(
+    name = "secrets",
+    template = ":secrets.yaml",
+)
+
 k8s_objects(
     name = "defaults",
     objects = [
@@ -31,6 +36,7 @@ k8s_objects(
         ":certificate_issuer",
         ":config",
         ":ingress",
+        ":secrets",
     ],
 )
 
@@ -49,11 +55,17 @@ microk8s_deploy(
     template = ":local-ingress.yaml",
 )
 
+microk8s_deploy(
+    name = "microk8s_secrets",
+    template = ":secrets.yaml",
+)
+
 k8s_objects(
     name = "microk8s_defaults",
     objects = [
         ":microk8s_kafka",
         ":microk8s_config",
         ":microk8s_ingress",
+        ":microk8s_secrets",
     ],
 )

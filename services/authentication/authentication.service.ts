@@ -16,32 +16,36 @@ import {EmailSignInToken} from './email-sign-in-token';
 import {RefreshToken} from './refresh-token';
 import {AccessToken} from './access-token';
 import {UserReadAdapter} from './user-read.adapter';
+import {AuthenticationConfig} from './authentication.config';
 
 @injectable()
 export class AuthenticationService {
-  @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory!: MongoEventStoreFactory;
-  @inject(MONGO_SNAPSHOT_STORE_FACTORY) private snapshotStoreFactory!: MongoSnapshotStoreFactory;
+  private readonly refreshTokenSecret = this.secretesConfig.get('secrets.tokens.refresh');
+  private readonly accessTokenSecret = this.secretesConfig.get('secrets.tokens.access');
+  private readonly signInTokenSecret = this.secretesConfig.get('secrets.tokens.signin');
+  private readonly databaseUrl = this.config.get('authentication.database.url');
+  private readonly databaseName = this.config.get('authentication.database.name');
+  private readonly snapshotDistance = 50;
+  private readonly accessTokenExpirationSeconds = 15 * 60;
+  private readonly refreshTokenExpirationSeconds = 7 * 24 * 60 * 60;
 
   private eventStore = this.eventStoreFactory({
-    // TODO configure event store database
-    url: '',
-    name: '',
+    url: this.databaseUrl,
+    name: this.databaseName,
     topic: EventTopics.Authentication,
   });
   private snapshotStore = this.snapshotStoreFactory({
-    url: '',
-    name: '',
+    url: this.databaseUrl,
+    name: this.databaseName,
   });
-  private readonly snapshotDistance = 50;
 
-  private readonly refreshTokenSecret = this.secretesConfig.get('secrets.tokens.refresh');
-  private readonly accessTokenSecret = this.secretesConfig.get('secrets.tokens.access');
-  private readonly signInTokenSecret = this.secretesConfig.get('secrets.tokens.login');
-
-  private accessTokenExpirationSeconds = 15 * 60;
-  private refreshTokenExpirationSeconds = 7 * 24 * 60 * 60;
-
-  constructor(private secretesConfig: SecretsConfig, private userReadAdapter: UserReadAdapter) {}
+  constructor(
+    private secretesConfig: SecretsConfig,
+    private config: AuthenticationConfig,
+    private userReadAdapter: UserReadAdapter,
+    @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory: MongoEventStoreFactory,
+    @inject(MONGO_SNAPSHOT_STORE_FACTORY) private snapshotStoreFactory: MongoSnapshotStoreFactory,
+  ) {}
 
   async requestEmailSignIn(email: string) {
     const sessionId = SessionId.generate();

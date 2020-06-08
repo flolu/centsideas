@@ -13,7 +13,7 @@ sudo snap install microk8s --classic
 Now we will start the local Kubernetes cluster and enable some addons.
 
 ```bash
-microk8s start
+microk8s start && \
 microk8s enable dns storage ingress registry
 ```
 

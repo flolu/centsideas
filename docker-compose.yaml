@@ -76,6 +76,22 @@ services:
       - kafka
       - mongo-database
 
+  authentication:
+    container_name: authentication
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./services/authentication:/services/authentication
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/authentication --colors
+    depends_on:
+      - kafka
+      - mongo-database
+
   mongo-database:
     container_name: mongo-database
     image: mongo:4

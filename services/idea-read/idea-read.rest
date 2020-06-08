@@ -1,7 +1,7 @@
 @id=qVxuSaCYa
 @userId = Md9Q6fwHY
-# @apiUrl = http://api.localhost
-@apiUrl = http://localhost:3000
+@apiUrl = http://api.localhost
+# @apiUrl = http://localhost:3000
 
 ###
 
