@@ -102,7 +102,6 @@ microk8s_deploy(
 k8s_objects(
     name = "microk8s",
     objects = [
-        # NOW applyting this does not work
         ":microk8s_authentication",
         ":microk8s_storage",
         ":microk8s_config",

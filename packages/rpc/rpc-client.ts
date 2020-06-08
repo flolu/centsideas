@@ -5,10 +5,12 @@ import {SchemaService, loadProtoService} from '@centsideas/schemas';
 
 @injectable()
 export class RpcClient<T = any> {
-  private internalRpcClient!: grpc.Client;
   client: T = {} as any;
 
-  initialize(host: string, service: SchemaService, port: number) {
+  private readonly defaultPort = 40000;
+  private internalRpcClient!: grpc.Client;
+
+  initialize(host: string, service: SchemaService, port: number = this.defaultPort) {
     const serviceDefinition = loadProtoService(service);
     this.internalRpcClient = new serviceDefinition(
       `${host}:${port}`,
@@ -40,14 +42,14 @@ export class RpcClient<T = any> {
   }
 }
 
-export type RpcClientFactory = (
-  host: string,
-  service: SchemaService,
-  port?: number,
-) => RpcClient<any>;
+export type RpcClientFactory = (options: {
+  host: string;
+  service: SchemaService;
+  port?: number;
+}) => RpcClient<any>;
 
 export const rpcClientFactory = (context: interfaces.Context): RpcClientFactory => {
-  return (host, service: SchemaService, port = 40000) => {
+  return ({host, service, port}) => {
     const rpcClient = context.container.get(RpcClient);
     rpcClient.initialize(host, service, port);
     return rpcClient;

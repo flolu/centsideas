@@ -1,0 +1,13 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "userId": "Md9Q6fwHY"
+    },
+    "dev": {
+      "apiUrl": "http://localhost:3000"
+    },
+    "microk8s": {
+      "apiUrl": "http://api.localhost"
+    }
+  }
+}

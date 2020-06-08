@@ -3,23 +3,26 @@ import * as http from 'http';
 
 import {RpcServer, RPC_SERVER_FACTORY, RpcServerFactory, RpcMethod} from '@centsideas/rpc';
 import {IdeaId} from '@centsideas/types';
-import {IdeaCommandsService, IdeaCommands} from '@centsideas/schemas';
+import {IdeaCommandsService, IdeaCommands, GetEvents} from '@centsideas/schemas';
 
 import {IdeaService} from './idea.service';
+import {IdeaConfig} from './idea.config';
 
 @injectable()
 export class IdeaServer implements IdeaCommands.Service {
-  private rpcServer: RpcServer = this.rpcServerFactory({
+  private _rpcServer: RpcServer = this.rpcServerFactory({
     services: [IdeaCommandsService],
     handlerClassInstance: this,
+    port: this.config.getNumber('idea.rpc.port'),
   });
 
   constructor(
     private service: IdeaService,
+    private config: IdeaConfig,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     http
-      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
+      .createServer((_, res) => res.writeHead(this._rpcServer.isRunning ? 200 : 500).end())
       .listen(3000);
   }
 
@@ -56,8 +59,8 @@ export class IdeaServer implements IdeaCommands.Service {
   }
 
   @RpcMethod(IdeaCommandsService)
-  async getEvents({after: from}: IdeaCommands.GetEvents) {
-    const events = await this.service.getEvents(from);
+  async getEvents({after}: GetEvents) {
+    const events = await this.service.getEvents(after);
     return {events};
   }
 }

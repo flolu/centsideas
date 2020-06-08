@@ -9,11 +9,11 @@ import {IdeaConfig} from './idea.config';
 
 @injectable()
 export class IdeaReadAdapter {
-  private ideaReadRpc: RpcClient<IdeaReadQueries.Service> = this.newRpcFactory(
-    this.config.get('idea-read.rpc.host'),
-    IdeaReadService,
-    Number(this.config.get('idea-read.rpc.port')),
-  );
+  private ideaReadRpc: RpcClient<IdeaReadQueries.Service> = this.newRpcFactory({
+    host: this.config.get('idea-read.rpc.host'),
+    service: IdeaReadService,
+    port: this.config.getNumber('idea-read.rpc.port'),
+  });
 
   constructor(
     private config: IdeaConfig,

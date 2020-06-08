@@ -7,7 +7,7 @@ import {
   MongoSnapshotStoreFactory,
 } from '@centsideas/event-sourcing';
 import {Email, ISODate, UserId, SessionId} from '@centsideas/types';
-import {EventTopics} from '@centsideas/enums';
+import {EventTopics, TokenExpirationTimes} from '@centsideas/enums';
 import {PersistedEvent} from '@centsideas/models';
 import {SecretsConfig} from '@centsideas/config';
 
@@ -17,6 +17,7 @@ import {RefreshToken} from './refresh-token';
 import {AccessToken} from './access-token';
 import {UserReadAdapter} from './user-read.adapter';
 import {AuthenticationConfig} from './authentication.config';
+import {serializeEvent} from '@centsideas/rpc';
 
 @injectable()
 export class AuthenticationService {
@@ -26,8 +27,6 @@ export class AuthenticationService {
   private readonly databaseUrl = this.config.get('authentication.database.url');
   private readonly databaseName = this.config.get('authentication.database.name');
   private readonly snapshotDistance = 50;
-  private readonly accessTokenExpirationSeconds = 15 * 60;
-  private readonly refreshTokenExpirationSeconds = 7 * 24 * 60 * 60;
 
   private eventStore = this.eventStoreFactory({
     url: this.databaseUrl,
@@ -47,9 +46,13 @@ export class AuthenticationService {
     @inject(MONGO_SNAPSHOT_STORE_FACTORY) private snapshotStoreFactory: MongoSnapshotStoreFactory,
   ) {}
 
-  async requestEmailSignIn(email: string) {
+  async requestEmailSignIn(emailString: string) {
     const sessionId = SessionId.generate();
-    const session = Session.requestEmailSignIn(sessionId, Email.fromString(email), ISODate.now());
+    const email = Email.fromString(emailString);
+    const session = Session.requestEmailSignIn(sessionId, email, ISODate.now());
+    const _emailSignInToken = new EmailSignInToken(sessionId, email);
+    // TODO send email with this token
+    // console.log(emailSignInToken.sign(this.signInTokenSecret, TokenExpirationTimes.SignInToken));
     await this.store(session);
   }
 
@@ -57,12 +60,17 @@ export class AuthenticationService {
     const {sessionId, email} = EmailSignInToken.fromString(signInToken, this.signInTokenSecret);
     const session = await this.build(sessionId);
     const existingUser = await this.userReadAdapter.getUserByEmail(email);
-    const userId = existingUser?.id || UserId.generate();
+    const userId = (existingUser?.id as UserId) || UserId.generate();
     session.confirmEmailSignIn(userId, !existingUser, ISODate.now());
     await this.store(session);
 
+    const accessToken = new AccessToken(sessionId, userId);
     const refreshToken = new RefreshToken(sessionId, userId);
-    return {refreshToken: refreshToken.toString(), userId};
+    return {
+      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.AccessToken),
+      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.RefreshToken),
+      userId: userId.toString(),
+    };
   }
 
   async refresTokens(currentRefreshToken: string) {
@@ -77,23 +85,30 @@ export class AuthenticationService {
     const accessToken = new AccessToken(sessionId, userId);
     const refreshToken = new RefreshToken(sessionId, userId);
     return {
-      accessToken: accessToken.sign(this.accessTokenSecret, this.accessTokenExpirationSeconds),
-      refreshToken: refreshToken.sign(this.refreshTokenSecret, this.refreshTokenExpirationSeconds),
+      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.AccessToken),
+      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.RefreshToken),
+      userId: userId.toString(),
     };
   }
 
-  async signOut(sessionId: string) {
-    const session = await this.build(SessionId.fromString(sessionId));
+  async signOut(refreshToken: string) {
+    const {sessionId} = RefreshToken.fromString(refreshToken, this.refreshTokenSecret);
+    const session = await this.build(sessionId);
     session.signOut(ISODate.now());
     await this.store(session);
   }
 
-  // FIXME tihs will only revoke token from current session (maybe later implement such that can be revoked for all sessions of a particular user)
+  // FIXME this will only revoke token from current session (maybe later implement such that can be revoked for all sessions of a particular user)
   // FIXME only admins should be able to do this
   async revokeRefreshToken(sessionId: string) {
     const session = await this.build(SessionId.fromString(sessionId));
     session.revokeRefreshToken();
     await this.store(session);
+  }
+
+  async getEvents(after?: number) {
+    const events = await this.eventStore.getEvents(after || -1);
+    return events.map(serializeEvent);
   }
 
   private async build(id: SessionId) {

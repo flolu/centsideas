@@ -9,7 +9,7 @@ import {SignInMethods, SignInMethod} from './sign-in-method';
 import * as Errors from './session.errors';
 import {SignInRequested} from './sign-in-requested';
 import {SignInConfirmed} from './sign-in-confirmed';
-import {TokensRefreshed} from './access-token-refreshed';
+import {TokensRefreshed} from './tokens-refreshed';
 import {SignedOut} from './signed-out';
 import {RefreshTokenRevoked} from './refresh-token-revoked';
 

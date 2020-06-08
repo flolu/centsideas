@@ -1,0 +1,33 @@
+@endpoint=auth
+@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiI1NTUwNWI5OS1hZTVjLTQ2YmEtOTQ1NS1lOTgzNDkyNTQ5NDIiLCJlbWFpbCI6ImhlbGxvQGNlbnRzaWRlYXMuY29tIiwiaWF0IjoxNTkxNjMwNzY1LCJleHAiOjE1OTE2Mzc5NjV9.lgaM5fL8Pzd-e-FpbPp9ZzjOEq1LxaAcR7uNAZL71dU
+@sessionId = XXX
+
+###
+
+POST {{apiUrl}}/{{endpoint}}/signin/email
+content-type: application/json
+
+{"email":"hello@centsideas.com"}
+
+###
+
+# @name confirmEmailSignIn
+POST {{apiUrl}}/{{endpoint}}/signin/email/confirm
+content-type: application/json
+
+{"token":"{{emailSignInToken}}"}
+
+###
+
+POST {{apiUrl}}/{{endpoint}}/refresh
+
+###
+
+POST {{apiUrl}}/{{endpoint}}/signout
+
+###
+
+POST {{apiUrl}}/{{endpoint}}/revoke
+content-type: application/json
+
+{"sessionId":"{{sessionId}}"}

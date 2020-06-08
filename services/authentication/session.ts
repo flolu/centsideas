@@ -4,7 +4,7 @@ import {PersistedEvent} from '@centsideas/models';
 
 import {RefreshTokenRevoked} from './refresh-token-revoked';
 import {SignInMethod, SignInMethods} from './sign-in-method';
-import {TokensRefreshed} from './access-token-refreshed';
+import {TokensRefreshed} from './tokens-refreshed';
 import {SignInRequested} from './sign-in-requested';
 import {SignInConfirmed} from './sign-in-confirmed';
 import * as Errors from './session.errors';

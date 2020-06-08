@@ -1,7 +1,4 @@
-@userId = Md9Q6fwHY
 @ideaId = {{create.response.body.id}}
-@apiUrl = http://api.localhost
-# @apiUrl = http://localhost:3000
 
 ###
 

@@ -30,11 +30,16 @@ export abstract class Config {
     return value;
   }
 
+  getNumber(identifier: string, fallback?: string) {
+    const value = this.get(identifier, fallback);
+    return Number(value);
+  }
+
   getArray(identifier: string, fallback?: string[]) {
-    const conf = this.config[identifier];
-    if (!conf) return fallback || [];
-    if (conf.split(' ').length) return conf.split(' ');
-    return [conf];
+    const value = this.get(identifier);
+    if (!value) return fallback || [];
+    if (value.split(' ').length) return value.split(' ');
+    return [value];
   }
 
   get identifiers() {

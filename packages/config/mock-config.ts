@@ -6,6 +6,10 @@ export class MockConfig {
     return '';
   }
 
+  getNumber(_identifier: string, _fallback?: string) {
+    return 0;
+  }
+
   getArray(_identifier: string, _fallback?: string) {
     return [];
   }

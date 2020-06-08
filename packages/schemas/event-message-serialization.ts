@@ -6,9 +6,11 @@ import {EventTopics} from '@centsideas/enums';
 
 import {SchemaMessage} from './schema-message';
 import {IdeaEventMessage} from './idea';
+import {AuthenticationEventMessage} from './authentication';
 
 const topicMessageMap = new Map<EventTopics, SchemaMessage>();
 topicMessageMap.set(EventTopics.Idea, IdeaEventMessage);
+topicMessageMap.set(EventTopics.Authentication, AuthenticationEventMessage);
 
 function extractKeyFromEventName(eventName: string) {
   return eventName.substring(eventName.indexOf('.') + 1, eventName.length);
@@ -16,7 +18,10 @@ function extractKeyFromEventName(eventName: string) {
 
 export function serializeEventMessage(event: PersistedEvent, topic: EventTopics) {
   const messageData = topicMessageMap.get(topic);
-  if (!messageData) throw new Error(`Please register message data for topic ${topic}!`);
+  if (!messageData)
+    throw new Error(
+      `Please register message data for topic ${topic} in packages/schemasa/event-message-serialization.ts!`,
+    );
 
   const root = protobuf.loadSync(path.join(__dirname, messageData.package, messageData.proto));
   const Message = root.lookupType(messageData.name);

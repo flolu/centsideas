@@ -16,11 +16,11 @@ export class IdeaProjector extends MongoProjector {
   databaseName = this.config.get('idea-read.database.name');
 
   private consumerGroupName = 'centsideas-idea-read';
-  private ideaEventStoreRpc: RpcClient<IdeaCommands.Service> = this.rpcFactory(
-    this.config.get('idea.rpc.host'),
-    IdeaCommandsService,
-    Number(this.config.get('idea.rpc.port')),
-  );
+  private ideaEventStoreRpc: RpcClient<IdeaCommands.Service> = this.rpcFactory({
+    host: this.config.get('idea.rpc.host'),
+    service: IdeaCommandsService,
+    port: this.config.getNumber('idea.rpc.port'),
+  });
   private collectionName = this.config.get('idea-read.database.collection');
 
   constructor(

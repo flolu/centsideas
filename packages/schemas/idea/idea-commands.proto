@@ -1,20 +1,10 @@
 import "google/protobuf/empty.proto";
 import "idea-events.proto";
+import "../common/common.proto";
 
 syntax = "proto3";
 
 package idea;
-
-service IdeaCommands {
-  rpc create(CreateIdea) returns (IdeaCreated);
-  rpc rename(RenameIdea) returns (google.protobuf.Empty);
-  rpc editDescription(EditIdeaDescription) returns (google.protobuf.Empty);
-  rpc updateTags(UpdateIdeaTags) returns (google.protobuf.Empty);
-  rpc publish(PublishIdea) returns (google.protobuf.Empty);
-  rpc delete(DeleteIdea) returns (google.protobuf.Empty);
-
-  rpc getEvents(GetEvents) returns (IdeaEvents);
-}
 
 message CreateIdea {
   string userId = 1;
@@ -51,6 +41,13 @@ message PublishIdea {
   string userId = 2;
 }
 
-message GetEvents {
-  int32 after = 1;
+service IdeaCommands {
+  rpc create(CreateIdea) returns (IdeaCreated);
+  rpc rename(RenameIdea) returns (google.protobuf.Empty);
+  rpc editDescription(EditIdeaDescription) returns (google.protobuf.Empty);
+  rpc updateTags(UpdateIdeaTags) returns (google.protobuf.Empty);
+  rpc publish(PublishIdea) returns (google.protobuf.Empty);
+  rpc delete(DeleteIdea) returns (google.protobuf.Empty);
+
+  rpc getEvents(GetEvents) returns (IdeaEvents);
 }

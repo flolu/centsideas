@@ -1,4 +1,4 @@
-import {PersistedEvent} from '@centsideas/models';
+import {GetEventsCommand} from '../common';
 
 export interface CreateIdea {
   userId: string;
@@ -32,10 +32,6 @@ export interface DeleteIdea {
   userId: string;
 }
 
-export interface GetEvents {
-  after: number;
-}
-
 export interface IdeaCreatedResponse {
   id: string;
 }
@@ -48,5 +44,5 @@ export interface Service {
   publish: (payload: PublishIdea) => Promise<void>;
   delete: (payload: DeleteIdea) => Promise<void>;
 
-  getEvents: (payload: GetEvents) => Promise<{events: PersistedEvent[]}>;
+  getEvents: GetEventsCommand;
 }
