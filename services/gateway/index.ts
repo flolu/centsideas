@@ -8,12 +8,19 @@ import {RpcClient, RPC_CLIENT_FACTORY, rpcClientFactory} from '@centsideas/rpc';
 import {GlobalConfig, SecretsConfig} from '@centsideas/config';
 
 import {GatewayServer} from './gateway.server';
-import {QueryController} from './query.controller';
-import {CommandController} from './command.controller';
+import {RootController} from './root.controller';
 import {AuthMiddleware} from './auth.middleware';
 import {GatewayConfig} from './gateway.config';
+import {AuthenticationController} from './authentication.controller';
+import {IdeaController} from './idea.controller';
 
-DI.registerProviders(GatewayServer, QueryController, CommandController, AuthMiddleware);
+DI.registerProviders(
+  GatewayServer,
+  RootController,
+  AuthenticationController,
+  IdeaController,
+  AuthMiddleware,
+);
 DI.registerSingletons(Logger, GatewayConfig, GlobalConfig, SecretsConfig);
 
 DI.registerProviders(RpcClient);
