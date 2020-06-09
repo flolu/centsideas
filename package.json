@@ -2,7 +2,7 @@
   "name": "centsideas",
   "scripts": {
     "dev": "yarn config:dev && yarn docker",
-    "kafka": "docker-compose -f misc/kafka-cluster up",
+    "kafka": "docker-compose -f kafka-cluster.yaml up",
     "test": "yarn config:dev && bazelisk test //...",
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
