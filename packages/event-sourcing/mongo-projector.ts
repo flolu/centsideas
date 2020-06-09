@@ -1,12 +1,14 @@
-import {postConstruct} from 'inversify';
+import {postConstruct, inject} from 'inversify';
 import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
-import {Observable, from} from 'rxjs';
+import {from} from 'rxjs';
 import {concatMap} from 'rxjs/operators';
 
 import {PersistedEvent} from '@centsideas/models';
 
 import {Projector} from './projector';
+import {EventTopics} from '@centsideas/enums';
+import {EventListener} from './event-bus';
 
 interface SequenceCounter {
   name: string;
@@ -14,12 +16,14 @@ interface SequenceCounter {
 }
 
 export abstract class MongoProjector extends Projector {
-  abstract eventStream: Observable<PersistedEvent>;
   abstract async getEvents(from: number): Promise<PersistedEvent[]>;
   abstract databaseUrl: string;
   abstract databaseName: string;
+  abstract topic: EventTopics;
+  abstract consumerGroupName: string;
   abstract initialize(): Promise<void>;
 
+  @inject(EventListener) private eventListener!: EventListener;
   private readonly sequenceCollectionName = '__sequence';
   private readonly sequenceCounterName = 'projector';
 
@@ -30,7 +34,10 @@ export abstract class MongoProjector extends Projector {
     await this.initialize();
     await this.initializeSequenceCounter();
     await this.replay();
-    this.eventStream.pipe(concatMap(event => from(this.trigger(event)))).subscribe();
+    this.eventListener
+      .listen(this.topic, this.consumerGroupName)
+      .pipe(concatMap(event => from(this.trigger(event))))
+      .subscribe();
   }
 
   async getBookmark() {

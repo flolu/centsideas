@@ -1,7 +1,7 @@
 import {injectable, inject} from 'inversify';
 import * as asynRetry from 'async-retry';
 
-import {MongoProjector, EventListener, Listen} from '@centsideas/event-sourcing';
+import {MongoProjector, EventProjector} from '@centsideas/event-sourcing';
 import {RpcClient, deserializeEvent, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
 import {EventTopics, IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels, PersistedEvent} from '@centsideas/models';
@@ -14,8 +14,9 @@ import {IdeaReadConfig} from './idea-read.config';
 export class IdeaProjector extends MongoProjector {
   databaseUrl = this.config.get('idea-read.database.url');
   databaseName = this.config.get('idea-read.database.name');
+  topic = EventTopics.Idea;
+  consumerGroupName = 'centsideas.idea-read';
 
-  private consumerGroupName = 'centsideas-idea-read';
   private ideaEventStoreRpc: RpcClient<IdeaCommands.Service> = this.rpcFactory({
     host: this.config.get('idea.rpc.host'),
     service: IdeaCommandsService,
@@ -24,7 +25,6 @@ export class IdeaProjector extends MongoProjector {
   private collectionName = this.config.get('idea-read.database.collection');
 
   constructor(
-    private eventListener: EventListener,
     private config: IdeaReadConfig,
     @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {
@@ -36,8 +36,6 @@ export class IdeaProjector extends MongoProjector {
     await collection.createIndex({id: 1}, {unique: true});
   }
 
-  eventStream = this.eventListener.listen(EventTopics.Idea, this.consumerGroupName);
-
   async getEvents(after: number) {
     const result = await asynRetry(() => this.ideaEventStoreRpc.client.getEvents({after}), {
       minTimeout: 500,
@@ -47,7 +45,7 @@ export class IdeaProjector extends MongoProjector {
     return result.events.map(deserializeEvent);
   }
 
-  @Listen(IdeaEventNames.Created)
+  @EventProjector(IdeaEventNames.Created)
   async created({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
     const {userId, createdAt} = data;
     const collection = await this.ideaCollection();
@@ -65,7 +63,7 @@ export class IdeaProjector extends MongoProjector {
     });
   }
 
-  @Listen(IdeaEventNames.Renamed)
+  @EventProjector(IdeaEventNames.Renamed)
   async renamed({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaRenamedData>) {
     const {title} = data;
     const collection = await this.ideaCollection();
@@ -75,7 +73,7 @@ export class IdeaProjector extends MongoProjector {
     );
   }
 
-  @Listen(IdeaEventNames.DescriptionEdited)
+  @EventProjector(IdeaEventNames.DescriptionEdited)
   async descriptionEdited({
     version,
     streamId,
@@ -90,7 +88,7 @@ export class IdeaProjector extends MongoProjector {
     );
   }
 
-  @Listen(IdeaEventNames.TagsAdded)
+  @EventProjector(IdeaEventNames.TagsAdded)
   async tagsAdded({
     version,
     streamId,
@@ -105,7 +103,7 @@ export class IdeaProjector extends MongoProjector {
     );
   }
 
-  @Listen(IdeaEventNames.TagsRemoved)
+  @EventProjector(IdeaEventNames.TagsRemoved)
   async tagsRemoved({
     version,
     streamId,
@@ -120,7 +118,7 @@ export class IdeaProjector extends MongoProjector {
     );
   }
 
-  @Listen(IdeaEventNames.Published)
+  @EventProjector(IdeaEventNames.Published)
   async published({
     version,
     streamId,
@@ -135,7 +133,7 @@ export class IdeaProjector extends MongoProjector {
     );
   }
 
-  @Listen(IdeaEventNames.Deleted)
+  @EventProjector(IdeaEventNames.Deleted)
   async deleted({version, streamId, data, insertedAt}: PersistedEvent<IdeaModels.IdeaDeletedData>) {
     const {deletedAt} = data;
     const collection = await this.ideaCollection();

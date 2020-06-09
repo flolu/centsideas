@@ -1,11 +1,9 @@
-import {Observable} from 'rxjs';
 import {inject} from 'inversify';
 
 import {Logger} from '@centsideas/utils';
 import {PersistedEvent} from '@centsideas/models';
 
 export interface IProjector {
-  eventStream: Observable<PersistedEvent>;
   getBookmark(): Promise<number>;
   increaseBookmark(): Promise<void>;
   trigger(event: PersistedEvent): Promise<boolean>;
@@ -17,7 +15,6 @@ export interface IProjector {
 export abstract class Projector implements IProjector {
   @inject(Logger) logger!: Logger;
 
-  abstract eventStream: Observable<PersistedEvent>;
   abstract getBookmark(): Promise<number>;
   abstract increaseBookmark(): Promise<void>;
   abstract getEvents(from: number): Promise<PersistedEvent[]>;
@@ -62,8 +59,8 @@ export abstract class Projector implements IProjector {
  * The method, which is decorated will be called to handle
  * the projection of the event with the specified @param eventName
  */
-export const Listen = (eventName: string) => {
-  return function ProjetDecorator(target: any, methodName: string) {
+export const EventProjector = (eventName: string) => {
+  return function EventProjectorDecorator(target: any, methodName: string) {
     /**
      * Save the @param methodName of the handler method
      * on the @param target class and associate it with the
