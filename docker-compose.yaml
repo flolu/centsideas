@@ -63,6 +63,19 @@ services:
     depends_on:
       - mongo-database
 
+  mailing:
+    container_name: mailing
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./services/mailing:/services/mailing
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/mailing --colors
+
   mongo-database:
     container_name: mongo-database
     image: mongo:4
