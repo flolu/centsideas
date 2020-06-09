@@ -48,6 +48,12 @@
   sudo yarn global add @bazel/bazelisk --prefix /usr/local
   ```
 
+- Other configuration - In order to run a local Kafka cluster properly you need to add two liens to `/etc/hosts`
+  ```
+  127.0.0.1 zookeeper-1 zookeeper-2 zookeeper-3
+  127.0.0.1 kafka-1 kafka-2 kafka-3
+  ```
+
 ## Optional
 
 - [Chromium](https://github.com/chromium/chromium) and [Firefox](https://www.mozilla.org/en-US/firefox/new) - web browsers
@@ -59,14 +65,14 @@
 
 - [MicroK8s](https://github.com/ubuntu/microk8s) and [kubectl](https://github.com/kubernetes/kubectl) and [Helm](https://github.com/helm/helm)- lightweight kubernetes for development
 
-```bash
-sudo snap install microk8s --classic && \
-#echo "alias kubectl='microk8s kubectl'" >> ~/.bash_aliases && \
-sudo snap alias microk8s.kubectl kubectl && \
-sudo usermod -a -G microk8s $USER && \
-sudo chown -f -R $USER ~/.kube && \
-su - $USER
-```
+  ```bash
+  sudo snap install microk8s --classic && \
+  #echo "alias kubectl='microk8s kubectl'" >> ~/.bash_aliases && \
+  sudo snap alias microk8s.kubectl kubectl && \
+  sudo usermod -a -G microk8s $USER && \
+  sudo chown -f -R $USER ~/.kube && \
+  su - $USER
+  ```
 
 - [Google Cloud SDK](https://cloud.google.com/sdk/) - cli for google cloud
 

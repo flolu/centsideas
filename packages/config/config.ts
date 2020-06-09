@@ -38,7 +38,7 @@ export abstract class Config {
   getArray(identifier: string, fallback?: string[]) {
     const value = this.get(identifier);
     if (!value) return fallback || [];
-    if (value.split(' ').length) return value.split(' ');
+    if (value.split(';').length) return value.split(';');
     return [value];
   }
 

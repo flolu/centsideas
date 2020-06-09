@@ -64,7 +64,7 @@
     <td><strong>desktop</strong>, <strong>mobile</strong></td>
     <td><img src="misc/assets/check.svg" width="16"></td>
   </tr>
-  
+
   <tr>
     <td>Event sourcing</td>
     <td>pure commands, projectors, event store, eventual consistency, event replay, event storming, snapshotting</td>
@@ -196,23 +196,15 @@
 
 **Backend**
 
+`yarn kafka` start local kafka cluster http://localhost:9000
+
 `yarn dev` all backend services http://localhost:3000
-
-**Main web app**
-
-`yarn client` production server http://localhost:5000
-
-`yarn client:dev` development server http://localhost:4200 (currently not working)
-
-**Admin web app**
-
-`yarn admin` production server http://localhost:8080
-
-`yarn admin:dev` development server http://localhost:4201
 
 **Testing**
 
-`yarn test` all tests
+`yarn test` all tests with bazel
+
+`yarn test:unit` unit tests with jest
 
 **Miscellaneous**
 
@@ -222,7 +214,13 @@
 
 `yarn up` upgrade npm dependencies
 
-`yarn deploy:microk8s` deploy app to local kubernetes cluster
+`(sudo) yarn deploy:microk8s` deploy app to local kubernetes cluster
+
+**Main web app**
+_coming soon_
+
+**Admin web app**
+_coming soon_
 
 ## Documentation
 

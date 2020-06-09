@@ -2,9 +2,18 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
 package(default_visibility = ["//:__subpackages__"])
 
-# TODO more fine-grained proto file split
 filegroup(
-    name = "proto_files",
+    name = "proto_authentication",
+    srcs = glob(["**/authentication/*.proto"]),
+)
+
+filegroup(
+    name = "proto_idea",
+    srcs = glob(["**/idea/*.proto"]),
+)
+
+filegroup(
+    name = "all_proto",
     srcs = glob(["**/*.proto"]),
 )
 
