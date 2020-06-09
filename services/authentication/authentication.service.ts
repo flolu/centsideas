@@ -51,7 +51,7 @@ export class AuthenticationService {
     const session = Session.requestEmailSignIn(sessionId, email, ISODate.now());
     const _emailSignInToken = new EmailSignInToken(sessionId, email);
     // TODO send email with this token
-    // console.log(emailSignInToken.sign(this.signInTokenSecret, TokenExpirationTimes.SignInToken));
+    // console.log(_emailSignInToken.sign(this.signInTokenSecret, TokenExpirationTimes.SignInToken));
     await this.store(session);
   }
 

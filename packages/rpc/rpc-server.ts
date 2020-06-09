@@ -89,9 +89,11 @@ export class RpcServer {
 
         if (name) metadata.add('name', name);
 
-        if (code === RpcStatus.UNKNOWN)
+        if (code === RpcStatus.UNKNOWN) {
           callback({code, details, metadata, stack: error.stack}, null);
-        else callback({code, details, metadata}, null);
+        } else {
+          callback({code, details, metadata}, null);
+        }
 
         this.logger.error(error);
         const _data = {

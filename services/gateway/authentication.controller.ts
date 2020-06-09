@@ -43,14 +43,14 @@ export class AuthenticationController implements interfaces.Controller {
   async refreshToken(req: express.Request, res: express.Response) {
     try {
       const current = req.cookies[CookieNames.RefreshToken];
-      if (!current) return res.cookie(CookieNames.RefreshToken, '', {maxAge: 0}).status(401);
 
       const data = await this.authenticationRpc.client.refreshToken({refreshToken: current});
       const {accessToken, refreshToken, userId} = data;
       res.cookie(CookieNames.RefreshToken, refreshToken, this.refreshTokenCookieOptions);
-      return {userId, accessToken};
+      return {accessToken, userId};
     } catch (error) {
-      return res.cookie(CookieNames.RefreshToken, '', {maxAge: 0}).status(401);
+      res.cookie(CookieNames.RefreshToken, '', {maxAge: 0}).status(401);
+      throw error;
     }
   }
 
@@ -58,7 +58,7 @@ export class AuthenticationController implements interfaces.Controller {
   async signOut(req: express.Request, res: express.Response) {
     const refreshToken = req.cookies[CookieNames.RefreshToken];
     await this.authenticationRpc.client.signOut({refreshToken});
-    return res.cookie(CookieNames.RefreshToken, '', {maxAge: 0}).status(401);
+    res.cookie(CookieNames.RefreshToken, '', {maxAge: 0});
   }
 
   @httpPost('/revoke')
