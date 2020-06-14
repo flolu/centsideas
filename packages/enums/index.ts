@@ -10,3 +10,4 @@ export * from './environments';
 export * from './rpc-status.enum';
 export * from './errors.enum';
 export * from './idea-validation.enum';
+export * from './user-validation.enum';

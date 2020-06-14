@@ -34,3 +34,11 @@ export enum AuthenticationErrorNames {
   SessionSignedOut = 'authentication.session.sessionSignedOut',
   SessionUnconfirmed = 'authentication.session.sessionUnconfirmed',
 }
+
+export enum UserErrorNames {
+  UsernameTooLong = 'user.usernameTooLong',
+  UsernameTooShort = 'user.usernameTooShort',
+  UsernameInvalid = 'user.usernameInvalid',
+  AlreadyDeleted = 'user.alreadyDeleted',
+  NoPermission = 'user.noPermssion',
+}

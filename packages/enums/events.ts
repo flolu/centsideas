@@ -16,3 +16,16 @@ export enum AuthenticationEventNames {
   TokensRefreshed = 'authentication.session.tokensRefreshed',
   RefreshTokenRevoked = 'authentication.session.refreshTokenRevoked',
 }
+
+export enum PrivateUserEventNames {
+  Created = 'user.private.created',
+  EmailChangeRequested = 'user.private.emailChangeRequested',
+  EmailChangeConfirmed = 'user.private.emailChangeConfirmed',
+}
+
+export enum UserEventNames {
+  Created = 'user.creatd',
+  Renamed = 'user.renamed',
+  DeletionRequested = 'user.deletionRequested',
+  DeletionConfirmed = 'user.deletionConfirmed',
+}
