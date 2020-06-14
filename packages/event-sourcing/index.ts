@@ -19,3 +19,5 @@ export * from './projector';
 export * from './in-memory-projector';
 export * from './mongo-projector';
 export * from './event-bus';
+export * from './events-handler';
+export * from './event-handler';

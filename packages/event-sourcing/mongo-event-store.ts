@@ -76,6 +76,7 @@ export class MongoEventStore implements EventStore {
     const collection = await this.collection();
     await collection.insertMany(inserts);
 
+    // FIXME keep track of events that couldn't be sent (and retry them until they have been sent)
     await this.dispatcher.dispatch(this.topic, inserts);
   }
 

@@ -8,12 +8,13 @@ import {SchemaMessage} from './schema-message';
 import {IdeaEventMessage} from './idea';
 import {AuthenticationEventMessage} from './authentication';
 
+// FIXME a better solution would be a appriciated!
 const topicMessageMap = new Map<EventTopics, SchemaMessage>();
 topicMessageMap.set(EventTopics.Idea, IdeaEventMessage);
 topicMessageMap.set(EventTopics.Authentication, AuthenticationEventMessage);
 
 function extractKeyFromEventName(eventName: string) {
-  return eventName.substring(eventName.indexOf('.') + 1, eventName.length);
+  return eventName.substring(eventName.lastIndexOf('.') + 1, eventName.length);
 }
 
 export function serializeEventMessage(event: PersistedEvent, topic: EventTopics) {
@@ -33,18 +34,23 @@ export function serializeEventMessage(event: PersistedEvent, topic: EventTopics)
   return Message.encode(message).finish() as Buffer;
 }
 
-const aggregateMessageMap = new Map<string, SchemaMessage>();
-aggregateMessageMap.set('idea', IdeaEventMessage);
+// FIXME a better solution would be a appriciated!
+const eventMessageMap = new Map<string, SchemaMessage>();
+eventMessageMap.set('idea', IdeaEventMessage);
+eventMessageMap.set('authentication', AuthenticationEventMessage);
 
 export function deserializeEventMessage(buffer: Buffer, eventName: string): PersistedEvent {
-  const aggregate = eventName.split('.')[0];
-  if (!aggregate)
+  const eventType = eventName.split('.')[0];
+  if (!eventType)
     throw new Error(
-      `Unknown aggregate: ${eventName}. Please name events like this: "aggregate.someEvent".`,
+      `Unknown event message: ${eventName}. Please name events like this: "aggregate.someEvent".`,
     );
 
-  const messageData = aggregateMessageMap.get(aggregate);
-  if (!messageData) throw new Error(`Please register message data for aggregate ${aggregate}!`);
+  const messageData = eventMessageMap.get(eventType);
+  if (!messageData)
+    throw new Error(
+      `Please register message data for event message type ${eventType} inside packages/schemasa/event-message-serialization.ts!`,
+    );
 
   const root = protobuf.loadSync(path.join(__dirname, messageData.package, messageData.proto));
   const Message = root.lookupType(messageData.name);

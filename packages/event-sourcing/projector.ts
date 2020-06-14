@@ -60,7 +60,12 @@ export abstract class Projector implements IProjector {
  * the projection of the event with the specified @param eventName
  */
 export const EventProjector = (eventName: string) => {
-  return function EventProjectorDecorator(target: any, methodName: string) {
+  return (target: any, propertyKey: string) => {
+    if (!(target instanceof Projector))
+      throw new Error(
+        `@EventProjector() decorator can only be used inside an Projector class.` +
+          ` But ${target} does not extend Projector!`,
+      );
     /**
      * Save the @param methodName of the handler method
      * on the @param target class and associate it with the
@@ -69,6 +74,6 @@ export const EventProjector = (eventName: string) => {
      * This information is used in the @method handleEvent inside
      * the projectors
      */
-    Reflect.defineMetadata(eventName, methodName, target);
+    Reflect.defineMetadata(eventName, propertyKey, target);
   };
 };
