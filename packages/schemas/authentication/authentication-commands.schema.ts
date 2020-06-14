@@ -8,6 +8,10 @@ export interface ConfirmEmailSignIn {
   signInToken: string;
 }
 
+export interface GoogleSignIn {
+  code: string;
+}
+
 export interface RefreshTokens {
   refreshToken: string;
 }
@@ -26,9 +30,15 @@ export interface AuthTokenResponse {
   userId: string;
 }
 
+export interface GoogleSignInUrlResponse {
+  url: string;
+}
+
 export interface Service {
   requestEmailSignIn: (payload: RequestEmailSignIn) => Promise<void>;
   confirmEmailSignIn: (payload: ConfirmEmailSignIn) => Promise<AuthTokenResponse>;
+  googleSignInUrl: (payload: void) => Promise<GoogleSignInUrlResponse>;
+  googleSignIn: (payload: GoogleSignIn) => Promise<AuthTokenResponse>;
   refreshToken: (payload: RefreshTokens) => Promise<AuthTokenResponse>;
   signOut: (payload: SignOut) => Promise<void>;
   revokeRefreshToken: (payload: RevokeRefreshToken) => Promise<void>;

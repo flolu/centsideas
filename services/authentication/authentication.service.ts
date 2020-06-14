@@ -6,17 +6,17 @@ import {
   MONGO_SNAPSHOT_STORE_FACTORY,
   MongoSnapshotStoreFactory,
 } from '@centsideas/event-sourcing';
-import {Email, ISODate, UserId, SessionId, AccessToken} from '@centsideas/types';
+import {Email, ISODate, UserId, SessionId, AccessToken, EmailSignInToken} from '@centsideas/types';
 import {EventTopics, TokenExpirationTimes} from '@centsideas/enums';
 import {PersistedEvent} from '@centsideas/models';
 import {SecretsConfig} from '@centsideas/config';
+import {serializeEvent} from '@centsideas/rpc';
 
 import {Session} from './session';
-import {EmailSignInToken} from '../../packages/types/tokens/email-sign-in-token';
 import {RefreshToken} from './refresh-token';
 import {UserReadAdapter} from './user-read.adapter';
 import {AuthenticationConfig} from './authentication.config';
-import {serializeEvent} from '@centsideas/rpc';
+import {GoogleApiAdapter} from './google-api.adapter';
 
 @injectable()
 export class AuthenticationService {
@@ -41,6 +41,7 @@ export class AuthenticationService {
     private secretesConfig: SecretsConfig,
     private config: AuthenticationConfig,
     private userReadAdapter: UserReadAdapter,
+    private googleApiAdapter: GoogleApiAdapter,
     @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory: MongoEventStoreFactory,
     @inject(MONGO_SNAPSHOT_STORE_FACTORY) private snapshotStoreFactory: MongoSnapshotStoreFactory,
   ) {}
@@ -58,6 +59,41 @@ export class AuthenticationService {
     const existingUser = await this.userReadAdapter.getUserByEmail(email);
     const userId = (existingUser?.id as UserId) || UserId.generate();
     session.confirmEmailSignIn(userId, !existingUser, ISODate.now());
+    await this.store(session);
+
+    const accessToken = new AccessToken(sessionId, userId);
+    const refreshToken = new RefreshToken(sessionId, userId);
+    return {
+      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.AccessToken),
+      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.RefreshToken),
+      userId: userId.toString(),
+    };
+  }
+
+  googleSignInUrl() {
+    return {url: this.googleApiAdapter.getSignInUrl};
+  }
+
+  async googleSignIn(code: string) {
+    const requestedAt = ISODate.now();
+
+    const googleAccessToken = await this.googleApiAdapter.getAccessToken(code);
+    const {id, email} = await this.googleApiAdapter.getUserInfo(googleAccessToken);
+    // FIXME consider asking the user to change email if users' email doesnt match gmail
+
+    const existingUser = await this.userReadAdapter.getUserByGoogleId(id);
+    const userId = (existingUser?.id as UserId) || UserId.generate();
+
+    const sessionId = SessionId.generate();
+    const session = Session.googleSignIn(
+      sessionId,
+      userId,
+      email,
+      id,
+      !existingUser,
+      requestedAt,
+      ISODate.now(),
+    );
     await this.store(session);
 
     const accessToken = new AccessToken(sessionId, userId);

@@ -1,6 +1,6 @@
 import * as express from 'express';
 import {inject} from 'inversify';
-import {controller, interfaces, httpPost} from 'inversify-express-utils';
+import {controller, interfaces, httpPost, httpGet} from 'inversify-express-utils';
 
 import {ApiEndpoints, CookieNames, TokenExpirationTimes, Environments} from '@centsideas/enums';
 import {RpcClient, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
@@ -39,6 +39,20 @@ export class AuthenticationController implements interfaces.Controller {
     return {accessToken, userId};
   }
 
+  @httpGet('/signin/google/url')
+  async getGoogleSignInUrl() {
+    return this.authenticationRpc.client.googleSignInUrl();
+  }
+
+  @httpPost('/signin/google')
+  async googleSignIn(req: express.Request, res: express.Response) {
+    const {code} = req.body;
+    const data = await this.authenticationRpc.client.googleSignIn({code});
+    const {refreshToken, accessToken, userId} = data;
+    res.cookie(CookieNames.RefreshToken, refreshToken, this.refreshTokenCookieOptions);
+    return {accessToken, userId};
+  }
+
   @httpPost('/refresh')
   async refreshToken(req: express.Request, res: express.Response) {
     try {
@@ -65,6 +79,12 @@ export class AuthenticationController implements interfaces.Controller {
   revokeRefreshToken(req: express.Request) {
     const {sessionId} = req.body;
     return this.authenticationRpc.client.revokeRefreshToken({sessionId});
+  }
+
+  // FIXME remove eventually
+  @httpGet('/google/signin/token')
+  googleSignInToken(req: express.Request) {
+    return req.query.code;
   }
 
   private get refreshTokenCookieOptions(): express.CookieOptions {

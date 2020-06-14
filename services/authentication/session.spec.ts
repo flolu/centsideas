@@ -12,12 +12,14 @@ import {SignInConfirmed} from './sign-in-confirmed';
 import {TokensRefreshed} from './tokens-refreshed';
 import {SignedOut} from './signed-out';
 import {RefreshTokenRevoked} from './refresh-token-revoked';
+import {GoogleSignInConfirmed} from './google-sign-in-confirmed';
 
 describe('Sesstion', () => {
   const id = SessionId.generate();
   const timestamp = ISODate.now();
   const email = Email.fromString('hello@centsideas.com');
   const user = UserId.generate();
+  const googleUserId = 'someGoogleUserId';
 
   let version = 1;
   const requested: PersistedEvent<SessionModels.SignInRequestedData> = {
@@ -163,9 +165,12 @@ describe('Sesstion', () => {
     );
   });
 
-  /* // TODO implement it('requests a google sign in', () => {});
-  it('confirms a google sign in', () => {});
-  it('confirms a google sign in only once', () => {}); */
+  it('confirms a google sign in', () => {
+    const session = Session.googleSignIn(id, user, email, googleUserId, true, timestamp, timestamp);
+    expect(session.flushEvents().toEvents()).toContainEqual(
+      new GoogleSignInConfirmed(id, user, email, googleUserId, true, timestamp, timestamp),
+    );
+  });
 
   it('refreshes tokens', () => {
     const session = Session.requestEmailSignIn(id, email, timestamp);

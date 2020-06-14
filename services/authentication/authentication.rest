@@ -1,7 +1,8 @@
 @endpoint=auth
-@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJhMzEzOTFiMS00NTEzLTQ5ZWItOTVhYy0xMmRlOGJhMTUyZjEiLCJlbWFpbCI6ImpveGl5YXk2MTBAYWdpbGVrei5jb20iLCJpYXQiOjE1OTIxMTkyOTEsImV4cCI6MTU5MjEyNjQ5MX0.ABrq8zsV6dq8OajEkdxiJBytCnIcHzOSZ4ZATIHR_1c
 @sessionId = XXX
 @email = joxiyay610@agilekz.com
+@emailSignInToken = XXX
+@googleSignInCode = XXX
 
 ###
 
@@ -12,11 +13,21 @@ content-type: application/json
 
 ###
 
-# @name confirmEmailSignIn
 POST {{apiUrl}}/{{endpoint}}/signin/email/confirm
 content-type: application/json
 
 {"token":"{{emailSignInToken}}"}
+
+###
+
+GET {{apiUrl}}/{{endpoint}}/signin/google/url
+
+###
+
+POST {{apiUrl}}/{{endpoint}}/signin/google
+content-type: application/json
+
+{"code":"{{googleSignInCode}}"}
 
 ###
 

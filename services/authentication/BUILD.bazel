@@ -24,7 +24,9 @@ ts_library(
         "//packages/types",
         "//packages/utils",
         "@npm//@types/node",
+        "@npm//axios",
         "@npm//inversify",
+        "@npm//query-string",
         "@npm//reflect-metadata",
     ],
 )

@@ -21,8 +21,14 @@ import {AuthenticationServer} from './authentication.server';
 import {AuthenticationService} from './authentication.service';
 import {AuthenticationConfig} from './authentication.config';
 import {UserReadAdapter} from './user-read.adapter';
+import {GoogleApiAdapter} from './google-api.adapter';
 
-DI.registerProviders(AuthenticationServer, AuthenticationService, UserReadAdapter);
+DI.registerProviders(
+  AuthenticationServer,
+  AuthenticationService,
+  UserReadAdapter,
+  GoogleApiAdapter,
+);
 DI.registerSingletons(AuthenticationConfig);
 
 DI.registerSingletons(Logger, GlobalConfig, SecretsConfig);

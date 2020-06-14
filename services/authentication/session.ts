@@ -9,6 +9,7 @@ import {SignInRequested} from './sign-in-requested';
 import {SignInConfirmed} from './sign-in-confirmed';
 import * as Errors from './session.errors';
 import {SignedOut} from './signed-out';
+import {GoogleSignInConfirmed} from './google-sign-in-confirmed';
 
 export interface SerializedSession {
   id: string;
@@ -71,29 +72,34 @@ export class Session extends Aggregate<SerializedSession> {
     return session;
   }
 
-  static requestGoogleSignIn(
+  static googleSignIn(
     sessionId: SessionId,
+    userId: UserId,
     email: Email,
     googleUserId: string,
+    isSignUp: boolean,
     requestedAt: ISODate,
+    confirmedAt: ISODate,
   ) {
-    // TODO implement
-    // const session = new Session();
-    // const method = new SignInMethod(SignInMethods.Email);
-    // session.raise(new SignInRequested(sessionId, method, email, requestedAt, {googleUserId}));
-    // return session;
+    const session = new Session();
+    session.raise(
+      new GoogleSignInConfirmed(
+        sessionId,
+        userId,
+        email,
+        googleUserId,
+        isSignUp,
+        requestedAt,
+        confirmedAt,
+      ),
+    );
+    return session;
   }
 
   confirmEmailSignIn(userId: UserId, isSignUp: boolean, confirmedAt: ISODate) {
     if (this.signInConfirmedAt) throw new Errors.SessionAlreadyConfirmed();
     if (this.isRefreshTokenRevoked) throw new Errors.SessionRevoked();
     this.raise(new SignInConfirmed(isSignUp, userId, confirmedAt));
-  }
-
-  confirmGoogleSignIn(userId: UserId, isSignUp: boolean) {
-    // TODO implement
-    // if (this.signInConfirmedAt) throw new Errors.SessionAlreadyConfirmed();
-    // if (this.refreshTokenRevoked) throw new Errors.SessionRevoked();
   }
 
   refreshTokens() {
@@ -126,6 +132,16 @@ export class Session extends Aggregate<SerializedSession> {
   @Apply(SignInConfirmed)
   protected signInConfirmed(event: SignInConfirmed) {
     this.isSignUpSession = event.isSignUpSession;
+    this.userId = event.userId;
+    this.signInConfirmedAt = event.confirmedAt;
+  }
+
+  @Apply(GoogleSignInConfirmed)
+  protected googleSignInConfirmed(event: GoogleSignInConfirmed) {
+    this.id = event.sessionId;
+    this.signInMethod = new SignInMethod(SignInMethods.Google);
+    this.signInRequestedAt = event.requestedAt;
+    this.isSignUpSession = event.isSignUp;
     this.userId = event.userId;
     this.signInConfirmedAt = event.confirmedAt;
   }

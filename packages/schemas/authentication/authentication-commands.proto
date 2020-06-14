@@ -14,6 +14,10 @@ message ConfirmEmailSignIn {
   string signInToken = 1;
 }
 
+message GoogleSignIn {
+  string code = 1;
+}
+
 message RefreshTokens {
   string refreshToken = 1;
 }
@@ -32,9 +36,15 @@ message AuthTokenResponse {
   string userId = 3;
 }
 
+message GoogleLoginUrl {
+  string url = 1;
+}
+
 service AuthenticationCommands {
   rpc requestEmailSignIn(RequestEmailSignIn) returns (google.protobuf.Empty);
   rpc confirmEmailSignIn(ConfirmEmailSignIn) returns (AuthTokenResponse);
+  rpc googleSignInUrl(google.protobuf.Empty) returns (GoogleLoginUrl);
+  rpc googleSignIn(GoogleSignIn) returns (AuthTokenResponse);
   rpc refreshToken(RefreshTokens) returns (AuthTokenResponse);
   rpc signOut(SignOut) returns (google.protobuf.Empty);
   rpc revokeRefreshToken(RevokeRefreshToken) returns (google.protobuf.Empty);

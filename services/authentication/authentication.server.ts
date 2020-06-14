@@ -35,6 +35,16 @@ export class AuthenticationServer implements AuthenticationCommands.Service {
   }
 
   @RpcMethod(AuthenticationCommandsService)
+  async googleSignInUrl() {
+    return this.service.googleSignInUrl();
+  }
+
+  @RpcMethod(AuthenticationCommandsService)
+  async googleSignIn({code}: AuthenticationCommands.GoogleSignIn) {
+    return this.service.googleSignIn(code);
+  }
+
+  @RpcMethod(AuthenticationCommandsService)
   async refreshToken({refreshToken}: AuthenticationCommands.RefreshTokens) {
     return this.service.refresTokens(refreshToken);
   }
