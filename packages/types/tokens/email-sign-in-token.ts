@@ -1,4 +1,6 @@
-import {Token, SessionId, Email} from '@centsideas/types';
+import {Token} from './token';
+import {SessionId} from '../identifiers';
+import {Email} from '../email';
 
 interface EmailSignInTokenPayload {
   sessionId: string;

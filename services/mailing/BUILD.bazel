@@ -19,6 +19,7 @@ ts_library(
         "//packages/enums",
         "//packages/event-sourcing",
         "//packages/models",
+        "//packages/types",
         "//packages/utils",
         "@npm//@sendgrid/mail",
         "@npm//@types/node",

@@ -1,6 +1,8 @@
 import {injectable, inject, postConstruct} from 'inversify';
+import * as asyncRetry from 'async-retry';
 
 import {PersistedEvent} from '@centsideas/models';
+import {Logger} from '@centsideas/utils';
 
 import {EventListener} from './event-bus';
 import {EVENTS_HANDLER_TOPICS} from './event-handler';
@@ -8,6 +10,7 @@ import {EVENTS_HANDLER_TOPICS} from './event-handler';
 @injectable()
 export abstract class EventsHandler {
   @inject(EventListener) private eventListener!: EventListener;
+  @inject(Logger) private logger!: Logger;
 
   abstract consumerGroupName: string;
 
@@ -23,11 +26,16 @@ export abstract class EventsHandler {
 
   private async handleEvent(event: PersistedEvent) {
     const handlerMethodName = Reflect.getMetadata(event.name, this);
-    // TODO consider converting all `throw new Error` to internal error excpection classes
-    if (!handlerMethodName || !(this as any)[handlerMethodName])
+    if (!handlerMethodName) return;
+    if (!(this as any)[handlerMethodName])
       throw new Error(`No handler for event ${event.name} found!`);
 
-    // TODO catch errors ... what to do then?
-    await (this as any)[handlerMethodName](event);
+    try {
+      await asyncRetry(() => (this as any)[handlerMethodName](event));
+    } catch (error) {
+      // FIXME handle errors that occured in event handlers?!
+      error.message = `Error in event handler ${event.name}: ${error.message}`;
+      this.logger.error(error);
+    }
   }
 }

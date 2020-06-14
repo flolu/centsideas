@@ -12,7 +12,7 @@ import {PersistedEvent} from '@centsideas/models';
 import {SecretsConfig} from '@centsideas/config';
 
 import {Session} from './session';
-import {EmailSignInToken} from './email-sign-in-token';
+import {EmailSignInToken} from '../../packages/types/tokens/email-sign-in-token';
 import {RefreshToken} from './refresh-token';
 import {UserReadAdapter} from './user-read.adapter';
 import {AuthenticationConfig} from './authentication.config';
@@ -49,9 +49,6 @@ export class AuthenticationService {
     const sessionId = SessionId.generate();
     const email = Email.fromString(emailString);
     const session = Session.requestEmailSignIn(sessionId, email, ISODate.now());
-    const _emailSignInToken = new EmailSignInToken(sessionId, email);
-    // TODO send email with this token
-    // console.log(_emailSignInToken.sign(this.signInTokenSecret, TokenExpirationTimes.SignInToken));
     await this.store(session);
   }
 
