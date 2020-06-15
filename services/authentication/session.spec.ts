@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import {PersistedEvent, SessionModels} from '@centsideas/models';
 import {EventId, PersistedSnapshot} from '@centsideas/event-sourcing';
-import {SessionId, ISODate, Email, UserId} from '@centsideas/types';
+import {SessionId, Timestamp, Email, UserId} from '@centsideas/types';
 import {AuthenticationEventNames} from '@centsideas/enums';
 
 import {Session, SerializedSession} from './session';
@@ -16,7 +16,7 @@ import {GoogleSignInConfirmed} from './google-sign-in-confirmed';
 
 describe('Sesstion', () => {
   const id = SessionId.generate();
-  const timestamp = ISODate.now();
+  const timestamp = Timestamp.now();
   const email = Email.fromString('hello@centsideas.com');
   const user = UserId.generate();
   const googleUserId = 'someGoogleUserId';

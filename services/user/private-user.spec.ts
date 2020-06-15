@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 import {PersistedEvent, UserModels} from '@centsideas/models';
-import {UserId, Email, ISODate} from '@centsideas/types';
+import {UserId, Email, Timestamp} from '@centsideas/types';
 import {EventId, PersistedSnapshot} from '@centsideas/event-sourcing';
 import {PrivateUserEventNames} from '@centsideas/enums';
 
@@ -17,7 +17,7 @@ describe('Private User', () => {
   const otherUser = UserId.generate();
   const email = Email.fromString('hello@centsideas.com');
   const otherEmail = Email.fromString('other@centsideas.com');
-  const timestamp = ISODate.now();
+  const timestamp = Timestamp.now();
 
   let version = 1;
   const created: PersistedEvent<UserModels.PrivateUserCreatedData> = {

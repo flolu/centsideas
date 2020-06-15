@@ -1,11 +1,11 @@
 import {IDomainEvent, DomainEvent} from '@centsideas/event-sourcing';
-import {ISODate} from '@centsideas/types';
+import {Timestamp} from '@centsideas/types';
 import {IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels} from '@centsideas/models';
 
 @DomainEvent(IdeaEventNames.Deleted)
 export class IdeaDeleted implements IDomainEvent {
-  constructor(public readonly deletedAt: ISODate) {}
+  constructor(public readonly deletedAt: Timestamp) {}
 
   serialize(): IdeaModels.IdeaDeletedData {
     return {
@@ -14,6 +14,6 @@ export class IdeaDeleted implements IDomainEvent {
   }
 
   static deserialize({deletedAt}: IdeaModels.IdeaDeletedData) {
-    return new IdeaDeleted(ISODate.fromString(deletedAt));
+    return new IdeaDeleted(Timestamp.fromString(deletedAt));
   }
 }

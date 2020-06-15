@@ -2,7 +2,7 @@ import {inject, interfaces, injectable} from 'inversify';
 import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
-import {Id, ISODate} from '@centsideas/types';
+import {Id, Timestamp} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
 import {EventTopics} from '@centsideas/enums';
 
@@ -67,7 +67,7 @@ export class MongoEventStore implements EventStore {
         version: streamEvent.version.toNumber(),
         name: Reflect.getMetadata(EVENT_NAME_METADATA, streamEvent.event),
         data: streamEvent.event.serialize(),
-        insertedAt: ISODate.now().toString(),
+        insertedAt: Timestamp.now().toString(),
         sequence: currentSequence,
       };
       return persisted;

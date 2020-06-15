@@ -1,6 +1,6 @@
 import {Aggregate, PersistedSnapshot, Apply} from '@centsideas/event-sourcing';
 import {PersistedEvent} from '@centsideas/models';
-import {UserId, ISODate} from '@centsideas/types';
+import {UserId, Timestamp} from '@centsideas/types';
 
 import * as Errors from './user.errors';
 import {Username} from './username';
@@ -20,9 +20,9 @@ export interface SerializedUser {
 export class User extends Aggregate<SerializedUser> {
   protected id!: UserId;
   private username!: Username;
-  private createdAt!: ISODate;
-  private deletedAt: ISODate | undefined;
-  private deletionRequestedAt: ISODate | undefined;
+  private createdAt!: Timestamp;
+  private deletedAt: Timestamp | undefined;
+  private deletionRequestedAt: Timestamp | undefined;
 
   static buildFrom(events: PersistedEvent[], snapshot?: PersistedSnapshot<SerializedUser>) {
     const user = new User();
@@ -34,8 +34,8 @@ export class User extends Aggregate<SerializedUser> {
   protected deserialize(data: SerializedUser) {
     this.id = UserId.fromString(data.id);
     this.username = Username.fromString(data.username);
-    this.createdAt = ISODate.fromString(data.createdAt);
-    this.deletedAt = data.deletedAt ? ISODate.fromString(data.deletedAt) : undefined;
+    this.createdAt = Timestamp.fromString(data.createdAt);
+    this.deletedAt = data.deletedAt ? Timestamp.fromString(data.deletedAt) : undefined;
   }
 
   protected serialize(): SerializedUser {
@@ -50,7 +50,7 @@ export class User extends Aggregate<SerializedUser> {
     };
   }
 
-  static create(id: UserId, username: Username, createdAt: ISODate) {
+  static create(id: UserId, username: Username, createdAt: Timestamp) {
     const user = new User();
     user.raise(new UserCreated(id, username, createdAt));
     return user;
@@ -61,12 +61,12 @@ export class User extends Aggregate<SerializedUser> {
     this.raise(new UserRenamed(username));
   }
 
-  requestDeletion(userId: UserId, requestedAt: ISODate) {
+  requestDeletion(userId: UserId, requestedAt: Timestamp) {
     this.checkGeneralConditions(userId);
     this.raise(new UserDeletionRequested(requestedAt));
   }
 
-  confirmDeletion(userId: UserId, deletedAt: ISODate) {
+  confirmDeletion(userId: UserId, deletedAt: Timestamp) {
     this.checkGeneralConditions(userId);
     if (!this.deletionRequestedAt) throw new Errors.UserDeletionMustBeRequested(userId);
     this.raise(new UserDeletionConfirmed(deletedAt));

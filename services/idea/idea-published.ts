@@ -1,11 +1,11 @@
-import {ISODate} from '@centsideas/types';
+import {Timestamp} from '@centsideas/types';
 import {IDomainEvent, DomainEvent} from '@centsideas/event-sourcing';
 import {IdeaEventNames} from '@centsideas/enums';
 import {IdeaModels} from '@centsideas/models';
 
 @DomainEvent(IdeaEventNames.Published)
 export class IdeaPublished implements IDomainEvent {
-  constructor(public readonly publishedAt: ISODate) {}
+  constructor(public readonly publishedAt: Timestamp) {}
 
   serialize(): IdeaModels.IdeaPublishedData {
     return {
@@ -14,6 +14,6 @@ export class IdeaPublished implements IDomainEvent {
   }
 
   static deserialize({publishedAt}: IdeaModels.IdeaPublishedData) {
-    return new IdeaPublished(ISODate.fromString(publishedAt));
+    return new IdeaPublished(Timestamp.fromString(publishedAt));
   }
 }

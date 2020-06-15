@@ -1,11 +1,11 @@
 import {DomainEvent, IDomainEvent} from '@centsideas/event-sourcing';
 import {PrivateUserEventNames} from '@centsideas/enums';
-import {ISODate} from '@centsideas/types';
+import {Timestamp} from '@centsideas/types';
 import {UserModels} from '@centsideas/models';
 
 @DomainEvent(PrivateUserEventNames.Deleted)
 export class PrivateUserDeleted implements IDomainEvent {
-  constructor(public readonly deletedAt: ISODate) {}
+  constructor(public readonly deletedAt: Timestamp) {}
 
   serialize(): UserModels.PrivateUserDeletedData {
     return {
@@ -14,6 +14,6 @@ export class PrivateUserDeleted implements IDomainEvent {
   }
 
   static deserialize({deletedAt}: UserModels.PrivateUserDeletedData) {
-    return new PrivateUserDeleted(ISODate.fromString(deletedAt));
+    return new PrivateUserDeleted(Timestamp.fromString(deletedAt));
   }
 }

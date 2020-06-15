@@ -6,7 +6,14 @@ import {
   MONGO_SNAPSHOT_STORE_FACTORY,
   MongoSnapshotStoreFactory,
 } from '@centsideas/event-sourcing';
-import {Email, ISODate, UserId, SessionId, AccessToken, EmailSignInToken} from '@centsideas/types';
+import {
+  Email,
+  Timestamp,
+  UserId,
+  SessionId,
+  AccessToken,
+  EmailSignInToken,
+} from '@centsideas/types';
 import {EventTopics, TokenExpirationTimes} from '@centsideas/enums';
 import {PersistedEvent} from '@centsideas/models';
 import {SecretsConfig} from '@centsideas/config';
@@ -49,7 +56,7 @@ export class AuthenticationService {
   async requestEmailSignIn(emailString: string) {
     const sessionId = SessionId.generate();
     const email = Email.fromString(emailString);
-    const session = Session.requestEmailSignIn(sessionId, email, ISODate.now());
+    const session = Session.requestEmailSignIn(sessionId, email, Timestamp.now());
     await this.store(session);
   }
 
@@ -58,7 +65,7 @@ export class AuthenticationService {
     const session = await this.build(sessionId);
     const existingUser = await this.userReadAdapter.getUserByEmail(email);
     const userId = (existingUser?.id as UserId) || UserId.generate();
-    session.confirmEmailSignIn(userId, !existingUser, ISODate.now());
+    session.confirmEmailSignIn(userId, !existingUser, Timestamp.now());
     await this.store(session);
 
     const accessToken = new AccessToken(sessionId, userId);
@@ -75,7 +82,7 @@ export class AuthenticationService {
   }
 
   async googleSignIn(code: string) {
-    const requestedAt = ISODate.now();
+    const requestedAt = Timestamp.now();
 
     const googleAccessToken = await this.googleApiAdapter.getAccessToken(code);
     const {id, email} = await this.googleApiAdapter.getUserInfo(googleAccessToken);
@@ -92,7 +99,7 @@ export class AuthenticationService {
       id,
       !existingUser,
       requestedAt,
-      ISODate.now(),
+      Timestamp.now(),
     );
     await this.store(session);
 
@@ -126,7 +133,7 @@ export class AuthenticationService {
   async signOut(refreshToken: string) {
     const {sessionId} = RefreshToken.fromString(refreshToken, this.refreshTokenSecret);
     const session = await this.build(sessionId);
-    session.signOut(ISODate.now());
+    session.signOut(Timestamp.now());
     await this.store(session);
   }
 

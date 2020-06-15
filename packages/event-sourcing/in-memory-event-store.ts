@@ -1,6 +1,6 @@
 import {inject, interfaces, injectable} from 'inversify';
 
-import {Id, ISODate} from '@centsideas/types';
+import {Id, Timestamp} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
 import {EventTopics} from '@centsideas/enums';
 
@@ -49,7 +49,7 @@ export class InMemoryEventStore implements EventStore {
         version: streamEvent.version.toNumber(),
         name: Reflect.getMetadata(EVENT_NAME_METADATA, streamEvent.event),
         data: streamEvent.event.serialize(),
-        insertedAt: ISODate.now().toString(),
+        insertedAt: Timestamp.now().toString(),
         sequence: this.sequence,
       };
       return insert;

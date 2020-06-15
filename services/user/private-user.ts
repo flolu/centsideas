@@ -1,6 +1,6 @@
 import {Aggregate, PersistedSnapshot, Apply} from '@centsideas/event-sourcing';
 import {PersistedEvent} from '@centsideas/models';
-import {UserId, Email, ISODate} from '@centsideas/types';
+import {UserId, Email, Timestamp} from '@centsideas/types';
 
 import * as Errors from './user.errors';
 import {PrivateUserCreated} from './private-user-created';
@@ -19,7 +19,7 @@ export class PrivateUser extends Aggregate<SerializedPrivateUser> {
   protected id!: UserId;
   email!: Email | undefined;
   pendingEmail: Email | undefined;
-  deletedAt: ISODate | undefined;
+  deletedAt: Timestamp | undefined;
 
   static buildFrom(events: PersistedEvent[], snapshot?: PersistedSnapshot<SerializedPrivateUser>) {
     const privateUser = new PrivateUser();
@@ -59,7 +59,7 @@ export class PrivateUser extends Aggregate<SerializedPrivateUser> {
     this.raise(new EmailChangeConfirmed());
   }
 
-  delete(userId: UserId, deletedAt: ISODate) {
+  delete(userId: UserId, deletedAt: Timestamp) {
     this.checkGeneralConditions(userId);
     this.raise(new PrivateUserDeleted(deletedAt));
   }

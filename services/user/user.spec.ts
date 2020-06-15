@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import {UserId, ISODate} from '@centsideas/types';
+import {UserId, Timestamp} from '@centsideas/types';
 import {PersistedEvent, UserModels} from '@centsideas/models';
 import {PersistedSnapshot, EventId} from '@centsideas/event-sourcing';
 import {UserEventNames} from '@centsideas/enums';
@@ -16,7 +16,7 @@ import * as Errors from './user.errors';
 describe('User', () => {
   const id = UserId.generate();
   const otherUser = UserId.generate();
-  const timestamp = ISODate.now();
+  const timestamp = Timestamp.now();
   const username = Username.fromString('mjdemarco');
   const otherUsername = Username.fromString('john');
 

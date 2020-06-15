@@ -1,11 +1,11 @@
 import {DomainEvent, IDomainEvent} from '@centsideas/event-sourcing';
 import {UserEventNames} from '@centsideas/enums';
 import {UserModels} from '@centsideas/models';
-import {ISODate} from '@centsideas/types';
+import {Timestamp} from '@centsideas/types';
 
 @DomainEvent(UserEventNames.DeletionRequested)
 export class UserDeletionRequested implements IDomainEvent {
-  constructor(public readonly requestedAt: ISODate) {}
+  constructor(public readonly requestedAt: Timestamp) {}
 
   serialize(): UserModels.DeletionRequestedData {
     return {
@@ -14,6 +14,6 @@ export class UserDeletionRequested implements IDomainEvent {
   }
 
   static deserialize({requestedAt}: UserModels.DeletionRequestedData) {
-    return new UserDeletionRequested(ISODate.fromString(requestedAt));
+    return new UserDeletionRequested(Timestamp.fromString(requestedAt));
   }
 }

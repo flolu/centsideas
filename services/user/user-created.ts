@@ -1,7 +1,7 @@
 import {DomainEvent, IDomainEvent} from '@centsideas/event-sourcing';
 import {UserEventNames} from '@centsideas/enums';
 import {UserModels} from '@centsideas/models';
-import {UserId, ISODate} from '@centsideas/types';
+import {UserId, Timestamp} from '@centsideas/types';
 
 import {Username} from './username';
 
@@ -10,7 +10,7 @@ export class UserCreated implements IDomainEvent {
   constructor(
     public readonly id: UserId,
     public readonly username: Username,
-    public readonly createdAt: ISODate,
+    public readonly createdAt: Timestamp,
   ) {}
 
   serialize(): UserModels.UserCreatedData {
@@ -25,7 +25,7 @@ export class UserCreated implements IDomainEvent {
     return new UserCreated(
       UserId.fromString(id),
       Username.fromString(username),
-      ISODate.fromString(createdAt),
+      Timestamp.fromString(createdAt),
     );
   }
 }

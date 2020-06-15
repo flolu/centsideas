@@ -1,13 +1,12 @@
-// TODO consider renaming to timestamp
-export class ISODate {
+export class Timestamp {
   protected constructor(private readonly date: string) {}
 
   static now() {
-    return new ISODate(new Date().toISOString());
+    return new Timestamp(new Date().toISOString());
   }
 
   static fromString(isoString: string) {
-    return new ISODate(new Date(isoString).toISOString());
+    return new Timestamp(new Date(isoString).toISOString());
   }
 
   toString() {

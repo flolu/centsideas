@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import {IdeaId, UserId, ISODate} from '@centsideas/types';
+import {IdeaId, UserId, Timestamp} from '@centsideas/types';
 import {PersistedEvent, IdeaModels} from '@centsideas/models';
 import {IdeaEventNames} from '@centsideas/enums';
 import {EventId, PersistedSnapshot} from '@centsideas/event-sourcing';
@@ -22,7 +22,7 @@ describe('Idea', () => {
   const id = IdeaId.generate();
   const user = UserId.generate();
   const otherUser = UserId.generate();
-  const timestamp = ISODate.now();
+  const timestamp = Timestamp.now();
   const title = IdeaTitle.fromString('Some awesome idea title');
   const description = IdeaDescription.fromString(
     'This is idea is meant to be great, but also a dummy mock test description!',
@@ -172,7 +172,7 @@ describe('Idea', () => {
 
   it('publishes idea', () => {
     const idea = Idea.create(id, user, timestamp);
-    const publishedAt = ISODate.now();
+    const publishedAt = Timestamp.now();
     idea.rename(IdeaTitle.fromString('My awesome idea'), user);
     idea.publish(publishedAt, user);
     expect(idea.flushEvents().toEvents()).toContainEqual(new IdeaPublished(publishedAt));
@@ -180,7 +180,7 @@ describe('Idea', () => {
 
   it('can not publish ideas without a title', () => {
     const idea = Idea.create(id, user, timestamp);
-    const publishedAt = ISODate.now();
+    const publishedAt = Timestamp.now();
     expect(() => idea.publish(publishedAt, user)).toThrowError(
       new Errors.IdeaTitleRequired(id, user),
     );
@@ -188,7 +188,7 @@ describe('Idea', () => {
 
   it('can not be published if it was already published', () => {
     const idea = Idea.create(id, user, timestamp);
-    const publishedAt = ISODate.now();
+    const publishedAt = Timestamp.now();
     idea.rename(title, user);
     idea.publish(publishedAt, user);
     expect(() => idea.publish(publishedAt, user)).toThrowError(
@@ -198,7 +198,7 @@ describe('Idea', () => {
 
   it('deletes idea', () => {
     const idea = Idea.create(id, user, timestamp);
-    const deletedAt = ISODate.now();
+    const deletedAt = Timestamp.now();
     idea.delete(deletedAt, user);
     expect(idea.flushEvents().toEvents()).toContainEqual(new IdeaDeleted(deletedAt));
   });
@@ -209,18 +209,18 @@ describe('Idea', () => {
     expect(() => idea.rename(title, otherUser)).toThrowError(error);
     expect(() => idea.editDescription(description, otherUser)).toThrowError(error);
     expect(() => idea.updateTags(tags, otherUser)).toThrowError(error);
-    expect(() => idea.publish(ISODate.now(), otherUser)).toThrowError(error);
-    expect(() => idea.delete(ISODate.now(), otherUser)).toThrowError(error);
+    expect(() => idea.publish(Timestamp.now(), otherUser)).toThrowError(error);
+    expect(() => idea.delete(Timestamp.now(), otherUser)).toThrowError(error);
   });
 
   it('can not be changed if it was already deleted', () => {
     const idea = Idea.create(id, user, timestamp);
     const error = new Errors.IdeaAlreadyDeleted(id, user);
-    idea.delete(ISODate.now(), user);
+    idea.delete(Timestamp.now(), user);
     expect(() => idea.rename(title, user)).toThrowError(error);
     expect(() => idea.editDescription(description, user)).toThrowError(error);
     expect(() => idea.updateTags(tags, user)).toThrowError(error);
-    expect(() => idea.publish(ISODate.now(), user)).toThrowError(error);
-    expect(() => idea.delete(ISODate.now(), user)).toThrowError(error);
+    expect(() => idea.publish(Timestamp.now(), user)).toThrowError(error);
+    expect(() => idea.delete(Timestamp.now(), user)).toThrowError(error);
   });
 });

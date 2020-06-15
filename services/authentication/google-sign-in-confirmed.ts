@@ -1,7 +1,7 @@
 import {DomainEvent, IDomainEvent} from '@centsideas/event-sourcing';
 import {AuthenticationEventNames} from '@centsideas/enums';
 import {SessionModels} from '@centsideas/models';
-import {ISODate, UserId, SessionId, Email} from '@centsideas/types';
+import {Timestamp, UserId, SessionId, Email} from '@centsideas/types';
 
 @DomainEvent(AuthenticationEventNames.GoogleSignInConfirmed)
 export class GoogleSignInConfirmed implements IDomainEvent {
@@ -11,8 +11,8 @@ export class GoogleSignInConfirmed implements IDomainEvent {
     public readonly email: Email,
     public readonly googleUserId: string,
     public readonly isSignUp: boolean,
-    public readonly requestedAt: ISODate,
-    public readonly confirmedAt: ISODate,
+    public readonly requestedAt: Timestamp,
+    public readonly confirmedAt: Timestamp,
   ) {}
 
   serialize(): SessionModels.GoogleSignInConfirmedData {
@@ -42,8 +42,8 @@ export class GoogleSignInConfirmed implements IDomainEvent {
       Email.fromString(email),
       googleUserId,
       isSignUp,
-      ISODate.fromString(requestedAt),
-      ISODate.fromString(confirmedAt),
+      Timestamp.fromString(requestedAt),
+      Timestamp.fromString(confirmedAt),
     );
   }
 }

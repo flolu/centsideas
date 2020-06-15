@@ -1,5 +1,5 @@
 import {Aggregate, Apply, PersistedSnapshot} from '@centsideas/event-sourcing';
-import {IdeaId, UserId, ISODate} from '@centsideas/types';
+import {IdeaId, UserId, Timestamp} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
 
 import * as Errors from './idea.errors';
@@ -30,8 +30,8 @@ export class Idea extends Aggregate<SerializedIdea> {
   private tags = IdeaTags.empty();
   private title: IdeaTitle | undefined;
   private description: IdeaDescription | undefined;
-  private publishedAt: ISODate | undefined;
-  private deletedAt: ISODate | undefined;
+  private publishedAt: Timestamp | undefined;
+  private deletedAt: Timestamp | undefined;
 
   static buildFrom(events: PersistedEvent[], snapshot?: PersistedSnapshot<SerializedIdea>) {
     const idea = new Idea();
@@ -46,8 +46,8 @@ export class Idea extends Aggregate<SerializedIdea> {
     this.tags = IdeaTags.fromArray(data.tags);
     this.title = data.title ? IdeaTitle.fromString(data.title) : undefined;
     this.description = data.description ? IdeaDescription.fromString(data.description) : undefined;
-    this.publishedAt = data.publishedAt ? ISODate.fromString(data.publishedAt) : undefined;
-    this.deletedAt = data.deletedAt ? ISODate.fromString(data.deletedAt) : undefined;
+    this.publishedAt = data.publishedAt ? Timestamp.fromString(data.publishedAt) : undefined;
+    this.deletedAt = data.deletedAt ? Timestamp.fromString(data.deletedAt) : undefined;
   }
 
   protected serialize(): SerializedIdea {
@@ -62,7 +62,7 @@ export class Idea extends Aggregate<SerializedIdea> {
     };
   }
 
-  static create(id: IdeaId, user: UserId, createdAt: ISODate) {
+  static create(id: IdeaId, user: UserId, createdAt: Timestamp) {
     const idea = new Idea();
     idea.raise(new IdeaCreated(id, user, createdAt));
     return idea;
@@ -88,14 +88,14 @@ export class Idea extends Aggregate<SerializedIdea> {
     if (removed.toArray().length) this.raise(new IdeaTagsRemoved(removed));
   }
 
-  publish(publishedAt: ISODate, user: UserId) {
+  publish(publishedAt: Timestamp, user: UserId) {
     this.checkGeneralConditions(user);
     if (this.publishedAt) throw new Errors.IdeaAlreadyPublished(this.id, user);
     if (!this.title) throw new Errors.IdeaTitleRequired(this.id, user);
     this.raise(new IdeaPublished(publishedAt));
   }
 
-  delete(deletedAt: ISODate, user: UserId) {
+  delete(deletedAt: Timestamp, user: UserId) {
     this.checkGeneralConditions(user);
     this.raise(new IdeaDeleted(deletedAt));
   }

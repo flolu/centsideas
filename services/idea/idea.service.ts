@@ -6,7 +6,7 @@ import {
   MONGO_SNAPSHOT_STORE_FACTORY,
   MongoSnapshotStoreFactory,
 } from '@centsideas/event-sourcing';
-import {UserId, IdeaId, ISODate} from '@centsideas/types';
+import {UserId, IdeaId, Timestamp} from '@centsideas/types';
 import {serializeEvent} from '@centsideas/rpc';
 import {EventTopics} from '@centsideas/enums';
 import {PersistedEvent} from '@centsideas/models';
@@ -43,7 +43,7 @@ export class IdeaService {
     const user = UserId.fromString(userId);
     const unpublished = await this.ideaReadAdapter.getUnpublishedIdea(user);
     if (unpublished) return unpublished.id;
-    const idea = Idea.create(id, user, ISODate.now());
+    const idea = Idea.create(id, user, Timestamp.now());
     await this.store(idea);
     return id.toString();
   }
@@ -68,13 +68,13 @@ export class IdeaService {
 
   async publish(id: string, userId: string) {
     const idea = await this.build(IdeaId.fromString(id));
-    idea.publish(ISODate.now(), UserId.fromString(userId));
+    idea.publish(Timestamp.now(), UserId.fromString(userId));
     await this.store(idea);
   }
 
   async delete(id: string, userId: string) {
     const idea = await this.build(IdeaId.fromString(id));
-    idea.delete(ISODate.now(), UserId.fromString(userId));
+    idea.delete(Timestamp.now(), UserId.fromString(userId));
     await this.store(idea);
   }
 

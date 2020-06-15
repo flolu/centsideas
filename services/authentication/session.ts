@@ -1,5 +1,5 @@
 import {Aggregate, PersistedSnapshot, Apply} from '@centsideas/event-sourcing';
-import {ISODate, UserId, Email, SessionId} from '@centsideas/types';
+import {Timestamp, UserId, Email, SessionId} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
 
 import {RefreshTokenRevoked} from './refresh-token-revoked';
@@ -24,12 +24,12 @@ export interface SerializedSession {
 
 export class Session extends Aggregate<SerializedSession> {
   protected id!: SessionId;
-  private signInRequestedAt!: ISODate;
+  private signInRequestedAt!: Timestamp;
   private signInMethod!: SignInMethod;
   private isSignUpSession: boolean | undefined;
   private userId: UserId | undefined;
-  private signInConfirmedAt: ISODate | undefined;
-  private signedOutAt: ISODate | undefined;
+  private signInConfirmedAt: Timestamp | undefined;
+  private signedOutAt: Timestamp | undefined;
   private isRefreshTokenRevoked = false;
 
   static buildFrom(events: PersistedEvent[], snapshot?: PersistedSnapshot<SerializedSession>) {
@@ -41,14 +41,14 @@ export class Session extends Aggregate<SerializedSession> {
 
   protected deserialize(data: SerializedSession) {
     this.id = SessionId.fromString(data.id);
-    this.signInRequestedAt = ISODate.fromString(data.signInRequestedAt);
+    this.signInRequestedAt = Timestamp.fromString(data.signInRequestedAt);
     this.signInMethod = SignInMethod.fromString(data.signInMethod);
     this.isSignUpSession = data.isSignUpSession;
     this.userId = data.userId ? UserId.fromString(data.userId) : undefined;
     this.signInConfirmedAt = data.signInConfirmedAt
-      ? ISODate.fromString(data.signInConfirmedAt)
+      ? Timestamp.fromString(data.signInConfirmedAt)
       : undefined;
-    this.signedOutAt = data.signedOutAt ? ISODate.fromString(data.signedOutAt) : undefined;
+    this.signedOutAt = data.signedOutAt ? Timestamp.fromString(data.signedOutAt) : undefined;
     this.isRefreshTokenRevoked = data.isRefreshTokenRevoked;
   }
 
@@ -65,7 +65,7 @@ export class Session extends Aggregate<SerializedSession> {
     };
   }
 
-  static requestEmailSignIn(sessionId: SessionId, email: Email, requestedAt: ISODate) {
+  static requestEmailSignIn(sessionId: SessionId, email: Email, requestedAt: Timestamp) {
     const session = new Session();
     const method = new SignInMethod(SignInMethods.Email);
     session.raise(new SignInRequested(sessionId, method, email, requestedAt));
@@ -78,8 +78,8 @@ export class Session extends Aggregate<SerializedSession> {
     email: Email,
     googleUserId: string,
     isSignUp: boolean,
-    requestedAt: ISODate,
-    confirmedAt: ISODate,
+    requestedAt: Timestamp,
+    confirmedAt: Timestamp,
   ) {
     const session = new Session();
     session.raise(
@@ -96,7 +96,7 @@ export class Session extends Aggregate<SerializedSession> {
     return session;
   }
 
-  confirmEmailSignIn(userId: UserId, isSignUp: boolean, confirmedAt: ISODate) {
+  confirmEmailSignIn(userId: UserId, isSignUp: boolean, confirmedAt: Timestamp) {
     if (this.signInConfirmedAt) throw new Errors.SessionAlreadyConfirmed();
     if (this.isRefreshTokenRevoked) throw new Errors.SessionRevoked();
     this.raise(new SignInConfirmed(isSignUp, userId, confirmedAt));
@@ -109,7 +109,7 @@ export class Session extends Aggregate<SerializedSession> {
     this.raise(new TokensRefreshed());
   }
 
-  signOut(signedOutAt: ISODate) {
+  signOut(signedOutAt: Timestamp) {
     if (!this.signInConfirmedAt) throw new Errors.SessionUnconfirmed();
     if (this.isRefreshTokenRevoked) throw new Errors.SessionRevoked();
     if (this.signedOutAt) throw new Errors.SessionSignedOut();
