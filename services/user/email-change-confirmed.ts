@@ -8,7 +8,7 @@ export class EmailChangeConfirmed implements IDomainEvent {
     return {};
   }
 
-  deserialize({}: UserModels.EmailChangeConfirmedData) {
+  static deserialize({}: UserModels.EmailChangeConfirmedData) {
     return new EmailChangeConfirmed();
   }
 }

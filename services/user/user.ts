@@ -14,6 +14,7 @@ export interface SerializedUser {
   username: string;
   createdAt: string;
   deletedAt: string | undefined;
+  deletionRequestedAt: string | undefined;
 }
 
 export class User extends Aggregate<SerializedUser> {
@@ -21,6 +22,7 @@ export class User extends Aggregate<SerializedUser> {
   private username!: Username;
   private createdAt!: ISODate;
   private deletedAt: ISODate | undefined;
+  private deletionRequestedAt: ISODate | undefined;
 
   static buildFrom(events: PersistedEvent[], snapshot?: PersistedSnapshot<SerializedUser>) {
     const user = new User();
@@ -42,6 +44,9 @@ export class User extends Aggregate<SerializedUser> {
       username: this.username.toString(),
       createdAt: this.createdAt.toString(),
       deletedAt: this.deletedAt ? this.deletedAt.toString() : undefined,
+      deletionRequestedAt: this.deletionRequestedAt
+        ? this.deletionRequestedAt.toString()
+        : undefined,
     };
   }
 
@@ -56,13 +61,14 @@ export class User extends Aggregate<SerializedUser> {
     this.raise(new UserRenamed(username));
   }
 
-  requestDeletion(userId: UserId) {
+  requestDeletion(userId: UserId, requestedAt: ISODate) {
     this.checkGeneralConditions(userId);
-    this.raise(new UserDeletionRequested());
+    this.raise(new UserDeletionRequested(requestedAt));
   }
 
   confirmDeletion(userId: UserId, deletedAt: ISODate) {
     this.checkGeneralConditions(userId);
+    if (!this.deletionRequestedAt) throw new Errors.UserDeletionMustBeRequested(userId);
     this.raise(new UserDeletionConfirmed(deletedAt));
   }
 
@@ -72,19 +78,24 @@ export class User extends Aggregate<SerializedUser> {
   }
 
   @Apply(UserCreated)
-  created(event: UserCreated) {
+  protected created(event: UserCreated) {
     this.id = event.id;
     this.username = event.username;
     this.createdAt = event.createdAt;
   }
 
   @Apply(UserRenamed)
-  renamed(event: UserRenamed) {
+  protected renamed(event: UserRenamed) {
     this.username = event.username;
   }
 
+  @Apply(UserDeletionRequested)
+  protected deletionRequested(event: UserDeletionRequested) {
+    this.deletionRequestedAt = event.requestedAt;
+  }
+
   @Apply(UserDeletionConfirmed)
-  deletionConfirmed(event: UserDeletionConfirmed) {
+  protected deletionConfirmed(event: UserDeletionConfirmed) {
     this.deletedAt = event.deletedAt;
   }
 }

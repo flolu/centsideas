@@ -1,3 +1,4 @@
+// TODO consider renaming to timestamp
 export class ISODate {
   protected constructor(private readonly date: string) {}
 

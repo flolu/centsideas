@@ -21,6 +21,7 @@ export enum PrivateUserEventNames {
   Created = 'user.private.created',
   EmailChangeRequested = 'user.private.emailChangeRequested',
   EmailChangeConfirmed = 'user.private.emailChangeConfirmed',
+  Deleted = 'user.private.deleted',
 }
 
 export enum UserEventNames {

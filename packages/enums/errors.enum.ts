@@ -41,4 +41,5 @@ export enum UserErrorNames {
   UsernameInvalid = 'user.usernameInvalid',
   AlreadyDeleted = 'user.alreadyDeleted',
   NoPermission = 'user.noPermssion',
+  UserDeletionMustBeRequested = 'user.userDeletionMustBeRequested',
 }

@@ -11,7 +11,7 @@ export class UserDeletionConfirmed implements IDomainEvent {
     return {deletedAt: this.deletedAt.toString()};
   }
 
-  deserialize({deletedAt}: UserModels.DeletionConfirmedData) {
+  static deserialize({deletedAt}: UserModels.DeletionConfirmedData) {
     return new UserDeletionConfirmed(ISODate.fromString(deletedAt));
   }
 }

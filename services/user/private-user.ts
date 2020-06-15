@@ -1,22 +1,25 @@
 import {Aggregate, PersistedSnapshot, Apply} from '@centsideas/event-sourcing';
 import {PersistedEvent} from '@centsideas/models';
-import {UserId, Email} from '@centsideas/types';
+import {UserId, Email, ISODate} from '@centsideas/types';
 
 import * as Errors from './user.errors';
 import {PrivateUserCreated} from './private-user-created';
 import {EmailChangeRequested} from './email-change-requested';
 import {EmailChangeConfirmed} from './email-change-confirmed';
+import {PrivateUserDeleted} from './private-user-deleted';
 
 export interface SerializedPrivateUser {
   id: string;
-  email: string;
+  email: string | undefined;
   pendingEmail: string | undefined;
+  deletedAt: string | undefined;
 }
 
 export class PrivateUser extends Aggregate<SerializedPrivateUser> {
   protected id!: UserId;
-  email!: Email;
+  email!: Email | undefined;
   pendingEmail: Email | undefined;
+  deletedAt: ISODate | undefined;
 
   static buildFrom(events: PersistedEvent[], snapshot?: PersistedSnapshot<SerializedPrivateUser>) {
     const privateUser = new PrivateUser();
@@ -27,15 +30,16 @@ export class PrivateUser extends Aggregate<SerializedPrivateUser> {
 
   protected deserialize(data: SerializedPrivateUser) {
     this.id = UserId.fromString(data.id);
-    this.email = Email.fromString(data.email);
+    this.email = data.email ? Email.fromString(data.email) : undefined;
     this.pendingEmail = data.pendingEmail ? Email.fromString(data.pendingEmail) : undefined;
   }
 
   protected serialize(): SerializedPrivateUser {
     return {
       id: this.id.toString(),
-      email: this.email.toString(),
+      email: this.email?.toString(),
       pendingEmail: this.pendingEmail?.toString(),
+      deletedAt: this.deletedAt ? this.deletedAt.toString() : undefined,
     };
   }
 
@@ -55,24 +59,36 @@ export class PrivateUser extends Aggregate<SerializedPrivateUser> {
     this.raise(new EmailChangeConfirmed());
   }
 
+  delete(userId: UserId, deletedAt: ISODate) {
+    this.checkGeneralConditions(userId);
+    this.raise(new PrivateUserDeleted(deletedAt));
+  }
+
   private checkGeneralConditions(userId: UserId) {
     if (!this.id.equals(userId)) throw new Errors.NoPermissionToAccessUser(this.id, userId);
   }
 
   @Apply(PrivateUserCreated)
-  created(event: PrivateUserCreated) {
+  protected created(event: PrivateUserCreated) {
     this.id = event.id;
     this.email = event.email;
   }
 
   @Apply(EmailChangeRequested)
-  emailChangeRequested(event: EmailChangeRequested) {
+  protected emailChangeRequested(event: EmailChangeRequested) {
     this.pendingEmail = event.newEmail;
   }
 
   @Apply(EmailChangeConfirmed)
-  emailChangeConfirmed() {
+  protected emailChangeConfirmed() {
     this.email = this.pendingEmail!;
     this.pendingEmail = undefined;
+  }
+
+  @Apply(PrivateUserDeleted)
+  protected deleted(event: PrivateUserDeleted) {
+    this.email = undefined;
+    this.pendingEmail = undefined;
+    this.deletedAt = event.deletedAt;
   }
 }

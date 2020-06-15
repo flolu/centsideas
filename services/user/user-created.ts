@@ -21,7 +21,7 @@ export class UserCreated implements IDomainEvent {
     };
   }
 
-  deserialize({id, username, createdAt}: UserModels.UserCreatedData) {
+  static deserialize({id, username, createdAt}: UserModels.UserCreatedData) {
     return new UserCreated(
       UserId.fromString(id),
       Username.fromString(username),

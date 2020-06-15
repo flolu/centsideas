@@ -14,7 +14,7 @@ export class UserRenamed implements IDomainEvent {
     };
   }
 
-  deserialize({username}: UserModels.UserRenamedData) {
+  static deserialize({username}: UserModels.UserRenamedData) {
     return new UserRenamed(Username.fromString(username));
   }
 }

@@ -61,3 +61,14 @@ export class UserAlreadyDeleted extends Exception {
     });
   }
 }
+
+export class UserDeletionMustBeRequested extends Exception {
+  name = UserErrorNames.UserDeletionMustBeRequested;
+  code = RpcStatus.INVALID_ARGUMENT;
+
+  constructor(user: UserId) {
+    super('You have to request your account deletion before confirming it!', {
+      userId: user.toString(),
+    });
+  }
+}
