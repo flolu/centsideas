@@ -15,7 +15,7 @@ import {GatewayConfig} from './gateway.config';
 
 @injectable()
 export class GatewayServer {
-  // TODO eventually add frontend to cors whitelist
+  // FIXME eventually add frontend to cors whitelist
   private corsWhitelist: string[] = [];
 
   constructor(private globalConfig: GlobalConfig, private config: GatewayConfig) {
