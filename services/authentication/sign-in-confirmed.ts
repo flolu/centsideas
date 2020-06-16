@@ -14,21 +14,16 @@ export class SignInConfirmed implements IDomainEvent {
 
   serialize(): SessionModels.SignInConfirmedData {
     return {
-      isSignUpSession: this.isSignUpSession,
+      isSignUp: this.isSignUpSession,
       userId: this.userId.toString(),
       confirmedAt: this.confirmedAt.toString(),
       email: this.email.toString(),
     };
   }
 
-  static deserialize({
-    isSignUpSession,
-    userId,
-    confirmedAt,
-    email,
-  }: SessionModels.SignInConfirmedData) {
+  static deserialize({isSignUp, userId, confirmedAt, email}: SessionModels.SignInConfirmedData) {
     return new SignInConfirmed(
-      isSignUpSession,
+      isSignUp,
       UserId.fromString(userId),
       Email.fromString(email),
       Timestamp.fromString(confirmedAt),

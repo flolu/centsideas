@@ -17,7 +17,7 @@ export class UserServer extends EventsHandler {
 
   @EventHandler(AuthenticationEventNames.SignInConfirmed)
   async signInConfirmed(event: PersistedEvent<SessionModels.SignInConfirmedData>) {
-    if (!event.data.isSignUpSession) return;
+    if (!event.data.isSignUp) return;
     await this.service.create(
       UserId.fromString(event.data.userId),
       Email.fromString(event.data.email),

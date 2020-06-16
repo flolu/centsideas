@@ -43,7 +43,7 @@ describe('Sesstion', () => {
     version,
     name: AuthenticationEventNames.SignInConfirmed,
     data: {
-      isSignUpSession: true,
+      isSignUp: true,
       userId: user.toString(),
       confirmedAt: timestamp.toString(),
       email: email.toString(),
