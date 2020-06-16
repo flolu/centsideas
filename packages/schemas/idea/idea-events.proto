@@ -28,6 +28,7 @@ message IdeaEventData {
   }
 }
 
+// TODO why is id on every event?
 message IdeaCreatedEvent {
   string id = 1;
   string userId = 2;

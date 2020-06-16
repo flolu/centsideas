@@ -96,10 +96,10 @@ export class Session extends Aggregate<SerializedSession> {
     return session;
   }
 
-  confirmEmailSignIn(userId: UserId, isSignUp: boolean, confirmedAt: Timestamp) {
+  confirmEmailSignIn(userId: UserId, isSignUp: boolean, email: Email, confirmedAt: Timestamp) {
     if (this.signInConfirmedAt) throw new Errors.SessionAlreadyConfirmed();
     if (this.isRefreshTokenRevoked) throw new Errors.SessionRevoked();
-    this.raise(new SignInConfirmed(isSignUp, userId, confirmedAt));
+    this.raise(new SignInConfirmed(isSignUp, userId, email, confirmedAt));
   }
 
   refreshTokens() {

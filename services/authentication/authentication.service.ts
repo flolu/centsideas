@@ -65,7 +65,7 @@ export class AuthenticationService {
     const session = await this.build(sessionId);
     const existingUser = await this.userReadAdapter.getUserByEmail(email);
     const userId = (existingUser?.id as UserId) || UserId.generate();
-    session.confirmEmailSignIn(userId, !existingUser, Timestamp.now());
+    session.confirmEmailSignIn(userId, !existingUser, email, Timestamp.now());
     await this.store(session);
 
     const accessToken = new AccessToken(sessionId, userId);

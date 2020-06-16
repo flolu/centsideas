@@ -19,7 +19,11 @@ ts_library(
         "//packages/rpc",
         "//packages/types",
         "//packages/utils",
+        "@npm//@types/faker",
         "@npm//@types/node",
+        "@npm//faker",
+        "@npm//inversify",
+        "@npm//reflect-metadata",
     ],
 )
 
@@ -27,7 +31,7 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
-        # "//packages/schemas:proto_user",
+        "//packages/schemas:proto_user",
     ],
     entry_point = ":index.ts",
 )
@@ -35,18 +39,12 @@ nodejs_image(
 ts_jest(
     name = "test",
     srcs = glob(["**/*.spec.ts"]),
-    # data = ["//packages/schemas:proto_user"],
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
     deps = [
-        # "//packages/config",
-        # "//packages/dependency-injection",
         "//packages/enums",
         "//packages/event-sourcing",
         "//packages/models",
-        # "//packages/rpc",
-        # "//packages/rpc/testing",
-        # "//packages/testing",
         "//packages/types",
         "@npm//reflect-metadata",
     ],

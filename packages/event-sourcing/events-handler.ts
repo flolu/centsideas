@@ -1,5 +1,4 @@
 import {injectable, inject, postConstruct} from 'inversify';
-import * as asyncRetry from 'async-retry';
 
 import {PersistedEvent} from '@centsideas/models';
 import {Logger} from '@centsideas/utils';
@@ -31,7 +30,7 @@ export abstract class EventsHandler {
       throw new Error(`No handler for event ${event.name} found!`);
 
     try {
-      await asyncRetry(() => (this as any)[handlerMethodName](event));
+      await (this as any)[handlerMethodName](event);
     } catch (error) {
       // FIXME handle errors that occured in event handlers?!
       error.message = `Error in event handler ${event.name}: ${error.message}`;

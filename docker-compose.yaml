@@ -63,6 +63,21 @@ services:
     depends_on:
       - mongo-database
 
+  user:
+    container_name: user
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./services/user:/services/user
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/user --colors
+    depends_on:
+      - mongo-database
+
   mailing:
     container_name: mailing
     image: node:lts-alpine

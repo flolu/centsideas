@@ -1,7 +1,7 @@
 @endpoint=auth
 @sessionId = XXX
-@email = joxiyay610@agilekz.com
-@emailSignInToken = XXX
+@email = moralip777@bewedfv.com
+@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIxY2U0NmMyYy03MGVmLTQ5OTctODljYy1kYjJjMjYzNTQ4ZjUiLCJlbWFpbCI6Im1vcmFsaXA3NzdAYmV3ZWRmdi5jb20iLCJpYXQiOjE1OTIzMDAwMDEsImV4cCI6MTU5MjMwNzIwMX0.r61q98f5-UVwqYWg7OdomoDcJlSWay7xrTXaZtR_PQw
 @googleSignInCode = XXX
 
 ###

@@ -43,7 +43,8 @@ message SignInRequested {
 message SignInConfirmed {
   bool isSignUpSession = 1;
   string userId = 2;
-  string confirmedAt = 3;
+  string email = 3;
+  string confirmedAt = 4;
 }
 
 message SignedOut {

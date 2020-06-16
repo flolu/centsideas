@@ -13,6 +13,11 @@ filegroup(
 )
 
 filegroup(
+    name = "proto_user",
+    srcs = glob(["**/usera/*.proto"]),
+)
+
+filegroup(
     name = "all_proto",
     srcs = glob(["**/*.proto"]),
 )

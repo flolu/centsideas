@@ -7,11 +7,14 @@ import {EventTopics} from '@centsideas/enums';
 import {SchemaMessage} from './schema-message';
 import {IdeaEventMessage} from './idea';
 import {AuthenticationEventMessage} from './authentication';
+import {UserEventMessage, PrivateUserEventMessage} from './user';
 
-// FIXME a better solution would be a appriciated!
+// FIXME a better solution would be a appriciated! (maybe via decorator?!)
 const topicMessageMap = new Map<EventTopics, SchemaMessage>();
 topicMessageMap.set(EventTopics.Idea, IdeaEventMessage);
 topicMessageMap.set(EventTopics.Authentication, AuthenticationEventMessage);
+topicMessageMap.set(EventTopics.User, UserEventMessage);
+topicMessageMap.set(EventTopics.PrivateUser, PrivateUserEventMessage);
 
 function extractKeyFromEventName(eventName: string) {
   return eventName.substring(eventName.lastIndexOf('.') + 1, eventName.length);
@@ -34,10 +37,12 @@ export function serializeEventMessage(event: PersistedEvent, topic: EventTopics)
   return Message.encode(message).finish() as Buffer;
 }
 
-// FIXME a better solution would be a appriciated!
+// FIXME a better solution would be a appriciated! (maybe via decorator?!)
 const eventMessageMap = new Map<string, SchemaMessage>();
 eventMessageMap.set('idea', IdeaEventMessage);
 eventMessageMap.set('authentication', AuthenticationEventMessage);
+eventMessageMap.set('user', UserEventMessage);
+eventMessageMap.set('privateUser', PrivateUserEventMessage);
 
 export function deserializeEventMessage(buffer: Buffer, eventName: string): PersistedEvent {
   const eventType = eventName.split('.')[0];

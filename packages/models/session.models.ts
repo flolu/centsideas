@@ -6,9 +6,11 @@ export interface SignInRequestedData {
 }
 
 export interface SignInConfirmedData {
+  // TODO rename to isSignUp
   isSignUpSession: boolean;
   userId: string;
   confirmedAt: string;
+  email: string;
 }
 
 export interface GoogleSignInConfirmedData {

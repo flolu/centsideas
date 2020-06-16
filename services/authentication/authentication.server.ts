@@ -2,13 +2,13 @@ import {injectable, inject} from 'inversify';
 import * as http from 'http';
 
 import {RPC_SERVER_FACTORY, RpcServerFactory, RpcServer, RpcMethod} from '@centsideas/rpc';
-
-import {AuthenticationService} from './authentication.service';
 import {
   AuthenticationCommandsService,
   AuthenticationCommands,
   GetEvents,
 } from '@centsideas/schemas';
+
+import {AuthenticationService} from './authentication.service';
 
 @injectable()
 export class AuthenticationServer implements AuthenticationCommands.Service {

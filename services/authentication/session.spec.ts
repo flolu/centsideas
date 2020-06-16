@@ -46,6 +46,7 @@ describe('Sesstion', () => {
       isSignUpSession: true,
       userId: user.toString(),
       confirmedAt: timestamp.toString(),
+      email: email.toString(),
     },
     insertedAt: timestamp.toString(),
     sequence: version,
@@ -151,16 +152,16 @@ describe('Sesstion', () => {
 
   it('confirms an email sign in', () => {
     const session = Session.requestEmailSignIn(id, email, timestamp);
-    session.confirmEmailSignIn(user, true, timestamp);
+    session.confirmEmailSignIn(user, true, email, timestamp);
     expect(session.flushEvents().toEvents()).toContainEqual(
-      new SignInConfirmed(true, user, timestamp),
+      new SignInConfirmed(true, user, email, timestamp),
     );
   });
 
   it('confirms an email sign in only once', () => {
     const session = Session.requestEmailSignIn(id, email, timestamp);
-    session.confirmEmailSignIn(user, true, timestamp);
-    expect(() => session.confirmEmailSignIn(user, true, timestamp)).toThrowError(
+    session.confirmEmailSignIn(user, true, email, timestamp);
+    expect(() => session.confirmEmailSignIn(user, true, email, timestamp)).toThrowError(
       new Errors.SessionAlreadyConfirmed(),
     );
   });
@@ -174,35 +175,35 @@ describe('Sesstion', () => {
 
   it('refreshes tokens', () => {
     const session = Session.requestEmailSignIn(id, email, timestamp);
-    session.confirmEmailSignIn(user, true, timestamp);
+    session.confirmEmailSignIn(user, true, email, timestamp);
     session.refreshTokens();
     expect(session.flushEvents().toEvents()).toContainEqual(new TokensRefreshed());
   });
 
   it('signs out', () => {
     const session = Session.requestEmailSignIn(id, email, timestamp);
-    session.confirmEmailSignIn(user, true, timestamp);
+    session.confirmEmailSignIn(user, true, email, timestamp);
     session.signOut(timestamp);
     expect(session.flushEvents().toEvents()).toContainEqual(new SignedOut(timestamp));
   });
 
   it('blocks all actions after being signed out', () => {
     const session = Session.requestEmailSignIn(id, email, timestamp);
-    session.confirmEmailSignIn(user, true, timestamp);
+    session.confirmEmailSignIn(user, true, email, timestamp);
     session.signOut(timestamp);
     expect(() => session.refreshTokens()).toThrowError(new Errors.SessionSignedOut());
   });
 
   it('revokes refresh token', () => {
     const session = Session.requestEmailSignIn(id, email, timestamp);
-    session.confirmEmailSignIn(user, true, timestamp);
+    session.confirmEmailSignIn(user, true, email, timestamp);
     session.revokeRefreshToken();
     expect(session.flushEvents().toEvents()).toContainEqual(new RefreshTokenRevoked());
   });
 
   it('blocks all actions after being revoked', () => {
     const session = Session.requestEmailSignIn(id, email, timestamp);
-    session.confirmEmailSignIn(user, true, timestamp);
+    session.confirmEmailSignIn(user, true, email, timestamp);
     session.revokeRefreshToken();
     expect(() => session.refreshTokens()).toThrowError(new Errors.SessionRevoked());
   });

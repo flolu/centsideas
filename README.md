@@ -197,6 +197,7 @@
 **Backend**
 
 `yarn kafka` start local kafka cluster http://localhost:9000
+Go to "Add Cluster" and enter `zookeeper-1:12181,zookeeper-2:22181,zookeeper-3:32181` for "Cluster Zookeeper Hosts" and click "Save"
 
 `yarn dev` all backend services http://localhost:3000
 

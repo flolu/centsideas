@@ -1,7 +1,8 @@
+import 'reflect-metadata';
+
 // tslint:disable-next-line:no-var-requires
 if (process.env['global.environment'] === 'dev') require('module-alias/register');
 
-import 'reflect-metadata';
 import {
   EventDispatcher,
   MongoEventStore,
