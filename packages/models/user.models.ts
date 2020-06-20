@@ -8,6 +8,7 @@ export interface PrivateUserDeletedData {
 }
 
 export interface EmailChangeRequestedData {
+  userId: string;
   newEmail: string;
 }
 
@@ -24,6 +25,7 @@ export interface UserRenamedData {
 }
 
 export interface DeletionRequestedData {
+  userId: string;
   requestedAt: string;
 }
 

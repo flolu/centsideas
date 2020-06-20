@@ -16,7 +16,7 @@ export abstract class Token<T> {
     return jwt.sign(Object(this.serializedPayload), secret, {expiresIn: expiresInSeconds});
   }
 
-  abstract serializedPayload: T;
+  protected abstract serializedPayload: T;
 }
 
 export class InvalidToken extends Exception {

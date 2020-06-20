@@ -1,14 +1,15 @@
 @ideaId = {{create.response.body.id}}
+@endpoint = idea
 
 ###
 
 # @name create
-POST {{apiUrl}}/idea
+POST {{apiUrl}}/{{endpoint}}
 Authorization: Bearer {{userId}}
 
 ###
 
-PUT {{apiUrl}}/idea/{{ideaId}}/rename
+PUT {{apiUrl}}/{{endpoint}}/{{ideaId}}/rename
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -16,7 +17,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT {{apiUrl}}/idea/{{ideaId}}/rename
+PUT {{apiUrl}}/{{endpoint}}/{{ideaId}}/rename
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -24,7 +25,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT {{apiUrl}}/idea/{{ideaId}}/description
+PUT {{apiUrl}}/{{endpoint}}/{{ideaId}}/description
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -32,7 +33,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT {{apiUrl}}/idea/{{ideaId}}/tags
+PUT {{apiUrl}}/{{endpoint}}/{{ideaId}}/tags
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -40,7 +41,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT {{apiUrl}}/idea/{{ideaId}}/tags
+PUT {{apiUrl}}/{{endpoint}}/{{ideaId}}/tags
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -48,10 +49,10 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT {{apiUrl}}/idea/{{ideaId}}/publish
+PUT {{apiUrl}}/{{endpoint}}/{{ideaId}}/publish
 Authorization: Bearer {{userId}}
 
 ###
 
-DELETE {{apiUrl}}/idea/{{ideaId}}
+DELETE {{apiUrl}}/{{endpoint}}/{{ideaId}}
 Authorization: Bearer {{userId}}

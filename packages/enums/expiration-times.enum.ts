@@ -1,6 +1,7 @@
 export enum TokenExpirationTimes {
-  SignInToken = 2 * 60 * 60,
-  EmailChangeToken = 2 * 60 * 60,
-  RefreshToken = 7 * 24 * 60 * 60,
-  AccessToken = 15 * 60,
+  SignIn = 2 * 60 * 60,
+  EmailChange = 2 * 60 * 60,
+  UserDeletion = 8 * 60 * 60,
+  Refresh = 7 * 24 * 60 * 60,
+  Access = 15 * 60,
 }

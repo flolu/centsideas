@@ -4,8 +4,9 @@ import * as Errors from './user.errors';
 
 export class Username {
   private constructor(private readonly username: string) {
+    if (!this.username || this.username.length < UsernameLength.Min)
+      throw new Errors.UsernameTooShort(username);
     if (this.username.length > UsernameLength.Max) throw new Errors.UsernameTooLong(username);
-    if (this.username.length < UsernameLength.Min) throw new Errors.UsernameTooShort(username);
     if (!UsernameRegex.test(username)) throw new Errors.UsernameInvalid(username);
   }
 

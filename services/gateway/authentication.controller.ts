@@ -90,7 +90,7 @@ export class AuthenticationController implements interfaces.Controller {
   private get refreshTokenCookieOptions(): express.CookieOptions {
     return {
       httpOnly: true,
-      maxAge: TokenExpirationTimes.RefreshToken * 1000,
+      maxAge: TokenExpirationTimes.Refresh * 1000,
       sameSite: this.isProd ? 'strict' : 'lax',
       secure: this.isProd ? true : false,
     };

@@ -13,6 +13,7 @@ import {AuthMiddleware} from './auth.middleware';
 import {GatewayConfig} from './gateway.config';
 import {AuthenticationController} from './authentication.controller';
 import {IdeaController} from './idea.controller';
+import {UserController} from './user.controller';
 
 DI.registerProviders(
   GatewayServer,
@@ -20,6 +21,7 @@ DI.registerProviders(
   AuthenticationController,
   IdeaController,
   AuthMiddleware,
+  UserController,
 );
 DI.registerSingletons(Logger, GatewayConfig, GlobalConfig, SecretsConfig);
 

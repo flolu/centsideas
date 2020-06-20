@@ -51,7 +51,7 @@ export class PrivateUser extends Aggregate<SerializedPrivateUser> {
 
   requestEmailChange(userId: UserId, newEmail: Email) {
     this.checkGeneralConditions(userId);
-    this.raise(new EmailChangeRequested(newEmail));
+    this.raise(new EmailChangeRequested(userId, newEmail));
   }
 
   confirmEmailChange(userId: UserId) {

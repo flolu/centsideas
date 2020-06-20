@@ -24,6 +24,7 @@ export enum IdeaErrorNames {
   NoPermission = 'idea.noPermission',
 }
 
+// TODO merge with idea error names
 export enum IdeaReadErrorNames {
   NotFound = 'idea.notFound',
 }
@@ -42,4 +43,5 @@ export enum UserErrorNames {
   AlreadyDeleted = 'user.alreadyDeleted',
   NoPermission = 'user.noPermssion',
   UserDeletionMustBeRequested = 'user.userDeletionMustBeRequested',
+  NotFound = 'user.notFound',
 }

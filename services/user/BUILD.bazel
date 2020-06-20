@@ -17,6 +17,7 @@ ts_library(
         "//packages/event-sourcing",
         "//packages/models",
         "//packages/rpc",
+        "//packages/schemas",
         "//packages/types",
         "//packages/utils",
         "@npm//@types/faker",

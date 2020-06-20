@@ -34,27 +34,27 @@ export class IdeaServer implements IdeaCommands.Service {
   }
 
   @RpcMethod(IdeaCommandsService)
-  async rename({id, userId, title}: IdeaCommands.RenameIdea) {
+  rename({id, userId, title}: IdeaCommands.RenameIdea) {
     return this.service.rename(id, userId, title);
   }
 
   @RpcMethod(IdeaCommandsService)
-  async editDescription({id, userId, description}: IdeaCommands.EditIdeaDescription) {
+  editDescription({id, userId, description}: IdeaCommands.EditIdeaDescription) {
     return this.service.editDescription(id, userId, description);
   }
 
   @RpcMethod(IdeaCommandsService)
-  async updateTags({id, userId, tags}: IdeaCommands.UpdateIdeaTags) {
+  updateTags({id, userId, tags}: IdeaCommands.UpdateIdeaTags) {
     return this.service.updateTags(id, userId, tags);
   }
 
   @RpcMethod(IdeaCommandsService)
-  async publish({id, userId}: IdeaCommands.PublishIdea) {
+  publish({id, userId}: IdeaCommands.PublishIdea) {
     return this.service.publish(id, userId);
   }
 
   @RpcMethod(IdeaCommandsService)
-  async delete({id, userId}: IdeaCommands.DeleteIdea) {
+  delete({id, userId}: IdeaCommands.DeleteIdea) {
     return this.service.delete(id, userId);
   }
 

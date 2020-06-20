@@ -71,8 +71,8 @@ export class AuthenticationService {
     const accessToken = new AccessToken(sessionId, userId);
     const refreshToken = new RefreshToken(sessionId, userId);
     return {
-      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.AccessToken),
-      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.RefreshToken),
+      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.Access),
+      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.Refresh),
       userId: userId.toString(),
     };
   }
@@ -106,8 +106,8 @@ export class AuthenticationService {
     const accessToken = new AccessToken(sessionId, userId);
     const refreshToken = new RefreshToken(sessionId, userId);
     return {
-      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.AccessToken),
-      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.RefreshToken),
+      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.Access),
+      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.Refresh),
       userId: userId.toString(),
     };
   }
@@ -124,8 +124,8 @@ export class AuthenticationService {
     const accessToken = new AccessToken(sessionId, userId);
     const refreshToken = new RefreshToken(sessionId, userId);
     return {
-      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.AccessToken),
-      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.RefreshToken),
+      accessToken: accessToken.sign(this.accessTokenSecret, TokenExpirationTimes.Access),
+      refreshToken: refreshToken.sign(this.refreshTokenSecret, TokenExpirationTimes.Refresh),
       userId: userId.toString(),
     };
   }

@@ -17,7 +17,7 @@ message RequestDeletion {
 }
 
 message ConfirmDeletion {
-  string userId = 1;
+  string token = 1;
 }
 
 message RequestEmailChange {
@@ -26,7 +26,7 @@ message RequestEmailChange {
 }
 
 message ConfirmEmailChange {
-  string userId = 1;
+  string token = 1;
 }
 
 

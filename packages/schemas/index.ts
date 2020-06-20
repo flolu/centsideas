@@ -5,3 +5,4 @@ export * from './event-message-serialization';
 
 export * from './idea';
 export * from './authentication';
+export * from './user';

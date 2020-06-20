@@ -1,0 +1,29 @@
+@username = flo
+@endpoint = user
+@newEmail = XXX
+
+###
+
+PUT {{apiUrl}}/{{endpoint}}/rename
+content-type: application/json
+Authorization: Bearer {{userId}}
+
+{"username":"{{username}}"}
+
+###
+
+POST {{apiUrl}}/{{endpoint}}/requestDeletion
+Authorization: Bearer {{userId}}
+
+###
+
+DELETE {{apiUrl}}/{{endpoint}}
+Authorization: Bearer {{userId}}
+
+###
+
+POST {{apiUrl}}/{{endpoint}}/email/requestChange
+content-type: application/json
+Authorization: Bearer {{userId}}
+
+{"email":"{{newEmail}}"}

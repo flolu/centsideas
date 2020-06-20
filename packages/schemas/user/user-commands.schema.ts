@@ -10,7 +10,7 @@ export interface RequestDeletion {
 }
 
 export interface ConfirmDeletion {
-  userId: string;
+  token: string;
 }
 
 export interface RequestEmailChange {
@@ -19,7 +19,7 @@ export interface RequestEmailChange {
 }
 
 export interface ConfirmEmailChange {
-  userId: string;
+  token: string;
 }
 
 export interface Service {

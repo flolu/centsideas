@@ -20,7 +20,9 @@ export class UsernameTooShort extends Exception {
 
   constructor(username: string) {
     super(
-      `Username too short. Min length is ${UsernameLength.Min}. ${username} is only ${username.length} characters long.`,
+      `Username too short. Min length is ${UsernameLength.Min}. ${username} is only ${
+        username ? username.length : 0
+      } characters long.`,
       {username},
     );
   }
@@ -70,5 +72,14 @@ export class UserDeletionMustBeRequested extends Exception {
     super('You have to request your account deletion before confirming it!', {
       userId: user.toString(),
     });
+  }
+}
+
+export class UserNotFound extends Exception {
+  name = UserErrorNames.NotFound;
+  code = RpcStatus.NOT_FOUND;
+
+  constructor(id: UserId) {
+    super(`User with id ${id.toString()} was not found`);
   }
 }
