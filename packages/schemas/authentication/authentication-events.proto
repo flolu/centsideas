@@ -27,11 +27,11 @@ message AuthenticationEventData {
   }
 }
 
-// NOW wtf?
 message SignInRequestedData {
-  oneof data {
-    string googleUserId = 1;
-  }
+  string sessionId = 1;
+  string method = 2;
+  string email = 3;
+  string requestedAt = 4;
 }
 
 message SignInRequested {

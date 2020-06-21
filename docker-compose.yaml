@@ -1,7 +1,30 @@
 # FIXME research integration testing (maybe with docker-compose or microk8s)
 
-version: '3'
+version: "3"
 services:
+  zookeeper:
+    image: zookeeper
+    ports:
+      - 2181:2181
+  kafka:
+    image: confluentinc/cp-kafka
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+
+  mongo-database:
+    container_name: mongo-database
+    image: mongo:4
+    logging:
+      driver: none
+    ports:
+      - 27017:27017
+
   gateway:
     container_name: gateway
     image: node:lts-alpine
@@ -29,8 +52,6 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/idea --colors
-    depends_on:
-      - mongo-database
   idea-read:
     container_name: idea-read
     image: node:lts-alpine
@@ -43,9 +64,6 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/idea-read --colors
-    depends_on:
-      - idea
-      - mongo-database
 
   authentication:
     container_name: authentication
@@ -59,8 +77,6 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/authentication --colors
-    depends_on:
-      - mongo-database
 
   user:
     container_name: user
@@ -74,8 +90,6 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/user --colors
-    depends_on:
-      - mongo-database
   user-read:
     container_name: user-read
     image: node:lts-alpine
@@ -88,8 +102,6 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/user-read --colors
-    depends_on:
-      - mongo-database
 
   mailing:
     container_name: mailing
@@ -116,12 +128,3 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/admin --colors
-
-  # TODO move
-  mongo-database:
-    container_name: mongo-database
-    image: mongo:4
-    logging:
-      driver: none
-    ports:
-      - 27017:27017
