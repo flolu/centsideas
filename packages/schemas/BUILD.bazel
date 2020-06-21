@@ -29,6 +29,7 @@ ts_library(
     deps = [
         "//packages/enums",
         "//packages/models",
+        "//packages/types",
         "@npm//@grpc/grpc-js",
         "@npm//@grpc/proto-loader",
         "@npm//@types/async-retry",

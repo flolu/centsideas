@@ -1,22 +1,19 @@
 import {PersistedEvent} from '@centsideas/models';
-
-export function extractKeyFromEventName(eventName: string) {
-  return eventName.substring(eventName.indexOf('.') + 1, eventName.length);
-}
+import {EventName} from '@centsideas/types';
 
 export function serializeEvent(event: PersistedEvent): PersistedEvent {
   const data = event.data;
+  const eventName = EventName.fromString(event.name);
   return {
     ...event,
-    data: {
-      [extractKeyFromEventName(event.name)]: data,
-    },
+    data: {[eventName.name]: data},
   };
 }
 
 export function deserializeEvent(event: PersistedEvent): PersistedEvent {
+  const eventName = EventName.fromString(event.name);
   return {
     ...event,
-    data: (event.data as any)[extractKeyFromEventName(event.name)],
+    data: (event.data as any)[eventName.name],
   };
 }

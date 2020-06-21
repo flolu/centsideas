@@ -3,6 +3,7 @@ import * as protobuf from 'protobufjs';
 
 import {PersistedEvent} from '@centsideas/models';
 import {EventTopics} from '@centsideas/enums';
+import {EventName} from '@centsideas/types';
 
 import {SchemaMessage} from './schema-message';
 import {IdeaEventMessage} from './idea';
@@ -16,10 +17,6 @@ topicMessageMap.set(EventTopics.Authentication, AuthenticationEventMessage);
 topicMessageMap.set(EventTopics.User, UserEventMessage);
 topicMessageMap.set(EventTopics.PrivateUser, PrivateUserEventMessage);
 
-function extractKeyFromEventName(eventName: string) {
-  return eventName.substring(eventName.lastIndexOf('.') + 1, eventName.length);
-}
-
 export function serializeEventMessage(event: PersistedEvent, topic: EventTopics) {
   const messageData = topicMessageMap.get(topic);
   if (!messageData)
@@ -27,13 +24,10 @@ export function serializeEventMessage(event: PersistedEvent, topic: EventTopics)
       `Please register message data for topic ${topic} in packages/schemasa/event-message-serialization.ts!`,
     );
 
+  const eventName = EventName.fromString(event.name);
   const root = protobuf.loadSync(path.join(__dirname, messageData.package, messageData.proto));
   const Message = root.lookupType(messageData.name);
-  const extractedKey = extractKeyFromEventName(event.name);
-  const message = Message.create({
-    ...event,
-    data: {[extractedKey]: event.data},
-  });
+  const message = Message.create({...event, data: {[eventName.name]: event.data}});
 
   return Message.encode(message).finish() as Buffer;
 }
@@ -45,28 +39,22 @@ eventMessageMap.set('authentication', AuthenticationEventMessage);
 eventMessageMap.set('user', UserEventMessage);
 eventMessageMap.set('privateUser', PrivateUserEventMessage);
 
-export function deserializeEventMessage(buffer: Buffer, eventName: string): PersistedEvent {
-  const eventType = eventName.split('.')[0];
-  if (!eventType)
-    throw new Error(
-      `Unknown event message: ${eventName}. Please name events like this: "aggregate.someEvent".`,
-    );
-
-  const messageData = eventMessageMap.get(eventType);
+export function deserializeEventMessage(buffer: Buffer, event: EventName): PersistedEvent {
+  const messageData = eventMessageMap.get(event.getTopic());
   if (!messageData)
     throw new Error(
-      `Please register message data for event message type ${eventType} inside packages/schemasa/event-message-serialization.ts!`,
+      `Please register message data for topic ${event.getTopic()} inside event-message-serialization.ts!`,
     );
 
   const root = protobuf.loadSync(path.join(__dirname, messageData.package, messageData.proto));
   const Message = root.lookupType(messageData.name);
 
   const decoded: PersistedEvent = Object(Message.decode(buffer));
-  const extractedKey = extractKeyFromEventName(decoded.name);
-  const data = (decoded.data as any)[extractedKey];
+  const eventName = EventName.fromString(decoded.name);
+  const data = (decoded.data as any)[eventName.name];
   if (data === undefined)
     throw new Error(
-      `event name ${decoded.name} is likely wrong! Please double check implementation!`,
+      `event name ${eventName.name} is likely wrong! Please double check implementation!`,
     );
 
   return {...decoded, data};

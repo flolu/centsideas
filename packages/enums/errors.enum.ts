@@ -9,6 +9,7 @@ export enum GenericErrorNames {
 export enum EventSourcingErrorNames {
   OptimisticConcurrencyIssue = 'eventsourcing.optimisticConcurrency',
   ReplayVersionMismatch = 'eventsourcing.replayVersionMismatch',
+  InvalidEventName = 'eventsourcing.invalidEventName',
 }
 
 export enum IdeaErrorNames {

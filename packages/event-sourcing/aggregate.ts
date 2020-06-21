@@ -1,5 +1,6 @@
 import {Id} from '@centsideas/types';
 import {PersistedEvent} from '@centsideas/models';
+import {EventName} from '@centsideas/types/event-name';
 
 import {StreamVersion} from './stream-version';
 import {StreamEvents} from './stream-event';
@@ -62,7 +63,7 @@ export abstract class Aggregate<SerializedState = object> {
      * The event name metadata is set by the @DomainEvent decorator
      * on application start for each event class
      */
-    const eventName = Reflect.getMetadata(EVENT_NAME_METADATA, event);
+    const eventName = EventName.fromString(Reflect.getMetadata(EVENT_NAME_METADATA, event));
     /**
      * Get the method name of the event handler method
      * based on the event's name from @param this class instance
@@ -70,7 +71,7 @@ export abstract class Aggregate<SerializedState = object> {
      * This metadata is set by the @Apply decorator from of the
      * handler method
      */
-    const methodName = Reflect.getMetadata(eventName, this);
+    const methodName = Reflect.getMetadata(eventName.toString(), this);
     if (methodName) (this as any)[methodName](event);
 
     if (inReplay) this.persistedVersion.next();

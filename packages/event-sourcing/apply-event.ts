@@ -1,3 +1,5 @@
+import {EventName} from '@centsideas/types/event-name';
+
 import {DomainEventInstance, EVENT_NAME_METADATA} from './domain-event';
 import {Aggregate} from './aggregate';
 
@@ -17,7 +19,9 @@ export const Apply = (Event: DomainEventInstance<any>) => {
      * Get the event's name from the metadata saved on the
      * class of the event
      */
-    const eventName = Reflect.getMetadata(EVENT_NAME_METADATA, Event.prototype);
+    const eventName = EventName.fromString(
+      Reflect.getMetadata(EVENT_NAME_METADATA, Event.prototype),
+    );
     /**
      * Save the @param propertyKey of the handler method
      * on the @param target class and associate it with the
@@ -26,6 +30,6 @@ export const Apply = (Event: DomainEventInstance<any>) => {
      * This metadata is used in the @method apply of the
      * aggragate base class
      */
-    Reflect.defineMetadata(eventName, propertyKey, target);
+    Reflect.defineMetadata(eventName.toString(), propertyKey, target);
   };
 };

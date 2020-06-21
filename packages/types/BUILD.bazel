@@ -29,4 +29,7 @@ ts_jest(
     srcs = glob(include = ["**/*.spec.ts"]),
     test_lib = "types",
     tsconfig = "//:tsconfig.json",
+    deps = [
+        "@npm//reflect-metadata",
+    ],
 )

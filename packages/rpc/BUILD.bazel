@@ -13,6 +13,7 @@ ts_library(
         "//packages/enums",
         "//packages/models",
         "//packages/schemas",
+        "//packages/types",
         "//packages/utils",
         "@npm//@grpc/grpc-js",
         "@npm//@grpc/proto-loader",

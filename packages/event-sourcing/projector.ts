@@ -2,6 +2,7 @@ import {inject} from 'inversify';
 
 import {Logger} from '@centsideas/utils';
 import {PersistedEvent} from '@centsideas/models';
+import {EventName} from '@centsideas/types/event-name';
 
 export interface IProjector {
   getBookmark(): Promise<number>;
@@ -66,7 +67,8 @@ export abstract class Projector implements IProjector {
  * The method, which is decorated will be called to handle
  * the projection of the event with the specified @param eventName
  */
-export const EventProjector = (eventName: string) => {
+export const EventProjector = (eventNameString: string) => {
+  const eventName = EventName.fromString(eventNameString);
   return (target: any, propertyKey: string) => {
     if (!(target instanceof Projector))
       throw new Error(
@@ -81,6 +83,6 @@ export const EventProjector = (eventName: string) => {
      * This information is used in the @method handleEvent inside
      * the projectors
      */
-    Reflect.defineMetadata(eventName, propertyKey, target);
+    Reflect.defineMetadata(eventName.toString(), propertyKey, target);
   };
 };
