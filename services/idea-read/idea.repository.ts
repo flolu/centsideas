@@ -16,8 +16,9 @@ export class IdeaRepository {
 
   constructor(private config: IdeaReadConfig) {}
 
+  // TODO user classes like UserId and IdeaId on all read sides, too
   async getById(id: string, userId?: string) {
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     const idea = await collection.findOne({id});
     if (!idea) throw new Errors.IdeaNotFound(id);
     if (!idea.publishedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
@@ -26,7 +27,7 @@ export class IdeaRepository {
   }
 
   async getAll() {
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     const result = await collection.find({
       publishedAt: {$exists: true, $ne: ''},
       deletedAt: '',
@@ -36,13 +37,13 @@ export class IdeaRepository {
 
   // FIXME consider refreshing projector with newest events before returning result
   async getUnpublished(userId: string) {
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     const found = await collection.findOne({userId, publishedAt: '', deletedAt: ''});
     if (!found) throw new Errors.IdeaNotFound('');
     return found;
   }
 
-  private async ideaCollection() {
+  private async collection() {
     const db = await this.db();
     return db.collection<IdeaModels.IdeaModel>(this.config.get('idea-read.database.collection'));
   }

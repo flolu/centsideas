@@ -17,15 +17,16 @@ export enum AuthenticationEventNames {
   RefreshTokenRevoked = 'authentication.session.refreshTokenRevoked',
 }
 
+// TODO refactor to namespace.aggregate.eventName (all event names)
 export enum PrivateUserEventNames {
-  Created = 'user.private.created',
-  EmailChangeRequested = 'user.private.emailChangeRequested',
-  EmailChangeConfirmed = 'user.private.emailChangeConfirmed',
-  Deleted = 'user.private.deleted',
+  Created = 'privateUser.created',
+  EmailChangeRequested = 'privateUser.emailChangeRequested',
+  EmailChangeConfirmed = 'privateUser.emailChangeConfirmed',
+  Deleted = 'privateUser.deleted',
 }
 
 export enum UserEventNames {
-  Created = 'user.creatd',
+  Created = 'user.created',
   Renamed = 'user.renamed',
   DeletionRequested = 'user.deletionRequested',
   DeletionConfirmed = 'user.deletionConfirmed',

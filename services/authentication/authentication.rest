@@ -1,7 +1,7 @@
 @endpoint=auth
 @sessionId = XXX
-@email = moralip777@bewedfv.com
-@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIxY2U0NmMyYy03MGVmLTQ5OTctODljYy1kYjJjMjYzNTQ4ZjUiLCJlbWFpbCI6Im1vcmFsaXA3NzdAYmV3ZWRmdi5jb20iLCJpYXQiOjE1OTIzMDAwMDEsImV4cCI6MTU5MjMwNzIwMX0.r61q98f5-UVwqYWg7OdomoDcJlSWay7xrTXaZtR_PQw
+@email = citiso7227@royandk.com
+@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIyMjIwNjQ5MS0xMjdjLTQ4M2YtYTRiZC04NTU5YzM5N2M1ZmEiLCJlbWFpbCI6ImNpdGlzbzcyMjdAcm95YW5kay5jb20iLCJpYXQiOjE1OTI3MzAxMTcsImV4cCI6MTU5MjczNzMxN30.yoSfJE948uINVjxfV10uiSC2_QyjN-B_3l6ivOPPiNw
 @googleSignInCode = XXX
 
 ###

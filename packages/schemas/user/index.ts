@@ -19,4 +19,11 @@ export const PrivateUserEventMessage: SchemaMessage = {
   proto: 'user-events.proto',
 };
 
+export const UserReadService: SchemaService = {
+  proto: 'user-read.proto',
+  package: 'user',
+  service: 'UserRead',
+};
+
 export * as UserCommands from './user-commands.schema';
+export * as UserReadQueries from './user-read.schema';

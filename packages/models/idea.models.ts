@@ -6,6 +6,7 @@ export interface IdeaModel {
   tags: string[];
   createdAt: string;
   publishedAt: string;
+  // TODO consider strin | undefined  (also would need to be updated in idea.projector)
   deletedAt: string;
   lastEventVersion: number;
   updatedAt: string;

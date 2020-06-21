@@ -43,6 +43,7 @@ export class UserService {
     await this.storeAll(user, privateUser);
   }
 
+  // TODO check if username is avaialble
   async rename(id: string, newUsername: string) {
     const userId = UserId.fromString(id);
     const user = await this.build(userId);
@@ -68,6 +69,7 @@ export class UserService {
     ]);
     const timestamp = Timestamp.now();
     privateUser.delete(token.userId, timestamp);
+    // TODO remove personal data from private user events
     user.confirmDeletion(token.userId, timestamp);
     await this.storeAll(user, privateUser);
   }
@@ -84,12 +86,7 @@ export class UserService {
       tokenString,
       this.secretsConfig.get('secrets.tokens.change_email'),
     );
-    const [user, privateUser] = await Promise.all([
-      this.build(token.userId),
-      this.buildPrivate(token.userId),
-    ]);
-    // TODO remove personal data from private user events
-    user.confirmDeletion(token.userId, Timestamp.now());
+    const privateUser = await this.buildPrivate(token.userId);
     privateUser.confirmEmailChange(token.userId);
     await this.storePrivate(privateUser);
   }

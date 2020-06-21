@@ -131,7 +131,7 @@ export class Session extends Aggregate<SerializedSession> {
 
   @Apply(SignInConfirmed)
   protected signInConfirmed(event: SignInConfirmed) {
-    this.isSignUpSession = event.isSignUpSession;
+    this.isSignUpSession = event.isSignUp;
     this.userId = event.userId;
     this.signInConfirmedAt = event.confirmedAt;
   }

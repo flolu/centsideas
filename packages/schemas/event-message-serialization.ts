@@ -9,7 +9,7 @@ import {IdeaEventMessage} from './idea';
 import {AuthenticationEventMessage} from './authentication';
 import {UserEventMessage, PrivateUserEventMessage} from './user';
 
-// FIXME a better solution would be a appriciated! (maybe via decorator?!)
+// TODO a better solution would be a appriciated! (maybe via decorator?!)
 const topicMessageMap = new Map<EventTopics, SchemaMessage>();
 topicMessageMap.set(EventTopics.Idea, IdeaEventMessage);
 topicMessageMap.set(EventTopics.Authentication, AuthenticationEventMessage);
@@ -29,15 +29,16 @@ export function serializeEventMessage(event: PersistedEvent, topic: EventTopics)
 
   const root = protobuf.loadSync(path.join(__dirname, messageData.package, messageData.proto));
   const Message = root.lookupType(messageData.name);
+  const extractedKey = extractKeyFromEventName(event.name);
   const message = Message.create({
     ...event,
-    data: {[extractKeyFromEventName(event.name)]: event.data},
+    data: {[extractedKey]: event.data},
   });
 
   return Message.encode(message).finish() as Buffer;
 }
 
-// FIXME a better solution would be a appriciated! (maybe via decorator?!)
+// TODO a better solution would be a appriciated! (maybe via decorator?!)
 const eventMessageMap = new Map<string, SchemaMessage>();
 eventMessageMap.set('idea', IdeaEventMessage);
 eventMessageMap.set('authentication', AuthenticationEventMessage);
@@ -61,5 +62,12 @@ export function deserializeEventMessage(buffer: Buffer, eventName: string): Pers
   const Message = root.lookupType(messageData.name);
 
   const decoded: PersistedEvent = Object(Message.decode(buffer));
-  return {...decoded, data: (decoded.data as any)[extractKeyFromEventName(decoded.name)]};
+  const extractedKey = extractKeyFromEventName(decoded.name);
+  const data = (decoded.data as any)[extractedKey];
+  if (data === undefined)
+    throw new Error(
+      `event name ${decoded.name} is likely wrong! Please double check implementation!`,
+    );
+
+  return {...decoded, data};
 }

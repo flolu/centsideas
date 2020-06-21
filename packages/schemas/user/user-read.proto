@@ -1,0 +1,44 @@
+import "google/protobuf/empty.proto";
+
+syntax = "proto3";
+
+package user;
+
+service UserRead {
+  rpc getMe(GetMe) returns (FullUser);
+  rpc getById(GetById) returns (User);
+  rpc getAll(google.protobuf.Empty) returns (Users);
+}
+
+message GetMe {
+  string id = 1;
+}
+
+message GetById {
+  string id = 1;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string createdAt = 3;
+  string updatedAt = 4;
+  string deletedAt = 5;
+  int32 lastEventVersion = 6;
+}
+
+message Users {
+  repeated User users = 1;
+}
+
+message PrivateUser {
+  string id = 1;
+  string email = 2;
+  string pendingEmail = 3;
+  int32 lastEventVersion = 4;
+}
+
+message FullUser {
+  User public = 1;
+  PrivateUser private = 2;
+}

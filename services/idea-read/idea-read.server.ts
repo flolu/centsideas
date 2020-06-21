@@ -23,7 +23,7 @@ export class IdeaReadServer implements IdeaReadQueries.Service {
   }
 
   @RpcMethod(IdeaReadService)
-  async getById({id, userId}: IdeaReadQueries.GetBydId) {
+  getById({id, userId}: IdeaReadQueries.GetBydId) {
     return this.repository.getById(id, userId);
   }
 
@@ -34,7 +34,7 @@ export class IdeaReadServer implements IdeaReadQueries.Service {
   }
 
   @RpcMethod(IdeaReadService)
-  async getUnpublished({userId}: IdeaReadQueries.GetUnpublished) {
+  getUnpublished({userId}: IdeaReadQueries.GetUnpublished) {
     return this.repository.getUnpublished(userId);
   }
 }

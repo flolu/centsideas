@@ -6,7 +6,7 @@ import {Timestamp, UserId, Email} from '@centsideas/types';
 @DomainEvent(AuthenticationEventNames.SignInConfirmed)
 export class SignInConfirmed implements IDomainEvent {
   constructor(
-    public readonly isSignUpSession: boolean,
+    public readonly isSignUp: boolean,
     public readonly userId: UserId,
     public readonly email: Email,
     public readonly confirmedAt: Timestamp,
@@ -14,7 +14,7 @@ export class SignInConfirmed implements IDomainEvent {
 
   serialize(): SessionModels.SignInConfirmedData {
     return {
-      isSignUp: this.isSignUpSession,
+      isSignUp: this.isSignUp,
       userId: this.userId.toString(),
       confirmedAt: this.confirmedAt.toString(),
       email: this.email.toString(),

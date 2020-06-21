@@ -38,7 +38,7 @@ export class IdeaService {
     @inject(MONGO_SNAPSHOT_STORE_FACTORY) private snapshotStoreFactory: MongoSnapshotStoreFactory,
   ) {}
 
-  // FIXME check if user with id actually exists (query user service via adapter)
+  // TODO check if user with id actually exists (query user service via adapter)
   async create(id: IdeaId, userId: string) {
     const user = UserId.fromString(userId);
     const unpublished = await this.ideaReadAdapter.getUnpublishedIdea(user);

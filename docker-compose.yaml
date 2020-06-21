@@ -31,7 +31,6 @@ services:
     command: yarn run ts-node-dev services/idea --colors
     depends_on:
       - mongo-database
-
   idea-read:
     container_name: idea-read
     image: node:lts-alpine
@@ -75,6 +74,20 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/user --colors
+    depends_on:
+      - mongo-database
+  user-read:
+    container_name: user-read
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./services/user-read:/services/user-read
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/user-read --colors
     depends_on:
       - mongo-database
 

@@ -22,10 +22,6 @@ export enum IdeaErrorNames {
   TagTooShort = 'idea.tagTooShort',
   ToManyTags = 'idea.tooManyTags',
   NoPermission = 'idea.noPermission',
-}
-
-// TODO merge with idea error names
-export enum IdeaReadErrorNames {
   NotFound = 'idea.notFound',
 }
 

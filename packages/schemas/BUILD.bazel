@@ -3,6 +3,11 @@ load("@npm_bazel_typescript//:index.bzl", "ts_library")
 package(default_visibility = ["//:__subpackages__"])
 
 filegroup(
+    name = "all_proto",
+    srcs = glob(["**/*.proto"]),
+)
+
+filegroup(
     name = "proto_authentication",
     srcs = glob(["**/authentication/*.proto"]),
 )
@@ -15,11 +20,6 @@ filegroup(
 filegroup(
     name = "proto_user",
     srcs = glob(["**/usera/*.proto"]),
-)
-
-filegroup(
-    name = "all_proto",
-    srcs = glob(["**/*.proto"]),
 )
 
 ts_library(

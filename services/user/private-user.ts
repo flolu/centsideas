@@ -65,6 +65,7 @@ export class PrivateUser extends Aggregate<SerializedPrivateUser> {
   }
 
   private checkGeneralConditions(userId: UserId) {
+    if (this.deletedAt) throw new Errors.UserAlreadyDeleted(this.id, userId);
     if (!this.id.equals(userId)) throw new Errors.NoPermissionToAccessUser(this.id, userId);
   }
 

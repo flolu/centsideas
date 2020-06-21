@@ -1,6 +1,8 @@
 @username = flo
 @endpoint = user
-@newEmail = XXX
+@newEmail = jepames331@lerbhe.com
+@deletionToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJBcVgwRDllZE0iLCJpYXQiOjE1OTI3MzA0ODAsImV4cCI6MTU5Mjc1OTI4MH0.UIsK7b4uPY5uztki2siaoYlhABG1D8lCTAgisjrMnTU
+@changeEmailToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJBcVgwRDllZE0iLCJuZXdFbWFpbCI6ImplcGFtZXMzMzFAbGVyYmhlLmNvbSIsImlhdCI6MTU5MjczMDM3MSwiZXhwIjoxNTkyNzM3NTcxfQ.3tdIjnYSrk9fDeIUwLmff-B8Y93Ll5pw1iKOsq8Q3q4
 
 ###
 
@@ -19,6 +21,9 @@ Authorization: Bearer {{userId}}
 
 DELETE {{apiUrl}}/{{endpoint}}
 Authorization: Bearer {{userId}}
+content-type: application/json
+
+{"token":"{{deletionToken}}"}
 
 ###
 
@@ -27,3 +32,10 @@ content-type: application/json
 Authorization: Bearer {{userId}}
 
 {"email":"{{newEmail}}"}
+
+###
+
+PUT {{apiUrl}}/{{endpoint}}/email
+content-type: application/json
+
+{"token":"{{changeEmailToken}}"}

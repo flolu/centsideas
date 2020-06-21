@@ -54,9 +54,10 @@ export class EventListener {
 
   constructor(private globalConfig: GlobalConfig, private logger: Logger) {}
 
+  // TODO maybe i need sth like this: https://github.com/nestjs/nest/blob/f05786d8c15dfe61004dbc0c73a913c917268429/packages/microservices/client/client-kafka.ts#L118
   listen(topic: string | RegExp, consumerGroup: string): Observable<PersistedEvent> {
     this.logger.info('listen', {topic, consumerGroup});
-    const consumer = this.kafka.consumer({groupId: consumerGroup});
+    const consumer = this.kafka.consumer({groupId: consumerGroup, rebalanceTimeout: 1000});
     return Observable.create(async (observer: Observer<PersistedEvent>) => {
       await consumer.connect();
       this.logger.info('connected to consumer');
@@ -65,7 +66,7 @@ export class EventListener {
       return consumer.run({
         eachMessage: async ({message}) => {
           const eventName = message.headers && message.headers[EVENT_NAME_HEADER];
-          if (!eventName) return;
+          if (!eventName) throw new Error(`got message without event name in the heaer`);
           const des = deserializeEventMessage(message.value, eventName.toString());
           observer.next(des);
         },

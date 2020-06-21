@@ -1,0 +1,15 @@
+@endpoint = user
+@id = IXu3gw9sU
+
+###
+
+GET {{apiUrl}}/{{endpoint}}/me
+Authorization: Bearer {{userId}}
+
+###
+
+GET {{apiUrl}}/{{endpoint}}
+
+###
+
+GET {{apiUrl}}/{{endpoint}}/{{id}}

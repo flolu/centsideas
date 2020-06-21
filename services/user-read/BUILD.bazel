@@ -1,9 +1,6 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
-load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
 load("@centsideas//packages/jest:jest.bzl", "ts_jest")
-load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -19,13 +16,16 @@ ts_library(
         "//packages/enums",
         "//packages/event-sourcing",
         "//packages/models",
+        "//packages/rpc",
         "//packages/schemas",
         "//packages/types",
         "//packages/utils",
-        "@npm//@sendgrid/mail",
+        "@npm//@types/async-retry",
+        "@npm//@types/mongodb",
         "@npm//@types/node",
+        "@npm//async-retry",
         "@npm//inversify",
-        "@npm//reflect-metadata",
+        "@npm//mongodb",
     ],
 )
 
@@ -33,7 +33,7 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
-        "//packages/schemas:proto_idea",
+        "//packages/schemas:proto_user",
     ],
     entry_point = ":index.ts",
 )
@@ -43,30 +43,4 @@ ts_jest(
     srcs = glob(["**/*.spec.ts"]),
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
-)
-
-k8s_deploy(
-    name = "mailing",
-    images = {"mailing:placeholder_name": ":image"},
-    template = ":mailing.yaml",
-)
-
-k8s_objects(
-    name = "k8s",
-    objects = [
-        ":mailing",
-    ],
-)
-
-microk8s_deploy(
-    name = "microk8s_mailing",
-    images = {"mailing:placeholder_name": ":image"},
-    template = ":mailing.yaml",
-)
-
-k8s_objects(
-    name = "microk8s",
-    objects = [
-        ":microk8s_mailing",
-    ],
 )

@@ -50,7 +50,14 @@ export abstract class Projector implements IProjector {
     const projectorMethodName = Reflect.getMetadata(event.name, this);
     if (!projectorMethodName) return;
 
-    await (this as any)[projectorMethodName](event);
+    try {
+      await (this as any)[projectorMethodName](event);
+    } catch (error) {
+      // TODO what to do here?
+      this.logger.warn('error in projector handler');
+      this.logger.error(error);
+      throw new Error(error);
+    }
   }
 }
 
