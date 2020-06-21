@@ -31,11 +31,12 @@ export class EventDispatcher {
       value: serializeEventMessage(event, topic),
       headers: {[EVENT_NAME_HEADER]: event.name},
     }));
+    const result = await this.prodcuer.send({topic, messages});
     this.logger.info(
-      `dispatch events to topic: ${topic}`,
+      `dispatched events to topic: ${topic}`,
       events.map(e => e.name),
     );
-    return this.prodcuer.send({topic, messages});
+    return result;
   }
 
   private async ensureConnection() {
@@ -55,21 +56,23 @@ export class EventListener {
 
   constructor(private globalConfig: GlobalConfig, private logger: Logger) {}
 
-  // TODO maybe i need sth like this: https://github.com/nestjs/nest/blob/f05786d8c15dfe61004dbc0c73a913c917268429/packages/microservices/client/client-kafka.ts#L118
   listen(topic: string | RegExp, consumerGroup: string): Observable<PersistedEvent> {
     this.logger.info('listen', {topic, consumerGroup});
     const consumer = this.kafka.consumer({groupId: consumerGroup, rebalanceTimeout: 1000});
+
     return Observable.create(async (observer: Observer<PersistedEvent>) => {
       await consumer.connect();
       this.logger.info('connected to consumer');
-      await consumer.subscribe({topic});
+      await consumer.subscribe({topic, fromBeginning: false});
       this.logger.info(`subscribed to topic(s): ${topic}`);
+
       return consumer.run({
         eachMessage: async ({message}) => {
           const eventNameHeader = message.headers && message.headers[EVENT_NAME_HEADER];
           if (!eventNameHeader) throw new Error(`got message without event name in the header`);
           const eventName = EventName.fromString(eventNameHeader.toString());
           const deserialized = deserializeEventMessage(message.value, eventName);
+
           observer.next(deserialized);
         },
       });

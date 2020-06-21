@@ -1,0 +1,37 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("@centsideas//packages/jest:jest.bzl", "ts_jest")
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "lib",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//packages/config",
+        "//packages/dependency-injection",
+        "//packages/enums",
+        "//packages/utils",
+        "@npm//@types/node",
+        "@npm//inversify",
+        "@npm//kafkajs",
+        "@npm//reflect-metadata",
+    ],
+)
+
+nodejs_image(
+    name = "image",
+    data = [":lib"],
+    entry_point = ":index.ts",
+)
+
+ts_jest(
+    name = "test",
+    srcs = glob(["**/*.spec.ts"]),
+    test_lib = "lib",
+    tsconfig = "//:tsconfig.json",
+    deps = [],
+)

@@ -23,9 +23,11 @@ message AuthenticationEventData {
     SignedOut signedOut = 3;
     TokensRefreshed tokensRefreshed = 4;
     RefreshTokenRevoked refreshTokenRevoked = 5;
+    GoogleSignInConfirmed googleSignInConfirmed = 6;
   }
 }
 
+// NOW wtf?
 message SignInRequestedData {
   oneof data {
     string googleUserId = 1;
@@ -49,6 +51,16 @@ message SignInConfirmed {
 
 message SignedOut {
   string signedOutAt = 1;
+}
+
+message GoogleSignInConfirmed {
+  string sessionId = 1;
+  string userId = 2;
+  string email = 3;
+  string googleUserId = 4;
+  bool isSignUp = 5;
+  string requestedAt = 6;
+  string confirmedAt = 7;
 }
 
 message TokensRefreshed {}

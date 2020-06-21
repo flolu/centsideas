@@ -1,6 +1,6 @@
 # FIXME research integration testing (maybe with docker-compose or microk8s)
 
-version: "3"
+version: '3'
 services:
   gateway:
     container_name: gateway
@@ -104,6 +104,20 @@ services:
     env_file: .env
     command: yarn run ts-node-dev services/mailing --colors
 
+  admin:
+    container_name: admin
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./services/admin:/services/admin
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: .env
+    command: yarn run ts-node-dev services/admin --colors
+
+  # TODO move
   mongo-database:
     container_name: mongo-database
     image: mongo:4

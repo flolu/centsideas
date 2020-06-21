@@ -1,8 +1,8 @@
 @endpoint=auth
 @sessionId = XXX
-@email = jepames331@lerbhe.com
-@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiI3ZjBmYmFiOC1hMDE1LTRmMGUtYTNlOS0wZGY2ZDgxNTE2YWIiLCJlbWFpbCI6ImplcGFtZXMzMzFAbGVyYmhlLmNvbSIsImlhdCI6MTU5Mjc0MzUzNCwiZXhwIjoxNTkyNzUwNzM0fQ.rsukWZ0cd-avYZnk6DhQQ2ufzTn0pVO42SA1iDc2hHs
-@googleSignInCode = XXX
+@email = lodiyem142@royandk.com
+@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJmMDg5MGU3Yi1iNDI1LTQ0MDgtOTRmZi02MTYzNGMwNzlmYWMiLCJlbWFpbCI6ImxvZGl5ZW0xNDJAcm95YW5kay5jb20iLCJpYXQiOjE1OTI3NjM2MDQsImV4cCI6MTU5Mjc3MDgwNH0.IJtD-XtCXWtUThi07WeKpKKokMhzOCgGV4tElatnhKU
+@googleSignInCode = 4/1AG1GjG66xyPzynZ6lzNnW_TdyTyI2CiwNxBVD-w325MhugTsx5fzFwdOcL735VmV0MGnlrY_xkHmbEBxTNrToM
 
 ###
 
