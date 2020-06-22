@@ -50,7 +50,7 @@ describe('User', () => {
     streamId: id.toString(),
     version,
     name: UserEventNames.DeletionRequested,
-    data: {userId: id.toString(), requestedAt: timestamp.toString()},
+    data: {requestedAt: timestamp.toString()},
     insertedAt: timestamp.toString(),
     sequence: version,
   };
@@ -135,7 +135,7 @@ describe('User', () => {
   it('requests user deletion', () => {
     const user = User.create(id, username, timestamp);
     user.requestDeletion(id, timestamp);
-    expect(user.flushEvents().toEvents()).toContainEqual(new UserDeletionRequested(id, timestamp));
+    expect(user.flushEvents().toEvents()).toContainEqual(new UserDeletionRequested(timestamp));
   });
 
   it('deletes users', () => {

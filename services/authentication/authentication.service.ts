@@ -24,6 +24,7 @@ import {RefreshToken} from './refresh-token';
 import {UserReadAdapter} from './user-read.adapter';
 import {AuthenticationConfig} from './authentication.config';
 import {GoogleApiAdapter} from './google-api.adapter';
+import * as Errors from './session.errors';
 
 @injectable()
 export class AuthenticationService {
@@ -155,6 +156,7 @@ export class AuthenticationService {
     const events: PersistedEvent[] = snapshot
       ? await this.eventStore.getStream(id, snapshot.version)
       : await this.eventStore.getStream(id);
+    if (!events?.length) throw new Errors.SessionNotFound(id);
     return Session.buildFrom(events, snapshot);
   }
 

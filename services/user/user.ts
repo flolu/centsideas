@@ -63,7 +63,7 @@ export class User extends Aggregate<SerializedUser> {
 
   requestDeletion(userId: UserId, requestedAt: Timestamp) {
     this.checkGeneralConditions(userId);
-    this.raise(new UserDeletionRequested(userId, requestedAt));
+    this.raise(new UserDeletionRequested(requestedAt));
   }
 
   confirmDeletion(userId: UserId, deletedAt: Timestamp) {

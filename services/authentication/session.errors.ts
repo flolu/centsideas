@@ -1,5 +1,6 @@
 import {Exception} from '@centsideas/utils';
 import {RpcStatus, AuthenticationErrorNames} from '@centsideas/enums';
+import {SessionId} from '@centsideas/types';
 
 export class SessionAlreadyConfirmed extends Exception {
   code = RpcStatus.FAILED_PRECONDITION;
@@ -34,5 +35,14 @@ export class SessionUnconfirmed extends Exception {
 
   constructor() {
     super(`This session hasn't bee confirmed yet.`);
+  }
+}
+
+export class SessionNotFound extends Exception {
+  name = AuthenticationErrorNames.SessionNotFound;
+  code = RpcStatus.NOT_FOUND;
+
+  constructor(id: SessionId) {
+    super(`Session with id ${id.toString()} was not found`);
   }
 }

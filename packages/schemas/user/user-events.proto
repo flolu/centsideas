@@ -60,7 +60,6 @@ message RenamedEvent {
 
 message DeletionRequestedEvent {
   string requestedAt = 1;
-  string userId = 2;
 }
 
 message DeletionConfirmedEvent {

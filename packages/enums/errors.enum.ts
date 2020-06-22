@@ -31,6 +31,7 @@ export enum AuthenticationErrorNames {
   SessionRevoked = 'authentication.session.sessionRevoked',
   SessionSignedOut = 'authentication.session.sessionSignedOut',
   SessionUnconfirmed = 'authentication.session.sessionUnconfirmed',
+  SessionNotFound = 'authentication.session.notFound',
 }
 
 export enum UserErrorNames {

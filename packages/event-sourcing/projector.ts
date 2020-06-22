@@ -54,7 +54,7 @@ export abstract class Projector implements IProjector {
     try {
       await (this as any)[projectorMethodName](event);
     } catch (error) {
-      // TODO what to do here?
+      // FIXME what to do here?
       this.logger.warn('error in projector handler');
       this.logger.error(error);
       throw new Error(error);

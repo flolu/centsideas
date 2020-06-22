@@ -8,8 +8,6 @@ export interface PrivateUserDeletedData {
 }
 
 export interface EmailChangeRequestedData {
-  // TODO i dont think i need userId here?
-  userId: string;
   newEmail: string;
 }
 
@@ -26,8 +24,6 @@ export interface UserRenamedData {
 }
 
 export interface DeletionRequestedData {
-  // TODO i dont think i need userId here?
-  userId: string;
   requestedAt: string;
 }
 

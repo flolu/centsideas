@@ -103,7 +103,6 @@ export class UserService {
 
   private async build(id: UserId) {
     const events: PersistedEvent[] = await this.eventStore.getStream(id);
-    // TODO same in other *.service.ts
     if (!events?.length) throw new Errors.UserNotFound(id);
     return User.buildFrom(events);
   }

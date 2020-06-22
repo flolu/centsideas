@@ -1,13 +1,12 @@
 export interface IdeaModel {
   id: string;
   userId: string;
-  title: string;
-  description: string;
+  title: string | undefined;
+  description: string | undefined;
   tags: string[];
   createdAt: string;
-  publishedAt: string;
-  // TODO consider strin | undefined  (also would need to be updated in idea.projector)
-  deletedAt: string;
+  publishedAt: string | undefined;
+  deletedAt: string | undefined;
   lastEventVersion: number;
   updatedAt: string;
 }

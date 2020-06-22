@@ -38,7 +38,7 @@ describe('Private User', () => {
     streamId: id.toString(),
     version,
     name: PrivateUserEventNames.EmailChangeRequested,
-    data: {userId: id.toString(), newEmail: otherEmail.toString()},
+    data: {newEmail: otherEmail.toString()},
     insertedAt: timestamp.toString(),
     sequence: version,
   };
@@ -125,7 +125,7 @@ describe('Private User', () => {
     const privateUser = PrivateUser.create(id, email);
     privateUser.requestEmailChange(id, otherEmail);
     expect(privateUser.flushEvents().toEvents()).toContainEqual(
-      new EmailChangeRequested(id, otherEmail),
+      new EmailChangeRequested(otherEmail),
     );
   });
 

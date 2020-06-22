@@ -17,6 +17,7 @@ import {IdeaDescription} from './idea-description';
 import {IdeaTags} from './idea-tags';
 import {IdeaConfig} from './idea.config';
 import {IdeaReadAdapter} from './idea-read.adapter';
+import * as Errors from './idea.errors';
 
 @injectable()
 export class IdeaService {
@@ -88,6 +89,7 @@ export class IdeaService {
     const events: PersistedEvent[] = snapshot
       ? await this.eventStore.getStream(id, snapshot.version)
       : await this.eventStore.getStream(id);
+    if (!events?.length) throw new Errors.IdeaNotFound(id);
     return Idea.buildFrom(events, snapshot);
   }
 

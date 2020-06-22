@@ -3,6 +3,7 @@ import * as http from 'http';
 
 import {RpcServer, RpcServerFactory, RPC_SERVER_FACTORY, RpcMethod} from '@centsideas/rpc';
 import {IdeaReadService, IdeaReadQueries} from '@centsideas/schemas';
+import {IdeaId, UserId} from '@centsideas/types';
 
 import {IdeaRepository} from './idea.repository';
 
@@ -24,7 +25,7 @@ export class IdeaReadServer implements IdeaReadQueries.Service {
 
   @RpcMethod(IdeaReadService)
   getById({id, userId}: IdeaReadQueries.GetBydId) {
-    return this.repository.getById(id, userId);
+    return this.repository.getById(IdeaId.fromString(id), UserId.fromString(userId));
   }
 
   @RpcMethod(IdeaReadService)
@@ -35,6 +36,6 @@ export class IdeaReadServer implements IdeaReadQueries.Service {
 
   @RpcMethod(IdeaReadService)
   getUnpublished({userId}: IdeaReadQueries.GetUnpublished) {
-    return this.repository.getUnpublished(userId);
+    return this.repository.getUnpublished(UserId.fromString(userId));
   }
 }

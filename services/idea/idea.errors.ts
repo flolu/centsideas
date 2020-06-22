@@ -100,3 +100,12 @@ export class NoPermissionToAccessIdea extends Exception {
     });
   }
 }
+
+export class IdeaNotFound extends Exception {
+  name = IdeaErrorNames.NotFound;
+  code = RpcStatus.NOT_FOUND;
+
+  constructor(id: IdeaId) {
+    super(`Idea with id ${id.toString()} was not found`);
+  }
+}

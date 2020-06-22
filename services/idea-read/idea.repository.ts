@@ -6,6 +6,7 @@ import {IdeaModels} from '@centsideas/models';
 
 import * as Errors from './idea-read.errors';
 import {IdeaReadConfig} from './idea-read.config';
+import {UserId, IdeaId} from '@centsideas/types';
 
 @injectable()
 export class IdeaRepository {
@@ -16,30 +17,35 @@ export class IdeaRepository {
 
   constructor(private config: IdeaReadConfig) {}
 
-  // TODO user classes like UserId and IdeaId on all read sides, too
-  async getById(id: string, userId?: string) {
+  async getById(id: IdeaId, user?: UserId) {
     const collection = await this.collection();
-    const idea = await collection.findOne({id});
+    const idea = await collection.findOne({id: id.toString()});
     if (!idea) throw new Errors.IdeaNotFound(id);
-    if (!idea.publishedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
-    if (idea.deletedAt && idea.userId !== userId) throw new Errors.IdeaNotFound(id);
+    if (!idea.publishedAt && user?.equals(UserId.fromString(idea.userId)))
+      throw new Errors.IdeaNotFound(id);
+    if (idea.deletedAt && user?.equals(UserId.fromString(idea.userId)))
+      throw new Errors.IdeaNotFound(id);
     return idea;
   }
 
   async getAll() {
     const collection = await this.collection();
     const result = await collection.find({
-      publishedAt: {$exists: true, $ne: ''},
-      deletedAt: '',
+      publishedAt: {$exists: true, $ne: undefined},
+      deletedAt: undefined,
     });
     return result.toArray();
   }
 
   // FIXME consider refreshing projector with newest events before returning result
-  async getUnpublished(userId: string) {
+  async getUnpublished(user: UserId) {
     const collection = await this.collection();
-    const found = await collection.findOne({userId, publishedAt: '', deletedAt: ''});
-    if (!found) throw new Errors.IdeaNotFound('');
+    const found = await collection.findOne({
+      userId: user.toString(),
+      publishedAt: undefined,
+      deletedAt: undefined,
+    });
+    if (!found) throw new Errors.IdeaNotFound();
     return found;
   }
 
