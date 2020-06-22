@@ -49,8 +49,8 @@ export class UserReadServer implements UserReadQueries.Service {
   }
 
   @RpcMethod(UserReadService)
-  getByEmail({email}: UserReadQueries.GetByEmail) {
-    this.privateUserProjector.replay();
+  async getByEmail({email}: UserReadQueries.GetByEmail) {
+    await this.privateUserProjector.replay();
     return this.privateRepository.getPrivateUserByEmail(Email.fromString(email));
   }
 }

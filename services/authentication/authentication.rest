@@ -2,7 +2,7 @@
 @sessionId = XXX
 @email = lodiyem142@royandk.com
 @emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJmMDg5MGU3Yi1iNDI1LTQ0MDgtOTRmZi02MTYzNGMwNzlmYWMiLCJlbWFpbCI6ImxvZGl5ZW0xNDJAcm95YW5kay5jb20iLCJpYXQiOjE1OTI3NjM2MDQsImV4cCI6MTU5Mjc3MDgwNH0.IJtD-XtCXWtUThi07WeKpKKokMhzOCgGV4tElatnhKU
-@googleSignInCode = 4/1AG1q5LdSr5acvzvXuIRwOtTh_BTwhuLOapKb3bttecyA1wer_auX2NulR7vqtvtgu0mmYZBtA7Ek6NeKvO87Mo
+@googleSignInCode = 4/1AGSpaP1rsm9yvhNS2oQCr6v6Yu0fwNsERrSJQPEbrGfbgvq-4ONJMFeF0qWZ9rHPMNz31fMDPfYcxWxQNNVUTM
 
 ###
 
