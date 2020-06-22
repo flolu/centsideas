@@ -1,5 +1,8 @@
+import {EventTopics} from '@centsideas/enums';
+
 import {SchemaService} from '../schema.service';
 import {SchemaMessage} from '../schema-message';
+import {SerializableMessage} from '../serializable-message';
 
 export const UserCommandService: SchemaService = {
   proto: 'user-commands.proto',
@@ -7,23 +10,25 @@ export const UserCommandService: SchemaService = {
   service: 'UserCommands',
 };
 
-export const UserEventMessage: SchemaMessage = {
-  name: 'UserEvent',
-  package: 'user',
-  proto: 'user-events.proto',
-};
-
-export const PrivateUserEventMessage: SchemaMessage = {
-  name: 'PrivateUserEvent',
-  package: 'user',
-  proto: 'user-events.proto',
-};
-
 export const UserReadService: SchemaService = {
   proto: 'user-read.proto',
   package: 'user',
   service: 'UserRead',
 };
+
+// TODO consider merging
+@SerializableMessage(EventTopics.User)
+export class UserEventMessage extends SchemaMessage {
+  name = 'UserEvent';
+  package = 'user';
+  proto = 'user-events.proto';
+}
+@SerializableMessage(EventTopics.PrivateUser)
+export class PrivateUserEventMessage extends SchemaMessage {
+  name = 'PrivateUserEvent';
+  package = 'user';
+  proto = 'user-events.proto';
+}
 
 export * as UserCommands from './user-commands.schema';
 export * as UserReadQueries from './user-read.schema';

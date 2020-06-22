@@ -1,5 +1,8 @@
+import {EventTopics} from '@centsideas/enums';
+
 import {SchemaService} from '../schema.service';
 import {SchemaMessage} from '../schema-message';
+import {SerializableMessage} from '../serializable-message';
 
 export const AuthenticationCommandsService: SchemaService = {
   proto: 'authentication-commands.proto',
@@ -7,10 +10,11 @@ export const AuthenticationCommandsService: SchemaService = {
   service: 'AuthenticationCommands',
 };
 
-export const AuthenticationEventMessage: SchemaMessage = {
-  name: 'AuthenticationEvent',
-  package: 'authentication',
-  proto: 'authentication-events.proto',
-};
+@SerializableMessage(EventTopics.Authentication)
+export class AuthenticationEventMessage extends SchemaMessage {
+  name = 'AuthenticationEvent';
+  package = 'authentication';
+  proto = 'authentication-events.proto';
+}
 
 export * as AuthenticationCommands from './authentication-commands.schema';

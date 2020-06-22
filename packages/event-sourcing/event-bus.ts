@@ -7,7 +7,7 @@ import {serializeEventMessage, deserializeEventMessage} from '@centsideas/schema
 import {EventTopics} from '@centsideas/enums';
 import {GlobalConfig} from '@centsideas/config';
 import {Logger} from '@centsideas/utils';
-import {EventName} from '@centsideas/types/event-name';
+import {EventName} from '@centsideas/types';
 
 const EVENT_NAME_HEADER = 'eventName';
 
@@ -68,12 +68,16 @@ export class EventListener {
 
       return consumer.run({
         eachMessage: async ({message}) => {
-          const eventNameHeader = message.headers && message.headers[EVENT_NAME_HEADER];
-          if (!eventNameHeader) throw new Error(`got message without event name in the header`);
-          const eventName = EventName.fromString(eventNameHeader.toString());
-          const deserialized = deserializeEventMessage(message.value, eventName);
+          try {
+            const eventNameHeader = message.headers && message.headers[EVENT_NAME_HEADER];
+            if (!eventNameHeader) throw new Error(`got message without event name in the header`);
+            const eventName = EventName.fromString(eventNameHeader.toString());
+            const deserialized = deserializeEventMessage(message.value, eventName);
 
-          observer.next(deserialized);
+            observer.next(deserialized);
+          } catch (error) {
+            this.logger.error(error);
+          }
         },
       });
     });

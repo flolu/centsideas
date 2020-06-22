@@ -1,11 +1,13 @@
 # FIXME research integration testing (maybe with docker-compose or microk8s)
 
-version: "3"
+version: '3'
 services:
   zookeeper:
     image: zookeeper
     ports:
       - 2181:2181
+    logging:
+      driver: none
   kafka:
     image: confluentinc/cp-kafka
     ports:
@@ -14,6 +16,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    logging:
+      driver: none
     depends_on:
       - zookeeper
 

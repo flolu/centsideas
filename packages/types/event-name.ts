@@ -1,5 +1,5 @@
 import {Exception} from '@centsideas/utils';
-import {RpcStatus, EventSourcingErrorNames} from '@centsideas/enums';
+import {RpcStatus, EventSourcingErrorNames, EventTopics} from '@centsideas/enums';
 
 export class EventName {
   private regex = new RegExp(/^[A-Z]+$/i);
@@ -32,7 +32,8 @@ export class EventName {
   }
 
   getTopic() {
-    return this.service || this.aggregate;
+    const topic = this.service || this.aggregate;
+    return `centsideas.events.${topic}` as EventTopics;
   }
 }
 

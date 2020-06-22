@@ -15,7 +15,7 @@ export const EventHandler = (eventNameString: string) => {
     const eventName = EventName.fromString(eventNameString);
     Reflect.defineMetadata(eventName.toString(), propertyKey, target);
 
-    const topic = `centsideas.events.${eventName.getTopic()}`;
+    const topic = eventName.getTopic();
     if (
       !Object.values(EventTopics)
         .map(t => t.toString())

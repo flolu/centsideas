@@ -28,7 +28,7 @@ export class Logger {
       console.log(this.chalk.redBright(error.message));
       if (error.details) console.log(this.chalk.red(`details: ${error.details}`));
       if (error.service) console.log(this.chalk.red(`service: ${error.service}`));
-      console.log(this.chalk.red.dim(error.stack));
+      console.log(this.chalk.red(error.stack));
       console.log(this.chalk.red.bold('\n'));
       console.log(this.chalk.red.bold('\n'));
     }

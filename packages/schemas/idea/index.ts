@@ -1,5 +1,8 @@
+import {EventTopics} from '@centsideas/enums';
+
 import {SchemaService} from '../schema.service';
 import {SchemaMessage} from '../schema-message';
+import {SerializableMessage} from '../serializable-message';
 
 export const IdeaCommandsService: SchemaService = {
   proto: 'idea-commands.proto',
@@ -13,11 +16,12 @@ export const IdeaReadService: SchemaService = {
   service: 'IdeaRead',
 };
 
-export const IdeaEventMessage: SchemaMessage = {
-  name: 'IdeaEvent',
-  package: 'idea',
-  proto: 'idea-events.proto',
-};
+@SerializableMessage(EventTopics.Idea)
+export class IdeaEventMessage extends SchemaMessage {
+  name = 'IdeaEvent';
+  package = 'idea';
+  proto = 'idea-events.proto';
+}
 
 export * as IdeaCommands from './idea-commands.schema';
 export * as IdeaReadQueries from './idea-read.schema';
