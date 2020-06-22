@@ -6,7 +6,14 @@ import 'reflect-metadata';
 import {DI} from '@centsideas/dependency-injection';
 import {Logger} from '@centsideas/utils';
 import {GlobalConfig, SecretsConfig} from '@centsideas/config';
-import {RpcServer, RPC_SERVER_FACTORY, rpcServerFactory} from '@centsideas/rpc';
+import {
+  RpcServer,
+  RPC_SERVER_FACTORY,
+  rpcServerFactory,
+  RpcClient,
+  RPC_CLIENT_FACTORY,
+  rpcClientFactory,
+} from '@centsideas/rpc';
 import {
   EventDispatcher,
   MongoEventStore,
@@ -32,8 +39,9 @@ DI.registerProviders(
 DI.registerSingletons(AuthenticationConfig);
 
 DI.registerSingletons(Logger, GlobalConfig, SecretsConfig);
-DI.registerProviders(RpcServer);
+DI.registerProviders(RpcServer, RpcClient);
 DI.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
+DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
 DI.registerProviders(EventDispatcher, MongoEventStore, MongoSnapshotStore);
 DI.registerFactory(MONGO_EVENT_STORE_FACTORY, mongoEventStoreFactory);
 DI.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, mongoSnapshotStoreFactory);

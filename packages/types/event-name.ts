@@ -32,8 +32,7 @@ export class EventName {
   }
 
   getTopic() {
-    const topic = this.service || this.aggregate;
-    return `centsideas.events.${topic}` as EventTopics;
+    return `centsideas.events.${this.aggregate}` as EventTopics;
   }
 }
 

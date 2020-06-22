@@ -3,7 +3,7 @@ import * as http from 'http';
 
 import {RPC_SERVER_FACTORY, RpcServerFactory, RpcServer, RpcMethod} from '@centsideas/rpc';
 import {UserReadService, UserReadQueries} from '@centsideas/schemas';
-import {UserId} from '@centsideas/types';
+import {UserId, Email} from '@centsideas/types';
 
 import {PrivateUserRepository} from './private-user.repository';
 import {UserRepository} from './user.repository';
@@ -42,5 +42,11 @@ export class UserReadServer implements UserReadQueries.Service {
     const privateUser = await this.privateRepository.getPrivateUserById(userId);
     const user = await this.repository.getById(userId);
     return {private: privateUser, public: user};
+  }
+
+  @RpcMethod(UserReadService)
+  getByEmail({email}: UserReadQueries.GetByEmail) {
+    // NOW sync projector before fetch
+    return this.privateRepository.getPrivateUserByEmail(Email.fromString(email));
   }
 }

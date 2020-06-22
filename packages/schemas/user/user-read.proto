@@ -7,7 +7,8 @@ package user;
 service UserRead {
   rpc getMe(GetMe) returns (FullUser);
   rpc getById(GetById) returns (User);
-  rpc getAll(google.protobuf.Empty) returns (Users);
+  rpc getByEmail(GeyByEmail) returns (User);
+  rpc getAll(google.protobuf.Empty) returns (PrivateUser);
 }
 
 message GetMe {
@@ -16,6 +17,10 @@ message GetMe {
 
 message GetById {
   string id = 1;
+}
+
+message GeyByEmail {
+  string email = 1;
 }
 
 message User {

@@ -10,7 +10,7 @@ export const AuthenticationCommandsService: SchemaService = {
   service: 'AuthenticationCommands',
 };
 
-@SerializableMessage(EventTopics.Authentication)
+@SerializableMessage(EventTopics.Session)
 export class AuthenticationEventMessage extends SchemaMessage {
   name = 'AuthenticationEvent';
   package = 'authentication';

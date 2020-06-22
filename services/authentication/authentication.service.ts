@@ -38,7 +38,7 @@ export class AuthenticationService {
   private eventStore = this.eventStoreFactory({
     url: this.databaseUrl,
     name: this.databaseName,
-    topic: EventTopics.Authentication,
+    topic: EventTopics.Session,
   });
   private snapshotStore = this.snapshotStoreFactory({
     url: this.databaseUrl,
@@ -65,7 +65,7 @@ export class AuthenticationService {
     const {sessionId, email} = EmailSignInToken.fromString(signInToken, this.signInTokenSecret);
     const session = await this.build(sessionId);
     const existingUser = await this.userReadAdapter.getUserByEmail(email);
-    const userId = (existingUser?.id as UserId) || UserId.generate();
+    const userId = existingUser ? UserId.fromString(existingUser.id) : UserId.generate();
     session.confirmEmailSignIn(userId, !existingUser, email, Timestamp.now());
     await this.store(session);
 
@@ -89,7 +89,7 @@ export class AuthenticationService {
     const {email} = await this.googleApiAdapter.getUserInfo(googleAccessToken);
 
     const existingUser = await this.userReadAdapter.getUserByEmail(email);
-    const userId = (existingUser?.id as UserId) || UserId.generate();
+    const userId = existingUser ? UserId.fromString(existingUser.id) : UserId.generate();
 
     const sessionId = SessionId.generate();
     const session = Session.googleSignIn(

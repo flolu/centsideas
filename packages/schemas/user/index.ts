@@ -16,13 +16,13 @@ export const UserReadService: SchemaService = {
   service: 'UserRead',
 };
 
-// FIXME consider merging
 @SerializableMessage(EventTopics.User)
 export class UserEventMessage extends SchemaMessage {
   name = 'UserEvent';
   package = 'user';
   proto = 'user-events.proto';
 }
+
 @SerializableMessage(EventTopics.PrivateUser)
 export class PrivateUserEventMessage extends SchemaMessage {
   name = 'PrivateUserEvent';

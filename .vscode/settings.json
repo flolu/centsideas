@@ -9,5 +9,6 @@
     "microk8s": {
       "apiUrl": "http://api.localhost"
     }
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

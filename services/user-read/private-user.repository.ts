@@ -2,7 +2,7 @@ import {injectable} from 'inversify';
 import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
-import {UserId} from '@centsideas/types';
+import {UserId, Email} from '@centsideas/types';
 import {UserModels} from '@centsideas/models';
 
 import {UserReadConfig} from './user-read.config';
@@ -21,6 +21,13 @@ export class PrivateUserRepository {
     const collection = await this.collection();
     const privateUser = await collection.findOne({id: id.toString()});
     if (!privateUser) throw new Errors.UserNotFound(id);
+    return privateUser;
+  }
+
+  async getPrivateUserByEmail(email: Email) {
+    const collection = await this.collection();
+    const privateUser = await collection.findOne({email: email.toString()});
+    if (!privateUser) throw new Errors.UserNotFound();
     return privateUser;
   }
 

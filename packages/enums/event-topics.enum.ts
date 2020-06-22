@@ -1,6 +1,6 @@
 export enum EventTopics {
   Idea = 'centsideas.events.idea',
-  Authentication = 'centsideas.events.authentication',
+  Session = 'centsideas.events.session',
   User = 'centsideas.events.user',
   PrivateUser = 'centsideas.events.privateUser',
 }
