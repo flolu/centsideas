@@ -44,7 +44,7 @@ export class GoogleApiAdapter {
     const userInfoResponse = await axios.get(`https://www.googleapis.com/oauth2/v2/userinfo`, {
       headers: {Authorization: `Bearer ${accessToken}`},
     });
-    const {id, email} = userInfoResponse.data;
-    return {id, email};
+    const {email} = userInfoResponse.data;
+    return {email};
   }
 }

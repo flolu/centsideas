@@ -70,6 +70,7 @@ export class EventListener {
         eachMessage: async ({message}) => {
           try {
             const eventNameHeader = message.headers && message.headers[EVENT_NAME_HEADER];
+            this.logger.info('consuming message', eventNameHeader?.toString());
             if (!eventNameHeader) throw new Error(`got message without event name in the header`);
             const eventName = EventName.fromString(eventNameHeader.toString());
             const deserialized = deserializeEventMessage(message.value, eventName);

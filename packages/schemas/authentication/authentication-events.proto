@@ -57,10 +57,9 @@ message GoogleSignInConfirmed {
   string sessionId = 1;
   string userId = 2;
   string email = 3;
-  string googleUserId = 4;
-  bool isSignUp = 5;
-  string requestedAt = 6;
-  string confirmedAt = 7;
+  bool isSignUp = 4;
+  string requestedAt = 5;
+  string confirmedAt = 6;
 }
 
 message TokensRefreshed {}

@@ -86,10 +86,9 @@ export class AuthenticationService {
     const requestedAt = Timestamp.now();
 
     const googleAccessToken = await this.googleApiAdapter.getAccessToken(code);
-    const {id, email} = await this.googleApiAdapter.getUserInfo(googleAccessToken);
-    // FIXME consider asking the user to change email if users' email doesnt match gmail
+    const {email} = await this.googleApiAdapter.getUserInfo(googleAccessToken);
 
-    const existingUser = await this.userReadAdapter.getUserByGoogleId(id);
+    const existingUser = await this.userReadAdapter.getUserByEmail(email);
     const userId = (existingUser?.id as UserId) || UserId.generate();
 
     const sessionId = SessionId.generate();
@@ -97,7 +96,6 @@ export class AuthenticationService {
       sessionId,
       userId,
       email,
-      id,
       !existingUser,
       requestedAt,
       Timestamp.now(),

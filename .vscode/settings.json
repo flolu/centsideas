@@ -1,7 +1,7 @@
 {
   "rest-client.environmentVariables": {
     "$shared": {
-      "userId": "MftWZR9-0"
+      "userId": "JrSyVpXPq"
     },
     "dev": {
       "apiUrl": "http://localhost:3000"

@@ -76,22 +76,13 @@ export class Session extends Aggregate<SerializedSession> {
     sessionId: SessionId,
     userId: UserId,
     email: Email,
-    googleUserId: string,
     isSignUp: boolean,
     requestedAt: Timestamp,
     confirmedAt: Timestamp,
   ) {
     const session = new Session();
     session.raise(
-      new GoogleSignInConfirmed(
-        sessionId,
-        userId,
-        email,
-        googleUserId,
-        isSignUp,
-        requestedAt,
-        confirmedAt,
-      ),
+      new GoogleSignInConfirmed(sessionId, userId, email, isSignUp, requestedAt, confirmedAt),
     );
     return session;
   }

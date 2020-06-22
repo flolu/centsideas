@@ -16,7 +16,7 @@ export const UserReadService: SchemaService = {
   service: 'UserRead',
 };
 
-// TODO consider merging
+// FIXME consider merging
 @SerializableMessage(EventTopics.User)
 export class UserEventMessage extends SchemaMessage {
   name = 'UserEvent';

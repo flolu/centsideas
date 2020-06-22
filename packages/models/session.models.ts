@@ -16,7 +16,6 @@ export interface GoogleSignInConfirmedData {
   sessionId: string;
   userId: string;
   email: string;
-  googleUserId: string;
   isSignUp: boolean;
   requestedAt: string;
   confirmedAt: string;
