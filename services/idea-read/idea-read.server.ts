@@ -6,6 +6,7 @@ import {IdeaReadService, IdeaReadQueries} from '@centsideas/schemas';
 import {IdeaId, UserId} from '@centsideas/types';
 
 import {IdeaRepository} from './idea.repository';
+import {IdeaProjector} from './idea.projector';
 
 @injectable()
 export class IdeaReadServer implements IdeaReadQueries.Service {
@@ -16,6 +17,7 @@ export class IdeaReadServer implements IdeaReadQueries.Service {
 
   constructor(
     private repository: IdeaRepository,
+    private _projector: IdeaProjector,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     http

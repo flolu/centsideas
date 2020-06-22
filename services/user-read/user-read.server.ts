@@ -7,6 +7,8 @@ import {UserId, Email} from '@centsideas/types';
 
 import {PrivateUserRepository} from './private-user.repository';
 import {UserRepository} from './user.repository';
+import {UserProjector} from './user.projector';
+import {PrivateUserProjector} from './private-user.projector';
 
 @injectable()
 export class UserReadServer implements UserReadQueries.Service {
@@ -18,6 +20,8 @@ export class UserReadServer implements UserReadQueries.Service {
   constructor(
     private repository: UserRepository,
     private privateRepository: PrivateUserRepository,
+    private _userProjector: UserProjector,
+    private privateUserProjector: PrivateUserProjector,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     http
@@ -46,7 +50,7 @@ export class UserReadServer implements UserReadQueries.Service {
 
   @RpcMethod(UserReadService)
   getByEmail({email}: UserReadQueries.GetByEmail) {
-    // NOW sync projector before fetch
+    this.privateUserProjector.replay();
     return this.privateRepository.getPrivateUserByEmail(Email.fromString(email));
   }
 }

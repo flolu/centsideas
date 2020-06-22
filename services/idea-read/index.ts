@@ -28,4 +28,3 @@ DI.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
 
 DI.bootstrap(IdeaReadServer);
-DI.bootstrap(IdeaProjector);
