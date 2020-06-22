@@ -28,8 +28,9 @@ import {IdeaServer} from './idea.server';
 import {IdeaService} from './idea.service';
 import {IdeaConfig} from './idea.config';
 import {IdeaReadAdapter} from './idea-read.adapter';
+import {UserReadAdapter} from './user-read.adapter';
 
-DI.registerProviders(IdeaServer, IdeaService, IdeaReadAdapter);
+DI.registerProviders(IdeaServer, IdeaService, IdeaReadAdapter, UserReadAdapter);
 DI.registerSingletons(IdeaConfig);
 
 DI.registerSingletons(Logger, GlobalConfig);

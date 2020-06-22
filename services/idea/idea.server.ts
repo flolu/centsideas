@@ -28,8 +28,7 @@ export class IdeaServer implements IdeaCommands.Service {
 
   @RpcMethod(IdeaCommandsService)
   async create({userId}: IdeaCommands.CreateIdea) {
-    const id = IdeaId.generate();
-    const upsertedId = await this.service.create(id, userId);
+    const upsertedId = await this.service.create(IdeaId.generate(), userId);
     return {id: upsertedId};
   }
 

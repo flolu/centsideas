@@ -36,6 +36,7 @@ nodejs_image(
     data = [
         ":lib",
         "//packages/schemas:proto_idea",
+        "//packages/schemas:proto_user",
     ],
     entry_point = ":index.ts",
 )
@@ -43,7 +44,10 @@ nodejs_image(
 ts_jest(
     name = "test",
     srcs = glob(["**/*.spec.ts"]),
-    data = ["//packages/schemas:proto_idea"],
+    data = [
+        "//packages/schemas:proto_idea",
+        "//packages/schemas:proto_user",
+    ],
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
     deps = [

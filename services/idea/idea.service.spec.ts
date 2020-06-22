@@ -20,6 +20,8 @@ import {RpcClientMock} from '@centsideas/rpc/testing';
 import {IdeaService} from './idea.service';
 import {IdeaConfig} from './idea.config';
 import {IdeaReadAdapter} from './idea-read.adapter';
+import {UserReadAdapter} from './user-read.adapter';
+import {UserReadAdapterMock} from './user-read.adapter.mock';
 
 describe('IdeaService', () => {
   DI.registerProviders(
@@ -30,10 +32,12 @@ describe('IdeaService', () => {
     InMemorySnapshotStore,
     IdeaReadAdapter,
     RpcClient,
+    UserReadAdapter,
   );
   DI.overrideProvider(EventDispatcher, EventDispatcherMock);
   DI.overrideProvider(RpcClient, RpcClientMock);
   DI.overrideProvider(IdeaConfig, MockConfig);
+  DI.overrideProvider(UserReadAdapter, UserReadAdapterMock);
   DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
   DI.registerFactory(MONGO_EVENT_STORE_FACTORY, inMemoryEventStoreFactory);
   DI.registerFactory(MONGO_SNAPSHOT_STORE_FACTORY, inMemorySnapshotStoreFactory);

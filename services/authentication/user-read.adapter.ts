@@ -3,13 +3,13 @@ import {injectable, inject} from 'inversify';
 import {Email} from '@centsideas/types';
 import {RpcClient, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
 import {UserReadQueries, UserReadService} from '@centsideas/schemas';
+import {RpcStatus} from '@centsideas/enums';
 
 import {AuthenticationConfig} from './authentication.config';
-import {RpcStatus} from '@centsideas/enums';
 
 @injectable()
 export class UserReadAdapter {
-  private userReadRpc: RpcClient<UserReadQueries.Service> = this.newRpcFactory({
+  private userReadRpc: RpcClient<UserReadQueries.Service> = this.rpcClientFactory({
     host: this.config.get('user-read.rpc.host'),
     service: UserReadService,
     port: this.config.getNumber('user-read.rpc.port'),
@@ -17,7 +17,7 @@ export class UserReadAdapter {
 
   constructor(
     private config: AuthenticationConfig,
-    @inject(RPC_CLIENT_FACTORY) private newRpcFactory: RpcClientFactory,
+    @inject(RPC_CLIENT_FACTORY) private rpcClientFactory: RpcClientFactory,
   ) {}
 
   async getUserByEmail(email: Email) {

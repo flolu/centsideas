@@ -18,6 +18,7 @@ import {IdeaTags} from './idea-tags';
 import {IdeaConfig} from './idea.config';
 import {IdeaReadAdapter} from './idea-read.adapter';
 import * as Errors from './idea.errors';
+import {UserReadAdapter} from './user-read.adapter';
 
 @injectable()
 export class IdeaService {
@@ -35,13 +36,14 @@ export class IdeaService {
   constructor(
     private config: IdeaConfig,
     private ideaReadAdapter: IdeaReadAdapter,
+    private userReadAdapter: UserReadAdapter,
     @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory: MongoEventStoreFactory,
     @inject(MONGO_SNAPSHOT_STORE_FACTORY) private snapshotStoreFactory: MongoSnapshotStoreFactory,
   ) {}
 
-  // TODO check if user with id actually exists (query user service via adapter)
   async create(id: IdeaId, userId: string) {
     const user = UserId.fromString(userId);
+    await this.userReadAdapter.getUserById(user); // ensure user exists
     const unpublished = await this.ideaReadAdapter.getUnpublishedIdea(user);
     if (unpublished) return unpublished.id;
     const idea = Idea.create(id, user, Timestamp.now());
