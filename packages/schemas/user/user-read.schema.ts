@@ -25,5 +25,6 @@ export interface Service {
   getById: (payload: GetById) => Promise<UserModels.UserView>;
   getByEmail: (payload: GetByEmail) => Promise<UserModels.PrivateUserView>;
   getByUsername: (payload: GetByUsername) => Promise<UserModels.UserView>;
+  getEmailById: (payload: GetById) => Promise<{email: string}>;
   getAll: (payload: GetUsers) => Promise<{users: UserModels.UserView[]}>;
 }

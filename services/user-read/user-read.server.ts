@@ -59,4 +59,10 @@ export class UserReadServer implements UserReadQueries.Service {
     await this.privateUserProjector.replay();
     return this.repository.getByUsername(Username.fromString(username));
   }
+
+  @RpcMethod(UserReadService)
+  async getEmailById({id}: UserReadQueries.GetById) {
+    const privateUser = await this.privateRepository.getEmailById(UserId.fromString(id));
+    return {email: privateUser.email};
+  }
 }

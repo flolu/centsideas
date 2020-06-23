@@ -24,6 +24,13 @@ export class PrivateUserRepository {
     return privateUser;
   }
 
+  async getEmailById(id: UserId) {
+    const collection = await this.collection();
+    const user = await collection.findOne({id: id.toString()});
+    if (!user) throw new Errors.UserNotFound(id);
+    return user;
+  }
+
   async getByEmail(email: Email) {
     const collection = await this.collection();
     const privateUser = await collection.findOne({email: email.toString()});

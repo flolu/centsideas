@@ -19,6 +19,7 @@ ts_library(
         "//packages/enums",
         "//packages/event-sourcing",
         "//packages/models",
+        "//packages/rpc",
         "//packages/schemas",
         "//packages/types",
         "//packages/utils",

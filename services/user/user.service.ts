@@ -85,6 +85,7 @@ export class UserService {
     const timestamp = Timestamp.now();
     privateUser.delete(token.userId, timestamp);
     // TODO remove personal data from private user events
+    // TODO sign user out
     user.confirmDeletion(token.userId, timestamp);
     await this.storeAll(user, privateUser);
   }

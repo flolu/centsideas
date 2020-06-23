@@ -22,6 +22,7 @@ import {
 import {Logger} from '@centsideas/utils';
 
 import {MailingConfig} from './mailing.config';
+import {UserReadAdapter} from './user-read.adapter';
 
 @injectable()
 export class MailingServer extends EventsHandler {
@@ -33,6 +34,7 @@ export class MailingServer extends EventsHandler {
     private secretesConfig: SecretsConfig,
     private config: MailingConfig,
     private _logger: Logger,
+    private userReadAdapter: UserReadAdapter,
   ) {
     super();
     http.createServer((_, res) => res.writeHead(200).end()).listen(3000);
@@ -82,22 +84,21 @@ export class MailingServer extends EventsHandler {
 
   @EventHandler(UserEventNames.DeletionRequested)
   async userDeletionRequested(event: PersistedEvent<UserModels.DeletionRequestedData>) {
-    const token = new UserDeletionToken(UserId.fromString(event.streamId));
+    const userId = UserId.fromString(event.streamId);
+    const token = new UserDeletionToken(userId);
     const tokenString = token.sign(
       this.secretesConfig.get('secrets.tokens.delete_user'),
       TokenExpirationTimes.UserDeletion,
     );
-    // TODO fetch email of user via adapter
-    this._logger.info('delete user token', tokenString);
-    const _msg = {
-      to: 'TODO',
+    const emailResponse = await this.userReadAdapter.getEmailById(userId);
+    const email = Email.fromString(emailResponse.email);
+    const msg = {
+      to: email.toString(),
       from: this.fromEmail,
       subject: 'Do you really want to delete your account?',
       text: `This is your account deletion token: ${tokenString}`,
       html: `This is your account deletion token: <code>${tokenString}</code>`,
     };
-    // await sgMail.send(msg);
+    await sgMail.send(msg);
   }
-
-  // TODO send personal data?
 }
