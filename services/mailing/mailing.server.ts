@@ -41,7 +41,7 @@ export class MailingServer extends EventsHandler {
     sgMail.setApiKey(this.secretesConfig.get('secrets.sendgrid.api'));
   }
 
-  // TODO acknowledge kafka messages, such that the message will be resent if processing hasn't finished or retyable error was thrown?!
+  // FIXME acknowledge kafka messages, such that the message will be resent if processing hasn't finished or retyable error was thrown?!
   @EventHandler(AuthenticationEventNames.SignInRequested)
   async signInRequested(event: PersistedEvent<SessionModels.SignInRequestedData>) {
     const token = new EmailSignInToken(

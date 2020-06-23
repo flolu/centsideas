@@ -86,6 +86,12 @@ export class MongoEventStore implements EventStore {
     return result.toArray();
   }
 
+  async deleteStream(streamId: Id, _confirm: 'yes, I know what I do!' | 'what?') {
+    if (_confirm !== 'yes, I know what I do!') return;
+    const collection = await this.collection();
+    await collection.deleteMany({streamId: streamId.toString()});
+  }
+
   private async getSequenceBookmark() {
     const collection = await this.collection();
     const result = await collection.find({}, {sort: {sequence: -1}, limit: 1});
