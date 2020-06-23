@@ -52,7 +52,6 @@ export class UserProjector extends MongoProjector {
       username: data.username,
       createdAt: data.createdAt,
       updatedAt: insertedAt,
-      deletedAt: undefined,
       lastEventVersion: version,
     });
   }
@@ -80,17 +79,9 @@ export class UserProjector extends MongoProjector {
   }
 
   @EventProjector(UserEventNames.DeletionConfirmed)
-  async deletionConfirmed({
-    streamId,
-    data,
-    version,
-    insertedAt,
-  }: PersistedEvent<UserModels.DeletionConfirmedData>) {
+  async deletionConfirmed({streamId}: PersistedEvent<UserModels.DeletionConfirmedData>) {
     const collection = await this.userCollection();
-    await collection.findOneAndUpdate(
-      {id: streamId},
-      {$set: {deletedAt: data.deletedAt, lastEventVersion: version, updatedAt: insertedAt}},
-    );
+    await collection.findOneAndDelete({id: streamId});
   }
 
   private async userCollection() {

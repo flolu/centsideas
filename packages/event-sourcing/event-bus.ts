@@ -43,7 +43,6 @@ export class EventDispatcher {
     if (this.isConnected) return;
     await this.prodcuer.connect();
     this.isConnected = true;
-    this.logger.info('connected to producer');
   }
 }
 
@@ -57,14 +56,12 @@ export class EventListener {
   constructor(private globalConfig: GlobalConfig, private logger: Logger) {}
 
   listen(topic: string | RegExp, consumerGroup: string): Observable<PersistedEvent> {
-    this.logger.info('listen', {topic, consumerGroup});
     const consumer = this.kafka.consumer({groupId: consumerGroup, rebalanceTimeout: 1000});
 
     return Observable.create(async (observer: Observer<PersistedEvent>) => {
       await consumer.connect();
-      this.logger.info('connected to consumer');
       await consumer.subscribe({topic, fromBeginning: false});
-      this.logger.info(`subscribed to topic(s): ${topic}`);
+      this.logger.info(consumerGroup, 'is listening for', topic);
 
       return consumer.run({
         eachMessage: async ({message}) => {

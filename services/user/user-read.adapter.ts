@@ -2,9 +2,10 @@ import {injectable, inject} from 'inversify';
 
 import {RPC_CLIENT_FACTORY, RpcClientFactory, RpcClient} from '@centsideas/rpc';
 import {UserReadService, UserReadQueries} from '@centsideas/schemas';
-import {UserId} from '@centsideas/types';
+import {Username} from '@centsideas/types';
 
-import {IdeaConfig} from './idea.config';
+import {UserConfig} from './user.config';
+import {RpcStatus} from '@centsideas/enums';
 
 @injectable()
 export class UserReadAdapter {
@@ -15,11 +16,16 @@ export class UserReadAdapter {
   });
 
   constructor(
-    private config: IdeaConfig,
+    private config: UserConfig,
     @inject(RPC_CLIENT_FACTORY) private rpcClientFactory: RpcClientFactory,
   ) {}
 
-  getUserById(user: UserId) {
-    return this.userReadRpc.client.getById({id: user.toString()});
+  async getUserByUsername(username: Username) {
+    try {
+      return await this.userReadRpc.client.getByUsername({username: username.toString()});
+    } catch (error) {
+      if (error.code === RpcStatus.NOT_FOUND) return null;
+      throw error;
+    }
   }
 }

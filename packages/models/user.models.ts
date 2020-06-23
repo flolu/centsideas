@@ -36,7 +36,6 @@ export interface UserView {
   username: string;
   createdAt: string;
   updatedAt: string;
-  deletedAt: string | undefined;
   lastEventVersion: number;
 }
 

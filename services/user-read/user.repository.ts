@@ -2,7 +2,7 @@ import {injectable} from 'inversify';
 import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
-import {UserId} from '@centsideas/types';
+import {UserId, Username} from '@centsideas/types';
 import {UserModels} from '@centsideas/models';
 
 import {UserReadConfig} from './user-read.config';
@@ -19,14 +19,21 @@ export class UserRepository {
 
   async getById(id: UserId) {
     const collection = await this.collection();
-    const user = await collection.findOne({id: id.toString(), deletedAt: undefined});
+    const user = await collection.findOne({id: id.toString()});
     if (!user) throw new Errors.UserNotFound(id);
+    return user;
+  }
+
+  async getByUsername(username: Username) {
+    const collection = await this.collection();
+    const user = await collection.findOne({username: username.toString()});
+    if (!user) throw new Errors.UserNotFound();
     return user;
   }
 
   async getAll() {
     const collection = await this.collection();
-    const result = await collection.find({deletedAt: undefined});
+    const result = await collection.find();
     return result.toArray();
   }
 

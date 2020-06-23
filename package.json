@@ -12,7 +12,7 @@
     "lint": "tslint --project .",
     "format": "prettier --write .",
     "up": "yarn upgrade-interactive --latest",
-    "docker": "docker-compose up",
+    "docker": "docker-compose up --build",
     "docker:stop": "docker stop $(docker ps -a -q)",
     "docker:remove": "docker rm $(docker ps -a -q)",
     "docker:clean": "yarn docker:stop && yarn docker:remove && docker system prune --volumes",

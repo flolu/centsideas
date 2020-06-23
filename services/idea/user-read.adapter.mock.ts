@@ -11,7 +11,6 @@ export class UserReadAdapterMock {
       username: 'mock',
       createdAt: Timestamp.now().toString(),
       updatedAt: Timestamp.now().toString(),
-      deletedAt: undefined,
       lastEventVersion: 1,
     };
     return mockUser;

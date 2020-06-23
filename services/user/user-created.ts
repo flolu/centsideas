@@ -1,9 +1,7 @@
 import {DomainEvent, IDomainEvent} from '@centsideas/event-sourcing';
 import {UserEventNames} from '@centsideas/enums';
 import {UserModels} from '@centsideas/models';
-import {UserId, Timestamp} from '@centsideas/types';
-
-import {Username} from './username';
+import {UserId, Timestamp, Username} from '@centsideas/types';
 
 @DomainEvent(UserEventNames.Created)
 export class UserCreated implements IDomainEvent {

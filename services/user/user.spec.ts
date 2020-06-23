@@ -1,12 +1,11 @@
 import 'reflect-metadata';
 
-import {UserId, Timestamp} from '@centsideas/types';
+import {UserId, Timestamp, Username} from '@centsideas/types';
 import {PersistedEvent, UserModels} from '@centsideas/models';
 import {PersistedSnapshot, EventId} from '@centsideas/event-sourcing';
 import {UserEventNames} from '@centsideas/enums';
 
 import {User, SerializedUser} from './user';
-import {Username} from './username';
 import {UserCreated} from './user-created';
 import {UserRenamed} from './user-renamed';
 import {UserDeletionConfirmed} from './user-deletion-confirmed';

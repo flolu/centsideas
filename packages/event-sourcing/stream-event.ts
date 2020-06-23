@@ -30,4 +30,8 @@ export class StreamEvents {
   toEvents() {
     return this.events.map(e => e.event);
   }
+
+  isEmpty() {
+    return this.events.length <= 0;
+  }
 }

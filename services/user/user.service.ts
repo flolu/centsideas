@@ -1,18 +1,25 @@
 import * as faker from 'faker';
 import {injectable, inject} from 'inversify';
 
-import {EventTopics} from '@centsideas/enums';
+import {EventTopics, RpcStatus, UserErrorNames} from '@centsideas/enums';
 import {MONGO_EVENT_STORE_FACTORY, MongoEventStoreFactory} from '@centsideas/event-sourcing';
-import {UserId, Email, Timestamp, UserDeletionToken, ChangeEmailToken} from '@centsideas/types';
+import {
+  UserId,
+  Email,
+  Timestamp,
+  UserDeletionToken,
+  ChangeEmailToken,
+  Username,
+} from '@centsideas/types';
 import {serializeEvent} from '@centsideas/rpc';
 import {PersistedEvent} from '@centsideas/models';
 import {SecretsConfig} from '@centsideas/config';
 
 import {UserConfig} from './user.config';
-import {Username} from './username';
 import {User} from './user';
 import {PrivateUser} from './private-user';
 import * as Errors from './user.errors';
+import {UserReadAdapter} from './user-read.adapter';
 
 @injectable()
 export class UserService {
@@ -31,23 +38,31 @@ export class UserService {
   constructor(
     private config: UserConfig,
     private secretsConfig: SecretsConfig,
+    private userReadAdapter: UserReadAdapter,
     @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory: MongoEventStoreFactory,
   ) {}
 
-  async create(id: string, email: string, createdAt: string) {
+  async create(id: string, emailString: string, createdAt: string) {
     const userId = UserId.fromString(id);
-    // FIXME choose username based on email and/or google user name and/or location data
-    const username = Username.fromString(faker.internet.userName());
+    const email = Email.fromString(emailString);
+    const username = await this.generateUsername(email);
     const user = User.create(userId, username, Timestamp.fromString(createdAt));
-    const privateUser = PrivateUser.create(userId, Email.fromString(email));
+    const privateUser = PrivateUser.create(userId, email);
     await this.storeAll(user, privateUser);
   }
 
-  // TODO check if username is avaialble
   async rename(id: string, newUsername: string) {
+    const username = Username.fromString(newUsername);
     const userId = UserId.fromString(id);
     const user = await this.build(userId);
-    user.rename(userId, Username.fromString(newUsername));
+    try {
+      user.rename(userId, username);
+    } catch (error) {
+      if (error.name === UserErrorNames.UsernameNotChanged) return;
+      throw error;
+    }
+    const existingUser = await this.userReadAdapter.getUserByUsername(username);
+    if (existingUser) throw new Errors.UsernameUnavailable(username);
     await this.store(user);
   }
 
@@ -132,6 +147,40 @@ export class UserService {
         privateUser.persistedAggregateVersion,
       ),
     ]);
+  }
+
+  private async generateUsername(email: Email) {
+    let username: Username | undefined;
+
+    let usernameTry: Username | undefined;
+    try {
+      usernameTry = Username.fromString(email.toString().split('@')[0]);
+    } catch (err) {
+      //
+    }
+
+    if (usernameTry) {
+      try {
+        const existingUser = await this.userReadAdapter.getUserByUsername(usernameTry);
+        if (!existingUser) username = usernameTry;
+      } catch (error) {
+        if (error.code === RpcStatus.NOT_FOUND) username = usernameTry;
+      }
+    }
+
+    if (!username) {
+      username = Username.fromString(faker.internet.userName());
+      try {
+        const existingUser = await this.userReadAdapter.getUserByUsername(username);
+        if (!existingUser) return username;
+        throw new Errors.UsernameUnavailable(username);
+      } catch (error) {
+        if (error.code === RpcStatus.NOT_FOUND) return username;
+        throw error;
+      }
+    }
+
+    return username;
   }
 
   // TODO give a way to fetch all personal data (probably needs to be orchestrated by gateway?)

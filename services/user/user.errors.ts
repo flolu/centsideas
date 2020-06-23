@@ -1,44 +1,6 @@
 import {Exception} from '@centsideas/utils';
-import {RpcStatus, UserErrorNames, UsernameLength} from '@centsideas/enums';
-import {UserId} from '@centsideas/types';
-
-export class UsernameTooLong extends Exception {
-  code = RpcStatus.INVALID_ARGUMENT;
-  name = UserErrorNames.UsernameTooLong;
-
-  constructor(username: string) {
-    super(
-      `Username too long. Max length is ${UsernameLength.Max}. ${username} is ${username.length} characters long.`,
-      {username},
-    );
-  }
-}
-
-export class UsernameTooShort extends Exception {
-  code = RpcStatus.INVALID_ARGUMENT;
-  name = UserErrorNames.UsernameTooShort;
-
-  constructor(username: string) {
-    super(
-      `Username too short. Min length is ${UsernameLength.Min}. ${username} is only ${
-        username ? username.length : 0
-      } characters long.`,
-      {username},
-    );
-  }
-}
-
-export class UsernameInvalid extends Exception {
-  code = RpcStatus.INVALID_ARGUMENT;
-  name = UserErrorNames.UsernameInvalid;
-
-  constructor(username: string) {
-    super(
-      `Username ${username} contains invalid characters. "_" and "." are allowed, when not used at start or end.`,
-      {username},
-    );
-  }
-}
+import {RpcStatus, UserErrorNames} from '@centsideas/enums';
+import {UserId, Username} from '@centsideas/types';
 
 export class NoPermissionToAccessUser extends Exception {
   code = RpcStatus.INVALID_ARGUMENT;
@@ -81,5 +43,23 @@ export class UserNotFound extends Exception {
 
   constructor(id: UserId) {
     super(`User with id ${id.toString()} was not found`);
+  }
+}
+
+export class UsernameUnavailable extends Exception {
+  name = UserErrorNames.UsernameUnavailable;
+  code = RpcStatus.INVALID_ARGUMENT;
+
+  constructor(username: Username) {
+    super(`Username ${username.toString()} is not available`);
+  }
+}
+
+export class UsernameNotChanged extends Exception {
+  name = UserErrorNames.UsernameNotChanged;
+  code = RpcStatus.INVALID_ARGUMENT;
+
+  constructor(username: Username) {
+    super(`Your username already id ${username.toString()}`);
   }
 }

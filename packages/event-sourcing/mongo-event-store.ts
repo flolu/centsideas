@@ -45,7 +45,7 @@ export class MongoEventStore implements EventStore {
   }
 
   async store(events: StreamEvents, lastVersion: number) {
-    if (!events.toArray().length) return;
+    if (events.isEmpty()) return;
 
     const lastEvent = await this.getLastEvent(events.aggregateId);
     if (lastEvent && lastEvent.version !== lastVersion) {

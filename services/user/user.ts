@@ -1,9 +1,8 @@
 import {Aggregate, PersistedSnapshot, Apply} from '@centsideas/event-sourcing';
 import {PersistedEvent} from '@centsideas/models';
-import {UserId, Timestamp} from '@centsideas/types';
+import {UserId, Timestamp, Username} from '@centsideas/types';
 
 import * as Errors from './user.errors';
-import {Username} from './username';
 import {UserCreated} from './user-created';
 import {UserRenamed} from './user-renamed';
 import {UserDeletionRequested} from './user-deletion-requested';
@@ -58,6 +57,7 @@ export class User extends Aggregate<SerializedUser> {
 
   rename(userId: UserId, username: Username) {
     this.checkGeneralConditions(userId);
+    if (this.username.equals(username)) throw new Errors.UsernameNotChanged(username);
     this.raise(new UserRenamed(username));
   }
 

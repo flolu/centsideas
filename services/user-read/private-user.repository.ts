@@ -17,14 +17,14 @@ export class PrivateUserRepository {
 
   constructor(private config: UserReadConfig) {}
 
-  async getPrivateUserById(id: UserId) {
+  async getById(id: UserId) {
     const collection = await this.collection();
     const privateUser = await collection.findOne({id: id.toString()});
     if (!privateUser) throw new Errors.UserNotFound(id);
     return privateUser;
   }
 
-  async getPrivateUserByEmail(email: Email) {
+  async getByEmail(email: Email) {
     const collection = await this.collection();
     const privateUser = await collection.findOne({email: email.toString()});
     if (!privateUser) throw new Errors.UserNotFound();

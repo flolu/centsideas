@@ -1,14 +1,16 @@
 # FIXME research integration testing (maybe with docker-compose or microk8s)
 
-version: "3"
+version: '3'
 services:
   zookeeper:
+    container_name: zookeeper
     image: zookeeper
     ports:
       - 2181:2181
-    logging:
-      driver: none
+    environment:
+      ZOO_LOG4J_PROP: WARN
   kafka:
+    container_name: kafka
     image: confluentinc/cp-kafka
     ports:
       - 9092:9092
@@ -16,8 +18,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      # KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
-      # KAFKA_TOOLS_LOG4J_LOGLEVEL: ERROR
     logging:
       driver: none
     depends_on:
@@ -26,10 +26,10 @@ services:
   mongo-database:
     container_name: mongo-database
     image: mongo:4
-    logging:
-      driver: none
     ports:
       - 27017:27017
+    logging:
+      driver: none
 
   gateway:
     container_name: gateway
@@ -58,6 +58,8 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/idea --colors
+    depends_on:
+      - kafka
   idea-read:
     container_name: idea-read
     image: node:lts-alpine
@@ -70,6 +72,9 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/idea-read --colors
+    depends_on:
+      - kafka
+      - idea
 
   authentication:
     container_name: authentication
@@ -83,6 +88,8 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/authentication --colors
+    depends_on:
+      - kafka
 
   user:
     container_name: user
@@ -96,6 +103,8 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/user --colors
+    depends_on:
+      - kafka
   user-read:
     container_name: user-read
     image: node:lts-alpine
@@ -108,6 +117,9 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/user-read --colors
+    depends_on:
+      - kafka
+      - user
 
   mailing:
     container_name: mailing
@@ -121,6 +133,8 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/mailing --colors
+    depends_on:
+      - kafka
 
   admin:
     container_name: admin
@@ -134,3 +148,5 @@ services:
       - ./node_modules:/node_modules
     env_file: .env
     command: yarn run ts-node-dev services/admin --colors
+    depends_on:
+      - kafka

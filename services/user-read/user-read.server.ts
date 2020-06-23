@@ -3,7 +3,7 @@ import * as http from 'http';
 
 import {RPC_SERVER_FACTORY, RpcServerFactory, RpcServer, RpcMethod} from '@centsideas/rpc';
 import {UserReadService, UserReadQueries} from '@centsideas/schemas';
-import {UserId, Email} from '@centsideas/types';
+import {UserId, Email, Username} from '@centsideas/types';
 
 import {PrivateUserRepository} from './private-user.repository';
 import {UserRepository} from './user.repository';
@@ -43,7 +43,7 @@ export class UserReadServer implements UserReadQueries.Service {
   @RpcMethod(UserReadService)
   async getMe({id}: UserReadQueries.GetMe) {
     const userId = UserId.fromString(id);
-    const privateUser = await this.privateRepository.getPrivateUserById(userId);
+    const privateUser = await this.privateRepository.getById(userId);
     const user = await this.repository.getById(userId);
     return {private: privateUser, public: user};
   }
@@ -51,6 +51,12 @@ export class UserReadServer implements UserReadQueries.Service {
   @RpcMethod(UserReadService)
   async getByEmail({email}: UserReadQueries.GetByEmail) {
     await this.privateUserProjector.replay();
-    return this.privateRepository.getPrivateUserByEmail(Email.fromString(email));
+    return this.privateRepository.getByEmail(Email.fromString(email));
+  }
+
+  @RpcMethod(UserReadService)
+  async getByUsername({username}: UserReadQueries.GetByUsername) {
+    await this.privateUserProjector.replay();
+    return this.repository.getByUsername(Username.fromString(username));
   }
 }

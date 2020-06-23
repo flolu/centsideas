@@ -42,4 +42,6 @@ export enum UserErrorNames {
   NoPermission = 'user.noPermssion',
   UserDeletionMustBeRequested = 'user.userDeletionMustBeRequested',
   NotFound = 'user.notFound',
+  UsernameUnavailable = 'user.usernameUnavailable',
+  UsernameNotChanged = 'user.usernameNotChanged',
 }
