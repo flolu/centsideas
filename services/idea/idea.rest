@@ -45,7 +45,7 @@ PUT {{apiUrl}}/{{endpoint}}/{{ideaId}}/tags
 content-type: application/json
 Authorization: Bearer {{userId}}
 
-{"tags": ["awesome","cool","beset"]}
+{"tags": ["awesome","cool","best"]}
 
 ###
 

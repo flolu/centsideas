@@ -80,7 +80,6 @@ export class Idea extends Aggregate<SerializedIdea> {
     this.raise(new IdeaDescriptionEdited(description));
   }
 
-  // TODO it is possible to have duplicate tags by spamming the commands from idea-read.rest
   updateTags(tags: IdeaTags, user: UserId) {
     this.checkGeneralConditions(user);
     const {added, removed} = this.tags.findDifference(tags);

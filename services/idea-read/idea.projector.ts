@@ -114,7 +114,7 @@ export class IdeaProjector extends MongoProjector {
     const collection = await this.ideaCollection();
     await collection.findOneAndUpdate(
       {id: streamId},
-      {$pull: {fruits: {$in: tags}}, $set: {lastEventVersion: version, updatedAt: insertedAt}},
+      {$pull: {tags: {$in: tags}}, $set: {lastEventVersion: version, updatedAt: insertedAt}},
     );
   }
 
