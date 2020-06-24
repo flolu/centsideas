@@ -106,24 +106,28 @@ export class UserService {
     await this.storePrivate(privateUser);
   }
 
-  async getEvents(after?: number) {
-    const events = await this.eventStore.getEvents(after || -1);
+  async getEvents(after?: number, streamId?: string) {
+    let events: PersistedEvent[];
+    if (streamId) events = await this.eventStore.getStream(streamId, after || -1);
+    events = await this.eventStore.getEvents(after || -1);
     return events.map(serializeEvent);
   }
 
-  async getPrivateEvents(after?: number) {
-    const events = await this.privateEventStore.getEvents(after || -1);
+  async getPrivateEvents(after?: number, streamId?: string) {
+    let events: PersistedEvent[];
+    if (streamId) events = await this.privateEventStore.getStream(streamId, after || -1);
+    events = await this.privateEventStore.getEvents(after || -1);
     return events.map(serializeEvent);
   }
 
   private async build(id: UserId) {
-    const events: PersistedEvent[] = await this.eventStore.getStream(id);
+    const events: PersistedEvent[] = await this.eventStore.getStream(id.toString());
     if (!events?.length) throw new Errors.UserNotFound(id);
     return User.buildFrom(events);
   }
 
   private async buildPrivate(id: UserId) {
-    const events: PersistedEvent[] = await this.privateEventStore.getStream(id);
+    const events: PersistedEvent[] = await this.privateEventStore.getStream(id.toString());
     if (!events?.length) throw new Errors.UserNotFound(id);
     return PrivateUser.buildFrom(events);
   }
@@ -182,6 +186,4 @@ export class UserService {
 
     return username;
   }
-
-  // TODO give a way to fetch all personal data (probably needs to be orchestrated by gateway?)
 }

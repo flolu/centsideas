@@ -8,7 +8,7 @@ import {
 } from '@centsideas/event-sourcing';
 import {UserId, IdeaId, Timestamp} from '@centsideas/types';
 import {serializeEvent} from '@centsideas/rpc';
-import {EventTopics} from '@centsideas/enums';
+import {EventTopics, IdeaEventNames} from '@centsideas/enums';
 import {PersistedEvent} from '@centsideas/models';
 
 import {Idea} from './idea';
@@ -86,11 +86,26 @@ export class IdeaService {
     return events.map(serializeEvent);
   }
 
+  async getEventsByUser(user: UserId) {
+    const dbCollection = await this.eventStore._getCollection();
+    const result = await dbCollection.aggregate([
+      {
+        $match: {name: IdeaEventNames.Created, 'data.userId': user.toString()},
+      },
+      {
+        $group: {_id: '$streamId'},
+      },
+    ]);
+    const streamIds = (await result.toArray()).map((s: any) => s._id);
+    const events = dbCollection.find({streamId: {$in: streamIds}});
+    return (await events.toArray()).map(serializeEvent);
+  }
+
   private async build(id: IdeaId) {
     const snapshot = await this.snapshotStore.get(id);
     const events: PersistedEvent[] = snapshot
-      ? await this.eventStore.getStream(id, snapshot.version)
-      : await this.eventStore.getStream(id);
+      ? await this.eventStore.getStream(id.toString(), snapshot.version)
+      : await this.eventStore.getStream(id.toString());
     if (!events?.length) throw new Errors.IdeaNotFound(id);
     return Idea.buildFrom(events, snapshot);
   }

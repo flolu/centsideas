@@ -2,7 +2,7 @@ import {injectable, inject} from 'inversify';
 import * as http from 'http';
 
 import {RpcServer, RPC_SERVER_FACTORY, RpcServerFactory, RpcMethod} from '@centsideas/rpc';
-import {IdeaId} from '@centsideas/types';
+import {IdeaId, UserId} from '@centsideas/types';
 import {IdeaCommandsService, IdeaCommands, GetEvents} from '@centsideas/schemas';
 
 import {IdeaService} from './idea.service';
@@ -55,6 +55,12 @@ export class IdeaServer implements IdeaCommands.Service {
   @RpcMethod(IdeaCommandsService)
   delete({id, userId}: IdeaCommands.DeleteIdea) {
     return this.service.delete(id, userId);
+  }
+
+  @RpcMethod(IdeaCommandsService)
+  async getEventsByUserId({userId}: IdeaCommands.GetByUserId) {
+    const events = await this.service.getEventsByUser(UserId.fromString(userId));
+    return {events};
   }
 
   @RpcMethod(IdeaCommandsService)

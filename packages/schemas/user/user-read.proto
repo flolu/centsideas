@@ -1,3 +1,5 @@
+// TODO check if all proto files match implementations
+
 import "google/protobuf/empty.proto";
 
 syntax = "proto3";
@@ -10,7 +12,7 @@ service UserRead {
   rpc getByEmail(GeyByEmail) returns (User);
   rpc getEmailById(GetById) returns (Email);
   rpc getByUsername(GetByUsername) returns (User);
-  rpc getAll(google.protobuf.Empty) returns (PrivateUser);
+  rpc getAll(google.protobuf.Empty) returns (Users);
 }
 
 message GetMe {

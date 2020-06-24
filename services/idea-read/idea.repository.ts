@@ -37,6 +37,18 @@ export class IdeaRepository {
     return result.toArray();
   }
 
+  async getAllByUserId(user: UserId, privates: boolean) {
+    const collection = await this.collection();
+    const result = privates
+      ? await collection.find({userId: user.toString()})
+      : await collection.find({
+          userId: user.toString(),
+          publishedAt: {$exists: true, $ne: undefined},
+          deletedAt: undefined,
+        });
+    return result.toArray();
+  }
+
   // FIXME consider refreshing projector with newest events before returning result
   async getUnpublished(user: UserId) {
     const collection = await this.collection();

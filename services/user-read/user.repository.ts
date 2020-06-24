@@ -33,7 +33,7 @@ export class UserRepository {
 
   async getAll() {
     const collection = await this.collection();
-    const result = await collection.find();
+    const result = await collection.find({});
     return result.toArray();
   }
 

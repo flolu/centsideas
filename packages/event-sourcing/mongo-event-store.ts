@@ -13,6 +13,7 @@ import {EventId} from './event-id';
 import {EventDispatcher} from './event-bus';
 import {EVENT_NAME_METADATA} from './domain-event';
 
+// TODO create index of streamId
 @injectable()
 export class MongoEventStore implements EventStore {
   private topic!: EventTopics;
@@ -35,10 +36,10 @@ export class MongoEventStore implements EventStore {
     this.client.connect();
   }
 
-  async getStream(id: Id, after?: number) {
+  async getStream(id: string, after?: number) {
     const collection = await this.collection();
     const result = await collection
-      .find({streamId: id.toString(), version: {$gt: after ? after : 0}})
+      .find({streamId: id, version: {$gt: after ? after : 0}})
       .sort({version: 1});
     const events = await result.toArray();
     return events;
@@ -90,6 +91,10 @@ export class MongoEventStore implements EventStore {
     if (_confirm !== 'yes, I know what I do!') return;
     const collection = await this.collection();
     await collection.deleteMany({streamId: streamId.toString()});
+  }
+
+  _getCollection() {
+    return this.collection();
   }
 
   private async getSequenceBookmark() {

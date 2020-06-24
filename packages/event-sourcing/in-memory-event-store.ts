@@ -20,9 +20,9 @@ export class InMemoryEventStore implements EventStore {
 
   @inject(EventDispatcher) private dispatcher!: EventDispatcher;
 
-  async getStream(id: Id, after?: number) {
+  async getStream(id: string, after?: number) {
     return this.events
-      .filter(e => id.toString() === e.streamId)
+      .filter(e => id === e.streamId)
       .filter(e => (after ? e.version > after : true))
       .sort((a, b) => a.version - b.version);
   }

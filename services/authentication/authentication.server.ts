@@ -9,6 +9,7 @@ import {
 } from '@centsideas/schemas';
 
 import {AuthenticationService} from './authentication.service';
+import {UserId} from '@centsideas/types';
 
 @injectable()
 export class AuthenticationServer implements AuthenticationCommands.Service {
@@ -59,8 +60,15 @@ export class AuthenticationServer implements AuthenticationCommands.Service {
     await this.service.revokeRefreshToken(sessionId);
   }
 
-  @RpcMethod(AuthenticationCommandsService) async getEvents({after}: GetEvents) {
+  @RpcMethod(AuthenticationCommandsService)
+  async getEvents({after}: GetEvents) {
     const events = await this.service.getEvents(after);
+    return {events};
+  }
+
+  @RpcMethod(AuthenticationCommandsService)
+  async getEventsByUserId({userId}: AuthenticationCommands.GetEventsByUserId) {
+    const events = await this.service.getEventsByUserId(UserId.fromString(userId));
     return {events};
   }
 }

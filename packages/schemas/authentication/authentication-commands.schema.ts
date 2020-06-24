@@ -1,4 +1,5 @@
 import {GetEventsCommand} from '../common';
+import {PersistedEvent} from '@centsideas/models';
 
 export interface RequestEmailSignIn {
   email: string;
@@ -34,6 +35,10 @@ export interface GoogleSignInUrlResponse {
   url: string;
 }
 
+export interface GetEventsByUserId {
+  userId: string;
+}
+
 export interface Service {
   requestEmailSignIn: (payload: RequestEmailSignIn) => Promise<void>;
   confirmEmailSignIn: (payload: ConfirmEmailSignIn) => Promise<AuthTokenResponse>;
@@ -42,6 +47,7 @@ export interface Service {
   refreshToken: (payload: RefreshTokens) => Promise<AuthTokenResponse>;
   signOut: (payload: SignOut) => Promise<void>;
   revokeRefreshToken: (payload: RevokeRefreshToken) => Promise<void>;
+  getEventsByUserId: (payload: GetEventsByUserId) => Promise<{events: PersistedEvent[]}>;
 
   getEvents: GetEventsCommand;
 }

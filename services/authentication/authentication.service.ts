@@ -14,7 +14,7 @@ import {
   AccessToken,
   EmailSignInToken,
 } from '@centsideas/types';
-import {EventTopics, TokenExpirationTimes} from '@centsideas/enums';
+import {EventTopics, TokenExpirationTimes, AuthenticationEventNames} from '@centsideas/enums';
 import {PersistedEvent} from '@centsideas/models';
 import {SecretsConfig} from '@centsideas/config';
 import {serializeEvent} from '@centsideas/rpc';
@@ -149,11 +149,31 @@ export class AuthenticationService {
     return events.map(serializeEvent);
   }
 
+  async getEventsByUserId(user: UserId) {
+    const dbCollection = await this.eventStore._getCollection();
+    const result = await dbCollection.aggregate([
+      {
+        $match: {
+          $or: [
+            {name: AuthenticationEventNames.GoogleSignInConfirmed, 'data.userId': user.toString()},
+            {name: AuthenticationEventNames.SignInConfirmed, 'data.userId': user.toString()},
+          ],
+        },
+      },
+      {
+        $group: {_id: '$streamId'},
+      },
+    ]);
+    const streamIds = (await result.toArray()).map((s: any) => s._id);
+    const events = dbCollection.find({streamId: {$in: streamIds}});
+    return (await events.toArray()).map(serializeEvent);
+  }
+
   private async build(id: SessionId) {
     const snapshot = await this.snapshotStore.get(id);
     const events: PersistedEvent[] = snapshot
-      ? await this.eventStore.getStream(id, snapshot.version)
-      : await this.eventStore.getStream(id);
+      ? await this.eventStore.getStream(id.toString(), snapshot.version)
+      : await this.eventStore.getStream(id.toString());
     if (!events?.length) throw new Errors.SessionNotFound(id);
     return Session.buildFrom(events, snapshot);
   }

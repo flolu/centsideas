@@ -13,3 +13,8 @@ GET {{apiUrl}}/{{endpoint}}
 ###
 
 GET {{apiUrl}}/{{endpoint}}/{{id}}
+
+###
+
+GET {{apiUrl}}/personalData
+Authorization: Bearer {{userId}}

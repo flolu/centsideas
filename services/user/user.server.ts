@@ -65,14 +65,14 @@ export class UserServer extends EventsHandler implements UserCommands.Service {
   }
 
   @RpcMethod(UserCommandService)
-  async getEvents({after}: GetEvents) {
-    const events = await this.service.getEvents(after);
+  async getEvents({after, streamId}: GetEvents) {
+    const events = await this.service.getEvents(after, streamId);
     return {events};
   }
 
   @RpcMethod(UserCommandService)
-  async getPrivateEvents({after}: GetEvents) {
-    const events = await this.service.getPrivateEvents(after);
+  async getPrivateEvents({after, streamId}: GetEvents) {
+    const events = await this.service.getPrivateEvents(after, streamId);
     return {events};
   }
 }

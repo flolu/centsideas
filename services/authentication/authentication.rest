@@ -1,8 +1,10 @@
 @endpoint=auth
+
+# TODO would be better to put those variables in a file, which is not committed
 @sessionId = XXX
-@email = sojij20318@qmrbe.com
-@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIzYTNkZWUzMS1iMTMxLTQwMjUtYWIzMy1kOWU5YmUzODY3YTYiLCJlbWFpbCI6InNvamlqMjAzMThAcW1yYmUuY29tIiwiaWF0IjoxNTkyODk1MTU4LCJleHAiOjE1OTI5MDIzNTh9.JK1vmuRl8Wrjh6SPEoMW3e7Z4kTBQoDoZV5tbmrdhnI
-@googleSignInCode = 4/1AHm8gk9dN5_YxRmFT5Pq5YBi-J7xSwMTOoxpm8kvP1e7Rs7lk8kwOu6d-HGxlDNqitmDbN7ba9YqxiF6hLkl6c
+@email = XXX
+@emailSignInToken = XXX
+@googleSignInCode = XXX
 
 ###
 

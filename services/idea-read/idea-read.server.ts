@@ -40,4 +40,10 @@ export class IdeaReadServer implements IdeaReadQueries.Service {
   getUnpublished({userId}: IdeaReadQueries.GetUnpublished) {
     return this.repository.getUnpublished(UserId.fromString(userId));
   }
+
+  @RpcMethod(IdeaReadService)
+  async getAllByUserId({userId, privates}: IdeaReadQueries.GetAllByUserId) {
+    const ideas = await this.repository.getAllByUserId(UserId.fromString(userId), privates);
+    return {ideas};
+  }
 }

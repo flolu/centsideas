@@ -11,13 +11,13 @@ import {
 
 import {ApiEndpoints} from '@centsideas/enums';
 import {RpcClient, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
-
 import {
   UserCommands,
   UserCommandService,
   UserReadQueries,
   UserReadService,
 } from '@centsideas/schemas';
+
 import {GatewayConfig} from './gateway.config';
 import {AuthMiddleware} from './auth.middleware';
 

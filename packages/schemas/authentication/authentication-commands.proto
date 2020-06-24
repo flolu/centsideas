@@ -41,6 +41,10 @@ message GoogleLoginUrl {
   string url = 1;
 }
 
+message GetEventsByUserId {
+  string userId = 1;
+}
+
 service AuthenticationCommands {
   rpc requestEmailSignIn(RequestEmailSignIn) returns (google.protobuf.Empty);
   rpc confirmEmailSignIn(ConfirmEmailSignIn) returns (AuthTokenResponse);
@@ -49,6 +53,7 @@ service AuthenticationCommands {
   rpc refreshToken(RefreshTokens) returns (AuthTokenResponse);
   rpc signOut(SignOut) returns (google.protobuf.Empty);
   rpc revokeRefreshToken(RevokeRefreshToken) returns (google.protobuf.Empty);
+  rpc getEventsByUserId(GetEventsByUserId) returns (AuthenticationEvents);
 
   rpc getEvents(GetEvents) returns (AuthenticationEvents);
 }

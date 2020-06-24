@@ -7,12 +7,18 @@ package idea;
 service IdeaRead {
   rpc getById(GetIdeaById) returns (Idea);
   rpc getAll(google.protobuf.Empty) returns (Ideas);
+  rpc getAllByUserId(GetAllByUserId) returns (Ideas);
   rpc getUnpublished(GetUnpublished) returns (Idea);
 }
 
 message GetIdeaById {
   string id = 1;
   optional string userId = 2;
+}
+
+message GetAllByUserId {
+  string userId = 1;
+  bool privates = 2;
 }
 
 message GetUnpublished {
