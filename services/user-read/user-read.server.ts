@@ -35,7 +35,7 @@ export class UserReadServer implements UserReadQueries.Service {
   }
 
   @RpcMethod(UserReadService)
-  async getAll({}: UserReadQueries.GetUsers) {
+  async getAll() {
     const users = await this.repository.getAll();
     return {users};
   }

@@ -1,47 +1,44 @@
-@endpoint=auth
-
-# TODO would be better to put those variables in a file, which is not committed
-@sessionId = XXX
-@email = XXX
-@emailSignInToken = XXX
-@googleSignInCode = XXX
+@sessionId = ___
+@email = ___
+@emailSignInToken = ___
+@googleSignInCode = ___
 
 ###
 
-POST {{apiUrl}}/{{endpoint}}/signin/email
+POST {{apiUrl}}/auth/signin/email
 content-type: application/json
 
 {"email":"{{email}}"}
 
 ###
 
-POST {{apiUrl}}/{{endpoint}}/signin/email/confirm
+POST {{apiUrl}}/auth/signin/email/confirm
 content-type: application/json
 
 {"token":"{{emailSignInToken}}"}
 
 ###
 
-GET {{apiUrl}}/{{endpoint}}/signin/google/url
+GET {{apiUrl}}/auth/signin/google/url
 
 ###
 
-POST {{apiUrl}}/{{endpoint}}/signin/google
+POST {{apiUrl}}/auth/signin/google
 content-type: application/json
 
 {"code":"{{googleSignInCode}}"}
 
 ###
 
-POST {{apiUrl}}/{{endpoint}}/refresh
+POST {{apiUrl}}/auth/refresh
 
 ###
 
-POST {{apiUrl}}/{{endpoint}}/signout
+POST {{apiUrl}}/auth/signout
 
 ###
 
-POST {{apiUrl}}/{{endpoint}}/revoke
+POST {{apiUrl}}/auth/revoke
 content-type: application/json
 
 {"sessionId":"{{sessionId}}"}

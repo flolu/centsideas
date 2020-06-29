@@ -79,7 +79,7 @@ export class UserController implements interfaces.Controller {
 
   @httpGet('/')
   getAll(_req: express.Request) {
-    return this.userReadRpc.client.getAll({});
+    return this.userReadRpc.client.getAll();
   }
 
   @httpGet('/:id')

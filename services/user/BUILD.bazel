@@ -1,6 +1,9 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@centsideas//packages/jest:jest.bzl", "ts_jest")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -32,6 +35,8 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
+        "//packages/schemas:proto_authentication",
+        "//packages/schemas:proto_common",
         "//packages/schemas:proto_user",
     ],
     entry_point = ":index.ts",
@@ -48,5 +53,55 @@ ts_jest(
         "//packages/models",
         "//packages/types",
         "@npm//reflect-metadata",
+    ],
+)
+
+k8s_deploy(
+    name = "user",
+    images = {"user:placeholder_name": ":image"},
+    template = ":user.yaml",
+)
+
+k8s_deploy(
+    name = "storage",
+    template = ":user-storage.yaml",
+)
+
+k8s_deploy(
+    name = "config",
+    template = ":user-config.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+        ":user",
+        ":storage",
+        ":config",
+    ],
+)
+
+microk8s_deploy(
+    name = "microk8s_user",
+    images = {"user:placeholder_name": ":image"},
+    template = ":user.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_storage",
+    template = ":user-local-storage.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_config",
+    template = ":user-config.yaml",
+)
+
+k8s_objects(
+    name = "microk8s",
+    objects = [
+        ":microk8s_user",
+        ":microk8s_storage",
+        ":microk8s_config",
     ],
 )

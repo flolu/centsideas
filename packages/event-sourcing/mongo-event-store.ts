@@ -13,7 +13,7 @@ import {EventId} from './event-id';
 import {EventDispatcher} from './event-bus';
 import {EVENT_NAME_METADATA} from './domain-event';
 
-// TODO create index of streamId
+// FIXME create index of streamId
 @injectable()
 export class MongoEventStore implements EventStore {
   private topic!: EventTopics;

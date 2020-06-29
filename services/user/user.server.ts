@@ -1,4 +1,5 @@
 import {injectable, inject} from 'inversify';
+import * as http from 'http';
 
 import {EventsHandler, EventHandler} from '@centsideas/event-sourcing';
 import {AuthenticationEventNames} from '@centsideas/enums';
@@ -25,6 +26,9 @@ export class UserServer extends EventsHandler implements UserCommands.Service {
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     super();
+    http
+      .createServer((_, res) => res.writeHead(this._rpcServer.isRunning ? 200 : 500).end())
+      .listen(3000);
   }
 
   @EventHandler(AuthenticationEventNames.SignInConfirmed)

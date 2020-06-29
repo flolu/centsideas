@@ -12,6 +12,9 @@ k8s_objects(
         "//services/idea:k8s",
         "//services/idea-read:k8s",
         "//services/authentication:k8s",
+        "//services/user:k8s",
+        "//services/user-read:k8s",
+        "//services/mailing:k8s",
     ],
 )
 
@@ -23,5 +26,8 @@ k8s_objects(
         "//services/idea:microk8s",
         "//services/idea-read:microk8s",
         "//services/authentication:microk8s",
+        "//services/user:microk8s",
+        "//services/user-read:microk8s",
+        "//services/mailing:microk8s",
     ],
 )

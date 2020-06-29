@@ -36,6 +36,7 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
+        "//packages/schemas:proto_common",
         "//packages/schemas:proto_idea",
     ],
     entry_point = ":index.ts",

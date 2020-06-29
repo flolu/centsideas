@@ -1,52 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: authentication-deployment
+  name: user-read-deployment
 spec:
   selector:
     matchLabels:
-      app: authentication
+      app: user-read
   replicas: 1
   template:
     metadata:
       labels:
-        app: authentication
+        app: user-read
     spec:
       containers:
-        - name: authentication
-          image: authentication:placeholder_name
+        - name: user-read
+          image: user-read:placeholder_name
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: global-config
             - configMapRef:
-                name: authentication-config
-          env:
-            - name: secrets.tokens.refresh
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: secrets.tokens.refresh
-            - name: secrets.tokens.access
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: secrets.tokens.access
-            - name: secrets.tokens.signin
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: secrets.tokens.signin
-            - name: secrets.google.client_id
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: secrets.google.client_id
-            - name: secrets.google.client_secret
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: secrets.google.client_secret
+                name: user-read-config
           readinessProbe:
             httpGet:
               path: /
@@ -70,10 +44,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: authentication-service
+  name: user-read-service
 spec:
   selector:
-    app: authentication
+    app: user-read
   ports:
     - name: http
       port: 3000
@@ -84,20 +58,20 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: authentication-event-store-deployment
+  name: user-read-db-deployment
 spec:
   selector:
     matchLabels:
-      app: authentication-event-store
+      app: user-read-db
   replicas: 1
   template:
     metadata:
       labels:
-        app: authentication-event-store
+        app: user-read-db
     spec:
       containers:
-        - name: authentication-event-store
-          image: mongo:4.2.6
+        - name: user-read-db
+          image: mongo:4
           volumeMounts:
             - name: persistent-db-storage
               mountPath: /data/db
@@ -111,15 +85,61 @@ spec:
       volumes:
         - name: persistent-db-storage
           persistentVolumeClaim:
-            claimName: authentication-event-store-pvc
+            claimName: user-read-pvc
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: authentication-event-store-service
+  name: user-read-db-service
 spec:
   selector:
-    app: authentication-event-store
+    app: user-read-db
+  ports:
+    - name: mongo
+      port: 27017
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: private-user-read-db-deployment
+spec:
+  selector:
+    matchLabels:
+      app: private-user-read-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: private-user-read-db
+    spec:
+      containers:
+        - name: private-user-read-db
+          image: mongo:4
+          volumeMounts:
+            - name: persistent-db-storage
+              mountPath: /data/db
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 10m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+      volumes:
+        - name: persistent-db-storage
+          persistentVolumeClaim:
+            claimName: private-user-read-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: private-user-read-db-service
+spec:
+  selector:
+    app: private-user-read-db
   ports:
     - name: mongo
       port: 27017

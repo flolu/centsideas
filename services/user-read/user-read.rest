@@ -1,18 +1,17 @@
-@endpoint = user
-@id = ul4Zs3mVo
+@id = ___
 
 ###
 
-GET {{apiUrl}}/{{endpoint}}/me
+GET {{apiUrl}}/user/me
 Authorization: Bearer {{userId}}
 
 ###
 
-GET {{apiUrl}}/{{endpoint}}
+GET {{apiUrl}}/user
 
 ###
 
-GET {{apiUrl}}/{{endpoint}}/{{id}}
+GET {{apiUrl}}/user/{{id}}
 
 ###
 

@@ -21,6 +21,27 @@ spec:
                 name: global-config
             - configMapRef:
                 name: mailing-config
+          env:
+            - name: secrets.sendgrid.api
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: secrets.sendgrid.api
+            - name: secrets.tokens.signin
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: secrets.tokens.signin
+            - name: secrets.tokens.change_email
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: secrets.tokens.change_email
+            - name: secrets.tokens.delete_user
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: secrets.tokens.delete_user
           readinessProbe:
             httpGet:
               path: /

@@ -34,7 +34,8 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
-        "//packages/schemas:proto_idea",
+        "//packages/schemas:proto_authentication",
+        "//packages/schemas:proto_user",
     ],
     entry_point = ":index.ts",
 )
@@ -52,10 +53,16 @@ k8s_deploy(
     template = ":mailing.yaml",
 )
 
+k8s_deploy(
+    name = "config",
+    template = ":mailing-config.yaml",
+)
+
 k8s_objects(
     name = "k8s",
     objects = [
         ":mailing",
+        ":config",
     ],
 )
 
@@ -65,9 +72,15 @@ microk8s_deploy(
     template = ":mailing.yaml",
 )
 
+microk8s_deploy(
+    name = "microk8s_config",
+    template = ":mailing-config.yaml",
+)
+
 k8s_objects(
     name = "microk8s",
     objects = [
         ":microk8s_mailing",
+        ":microk8s_config",
     ],
 )

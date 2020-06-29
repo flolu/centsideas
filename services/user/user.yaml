@@ -1,52 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: authentication-deployment
+  name: user-deployment
 spec:
   selector:
     matchLabels:
-      app: authentication
+      app: user
   replicas: 1
   template:
     metadata:
       labels:
-        app: authentication
+        app: user
     spec:
       containers:
-        - name: authentication
-          image: authentication:placeholder_name
+        - name: user
+          image: user:placeholder_name
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: global-config
             - configMapRef:
-                name: authentication-config
+                name: user-config
           env:
-            - name: secrets.tokens.refresh
+            - name: secrets.tokens.change_email
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: secrets.tokens.refresh
-            - name: secrets.tokens.access
+                  key: secrets.tokens.change_email
+            - name: secrets.tokens.delete_user
               valueFrom:
                 secretKeyRef:
                   name: secrets
-                  key: secrets.tokens.access
-            - name: secrets.tokens.signin
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: secrets.tokens.signin
-            - name: secrets.google.client_id
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: secrets.google.client_id
-            - name: secrets.google.client_secret
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: secrets.google.client_secret
+                  key: secrets.tokens.delete_user
           readinessProbe:
             httpGet:
               path: /
@@ -70,10 +55,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: authentication-service
+  name: user-service
 spec:
   selector:
-    app: authentication
+    app: user
   ports:
     - name: http
       port: 3000
@@ -84,19 +69,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: authentication-event-store-deployment
+  name: user-event-store-deployment
 spec:
   selector:
     matchLabels:
-      app: authentication-event-store
+      app: user-event-store
   replicas: 1
   template:
     metadata:
       labels:
-        app: authentication-event-store
+        app: user-event-store
     spec:
       containers:
-        - name: authentication-event-store
+        - name: user-event-store
           image: mongo:4.2.6
           volumeMounts:
             - name: persistent-db-storage
@@ -111,15 +96,61 @@ spec:
       volumes:
         - name: persistent-db-storage
           persistentVolumeClaim:
-            claimName: authentication-event-store-pvc
+            claimName: user-event-store-pvc
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: authentication-event-store-service
+  name: user-event-store-service
 spec:
   selector:
-    app: authentication-event-store
+    app: user-event-store
+  ports:
+    - name: mongo
+      port: 27017
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: private-user-event-store-deployment
+spec:
+  selector:
+    matchLabels:
+      app: private-user-event-store
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: private-user-event-store
+    spec:
+      containers:
+        - name: private-user-event-store
+          image: mongo:4.2.6
+          volumeMounts:
+            - name: persistent-db-storage
+              mountPath: /data/db
+          resources:
+            requests:
+              memory: 10Mi
+              cpu: 10m
+            limits:
+              memory: 500Mi
+              cpu: 500m
+      volumes:
+        - name: persistent-db-storage
+          persistentVolumeClaim:
+            claimName: private-user-event-store-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: private-user-event-store-service
+spec:
+  selector:
+    app: private-user-event-store
   ports:
     - name: mongo
       port: 27017

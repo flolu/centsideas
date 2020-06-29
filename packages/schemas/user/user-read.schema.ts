@@ -8,8 +8,6 @@ export interface GetById {
   id: string;
 }
 
-export interface GetUsers {}
-
 export interface GetByEmail {
   email: string;
 }
@@ -26,5 +24,5 @@ export interface Service {
   getByEmail: (payload: GetByEmail) => Promise<UserModels.PrivateUserView>;
   getByUsername: (payload: GetByUsername) => Promise<UserModels.UserView>;
   getEmailById: (payload: GetById) => Promise<{email: string}>;
-  getAll: (payload: GetUsers) => Promise<{users: UserModels.UserView[]}>;
+  getAll: (payload: void) => Promise<{users: UserModels.UserView[]}>;
 }

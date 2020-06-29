@@ -8,6 +8,11 @@ filegroup(
 )
 
 filegroup(
+    name = "proto_common",
+    srcs = glob(["**/common/*.proto"]),
+)
+
+filegroup(
     name = "proto_authentication",
     srcs = glob(["**/authentication/*.proto"]),
 )
@@ -19,7 +24,7 @@ filegroup(
 
 filegroup(
     name = "proto_user",
-    srcs = glob(["**/usera/*.proto"]),
+    srcs = glob(["**/user/*.proto"]),
 )
 
 ts_library(

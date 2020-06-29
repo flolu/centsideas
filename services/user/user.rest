@@ -1,12 +1,11 @@
 @username = flo
-@endpoint = user
-@newEmail = jenaxi3316@6mails.com
-@deletionToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlYjY2LU1EalUiLCJpYXQiOjE1OTI5MzE0MjgsImV4cCI6MTU5Mjk2MDIyOH0.QbhRZutvi_8U-Eb1T0RpPAaKvjI4G1DcIkU1k8yi6qw
-@changeEmailToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJwTFVKU3RWdVoiLCJuZXdFbWFpbCI6ImplbmF4aTMzMTZANm1haWxzLmNvbSIsImlhdCI6MTU5MjkxOTAxOCwiZXhwIjoxNTkyOTI2MjE4fQ.LUnFoQlHy4JFRkIUAAeexhSjMoEoxDxJfKrbo9fI8T8
+@newEmail = ___
+@deletionToken = ___
+@changeEmailToken = ___
 
 ###
 
-PUT {{apiUrl}}/{{endpoint}}/rename
+PUT {{apiUrl}}/user/rename
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -14,12 +13,12 @@ Authorization: Bearer {{userId}}
 
 ###
 
-POST {{apiUrl}}/{{endpoint}}/requestDeletion
+POST {{apiUrl}}/user/requestDeletion
 Authorization: Bearer {{userId}}
 
 ###
 
-DELETE {{apiUrl}}/{{endpoint}}
+DELETE {{apiUrl}}/user
 Authorization: Bearer {{userId}}
 content-type: application/json
 
@@ -27,7 +26,7 @@ content-type: application/json
 
 ###
 
-POST {{apiUrl}}/{{endpoint}}/email/requestChange
+POST {{apiUrl}}/user/email/requestChange
 content-type: application/json
 Authorization: Bearer {{userId}}
 
@@ -35,7 +34,7 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT {{apiUrl}}/{{endpoint}}/email
+PUT {{apiUrl}}/user/email
 content-type: application/json
 
 {"token":"{{changeEmailToken}}"}

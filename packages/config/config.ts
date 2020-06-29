@@ -14,6 +14,7 @@ export abstract class Config {
     const internalKeys = this.keysStartingWith(`${namespace}.`);
 
     const sharedImports: string[] = this.getArrayFromEnv(`${namespace}.${this.sharedImportsKey}`);
+
     const sharedKeys: string[] = [];
     sharedImports.forEach(name => {
       const exportedKeys = this.getArrayFromEnv(`${name}.${this.sharedExportsKey}`);
@@ -49,7 +50,7 @@ export abstract class Config {
   private getArrayFromEnv(key: string): string[] {
     const env = this.getEnvVar(key);
     if (!env) return [];
-    if (env.split(' ').length) return env.split(' ');
+    if (env.split(';').length) return env.split(';');
     return [env];
   }
 

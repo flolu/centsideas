@@ -35,6 +35,7 @@ nodejs_image(
     name = "image",
     data = [
         ":lib",
+        "//packages/schemas:proto_common",
         "//packages/schemas:proto_idea",
         "//packages/schemas:proto_user",
     ],
@@ -45,6 +46,7 @@ ts_jest(
     name = "test",
     srcs = glob(["**/*.spec.ts"]),
     data = [
+        "//packages/schemas:proto_common",
         "//packages/schemas:proto_idea",
         "//packages/schemas:proto_user",
     ],
