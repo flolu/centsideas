@@ -17,6 +17,21 @@ microk8s start && \
 microk8s enable dns storage ingress registry
 ```
 
+```bash
+kubectl create namespace kafka && \
+kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka && \
+kubectl apply -f packages/kubernetes/kafka-ephemeral.yaml -n kafka
+```
+
+or with helm
+
+```bash
+microk8s.helm init
+microk8s.helm repo add strimzi https://strimzi.io/charts/
+microk8s.helm install strimzi/strimzi-kafka-operator --namespace kafka
+microk8s.helm ls
+```
+
 not sure if needed but might be:
 create `/etc/docker/daemon.json` with content
 
@@ -52,7 +67,7 @@ microk8s stop
 To reset the cluster run
 
 ```bash
-microk8s reset
+kubectl delete apiservices --all && microk8s reset
 ```
 
 ## Dashboard

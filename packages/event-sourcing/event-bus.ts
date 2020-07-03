@@ -11,17 +11,27 @@ import {EventName} from '@centsideas/types';
 
 const EVENT_NAME_HEADER = 'eventName';
 
+// TODO disconnect on crash
+// TODO evaluate connection to producer/consumer in health checks (provide way to fetch connection status)
+
 @injectable()
 export class EventDispatcher {
   private kafka = new Kafka({
     brokers: this.globalConfig.getArray('global.kafka.brokers'),
-    logLevel: logLevel.WARN,
+    logLevel: logLevel.INFO,
   });
   private prodcuer = this.kafka.producer();
   private isConnected = false;
 
   constructor(private globalConfig: GlobalConfig, private logger: Logger) {
     this.ensureConnection();
+
+    process.on('SIGTERM', () => {
+      console.info('SIGTERM signal received.');
+      this.prodcuer.disconnect().then(() => {
+        process.exit(0);
+      });
+    });
   }
 
   async dispatch(topic: EventTopics, events: PersistedEvent[]) {
@@ -43,6 +53,7 @@ export class EventDispatcher {
     if (this.isConnected) return;
     await this.prodcuer.connect();
     this.isConnected = true;
+    this.logger.info('connected to producer');
   }
 }
 
@@ -50,7 +61,7 @@ export class EventDispatcher {
 export class EventListener {
   private kafka = new Kafka({
     brokers: this.globalConfig.getArray('global.kafka.brokers'),
-    logLevel: logLevel.WARN,
+    logLevel: logLevel.INFO,
   });
 
   constructor(private globalConfig: GlobalConfig, private logger: Logger) {}
@@ -60,10 +71,21 @@ export class EventListener {
 
     return Observable.create(async (observer: Observer<PersistedEvent>) => {
       await consumer.connect();
+      /**
+       * The consumer group will use the latest committed offset when starting to fetch messages.
+       * If the offset is invalid or not defined, `fromBeginning` defines the behavior of the consumer group.
+       */
       await consumer.subscribe({topic, fromBeginning: false});
       this.logger.info(consumerGroup, 'is listening for', topic);
 
-      return consumer.run({
+      process.on('SIGTERM', () => {
+        console.info('SIGTERM signal received.');
+        consumer.disconnect().then(() => {
+          process.exit(0);
+        });
+      });
+
+      await consumer.run({
         eachMessage: async ({message}) => {
           try {
             const eventNameHeader = message.headers && message.headers[EVENT_NAME_HEADER];

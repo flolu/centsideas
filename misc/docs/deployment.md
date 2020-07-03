@@ -3,7 +3,11 @@
 ### 1. Create [GKE](https://cloud.google.com/kubernetes-engine) cluster and connect to it
 
 ```bash
-gcloud beta container --project "centsideas" clusters create "centsideas" --zone "europe-west3-b" --no-enable-basic-auth --cluster-version "1.15.11-gke.12" --machine-type "n1-standard-1" --disk-size "10" && \
+gcloud beta container --project "centsideas" clusters create "centsideas"\
+  --zone "europe-west3-b" --no-enable-basic-auth --cluster-version "1.16.9-gke.6"\
+  --machine-type "n1-standard-1" --disk-size "10" --preemptible --num-nodes "3"\
+  --enable-autoscaling --min-nodes "0" --max-nodes "3"
+
 gcloud container clusters get-credentials centsideas --zone europe-west3-b --project centsideas
 ```
 
@@ -44,7 +48,15 @@ helm install \
   --set installCRDs=true
 ```
 
-### 6. Deploy services
+### 6. Setup Kafka Cluster
+
+```
+kubectl create namespace kafka && \
+kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka && \
+kubectl apply -f packages/kubernetes/kafka-persistent.yaml -n kafka
+```
+
+### 7. Deploy services
 
 ```
 yarn deploy

@@ -43,6 +43,7 @@ export class IdeaService {
 
   async create(id: IdeaId, userId: string) {
     const user = UserId.fromString(userId);
+    // FIXME may be not needed since the userId is supposed to come from an auth token
     await this.userReadAdapter.getUserById(user); // ensure user exists
     const unpublished = await this.ideaReadAdapter.getUnpublishedIdea(user);
     if (unpublished) return unpublished.id;

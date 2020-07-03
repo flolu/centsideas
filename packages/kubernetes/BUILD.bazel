@@ -6,7 +6,7 @@ package(default_visibility = ["//visibility:public"])
 
 k8s_deploy(
     name = "kafka",
-    template = ":kafka.yaml",
+    template = ":kafka-persistent.yaml",
 )
 
 k8s_deploy(
@@ -42,7 +42,7 @@ k8s_objects(
 
 microk8s_deploy(
     name = "microk8s_kafka",
-    template = ":kafka.yaml",
+    template = ":kafka-ephemeral.yaml",
 )
 
 microk8s_deploy(
