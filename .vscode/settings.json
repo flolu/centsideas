@@ -1,13 +1,16 @@
 {
   "rest-client.environmentVariables": {
     "$shared": {
-      "userId": "SSzBvJopz"
+      "userId": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIyZDVjN2QwOC1mNDBjLTQ2MzgtODUzOS1kMTIyNjRjMzM5ZjIiLCJ1c2VySWQiOiJPcHNxOFZpUTUiLCJpYXQiOjE1OTM3ODY4ODUsImV4cCI6MTU5Mzc4Nzc4NX0.uug1tvZyr6NjPS5Jk-0l5zDnFGjeO8yedvTu5bGYVMg"
     },
     "dev": {
       "apiUrl": "http://localhost:3000"
     },
     "microk8s": {
       "apiUrl": "http://api.localhost"
+    },
+    "prod": {
+      "apiUrl": "http://api.centsideas.com"
     }
   },
   "typescript.tsdk": "node_modules/typescript/lib"

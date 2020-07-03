@@ -29,6 +29,11 @@ k8s_deploy(
     template = ":secrets.yaml",
 )
 
+k8s_deploy(
+    name = "storage",
+    template = ":storage.yaml",
+)
+
 k8s_objects(
     name = "defaults",
     objects = [
@@ -37,6 +42,7 @@ k8s_objects(
         ":config",
         ":ingress",
         ":secrets",
+        ":storage"
     ],
 )
 

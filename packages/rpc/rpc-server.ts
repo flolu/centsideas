@@ -77,6 +77,7 @@ export class RpcServer {
               }
               bail(err);
             });
+            this.logger.info('rpc:server', handler?.name, response);
             callback(null, response);
           },
           {retries: 2, minTimeout: 50},

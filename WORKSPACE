@@ -97,7 +97,7 @@ k8s_go_deps()
 
 k8s_defaults(
     name = "k8s_deploy",
-    cluster = "gke_centsideas_europe-west3-b_centsideas",
+    cluster = "gke_centsideas_europe-west3-b_ci",
     image_chroot = "gcr.io/centsideas",
     kind = "deployment",
 )

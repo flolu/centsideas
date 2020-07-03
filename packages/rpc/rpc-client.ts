@@ -2,6 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import {injectable, interfaces} from 'inversify';
 
 import {SchemaService, loadProtoService} from '@centsideas/schemas';
+import {Logger} from '@centsideas/utils';
 
 @injectable()
 export class RpcClient<T = any> {
@@ -9,6 +10,8 @@ export class RpcClient<T = any> {
 
   private readonly defaultPort = 40000;
   private internalRpcClient!: grpc.Client;
+
+  constructor(private logger: Logger) {}
 
   initialize(host: string, service: SchemaService, port: number = this.defaultPort) {
     const serviceDefinition = loadProtoService(service);
@@ -28,6 +31,7 @@ export class RpcClient<T = any> {
     methodNames.forEach(methodName => {
       (this.client as any)[methodName] = (payload: any) => {
         return new Promise((resolve, reject) => {
+          this.logger.info('rpc:client', methodName, payload);
           const method: grpc.requestCallback<any> = (this.internalRpcClient as any)[methodName](
             payload,
             (err: grpc.ServiceError, response: any) => {
