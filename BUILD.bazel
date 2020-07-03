@@ -15,6 +15,7 @@ k8s_objects(
         "//services/user:k8s",
         "//services/user-read:k8s",
         "//services/mailing:k8s",
+        "//services/admin:k8s",
     ],
 )
 
@@ -29,5 +30,6 @@ k8s_objects(
         "//services/user:microk8s",
         "//services/user-read:microk8s",
         "//services/mailing:microk8s",
+        "//services/admin:microk8s",
     ],
 )

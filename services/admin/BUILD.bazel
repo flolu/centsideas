@@ -1,6 +1,9 @@
 load("@npm_bazel_typescript//:index.bzl", "ts_library")
 load("@centsideas//packages/jest:jest.bzl", "ts_jest")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -34,4 +37,30 @@ ts_jest(
     test_lib = "lib",
     tsconfig = "//:tsconfig.json",
     deps = [],
+)
+
+k8s_deploy(
+    name = "admin",
+    images = {"admin:placeholder_name": ":image"},
+    template = ":admin.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+        ":admin",
+    ],
+)
+
+microk8s_deploy(
+    name = "microk8s_admin",
+    images = {"admin:placeholder_name": ":image"},
+    template = ":admin.yaml",
+)
+
+k8s_objects(
+    name = "microk8s",
+    objects = [
+        ":microk8s_admin",
+    ],
 )

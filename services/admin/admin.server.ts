@@ -1,5 +1,6 @@
 import {injectable} from 'inversify';
 import {Kafka, ITopicConfig} from 'kafkajs';
+import * as http from 'http';
 
 import {Logger} from '@centsideas/utils';
 import {GlobalConfig} from '@centsideas/config';
@@ -7,8 +8,11 @@ import {EventTopics} from '@centsideas/enums';
 
 @injectable()
 export class AdminServer {
+  private error = null;
+
   constructor(private logger: Logger, private globalConfig: GlobalConfig) {
     this.createTopics();
+    http.createServer((_, res) => res.writeHead(this.error ? 500 : 200).end()).listen(3000);
   }
 
   async createTopics() {
@@ -32,6 +36,7 @@ export class AdminServer {
     } catch (error) {
       this.logger.warn('failed to create kafka topics');
       this.logger.error(error);
+      this.error = error;
     }
   }
 }

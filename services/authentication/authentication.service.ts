@@ -25,7 +25,6 @@ import {UserReadAdapter} from './user-read.adapter';
 import {AuthenticationConfig} from './authentication.config';
 import {GoogleApiAdapter} from './google-api.adapter';
 import * as Errors from './session.errors';
-import {Logger} from '@centsideas/utils';
 
 @injectable()
 export class AuthenticationService {
@@ -51,7 +50,6 @@ export class AuthenticationService {
     private config: AuthenticationConfig,
     private userReadAdapter: UserReadAdapter,
     private googleApiAdapter: GoogleApiAdapter,
-    private logger: Logger,
     @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory: MongoEventStoreFactory,
     @inject(MONGO_SNAPSHOT_STORE_FACTORY) private snapshotStoreFactory: MongoSnapshotStoreFactory,
   ) {}
