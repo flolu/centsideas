@@ -1,7 +1,7 @@
 {
   "rest-client.environmentVariables": {
     "$shared": {
-      "userId": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIyZDVjN2QwOC1mNDBjLTQ2MzgtODUzOS1kMTIyNjRjMzM5ZjIiLCJ1c2VySWQiOiJPcHNxOFZpUTUiLCJpYXQiOjE1OTM3ODY4ODUsImV4cCI6MTU5Mzc4Nzc4NX0.uug1tvZyr6NjPS5Jk-0l5zDnFGjeO8yedvTu5bGYVMg"
+      "userId": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiJkZjBkZGMxOS00MTk5LTRjODQtYTlhMS1hZmI3ZmNjZmMwYTQiLCJ1c2VySWQiOiIxMlQ3ejlBSXUiLCJpYXQiOjE1OTM4NTY4MjAsImV4cCI6MTU5Mzg1NzcyMH0.dQdpOfXpTIxBUuFoRPWM-qnV1Jb7EQGwqfANBwz5sVU"
     },
     "dev": {
       "apiUrl": "http://localhost:3000"
