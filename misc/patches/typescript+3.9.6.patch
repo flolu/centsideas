@@ -1,8 +1,8 @@
 diff --git a/node_modules/typescript/lib/typescript.js b/node_modules/typescript/lib/typescript.js
-index 423d4c3..e2389aa 100644
+index 73d31bc..b455995 100644
 --- a/node_modules/typescript/lib/typescript.js
 +++ b/node_modules/typescript/lib/typescript.js
-@@ -92602,6 +92602,7 @@ var ts;
+@@ -92621,6 +92621,7 @@ var ts;
      }
      ts.isInternalDeclaration = isInternalDeclaration;
      var declarationEmitNodeBuilderFlags = 1024 /* MultilineObjectLiterals */ |

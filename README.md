@@ -1,15 +1,7 @@
-<style>
-a {
-  color: #ffab34;
-}
-a:hover {
-  color: #f57a20;
-  font-weight: bold;
-  text-decoration: none;
-}
-</style>
 <div align="center">
-  <img width="180px" height="auto" src="misc/assets/icon.png" />
+  <a href="https://centsideas.com">
+    <img width="180px" height="auto" src="misc/assets/icon.png" />
+  </a>
   <br>
   <h1>CentsIdeas</h1>
   <p>
@@ -43,6 +35,10 @@ The goal is to have **unit and integration tests** spaning across all services a
 ### Miscealenous
 
 This project also aims to be compliant with GDPR.
+
+## Documentation
+
+_coming soon_
 
 ## Thanks to all people listed below for your help!
 
