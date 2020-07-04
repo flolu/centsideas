@@ -61,3 +61,19 @@ spec:
       port: 3000
       targetPort: 3000
   type: NodePort
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gateway-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: gateway-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 75
+---
+

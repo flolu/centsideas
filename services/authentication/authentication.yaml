@@ -80,6 +80,9 @@ spec:
     - name: grpc
       port: 40000
   type: ClusterIP
+
+# TODO scaling of event store doesn't seem possible (is this a problem?)
+# if so... mongodb won't let multiple connections through
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -124,3 +127,19 @@ spec:
     - name: mongo
       port: 27017
   type: ClusterIP
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: authentication-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: authentication-deployment
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 75
+---
+

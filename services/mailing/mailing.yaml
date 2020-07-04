@@ -73,3 +73,19 @@ spec:
     - name: http
       port: 3000
   type: ClusterIP
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mailing-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: mailing-deployment
+  minReplicas: 2
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 75
+---
+
