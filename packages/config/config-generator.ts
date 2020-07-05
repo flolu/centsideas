@@ -4,49 +4,78 @@ import * as path from 'path';
 
 import {Config} from './config';
 
-const DOT_ENV_NAME = '.env';
+const BASE_DIR = path.join('env');
+const GLOBAL = 'global';
 const SERVICES = 'services';
 const K8S_CONFIG = '-config';
-const GLOBAL = 'global';
 const SECRETS = 'secrets';
-
-const ROOT = path.join(__dirname, '../../');
 const KUBERNETES = path.join('packages', 'kubernetes');
-const DOT_ENV = path.join(ROOT, DOT_ENV_NAME);
-const TEMPLATE = path.join(ROOT, `.template${DOT_ENV_NAME}`);
 
-const cliArgs = process.argv.slice(2);
-const envName = cliArgs[0];
+const environment = process.argv.slice(2)[0];
+if (environment === 'template') throw new Error('You cannot name an environment "template"!');
 
-async function main() {
-  await upsertDotEnvFile();
-  const {parsed} = dotenv.config({
-    path: path.join(ROOT, envName ? `.${envName}${DOT_ENV_NAME}` : DOT_ENV_NAME),
-  });
-  if (!parsed) return;
+async function main2() {
+  await upsertEnvFiles();
 
-  const services = discoverServices(parsed);
+  const parsedConfig = parseEnvFile(`.${environment}.config.env`);
+  const parsedSecrets = parseEnvFile(`.${environment}.secrets.env`);
+  if (!parsedConfig) throw new Error(`Could not find .${environment}.config.env`);
+  if (!parsedSecrets) throw new Error(`Could not find .${environment}.secrets.env`);
+
+  /**
+   * config
+   */
+  const services = discoverServices(parsedConfig);
   services.forEach(async service => {
     class ServiceConfig extends Config {
       constructor() {
-        super(service, envName);
+        super(service, environment);
       }
     }
-    const config = new ServiceConfig();
-    if (service === GLOBAL) await writeK8sConfigFile(service, config.config, KUBERNETES);
-    else if (service === SECRETS) await writeK8sSecretFile(config.config, KUBERNETES);
-    else await writeK8sConfigFile(service, config.config);
+    const serviceConfig = new ServiceConfig();
+    if (service === GLOBAL) await writeK8sConfigFile(service, serviceConfig.config, KUBERNETES);
+    else await writeK8sConfigFile(service, serviceConfig.config);
   });
+
+  /**
+   * secrets
+   */
+  class Secrets extends Config {
+    constructor() {
+      super(SECRETS, environment);
+    }
+  }
+  const {config} = new Secrets();
+  await writeK8sSecretFile(config, KUBERNETES);
 }
 
-async function upsertDotEnvFile() {
+async function upsertEnvFiles() {
   try {
-    await fsPromises.access(DOT_ENV);
+    await fsPromises.access(path.join(BASE_DIR, `.${environment}.secrets.env`));
   } catch (error) {
-    const template = await fsPromises.readFile(TEMPLATE);
-    await fsPromises.writeFile(DOT_ENV, template);
+    const template = await fsPromises.readFile(path.join(BASE_DIR, '.template.secrets.env'));
+    await fsPromises.writeFile(path.join(BASE_DIR, `.${environment}.secrets.env`), template);
+  }
+
+  /**
+   * create env file for docker-compose with all
+   * environment variables
+   */
+  if (environment === 'dev') {
+    const devConfig = await fsPromises.readFile(path.join(BASE_DIR, '.dev.config.env'));
+    const devSecrets = await fsPromises.readFile(path.join(BASE_DIR, '.dev.secrets.env'));
+    await fsPromises.writeFile(
+      path.join(BASE_DIR, '.docker-compose.env'),
+      devSecrets + '\n'.repeat(3) + devConfig,
+    );
   }
 }
+
+function parseEnvFile(file: string) {
+  return dotenv.config({path: path.join(ROOT, path.join(BASE_DIR, file))}).parsed;
+}
+
+const ROOT = path.join(__dirname, '../../');
 
 function discoverServices(parsed: dotenv.DotenvParseOptions) {
   const services = Object.keys(parsed)
@@ -99,4 +128,4 @@ ${data}
 `;
 }
 
-main();
+main2();

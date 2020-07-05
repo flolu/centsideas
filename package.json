@@ -6,9 +6,10 @@
     "test:unit": "jest",
     "test:coverage": "jest --coverage",
     "deploy": "yarn config:prod && bazelisk run :k8s.apply",
-    "deploy:microk8s": "ts-node packages/config/config-generator microk8s && bazelisk run :microk8s.apply",
+    "deploy:microk8s": "yarn config:microk8s && bazelisk run :microk8s.apply",
+    "config:microk8s": "ts-node packages/config/config-generator microk8s",
     "config:prod": "ts-node packages/config/config-generator prod",
-    "config:dev": "ts-node packages/config/config-generator",
+    "config:dev": "ts-node packages/config/config-generator dev",
     "lint": "tslint --project .",
     "format": "prettier --write .",
     "up": "yarn upgrade-interactive --latest",
@@ -17,6 +18,7 @@
     "docker:remove": "docker rm $(docker ps -a -q)",
     "docker:clean": "yarn docker:stop && yarn docker:remove && docker system prune --volumes",
     "clean": "rm -rf node_modules && bazelisk clean",
+    "vapid-keys": "web-push generate-vapid-keys --json",
     "postinstall": "patch-package --patch-dir misc/patches && ngcc"
   },
   "dependencies": {

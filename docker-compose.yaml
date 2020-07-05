@@ -41,7 +41,7 @@ services:
       - ./services/gateway:/services/gateway
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env
+    env_file: env/.docker-compose.env
     command: yarn run ts-node-dev services/gateway --colors
     ports:
       - 3000:3000
@@ -56,7 +56,7 @@ services:
       - ./services/idea:/services/idea
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env
+    env_file: env/.docker-compose.env
     command: yarn run ts-node-dev services/idea --colors
     depends_on:
       - kafka
@@ -70,7 +70,7 @@ services:
       - ./services/idea-read:/services/idea-read
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env
+    env_file: env/.docker-compose.env
     command: yarn run ts-node-dev services/idea-read --colors
     depends_on:
       - kafka
@@ -86,7 +86,7 @@ services:
       - ./services/authentication:/services/authentication
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env
+    env_file: env/.docker-compose.env
     command: yarn run ts-node-dev services/authentication --colors
     depends_on:
       - kafka
@@ -101,7 +101,7 @@ services:
       - ./services/user:/services/user
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env
+    env_file: env/.docker-compose.env
     command: yarn run ts-node-dev services/user --colors
     depends_on:
       - kafka
@@ -115,7 +115,7 @@ services:
       - ./services/user-read:/services/user-read
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env
+    env_file: env/.docker-compose.env
     command: yarn run ts-node-dev services/user-read --colors
     depends_on:
       - kafka
@@ -131,7 +131,7 @@ services:
       - ./services/mailing:/services/mailing
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env
+    env_file: env/.docker-compose.env
     command: yarn run ts-node-dev services/mailing --colors
     depends_on:
       - kafka
@@ -146,7 +146,7 @@ services:
       - ./services/admin:/services/admin
       - ./packages:/packages
       - ./node_modules:/node_modules
-    env_file: .env
+    env_file: env/.docker-compose.env
     command: yarn run ts-node-dev services/admin --colors
     depends_on:
       - kafka

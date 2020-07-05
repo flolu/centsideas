@@ -1,8 +1,13 @@
 node_modules
-.env*
 bazel-*
 coverage
 dist
 *-config.yaml
 secrets.yaml
 *.log
+
+.env
+.dev.secrets.env
+.microk8s.secrets.env
+.prod.secrets.env
+.docker-compose.env
