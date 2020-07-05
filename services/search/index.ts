@@ -14,25 +14,16 @@ import {
   rpcClientFactory,
 } from '@centsideas/rpc';
 
-import {UserReadConfig} from './user-read.config';
-import {UserReadServer} from './user-read.server';
-import {UserRepository} from './user.repository';
-import {PrivateUserRepository} from './private-user.repository';
-import {UserProjector} from './user.projector';
-import {PrivateUserProjector} from './private-user.projector';
+import {SearchConfig} from './search.config';
+import {SearchServer} from './search.server';
+import {IdeaReadAdapter} from './idea-read.adapter';
 
-DI.registerProviders(
-  UserReadServer,
-  UserRepository,
-  PrivateUserRepository,
-  UserProjector,
-  PrivateUserProjector,
-);
-DI.registerSingletons(Logger, UserReadConfig, GlobalConfig);
+DI.registerProviders(SearchServer, IdeaReadAdapter);
+DI.registerSingletons(Logger, SearchConfig, GlobalConfig);
 
 DI.registerProviders(EventListener);
 DI.registerProviders(RpcClient, RpcServer);
 DI.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
 
-DI.bootstrap(UserReadServer);
+DI.bootstrap(SearchServer);

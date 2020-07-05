@@ -27,6 +27,11 @@ filegroup(
     srcs = glob(["**/user/*.proto"]),
 )
 
+filegroup(
+    name = "proto_search",
+    srcs = glob(["**/search/*.proto"]),
+)
+
 ts_library(
     name = "schemas",
     srcs = glob(["**/*.ts"]),

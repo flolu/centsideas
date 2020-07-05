@@ -27,7 +27,10 @@ export class IdeaReadServer implements IdeaReadQueries.Service {
 
   @RpcMethod(IdeaReadService)
   getById({id, userId}: IdeaReadQueries.GetBydId) {
-    return this.repository.getById(IdeaId.fromString(id), UserId.fromString(userId));
+    return this.repository.getById(
+      IdeaId.fromString(id),
+      userId ? UserId.fromString(userId) : undefined,
+    );
   }
 
   @RpcMethod(IdeaReadService)

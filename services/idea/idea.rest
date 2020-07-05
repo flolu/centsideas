@@ -12,7 +12,7 @@ PUT {{apiUrl}}/idea/{{ideaId}}/rename
 content-type: application/json
 Authorization: Bearer {{userId}}
 
-{"title":"The best idea ever"}
+{"title":" "}
 
 ###
 
@@ -28,7 +28,7 @@ PUT {{apiUrl}}/idea/{{ideaId}}/description
 content-type: application/json
 Authorization: Bearer {{userId}}
 
-{"description":"Not really describing the idea."}
+{"description":"Not really describing the idea. puste"}
 
 ###
 
@@ -36,7 +36,7 @@ PUT {{apiUrl}}/idea/{{ideaId}}/tags
 content-type: application/json
 Authorization: Bearer {{userId}}
 
-{"tags": ["powerful", "awesome","cool"]}
+{"tags": ["powerful", "awesome","cool", "kuchen"]}
 
 ###
 

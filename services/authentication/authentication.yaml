@@ -81,7 +81,7 @@ spec:
       port: 40000
   type: ClusterIP
 
-# TODO scaling of event store doesn't seem possible (is this a problem?)
+# FIXME scaling of event store doesn't seem possible (is this a problem?)
 # if so... mongodb won't let multiple connections through
 ---
 apiVersion: apps/v1

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package search;
+
+service SearchService {
+  rpc searchIdeas(SearchIdeaPayload) returns (IdeasSearchResult);
+}
+
+message SearchIdeaPayload {
+  string input = 1;
+}
+
+message IdeasSearchResult {
+  repeated IdeaSearchHits hits = 2;
+}
+
+message IdeaSearchHits {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  repeated string tags = 4;
+}

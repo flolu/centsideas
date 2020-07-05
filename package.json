@@ -32,6 +32,7 @@
     "@angular/platform-server": "10.0.2",
     "@angular/router": "10.0.2",
     "@angular/service-worker": "^10.0.2",
+    "@elastic/elasticsearch": "^7.8.0",
     "@grpc/grpc-js": "^1.1.1",
     "@grpc/proto-loader": "^0.5.4",
     "@ngrx/effects": "9.2.0",

@@ -15,6 +15,7 @@ import {AuthenticationController} from './authentication.controller';
 import {IdeaController} from './idea.controller';
 import {UserController} from './user.controller';
 import {PersonalDataController} from './personal-data.controller';
+import {SearchController} from './search.controller';
 
 DI.registerProviders(
   GatewayServer,
@@ -24,6 +25,7 @@ DI.registerProviders(
   AuthMiddleware,
   UserController,
   PersonalDataController,
+  SearchController,
 );
 DI.registerSingletons(Logger, GatewayConfig, GlobalConfig, SecretsConfig);
 

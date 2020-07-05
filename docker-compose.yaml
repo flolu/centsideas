@@ -8,16 +8,16 @@ services:
     ports:
       - 2181:2181
     environment:
-      ZOO_LOG4J_PROP: WARN
+      - ZOO_LOG4J_PROP=WARN
   kafka:
     container_name: kafka
     image: confluentinc/cp-kafka
     ports:
       - 9092:9092
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
     logging:
       driver: none
     depends_on:
@@ -28,6 +28,29 @@ services:
     image: mongo:4
     ports:
       - 27017:27017
+    logging:
+      driver: none
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.8.0
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
     logging:
       driver: none
 
@@ -136,6 +159,21 @@ services:
     depends_on:
       - kafka
 
+  search:
+    container_name: search
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./services/search:/services/search
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: env/.docker-compose.env
+    command: yarn run ts-node-dev services/search --colors
+    depends_on:
+      - kafka
+
   admin:
     container_name: admin
     image: node:lts-alpine
@@ -150,3 +188,7 @@ services:
     command: yarn run ts-node-dev services/admin --colors
     depends_on:
       - kafka
+
+volumes:
+  elasticsearch-data:
+    driver: local

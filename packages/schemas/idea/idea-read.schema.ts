@@ -2,7 +2,7 @@ import {IdeaModels} from '@centsideas/models';
 
 export interface GetBydId {
   id: string;
-  userId: string;
+  userId?: string;
 }
 
 export interface GetUnpublished {
