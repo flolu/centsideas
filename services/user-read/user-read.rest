@@ -15,6 +15,5 @@ GET {{apiUrl}}/user/{{id}}
 
 ###
 
-# TODO events from all users are returned, but they should be filtered down to requester user
 GET {{apiUrl}}/personalData
 Authorization: Bearer {{userId}}

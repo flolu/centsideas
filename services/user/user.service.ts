@@ -107,16 +107,16 @@ export class UserService {
   }
 
   async getEvents(after?: number, streamId?: string) {
-    let events: PersistedEvent[];
-    if (streamId) events = await this.eventStore.getStream(streamId, after || -1);
-    events = await this.eventStore.getEvents(after || -1);
+    const events: PersistedEvent[] = streamId
+      ? await this.eventStore.getStream(streamId, after || -1)
+      : await this.eventStore.getEvents(after || -1);
     return events.map(serializeEvent);
   }
 
   async getPrivateEvents(after?: number, streamId?: string) {
-    let events: PersistedEvent[];
-    if (streamId) events = await this.privateEventStore.getStream(streamId, after || -1);
-    events = await this.privateEventStore.getEvents(after || -1);
+    const events: PersistedEvent[] = streamId
+      ? await this.privateEventStore.getStream(streamId, after || -1)
+      : await this.privateEventStore.getEvents(after || -1);
     return events.map(serializeEvent);
   }
 

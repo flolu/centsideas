@@ -8,6 +8,8 @@ import {AccessToken, UserId} from '@centsideas/types';
 
 @injectable()
 export class AuthMiddleware extends BaseMiddleware {
+  private accessTokenSecret = this.secretsConfig.get('secrets.tokens.access');
+
   constructor(private secretsConfig: SecretsConfig, private globalConfig: GlobalConfig) {
     super();
   }
@@ -16,10 +18,7 @@ export class AuthMiddleware extends BaseMiddleware {
     const authHeader = req.headers[HeaderKeys.Auth];
     const accessToken = authHeader?.split(' ')[1] || '';
     try {
-      const {userId} = AccessToken.fromString(
-        accessToken,
-        this.secretsConfig.get('secrets.tokens.access'),
-      );
+      const {userId} = AccessToken.fromString(accessToken, this.accessTokenSecret);
       res.locals.userId = userId;
       next();
     } catch (error) {
