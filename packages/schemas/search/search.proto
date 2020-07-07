@@ -15,8 +15,12 @@ message IdeasSearchResult {
 }
 
 message IdeaSearchHits {
-  string id = 1;
-  string title = 2;
-  string description = 3;
-  repeated string tags = 4;
+  float score = 1;
+  string id = 2;
+  string userId = 3;
+  string title = 4;
+  string description = 5;
+  repeated string tags = 6;
+  string publishedAt = 7;
+  string updatedAt = 8;
 }

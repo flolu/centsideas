@@ -1,7 +1,7 @@
 @sessionId = ___
-@email = diravi5860@wwmails.com
-@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIxYzE5NTEyZi01OGIxLTRmMDQtOTQxNC1lMTgwMWRkYzQyODUiLCJlbWFpbCI6ImRpcmF2aTU4NjBAd3dtYWlscy5jb20iLCJpYXQiOjE1OTM5NzQ2NjgsImV4cCI6MTU5Mzk4MTg2OH0.28w9NT4ESNG5c938DqFBJOZbgeJiFqK7S2DRB9Fm61g
-@googleSignInCode = 4/1gHpkXfa72rVhgXk14I7NR6wawjMlhmm1SoB5PTCpWQ3XQVpzMiRzwi0oihs6sXFkr8_W938XMiWQkatwoZv_Oo
+@email = ___
+@emailSignInToken = ___
+@googleSignInCode = ___
 
 ###
 

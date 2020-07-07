@@ -12,7 +12,7 @@ PUT {{apiUrl}}/idea/{{ideaId}}/rename
 content-type: application/json
 Authorization: Bearer {{userId}}
 
-{"title":" "}
+{"title":"Marketplace for 3D Models and similar assets"}
 
 ###
 
@@ -28,7 +28,7 @@ PUT {{apiUrl}}/idea/{{ideaId}}/description
 content-type: application/json
 Authorization: Bearer {{userId}}
 
-{"description":"Not really describing the idea. puste"}
+{"description":"A platform where people cann sell and buy 3d models"}
 
 ###
 
@@ -36,7 +36,7 @@ PUT {{apiUrl}}/idea/{{ideaId}}/tags
 content-type: application/json
 Authorization: Bearer {{userId}}
 
-{"tags": ["powerful", "awesome","cool", "kuchen"]}
+{"tags": ["3d","marketplace","ecommerce"]}
 
 ###
 

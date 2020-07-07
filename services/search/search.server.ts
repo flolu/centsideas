@@ -1,9 +1,8 @@
 import {injectable, inject} from 'inversify';
 import * as http from 'http';
-
 import * as elasticsearch from '@elastic/elasticsearch';
-import {EventsHandler, EventHandler} from '@centsideas/event-sourcing';
 
+import {EventsHandler, EventHandler} from '@centsideas/event-sourcing';
 import {IdeaEventNames} from '@centsideas/enums';
 import {PersistedEvent, IdeaModels} from '@centsideas/models';
 import {IdeaId} from '@centsideas/types';
@@ -35,49 +34,134 @@ export class SearchServer extends EventsHandler {
     http.createServer((_, res) => res.writeHead(200).end()).listen(3000);
   }
 
+  // FIXME instaead of fetching idea from read model... make search the read model
   @EventHandler(IdeaEventNames.Published)
   // TODO catch errors and don't ack kafka message
   async ideaPublished(event: PersistedEvent<IdeaModels.IdeaPublishedData>) {
-    this._logger.info('idea published', event);
-    // TODO make sure is sync
-    const {id, title, tags, description} = await this.ideaReadAdapter.getById(
-      IdeaId.fromString(event.streamId),
-    );
-    this._logger.info('fetched idea from idea read`', id, title, tags, description);
-    await this.client.index({
-      index: this.ideaIndex,
-      body: {id, title, tags, description},
-    });
+    const idea = await this.ideaReadAdapter.getById(IdeaId.fromString(event.streamId));
+    await this.client.index({index: this.ideaIndex, body: idea, id: idea.id});
     this._logger.info('saved idea to index');
   }
 
-  /*  TODO  @EventHandler(IdeaEventNames.Renamed)
-  async ideaRenamed() {}
+  @EventHandler(IdeaEventNames.Renamed)
+  async ideaRenamed(event: PersistedEvent<IdeaModels.IdeaRenamedData>) {
+    await this.client.update({
+      index: this.ideaIndex,
+      id: event.streamId,
+      body: {
+        doc: {
+          title: event.data.title,
+          updatedAt: event.insertedAt,
+        },
+      },
+    });
+  }
 
   @EventHandler(IdeaEventNames.DescriptionEdited)
-  async ideaDescriptionEdited() {}
+  async ideaDescriptionEdited(event: PersistedEvent<IdeaModels.IdeaDescriptionEditedData>) {
+    await this.client.update({
+      index: this.ideaIndex,
+      id: event.streamId,
+      body: {
+        doc: {
+          description: event.data.description,
+          updatedAt: event.insertedAt,
+        },
+      },
+    });
+  }
 
   @EventHandler(IdeaEventNames.TagsAdded)
-  async ideaTagsAdded() {}
+  async ideaTagsAdded(event: PersistedEvent<IdeaModels.IdeaTagsAddedData>) {
+    const {body} = await await this.client.get({index: this.ideaIndex, id: event.streamId});
+    await this.client.update({
+      index: this.ideaIndex,
+      id: event.streamId,
+      body: {
+        doc: {
+          tags: [body.tags, ...event.data.tags],
+          updatedAt: event.insertedAt,
+        },
+      },
+    });
+  }
 
   @EventHandler(IdeaEventNames.TagsRemoved)
-  async ideaTagsRemoved() {}
+  async ideaTagsRemoved(event: PersistedEvent<IdeaModels.IdeaTagsRemovedData>) {
+    const {body} = await await this.client.get({index: this.ideaIndex, id: event.streamId});
+    await this.client.update({
+      index: this.ideaIndex,
+      id: event.streamId,
+      body: {
+        doc: {
+          tags: body.tags.filter((t: string) => !event.data.tags.includes(t)),
+          updatedAt: event.insertedAt,
+        },
+      },
+    });
+  }
 
   @EventHandler(IdeaEventNames.Deleted)
-  async ideaDeleted() {} */
+  async ideaDeleted(event: PersistedEvent<IdeaModels.IdeaDeletedData>) {
+    await this.client.delete({index: this.ideaIndex, id: event.streamId});
+  }
 
   @RpcMethod(SearchService)
   async searchIdeas({input}: SearchQueries.SearchIdeaPayload) {
-    await this.client.indices.refresh({index: this.ideaIndex});
+    // FIXME ideas with higher scores should be ranked higher
     const {body} = await this.client.search({
       index: this.ideaIndex,
       body: {
         query: {
-          match: {title: input},
+          bool: {
+            should: [
+              {
+                match: {
+                  title: {
+                    query: input,
+                    operator: 'and',
+                    fuzziness: 'auto',
+                    boost: 1,
+                  },
+                },
+              },
+              {
+                match: {
+                  description: {
+                    query: input,
+                    operator: 'and',
+                    fuzziness: 'auto',
+                  },
+                },
+              },
+              {
+                match: {
+                  tags: {
+                    query: input,
+                    operator: 'and',
+                    fuzziness: 'auto',
+                    boost: 0.5,
+                  },
+                },
+              },
+              /**
+               * boost ideas, that have been published in the
+               * last 10 days
+               */
+              {
+                range: {
+                  publishedAt: {
+                    boost: 1,
+                    gte: new Date(Number(new Date()) - 1000 * 60 * 60 * 24 * 10),
+                  },
+                },
+              },
+            ],
+          },
         },
       },
     });
-    const hits = body.hits.hits.map((h: any) => h._source);
-    return {hits, max_score: body.max_score};
+    this._logger.info(body.hits);
+    return {hits: body.hits.hits.map((h: any) => ({...h._source, score: h._score}))};
   }
 }

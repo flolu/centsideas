@@ -19,9 +19,9 @@ export class SearchController {
     @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {}
 
-  @httpGet('/ideas')
+  @httpGet('/ideas/:input')
   async searchIdeas(req: express.Request) {
-    const {input} = req.query;
+    const {input} = req.params;
     if (!input) throw Error('please provide search input');
     return this.searchRpc.client.searchIdeas({input: input.toString()});
   }
