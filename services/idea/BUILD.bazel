@@ -85,9 +85,9 @@ k8s_deploy(
 k8s_objects(
     name = "k8s",
     objects = [
-        ":idea",
-        ":storage",
         ":config",
+        ":storage",
+        ":idea",
     ],
 )
 
@@ -110,8 +110,8 @@ microk8s_deploy(
 k8s_objects(
     name = "microk8s",
     objects = [
-        ":microk8s_idea",
-        ":microk8s_storage",
         ":microk8s_config",
+        ":microk8s_storage",
+        ":microk8s_idea",
     ],
 )

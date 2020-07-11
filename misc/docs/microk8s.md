@@ -17,28 +17,36 @@ microk8s start && \
 microk8s enable dns storage ingress registry
 ```
 
+Kafka
+
 ```bash
-kubectl create namespace kafka && \
-kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka && \
-kubectl apply -f packages/kubernetes/kafka-ephemeral.yaml -n kafka
+microk8s.kubectl create namespace kafka && \
+microk8s.kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka && \
+#microk8s.kubectl apply -f packages/kubernetes/kafka-ephemeral.yaml -n kafka
 ```
 
-or with helm
-
 ```bash
-microk8s.helm init
-microk8s.helm repo add strimzi https://strimzi.io/charts/
-microk8s.helm install strimzi/strimzi-kafka-operator --namespace kafka
-microk8s.helm ls
+# microk8s.helm init
+# microk8s.helm repo add strimzi https://strimzi.io/charts/
+# microk8s.helm install strimzi/strimzi-kafka-operator --namespace kafka
+# microk8s.helm ls
+```
+
+Elasticsearch
+https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-elasticsearch.html
+
+```
+microk8s.kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
+
+microk8s.kubectl create namespace elastic
+microk8s.kubectl apply -f packages/kubernetes/elasticsearch-local.yaml -n elastic
 ```
 
 not sure if needed but might be:
 create `/etc/docker/daemon.json` with content
 
 ```
-{
-  "insecure-registries" : ["10.141.241.175:32000"]
-}
+{"insecure-registries" : ["10.141.241.175:32000"]}
 ```
 
 ## Deployment
@@ -87,6 +95,9 @@ microk8s kubectl -n kube-system describe secret $token
 ```
 
 (this command from the [docs][1])
-Will return the auth token. Paste the token into the login screen and now you should be able to access the dashboard.
+Will return the auth token. Paste the token into the login screen and now you should be able to
+access the dashboard.
+
+# TODO document how to switch kubectl cluster from microk8s to gke and vice verca
 
 [1]: https://microk8s.io/docs/addon-dashboard

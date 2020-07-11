@@ -5,13 +5,11 @@ import * as elasticsearch from '@elastic/elasticsearch';
 import {EventsHandler, EventHandler} from '@centsideas/event-sourcing';
 import {IdeaEventNames} from '@centsideas/enums';
 import {PersistedEvent, IdeaModels} from '@centsideas/models';
-import {IdeaId} from '@centsideas/types';
 import {Logger} from '@centsideas/utils';
 import {RpcMethod, RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
 import {SearchService, SearchQueries} from '@centsideas/schemas';
 
 import {SearchConfig} from './search.config';
-import {IdeaReadAdapter} from './idea-read.adapter';
 
 @injectable()
 export class SearchServer extends EventsHandler {
@@ -26,21 +24,35 @@ export class SearchServer extends EventsHandler {
 
   constructor(
     private config: SearchConfig,
-    private ideaReadAdapter: IdeaReadAdapter,
     private _logger: Logger,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     super();
-    http.createServer((_, res) => res.writeHead(200).end()).listen(3000);
+    // FIXME check if connected to elasticsearch client to determinte server status
+    http
+      .createServer(async (_, res) => res.writeHead((await this.healthcheck()) ? 200 : 500).end())
+      .listen(3000);
   }
 
-  // FIXME instaead of fetching idea from read model... make search the read model
-  @EventHandler(IdeaEventNames.Published)
-  // TODO catch errors and don't ack kafka message
-  async ideaPublished(event: PersistedEvent<IdeaModels.IdeaPublishedData>) {
-    const idea = await this.ideaReadAdapter.getById(IdeaId.fromString(event.streamId));
-    await this.client.index({index: this.ideaIndex, body: idea, id: idea.id});
-    this._logger.info('saved idea to index');
+  @EventHandler(IdeaEventNames.Created)
+  async created({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
+    const {userId, createdAt} = data;
+    await this.client.index({
+      index: this.ideaIndex,
+      body: {
+        id: streamId,
+        userId,
+        createdAt,
+        title: undefined,
+        description: undefined,
+        tags: [],
+        publishedAt: undefined,
+        deletedAt: undefined,
+        lastEventVersion: version,
+        updatedAt: insertedAt,
+      },
+      id: streamId,
+    });
   }
 
   @EventHandler(IdeaEventNames.Renamed)
@@ -101,6 +113,21 @@ export class SearchServer extends EventsHandler {
     });
   }
 
+  // FIXME instaead of fetching idea from read model... make search the read model
+  @EventHandler(IdeaEventNames.Published)
+  // TODO catch errors and don't ack kafka message
+  async ideaPublished(event: PersistedEvent<IdeaModels.IdeaPublishedData>) {
+    await this.client.update({
+      index: this.ideaIndex,
+      id: event.streamId,
+      body: {
+        doc: {
+          publishedAt: event.insertedAt,
+        },
+      },
+    });
+  }
+
   @EventHandler(IdeaEventNames.Deleted)
   async ideaDeleted(event: PersistedEvent<IdeaModels.IdeaDeletedData>) {
     await this.client.delete({index: this.ideaIndex, id: event.streamId});
@@ -109,6 +136,7 @@ export class SearchServer extends EventsHandler {
   @RpcMethod(SearchService)
   async searchIdeas({input}: SearchQueries.SearchIdeaPayload) {
     // FIXME ideas with higher scores should be ranked higher
+    // TODO exclude unpublished and deleted ideas from search
     const {body} = await this.client.search({
       index: this.ideaIndex,
       body: {
@@ -163,5 +191,16 @@ export class SearchServer extends EventsHandler {
     });
     this._logger.info(body.hits);
     return {hits: body.hits.hits.map((h: any) => ({...h._source, score: h._score}))};
+  }
+
+  private async healthcheck(): Promise<boolean> {
+    try {
+      const health = await this.client.cluster.health();
+      this._logger.info('healthcheck', health);
+      return !!health;
+    } catch (err) {
+      this._logger.error(err);
+      return false;
+    }
   }
 }

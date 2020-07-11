@@ -1,7 +1,7 @@
 {
   "rest-client.environmentVariables": {
     "$shared": {
-      "userId": "___"
+      "userId": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiI3ZTkwZWQ2Ni00OTIyLTQ1ZjctOWM3ZS05MTAxMGVlMmJmOWQiLCJ1c2VySWQiOiJRUmhOajlqS28iLCJpYXQiOjE1OTQ0NjE2ODMsImV4cCI6MTU5NDQ2MjU4M30.xBWZHEsK7jZ60snSrz23v5RtAbcxpDkfuPqH806GGz0"
     },
     "dev": {
       "apiUrl": "http://localhost:3000"

@@ -1,6 +1,6 @@
 # FIXME research integration testing (maybe with docker-compose or microk8s)
 
-version: '3'
+version: "3"
 services:
   zookeeper:
     container_name: zookeeper

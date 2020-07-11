@@ -56,7 +56,15 @@ kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka &&
 kubectl apply -f packages/kubernetes/kafka-persistent.yaml -n kafka
 ```
 
-### 7. Deploy services
+### 7. Setup Elasticsearch Cluster
+
+https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-eck.html
+
+```
+
+```
+
+### 8. Deploy services
 
 ```
 yarn deploy

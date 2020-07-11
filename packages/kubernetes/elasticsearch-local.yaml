@@ -1,0 +1,18 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+spec:
+  version: 7.8.0
+  nodeSets:
+    - name: default
+      count: 3
+      config:
+        node.master: true
+        node.data: true
+        node.ingest: true
+        node.store.allow_mmap: false
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true

@@ -1,26 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: idea-deployment
+  name: search-deployment
 spec:
   selector:
     matchLabels:
-      app: idea
-  replicas: 2
+      app: search
+  replicas: 1
   template:
     metadata:
       labels:
-        app: idea
+        app: search
     spec:
       containers:
-        - name: idea
-          image: idea:placeholder_name
+        - name: search
+          image: search:placeholder_name
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: global-config
             - configMapRef:
-                name: idea-config
+                name: search-config
+          env:
+            - name: NODE_EXTRA_CA_CERTS
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-es-http-ca-internal
+                  key: tls.crt
           readinessProbe:
             httpGet:
               path: /
@@ -52,72 +58,27 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: idea-service
+  name: search-service
 spec:
   selector:
-    app: idea
+    app: search
   ports:
     - name: http
       port: 3000
     - name: grpc
       port: 40000
   type: ClusterIP
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: idea-event-store-deployment
-spec:
-  selector:
-    matchLabels:
-      app: idea-event-store
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: idea-event-store
-    spec:
-      containers:
-        - name: idea-event-store
-          image: mongo:4.2.6
-          volumeMounts:
-            - name: persistent-db-storage
-              mountPath: /data/db
-          resources:
-            requests:
-              memory: 10Mi
-              cpu: 10m
-            limits:
-              memory: 500Mi
-              cpu: 500m
-      volumes:
-        - name: persistent-db-storage
-          persistentVolumeClaim:
-            claimName: idea-event-store-pvc
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: idea-event-store-service
-spec:
-  selector:
-    app: idea-event-store
-  ports:
-    - name: mongo
-      port: 27017
-  type: ClusterIP
 
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: idea-hpa
+  name: search-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1beta1
     kind: Deployment
-    name: idea-deployment
-  minReplicas: 2
+    name: search-deployment
+  minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 75

@@ -16,9 +16,8 @@ import {
 
 import {SearchConfig} from './search.config';
 import {SearchServer} from './search.server';
-import {IdeaReadAdapter} from './idea-read.adapter';
 
-DI.registerProviders(SearchServer, IdeaReadAdapter);
+DI.registerProviders(SearchServer);
 DI.registerSingletons(Logger, SearchConfig, GlobalConfig);
 
 DI.registerProviders(EventListener);
