@@ -24,7 +24,9 @@ ts_library(
         "//packages/types",
         "//packages/utils",
         "@npm//@elastic/elasticsearch",
+        "@npm//@types/async-retry",
         "@npm//@types/node",
+        "@npm//async-retry",
         "@npm//inversify",
     ],
 )

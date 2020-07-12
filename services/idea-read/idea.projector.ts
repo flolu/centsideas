@@ -45,7 +45,6 @@ export class IdeaProjector extends MongoProjector {
     return result.events.map(deserializeEvent);
   }
 
-  // TODO consider also using @EventHandler in projectors (instead of @EventProjector)
   @EventProjector(IdeaEventNames.Created)
   async created({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
     const {userId, createdAt} = data;

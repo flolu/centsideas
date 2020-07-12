@@ -98,6 +98,4 @@ microk8s kubectl -n kube-system describe secret $token
 Will return the auth token. Paste the token into the login screen and now you should be able to
 access the dashboard.
 
-# TODO document how to switch kubectl cluster from microk8s to gke and vice verca
-
 [1]: https://microk8s.io/docs/addon-dashboard

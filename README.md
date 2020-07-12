@@ -12,7 +12,7 @@
   </p>
 </div>
 
-## Motives
+## Technical Motives
 
 ### Backend
 

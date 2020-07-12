@@ -1,4 +1,4 @@
-# TODO install in other namespace
+# TODO install in other namespace (by not adding it to bazel, instead apply once with -n elastic)
 
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch

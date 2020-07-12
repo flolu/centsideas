@@ -1,1 +1,1 @@
-GET {{apiUrl}}/search/ideas/market
+GET {{apiUrl}}/search/ideas/marketplace

@@ -15,7 +15,7 @@ const EVENT_NAME_HEADER = 'eventName';
 export class EventDispatcher {
   private kafka = new Kafka({
     brokers: this.globalConfig.getArray('global.kafka.brokers'),
-    logLevel: logLevel.INFO,
+    logLevel: logLevel.WARN,
   });
   private prodcuer = this.kafka.producer();
   private isConnected = false;
@@ -62,7 +62,7 @@ export class EventDispatcher {
 export class EventListener {
   private kafka = new Kafka({
     brokers: this.globalConfig.getArray('global.kafka.brokers'),
-    logLevel: logLevel.INFO,
+    logLevel: logLevel.WARN,
   });
   private consumer: Consumer | undefined;
   private isConnected: boolean = false;

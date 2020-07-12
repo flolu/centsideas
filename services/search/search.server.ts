@@ -1,21 +1,40 @@
 import {injectable, inject} from 'inversify';
 import * as http from 'http';
-import * as elasticsearch from '@elastic/elasticsearch';
+import * as asynRetry from 'async-retry';
 
-import {EventsHandler, EventHandler} from '@centsideas/event-sourcing';
-import {IdeaEventNames} from '@centsideas/enums';
+import {ElasticProjector, EventProjector} from '@centsideas/event-sourcing';
+import {IdeaEventNames, EventTopics} from '@centsideas/enums';
 import {PersistedEvent, IdeaModels} from '@centsideas/models';
 import {Logger} from '@centsideas/utils';
-import {RpcMethod, RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
-import {SearchService, SearchQueries} from '@centsideas/schemas';
+import {
+  RpcMethod,
+  RpcServer,
+  RPC_SERVER_FACTORY,
+  RpcServerFactory,
+  RpcClient,
+  RPC_CLIENT_FACTORY,
+  RpcClientFactory,
+  deserializeEvent,
+} from '@centsideas/rpc';
+import {SearchService, SearchQueries, IdeaCommandsService, IdeaCommands} from '@centsideas/schemas';
 
 import {SearchConfig} from './search.config';
 
 @injectable()
-export class SearchServer extends EventsHandler {
-  client = new elasticsearch.Client({node: this.config.get('search.elasticsearch.node')});
-  private readonly ideaIndex = 'ideas';
-  consumerGroupName = 'centsideas.search';
+export class SearchServer extends ElasticProjector {
+  elasticNode = this.config.get('search.elasticsearch.node');
+  index = 'ideas';
+  consumerGroupName = 'centsideas.search.ideas';
+  topic = EventTopics.Idea;
+  async initialize() {
+    //
+  }
+
+  private ideaEventStoreRpc: RpcClient<IdeaCommands.Service> = this.rpcFactory({
+    host: this.config.get('idea.rpc.host'),
+    service: IdeaCommandsService,
+    port: this.config.getNumber('idea.rpc.port'),
+  });
   private _rpcServer: RpcServer = this.rpcServerFactory({
     services: [SearchService],
     handlerClassInstance: this,
@@ -26,19 +45,31 @@ export class SearchServer extends EventsHandler {
     private config: SearchConfig,
     private _logger: Logger,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
+    @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
   ) {
     super();
     // FIXME check if connected to elasticsearch client to determinte server status
     http
       .createServer(async (_, res) => res.writeHead((await this.healthcheck()) ? 200 : 500).end())
       .listen(3000);
+    this.healthcheck();
   }
 
-  @EventHandler(IdeaEventNames.Created)
+  async getEvents(after: number) {
+    const result = await asynRetry(() => this.ideaEventStoreRpc.client.getEvents({after}), {
+      minTimeout: 500,
+      retries: 5,
+    });
+    if (!result.events) return [];
+    return result.events.map(deserializeEvent);
+  }
+
+  @EventProjector(IdeaEventNames.Created)
   async created({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
     const {userId, createdAt} = data;
-    await this.client.index({
-      index: this.ideaIndex,
+    const client = this.getClient();
+    await client.index({
+      index: this.index,
       body: {
         id: streamId,
         userId,
@@ -55,89 +86,125 @@ export class SearchServer extends EventsHandler {
     });
   }
 
-  @EventHandler(IdeaEventNames.Renamed)
-  async ideaRenamed(event: PersistedEvent<IdeaModels.IdeaRenamedData>) {
-    await this.client.update({
-      index: this.ideaIndex,
-      id: event.streamId,
+  @EventProjector(IdeaEventNames.Renamed)
+  async ideaRenamed({
+    version,
+    insertedAt,
+    data,
+    streamId,
+  }: PersistedEvent<IdeaModels.IdeaRenamedData>) {
+    const client = this.getClient();
+    await client.update({
+      index: this.index,
+      id: streamId,
       body: {
         doc: {
-          title: event.data.title,
-          updatedAt: event.insertedAt,
+          title: data.title,
+          updatedAt: insertedAt,
+          lastEventVersion: version,
         },
       },
     });
   }
 
-  @EventHandler(IdeaEventNames.DescriptionEdited)
-  async ideaDescriptionEdited(event: PersistedEvent<IdeaModels.IdeaDescriptionEditedData>) {
-    await this.client.update({
-      index: this.ideaIndex,
-      id: event.streamId,
+  @EventProjector(IdeaEventNames.DescriptionEdited)
+  async ideaDescriptionEdited({
+    version,
+    insertedAt,
+    data,
+    streamId,
+  }: PersistedEvent<IdeaModels.IdeaDescriptionEditedData>) {
+    const client = this.getClient();
+    await client.update({
+      index: this.index,
+      id: streamId,
       body: {
         doc: {
-          description: event.data.description,
-          updatedAt: event.insertedAt,
+          description: data.description,
+          updatedAt: insertedAt,
+          lastEventVersion: version,
         },
       },
     });
   }
 
-  @EventHandler(IdeaEventNames.TagsAdded)
-  async ideaTagsAdded(event: PersistedEvent<IdeaModels.IdeaTagsAddedData>) {
-    const {body} = await await this.client.get({index: this.ideaIndex, id: event.streamId});
-    await this.client.update({
-      index: this.ideaIndex,
-      id: event.streamId,
+  @EventProjector(IdeaEventNames.TagsAdded)
+  async ideaTagsAdded({
+    version,
+    insertedAt,
+    data,
+    streamId,
+  }: PersistedEvent<IdeaModels.IdeaTagsAddedData>) {
+    const client = this.getClient();
+    const {body} = await client.get({index: this.index, id: streamId});
+    const source = body._source;
+    await client.update({
+      index: this.index,
+      id: streamId,
       body: {
         doc: {
-          tags: [body.tags, ...event.data.tags],
-          updatedAt: event.insertedAt,
+          tags: [...source.tags, ...data.tags],
+          updatedAt: insertedAt,
+          lastEventVersion: version,
         },
       },
     });
   }
 
-  @EventHandler(IdeaEventNames.TagsRemoved)
-  async ideaTagsRemoved(event: PersistedEvent<IdeaModels.IdeaTagsRemovedData>) {
-    const {body} = await await this.client.get({index: this.ideaIndex, id: event.streamId});
-    await this.client.update({
-      index: this.ideaIndex,
-      id: event.streamId,
+  @EventProjector(IdeaEventNames.TagsRemoved)
+  async ideaTagsRemoved({
+    version,
+    insertedAt,
+    data,
+    streamId,
+  }: PersistedEvent<IdeaModels.IdeaTagsRemovedData>) {
+    const client = this.getClient();
+    const {body} = await client.get({index: this.index, id: streamId});
+    const source = body._source;
+    await client.update({
+      index: this.index,
+      id: streamId,
       body: {
         doc: {
-          tags: body.tags.filter((t: string) => !event.data.tags.includes(t)),
-          updatedAt: event.insertedAt,
+          tags: source.tags.filter((t: string) => !data.tags.includes(t)),
+          updatedAt: insertedAt,
+          lastEventVersion: version,
         },
       },
     });
   }
 
-  // FIXME instaead of fetching idea from read model... make search the read model
-  @EventHandler(IdeaEventNames.Published)
-  // TODO catch errors and don't ack kafka message
-  async ideaPublished(event: PersistedEvent<IdeaModels.IdeaPublishedData>) {
-    await this.client.update({
-      index: this.ideaIndex,
-      id: event.streamId,
+  @EventProjector(IdeaEventNames.Published)
+  async ideaPublished({
+    version,
+    insertedAt,
+    streamId,
+  }: PersistedEvent<IdeaModels.IdeaPublishedData>) {
+    const client = this.getClient();
+    await client.update({
+      index: this.index,
+      id: streamId,
       body: {
         doc: {
-          publishedAt: event.insertedAt,
+          publishedAt: insertedAt,
+          lastEventVersion: version,
         },
       },
     });
   }
 
-  @EventHandler(IdeaEventNames.Deleted)
+  @EventProjector(IdeaEventNames.Deleted)
   async ideaDeleted(event: PersistedEvent<IdeaModels.IdeaDeletedData>) {
-    await this.client.delete({index: this.ideaIndex, id: event.streamId});
+    const client = this.getClient();
+    await client.delete({index: this.index, id: event.streamId});
   }
 
   @RpcMethod(SearchService)
   async searchIdeas({input}: SearchQueries.SearchIdeaPayload) {
+    const client = this.getClient();
     // FIXME ideas with higher scores should be ranked higher
-    const {body} = await this.client.search({
-      index: this.ideaIndex,
+    const {body} = await client.search({
+      index: this.index,
       body: {
         query: {
           bool: {
@@ -194,10 +261,11 @@ export class SearchServer extends EventsHandler {
 
   private async healthcheck(): Promise<boolean> {
     try {
-      const health = await this.client.cluster.health();
-      this._logger.info('healthcheck', health);
-      return !!health && this.connected;
+      const client = this.getClient();
+      const {body} = await client.cluster.health();
+      return (body.status === 'green' || body.status === 'yellow') && this.connected;
     } catch (err) {
+      this._logger.warn('healthcheck failed with error');
       this._logger.error(err);
       return false;
     }
