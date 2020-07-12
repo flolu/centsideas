@@ -1,6 +1,6 @@
 import {injectable} from 'inversify';
 import {Observable, Observer} from 'rxjs';
-import {Kafka, logLevel, Message} from 'kafkajs';
+import {Kafka, logLevel, Message, Consumer} from 'kafkajs';
 
 import {PersistedEvent} from '@centsideas/models';
 import {serializeEventMessage, deserializeEventMessage} from '@centsideas/schemas';
@@ -10,9 +10,6 @@ import {Logger} from '@centsideas/utils';
 import {EventName} from '@centsideas/types';
 
 const EVENT_NAME_HEADER = 'eventName';
-
-// TODO disconnect on crash
-// TODO evaluate connection to producer/consumer in health checks (provide way to fetch connection status)
 
 @injectable()
 export class EventDispatcher {
@@ -49,6 +46,10 @@ export class EventDispatcher {
     return result;
   }
 
+  get connected() {
+    return this.isConnected;
+  }
+
   private async ensureConnection() {
     if (this.isConnected) return;
     await this.prodcuer.connect();
@@ -63,29 +64,36 @@ export class EventListener {
     brokers: this.globalConfig.getArray('global.kafka.brokers'),
     logLevel: logLevel.INFO,
   });
+  private consumer: Consumer | undefined;
+  private isConnected: boolean = false;
 
   constructor(private globalConfig: GlobalConfig, private logger: Logger) {}
 
   listen(topic: string | RegExp, consumerGroup: string): Observable<PersistedEvent> {
-    const consumer = this.kafka.consumer({groupId: consumerGroup, rebalanceTimeout: 1000});
+    if (!!this.consumer) throw new Error('Please call the listen method only once!');
+    this.consumer = this.kafka.consumer({groupId: consumerGroup, rebalanceTimeout: 1000});
+    this.consumer!.on('consumer.crash', () => (this.isConnected = false));
+    this.consumer!.on('consumer.connect', () => (this.isConnected = true));
+    this.consumer!.on('consumer.disconnect', () => (this.isConnected = false));
 
     return Observable.create(async (observer: Observer<PersistedEvent>) => {
-      await consumer.connect();
+      await this.consumer!.connect();
+
       /**
        * The consumer group will use the latest committed offset when starting to fetch messages.
        * If the offset is invalid or not defined, `fromBeginning` defines the behavior of the consumer group.
        */
-      await consumer.subscribe({topic, fromBeginning: false});
+      await this.consumer!.subscribe({topic, fromBeginning: false});
       this.logger.info(consumerGroup, 'is listening for', topic);
 
       process.on('SIGTERM', () => {
         console.info('SIGTERM signal received.');
-        consumer.disconnect().then(() => {
+        this.consumer!.disconnect().then(() => {
           process.exit(0);
         });
       });
 
-      await consumer.run({
+      await this.consumer!.run({
         eachMessage: async ({message}) => {
           try {
             const eventNameHeader = message.headers && message.headers[EVENT_NAME_HEADER];
@@ -101,6 +109,10 @@ export class EventListener {
         },
       });
     });
+  }
+
+  get connected() {
+    return this.isConnected;
   }
 }
 

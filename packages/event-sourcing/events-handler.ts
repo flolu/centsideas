@@ -23,6 +23,10 @@ export abstract class EventsHandler {
       .subscribe(e => this.handleEvent(e));
   }
 
+  get connected() {
+    return this.eventListener.connected;
+  }
+
   private async handleEvent(event: PersistedEvent) {
     const handlerMethodName = Reflect.getMetadata(event.name, this);
     if (!handlerMethodName) return;

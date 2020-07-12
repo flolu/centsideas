@@ -37,7 +37,7 @@ export class MailingServer extends EventsHandler {
     private userReadAdapter: UserReadAdapter,
   ) {
     super();
-    http.createServer((_, res) => res.writeHead(200).end()).listen(3000);
+    http.createServer((_, res) => res.writeHead(this.connected ? 200 : 500).end()).listen(3000);
     sgMail.setApiKey(this.secretesConfig.get('secrets.sendgrid.api'));
   }
 

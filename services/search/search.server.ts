@@ -136,7 +136,6 @@ export class SearchServer extends EventsHandler {
   @RpcMethod(SearchService)
   async searchIdeas({input}: SearchQueries.SearchIdeaPayload) {
     // FIXME ideas with higher scores should be ranked higher
-    // TODO exclude unpublished and deleted ideas from search
     const {body} = await this.client.search({
       index: this.ideaIndex,
       body: {
@@ -197,7 +196,7 @@ export class SearchServer extends EventsHandler {
     try {
       const health = await this.client.cluster.health();
       this._logger.info('healthcheck', health);
-      return !!health;
+      return !!health && this.connected;
     } catch (err) {
       this._logger.error(err);
       return false;

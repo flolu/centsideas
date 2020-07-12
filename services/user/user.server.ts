@@ -27,7 +27,9 @@ export class UserServer extends EventsHandler implements UserCommands.Service {
   ) {
     super();
     http
-      .createServer((_, res) => res.writeHead(this._rpcServer.isRunning ? 200 : 500).end())
+      .createServer((_, res) =>
+        res.writeHead(this._rpcServer.isRunning && this.connected ? 200 : 500).end(),
+      )
       .listen(3000);
   }
 
