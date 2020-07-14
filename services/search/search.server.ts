@@ -23,6 +23,8 @@ import {SearchConfig} from './search.config';
 @injectable()
 export class SearchServer extends ElasticProjector {
   elasticNode = this.config.get('search.elasticsearch.node');
+  elasticUserPassword = process.env.elasticsearch_password;
+  elasticTlsCertificate = process.env.elasticsearch_certificate || '';
   index = 'ideas';
   consumerGroupName = 'centsideas.search.ideas';
   topic = EventTopics.Idea;
@@ -265,7 +267,6 @@ export class SearchServer extends ElasticProjector {
       const {body} = await client.cluster.health();
       return (body.status === 'green' || body.status === 'yellow') && this.connected;
     } catch (err) {
-      this._logger.warn('healthcheck failed with error');
       this._logger.error(err);
       return false;
     }

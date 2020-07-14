@@ -12,6 +12,8 @@ import {EventListener} from './event-bus';
 export abstract class ElasticProjector extends Projector {
   abstract async getEvents(from: number): Promise<PersistedEvent[]>;
   abstract elasticNode: string;
+  abstract elasticUserPassword: string | undefined;
+  abstract elasticTlsCertificate: string;
   abstract index: string;
   abstract topic: EventTopics;
   abstract consumerGroupName: string;
@@ -25,7 +27,6 @@ export abstract class ElasticProjector extends Projector {
   @postConstruct()
   async initializeProjector() {
     await this.initialize();
-    this.client = new elasticsearch.Client({node: this.elasticNode});
     await this.upsertBookmark();
     await this.replay();
     this.eventListener
@@ -56,7 +57,13 @@ export abstract class ElasticProjector extends Projector {
   }
 
   protected getClient() {
-    if (!this.client) this.client = new elasticsearch.Client({node: this.elasticNode});
+    if (!this.client) {
+      this.client = new elasticsearch.Client({
+        node: this.elasticNode,
+        auth: {username: 'elastic', password: this.elasticUserPassword || 'changeme'},
+        ssl: {ca: this.elasticTlsCertificate, rejectUnauthorized: false},
+      });
+    }
     return this.client;
   }
 

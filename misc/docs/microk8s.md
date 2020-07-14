@@ -22,7 +22,7 @@ Kafka
 ```bash
 microk8s.kubectl create namespace kafka && \
 microk8s.kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka && \
-#microk8s.kubectl apply -f packages/kubernetes/kafka-ephemeral.yaml -n kafka
+microk8s.kubectl apply -f packages/kubernetes/kafka-ephemeral.yaml -n kafka
 ```
 
 ```bash
@@ -35,18 +35,23 @@ microk8s.kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n
 Elasticsearch
 https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-elasticsearch.html
 
-```
+```bash
 microk8s.kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
 
-microk8s.kubectl create namespace elastic
-microk8s.kubectl apply -f packages/kubernetes/elasticsearch-local.yaml -n elastic
+# microk8s.kubectl create namespace elastic
+# microk8s.kubectl apply -f packages/kubernetes/elasticsearch-local.yaml -n elastic
+microk8s.kubectl apply -f packages/kubernetes/elasticsearch-local.yaml
 ```
 
 not sure if needed but might be:
 create `/etc/docker/daemon.json` with content
 
 ```
-{"insecure-registries" : ["10.141.241.175:32000"]}
+{"insecure-registries" : ["localhost:32000"]}
+```
+
+```
+sudo systemctl restart docker
 ```
 
 ## Deployment

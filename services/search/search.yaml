@@ -22,11 +22,16 @@ spec:
             - configMapRef:
                 name: search-config
           env:
-            - name: NODE_EXTRA_CA_CERTS
+            - name: elasticsearch_certificate
               valueFrom:
                 secretKeyRef:
-                  name: elasticsearch-es-http-ca-internal
-                  key: tls.crt
+                  name: elasticsearch-es-http-certs-internal
+                  key: ca.crt
+            - name: elasticsearch_password
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-es-elastic-user
+                  key: elastic
           readinessProbe:
             httpGet:
               path: /
