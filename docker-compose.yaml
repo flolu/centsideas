@@ -73,7 +73,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/gateway --colors
+    command: yarn run ts-node-dev services/gateway --colors --transpileOnly --debounce 1500
     ports:
       - 3000:3000
 
@@ -88,7 +88,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/idea --colors
+    command: yarn run ts-node-dev services/idea --colors --transpileOnly --debounce 1500
     depends_on:
       - kafka
   idea-read:
@@ -102,7 +102,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/idea-read --colors
+    command: yarn run ts-node-dev services/idea-read --colors --transpileOnly --debounce 1500
     depends_on:
       - kafka
       - idea
@@ -118,7 +118,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/authentication --colors
+    command: yarn run ts-node-dev services/authentication --colors --transpileOnly --debounce 1500
     depends_on:
       - kafka
 
@@ -133,7 +133,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/user --colors
+    command: yarn run ts-node-dev services/user --colors --transpileOnly --debounce 1500
     depends_on:
       - kafka
   user-read:
@@ -147,7 +147,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/user-read --colors
+    command: yarn run ts-node-dev services/user-read --colors --transpileOnly --debounce 1500
     depends_on:
       - kafka
       - user
@@ -163,7 +163,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/mailing --colors
+    command: yarn run ts-node-dev services/mailing --colors --transpileOnly --debounce 1500
     depends_on:
       - kafka
 
@@ -178,9 +178,10 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/search --colors
+    command: yarn run ts-node-dev services/search --colors --transpileOnly --debounce 1500
     depends_on:
       - kafka
+      - elasticsearch
 
   admin:
     container_name: admin
@@ -193,7 +194,7 @@ services:
       - ./packages:/packages
       - ./node_modules:/node_modules
     env_file: env/.docker-compose.env
-    command: yarn run ts-node-dev services/admin --colors
+    command: yarn run ts-node-dev services/admin --colors --transpileOnly --debounce 1500
     depends_on:
       - kafka
 
