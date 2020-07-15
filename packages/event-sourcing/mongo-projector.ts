@@ -53,6 +53,11 @@ export abstract class MongoProjector extends Projector {
     await collection.findOneAndUpdate({name: this.sequenceCounterName}, {$inc: {sequence: 1}});
   }
 
+  async shutdown() {
+    await this.eventListener.disconnect();
+    if (this.client) await this.client.close();
+  }
+
   get connected() {
     return this.eventListener.connected;
   }

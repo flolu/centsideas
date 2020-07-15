@@ -32,6 +32,15 @@ export class RpcServer {
     services.forEach(s => this.addService(s, handlerClassInstance));
   }
 
+  disconnect() {
+    return new Promise(res => {
+      this.server.tryShutdown(err => {
+        if (err) this.server.forceShutdown();
+        res();
+      });
+    });
+  }
+
   private addService(service: SchemaService, methodsContainingClassInstance: object) {
     const methods = Reflect.getMetadata(RPC_METHODS, service);
     const implementation: Record<string, any> = {};

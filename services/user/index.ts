@@ -30,8 +30,9 @@ import {UserServer} from './user.server';
 import {UserConfig} from './user.config';
 import {UserService} from './user.service';
 import {UserReadAdapter} from './user-read.adapter';
+import {UserListener} from './user.listener';
 
-DI.registerProviders(UserServer, UserService, UserReadAdapter);
+DI.registerProviders(UserServer, UserService, UserReadAdapter, UserListener);
 DI.registerSingletons(UserConfig, GlobalConfig, SecretsConfig);
 
 DI.registerSingletons(Logger);

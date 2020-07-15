@@ -18,6 +18,7 @@ ts_library(
         "//packages/enums",
         "//packages/models",
         "@npm//@types/jsonwebtoken",
+        "@npm//@types/node",
         "@npm//chalk",
         "@npm//inversify",
         "@npm//jsonwebtoken",

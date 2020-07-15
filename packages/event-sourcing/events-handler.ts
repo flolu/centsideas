@@ -27,6 +27,10 @@ export abstract class EventsHandler {
     return this.eventListener.connected;
   }
 
+  async disconnect() {
+    await this.eventListener.disconnect();
+  }
+
   private async handleEvent(event: PersistedEvent) {
     const handlerMethodName = Reflect.getMetadata(event.name, this);
     if (!handlerMethodName) return;

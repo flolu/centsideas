@@ -22,13 +22,6 @@ export class EventDispatcher {
 
   constructor(private globalConfig: GlobalConfig, private logger: Logger) {
     this.ensureConnection();
-
-    process.on('SIGTERM', () => {
-      console.info('SIGTERM signal received.');
-      this.prodcuer.disconnect().then(() => {
-        process.exit(0);
-      });
-    });
   }
 
   async dispatch(topic: EventTopics, events: PersistedEvent[]) {
@@ -48,6 +41,11 @@ export class EventDispatcher {
 
   get connected() {
     return this.isConnected;
+  }
+
+  async disconnect() {
+    await this.prodcuer.disconnect();
+    return true;
   }
 
   private async ensureConnection() {
@@ -71,10 +69,10 @@ export class EventListener {
 
   listen(topic: string | RegExp, consumerGroup: string): Observable<PersistedEvent> {
     if (!!this.consumer) throw new Error('Please call the listen method only once!');
-    this.consumer = this.kafka.consumer({groupId: consumerGroup, rebalanceTimeout: 1000});
-    this.consumer!.on('consumer.crash', () => (this.isConnected = false));
-    this.consumer!.on('consumer.connect', () => (this.isConnected = true));
-    this.consumer!.on('consumer.disconnect', () => (this.isConnected = false));
+    this.consumer = this.kafka.consumer({groupId: consumerGroup});
+    this.consumer.on('consumer.crash', () => (this.isConnected = false));
+    this.consumer.on('consumer.connect', () => (this.isConnected = true));
+    this.consumer.on('consumer.disconnect', () => (this.isConnected = false));
 
     return Observable.create(async (observer: Observer<PersistedEvent>) => {
       await this.consumer!.connect();
@@ -85,13 +83,6 @@ export class EventListener {
        */
       await this.consumer!.subscribe({topic, fromBeginning: false});
       this.logger.info(consumerGroup, 'is listening for', topic);
-
-      process.on('SIGTERM', () => {
-        console.info('SIGTERM signal received.');
-        this.consumer!.disconnect().then(() => {
-          process.exit(0);
-        });
-      });
 
       await this.consumer!.run({
         eachMessage: async ({message}) => {
@@ -113,6 +104,16 @@ export class EventListener {
 
   get connected() {
     return this.isConnected;
+  }
+
+  async disconnect() {
+    try {
+      this.logger.warn('disconnect consumer');
+      if (this.consumer) await this.consumer.disconnect();
+      this.logger.warn('disconnected consumer');
+    } catch (err) {
+      this.logger.warn('error while disconnecting consumer', err);
+    }
   }
 }
 

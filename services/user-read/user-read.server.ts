@@ -1,9 +1,9 @@
 import {injectable, inject} from 'inversify';
-import * as http from 'http';
 
 import {RPC_SERVER_FACTORY, RpcServerFactory, RpcServer, RpcMethod} from '@centsideas/rpc';
 import {UserReadService, UserReadQueries} from '@centsideas/schemas';
 import {UserId, Email, Username} from '@centsideas/types';
+import {ServiceServer} from '@centsideas/utils';
 
 import {PrivateUserRepository} from './private-user.repository';
 import {UserRepository} from './user.repository';
@@ -11,7 +11,7 @@ import {UserProjector} from './user.projector';
 import {PrivateUserProjector} from './private-user.projector';
 
 @injectable()
-export class UserReadServer implements UserReadQueries.Service {
+export class UserReadServer extends ServiceServer implements UserReadQueries.Service {
   private rpcServer: RpcServer = this.rpcServerFactory({
     services: [UserReadService],
     handlerClassInstance: this,
@@ -20,13 +20,11 @@ export class UserReadServer implements UserReadQueries.Service {
   constructor(
     private repository: UserRepository,
     private privateRepository: PrivateUserRepository,
-    private _userProjector: UserProjector,
+    private projector: UserProjector,
     private privateUserProjector: PrivateUserProjector,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
-    http
-      .createServer((_, res) => res.writeHead(this.rpcServer.isRunning ? 200 : 500).end())
-      .listen(3000);
+    super();
   }
 
   @RpcMethod(UserReadService)
@@ -64,5 +62,13 @@ export class UserReadServer implements UserReadQueries.Service {
   async getEmailById({id}: UserReadQueries.GetById) {
     const privateUser = await this.privateRepository.getEmailById(UserId.fromString(id));
     return {email: privateUser.email};
+  }
+
+  async healthcheck() {
+    return this.projector.connected && this.rpcServer.isRunning;
+  }
+
+  async shutdownHandler() {
+    await Promise.all([this.projector.shutdown(), this.rpcServer.disconnect()]);
   }
 }

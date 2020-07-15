@@ -1,16 +1,16 @@
 import {injectable, inject} from 'inversify';
-import * as http from 'http';
 
 import {RpcServer, RPC_SERVER_FACTORY, RpcServerFactory, RpcMethod} from '@centsideas/rpc';
 import {IdeaId, UserId} from '@centsideas/types';
 import {IdeaCommandsService, IdeaCommands, GetEvents} from '@centsideas/schemas';
+import {ServiceServer} from '@centsideas/utils';
 
 import {IdeaService} from './idea.service';
 import {IdeaConfig} from './idea.config';
 
 @injectable()
-export class IdeaServer implements IdeaCommands.Service {
-  private _rpcServer: RpcServer = this.rpcServerFactory({
+export class IdeaServer extends ServiceServer implements IdeaCommands.Service {
+  private rpcServer: RpcServer = this.rpcServerFactory({
     services: [IdeaCommandsService],
     handlerClassInstance: this,
     port: this.config.getNumber('idea.rpc.port'),
@@ -21,9 +21,7 @@ export class IdeaServer implements IdeaCommands.Service {
     private config: IdeaConfig,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
-    http
-      .createServer((_, res) => res.writeHead(this._rpcServer.isRunning ? 200 : 500).end())
-      .listen(3000);
+    super();
   }
 
   @RpcMethod(IdeaCommandsService)
@@ -67,5 +65,13 @@ export class IdeaServer implements IdeaCommands.Service {
   async getEvents({after}: GetEvents) {
     const events = await this.service.getEvents(after);
     return {events};
+  }
+
+  async healthcheck() {
+    return this.rpcServer.isRunning;
+  }
+
+  async shutdownHandler() {
+    await this.rpcServer.disconnect();
   }
 }

@@ -28,14 +28,14 @@ spec:
                   key: secrets.tokens.access
           readinessProbe:
             httpGet:
-              path: /alive
-              port: 3000
+              path: /
+              port: 3001
             initialDelaySeconds: 5
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /alive
-              port: 3000
+              path: /
+              port: 3001
             initialDelaySeconds: 15
             periodSeconds: 10
           resources:

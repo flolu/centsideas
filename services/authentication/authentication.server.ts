@@ -1,5 +1,4 @@
 import {injectable, inject} from 'inversify';
-import * as http from 'http';
 
 import {RPC_SERVER_FACTORY, RpcServerFactory, RpcServer, RpcMethod} from '@centsideas/rpc';
 import {
@@ -7,13 +6,14 @@ import {
   AuthenticationCommands,
   GetEvents,
 } from '@centsideas/schemas';
-
-import {AuthenticationService} from './authentication.service';
+import {ServiceServer} from '@centsideas/utils';
 import {UserId} from '@centsideas/types';
 
+import {AuthenticationService} from './authentication.service';
+
 @injectable()
-export class AuthenticationServer implements AuthenticationCommands.Service {
-  private _rpcServer: RpcServer = this.rpcServerFactory({
+export class AuthenticationServer extends ServiceServer implements AuthenticationCommands.Service {
+  private rpcServer: RpcServer = this.rpcServerFactory({
     services: [AuthenticationCommandsService],
     handlerClassInstance: this,
   });
@@ -22,7 +22,7 @@ export class AuthenticationServer implements AuthenticationCommands.Service {
     private service: AuthenticationService,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
-    http.createServer((_, res) => res.writeHead(200).end()).listen(3000);
+    super();
   }
 
   @RpcMethod(AuthenticationCommandsService)
@@ -70,5 +70,13 @@ export class AuthenticationServer implements AuthenticationCommands.Service {
   async getEventsByUserId({userId}: AuthenticationCommands.GetEventsByUserId) {
     const events = await this.service.getEventsByUserId(UserId.fromString(userId));
     return {events};
+  }
+
+  async healthcheck() {
+    return this.rpcServer.isRunning;
+  }
+
+  async shutdownHandler() {
+    await this.rpcServer.disconnect();
   }
 }

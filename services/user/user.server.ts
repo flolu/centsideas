@@ -1,20 +1,16 @@
 import {injectable, inject} from 'inversify';
-import * as http from 'http';
 
-import {EventsHandler, EventHandler} from '@centsideas/event-sourcing';
-import {AuthenticationEventNames} from '@centsideas/enums';
-import {PersistedEvent, SessionModels} from '@centsideas/models';
 import {UserCommands, UserCommandService, GetEvents} from '@centsideas/schemas';
+import {ServiceServer} from '@centsideas/utils';
+import {RpcMethod, RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
 
 import {UserService} from './user.service';
-import {RpcMethod, RpcServer, RPC_SERVER_FACTORY, RpcServerFactory} from '@centsideas/rpc';
 import {UserConfig} from './user.config';
+import {UserListener} from './user.listener';
 
 @injectable()
-export class UserServer extends EventsHandler implements UserCommands.Service {
-  consumerGroupName = 'centsideas.user';
-
-  private _rpcServer: RpcServer = this.rpcServerFactory({
+export class UserServer extends ServiceServer implements UserCommands.Service {
+  private rpcServer: RpcServer = this.rpcServerFactory({
     services: [UserCommandService],
     handlerClassInstance: this,
     port: this.config.getNumber('user.rpc.port'),
@@ -23,26 +19,10 @@ export class UserServer extends EventsHandler implements UserCommands.Service {
   constructor(
     private service: UserService,
     private config: UserConfig,
+    private listener: UserListener,
     @inject(RPC_SERVER_FACTORY) private rpcServerFactory: RpcServerFactory,
   ) {
     super();
-    http
-      .createServer((_, res) =>
-        res.writeHead(this._rpcServer.isRunning && this.connected ? 200 : 500).end(),
-      )
-      .listen(3000);
-  }
-
-  @EventHandler(AuthenticationEventNames.SignInConfirmed)
-  async signInConfirmed(event: PersistedEvent<SessionModels.SignInConfirmedData>) {
-    if (!event.data.isSignUp) return;
-    await this.service.create(event.data.userId, event.data.email, event.data.confirmedAt);
-  }
-
-  @EventHandler(AuthenticationEventNames.GoogleSignInConfirmed)
-  async googleSignInConfirmed(event: PersistedEvent<SessionModels.GoogleSignInConfirmedData>) {
-    if (!event.data.isSignUp) return;
-    await this.service.create(event.data.userId, event.data.email, event.data.confirmedAt);
   }
 
   @RpcMethod(UserCommandService)
@@ -80,5 +60,13 @@ export class UserServer extends EventsHandler implements UserCommands.Service {
   async getPrivateEvents({after, streamId}: GetEvents) {
     const events = await this.service.getPrivateEvents(after, streamId);
     return {events};
+  }
+
+  async healthcheck() {
+    return this.rpcServer.isRunning && this.listener.connected;
+  }
+
+  async shutdownHandler() {
+    await Promise.all([this.rpcServer.disconnect(), this.listener.disconnect()]);
   }
 }

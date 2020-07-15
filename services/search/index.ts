@@ -16,8 +16,9 @@ import {
 
 import {SearchConfig} from './search.config';
 import {SearchServer} from './search.server';
+import {SearchProjector} from './search.projector';
 
-DI.registerProviders(SearchServer);
+DI.registerProviders(SearchServer, SearchProjector);
 DI.registerSingletons(Logger, SearchConfig, GlobalConfig);
 
 DI.registerProviders(EventListener);

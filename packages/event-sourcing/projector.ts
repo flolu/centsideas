@@ -19,6 +19,7 @@ export abstract class Projector implements IProjector {
   abstract getBookmark(): Promise<number>;
   abstract increaseBookmark(): Promise<void>;
   abstract getEvents(from: number): Promise<PersistedEvent[]>;
+  abstract shutdown(): Promise<void>;
 
   trigger = async (event: PersistedEvent) => {
     // this.logger.info('triggered', event.name);

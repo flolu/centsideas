@@ -71,6 +71,12 @@ export abstract class ElasticProjector extends Projector {
     return this.eventListener.connected;
   }
 
+  async shutdown() {
+    await this.eventListener.disconnect();
+    const client = this.getClient();
+    await client.close();
+  }
+
   private async upsertBookmark() {
     const client = this.getClient();
     try {

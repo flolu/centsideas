@@ -10,15 +10,17 @@ import {RpcStatusHttpMap} from '@centsideas/rpc';
 import {Environments} from '@centsideas/enums';
 import {DI} from '@centsideas/dependency-injection';
 import {GlobalConfig} from '@centsideas/config';
+import {ServiceServer} from '@centsideas/utils';
 
 import {GatewayConfig} from './gateway.config';
 
 @injectable()
-export class GatewayServer {
+export class GatewayServer extends ServiceServer {
   // FIXME eventually add frontend to cors whitelist
   private corsWhitelist: string[] = [];
 
   constructor(private globalConfig: GlobalConfig, private config: GatewayConfig) {
+    super(3001);
     const server = new InversifyExpressServer(DI.getContainer());
     server.setConfig((app: express.Application) => {
       app.use(helmet());
@@ -60,4 +62,11 @@ export class GatewayServer {
 
     return false;
   };
+
+  async healthcheck() {
+    return true;
+  }
+  async shutdownHandler() {
+    //
+  }
 }

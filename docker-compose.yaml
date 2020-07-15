@@ -23,6 +23,14 @@ services:
     depends_on:
       - zookeeper
 
+  postgres:
+    container_name: postgres
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
   mongo-database:
     container_name: mongo-database
     image: mongo:4
