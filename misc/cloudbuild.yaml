@@ -15,7 +15,7 @@ steps:
 
   - name: node
     entrypoint: npm
-    args: ["config:dev"]
+    args: ["run config:dev"]
 
   - name: gcr.io/centsideas/bazelisk
     args: ["test", "//packages/event-sourcing/..."]
