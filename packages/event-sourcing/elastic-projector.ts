@@ -2,6 +2,7 @@ import {inject, postConstruct} from 'inversify';
 import * as elasticsearch from '@elastic/elasticsearch';
 import {concatMap} from 'rxjs/operators';
 import {from} from 'rxjs';
+import * as asyncRetry from 'async-retry';
 
 import {PersistedEvent} from '@centsideas/models';
 import {EventTopics} from '@centsideas/enums';
@@ -36,7 +37,7 @@ export abstract class ElasticProjector extends Projector {
   }
 
   async increaseBookmark() {
-    const client = this.getClient();
+    const client = await this.getClient();
     const bookmark = await this.getBookmark();
     await client.update({
       index: this.index,
@@ -47,7 +48,7 @@ export abstract class ElasticProjector extends Projector {
   }
 
   async getBookmark() {
-    const client = this.getClient();
+    const client = await this.getClient();
     const {body} = await client.get({
       index: this.index,
       type: this.bookmarkType,
@@ -56,7 +57,7 @@ export abstract class ElasticProjector extends Projector {
     return body._source.sequence || 0;
   }
 
-  protected getClient() {
+  protected async getClient() {
     if (!this.client) {
       this.client = new elasticsearch.Client({
         node: this.elasticNode,
@@ -64,6 +65,11 @@ export abstract class ElasticProjector extends Projector {
         ssl: {ca: this.elasticTlsCertificate, rejectUnauthorized: false},
       });
     }
+    const healthy = await this.healthcheck();
+    if (!healthy)
+      await asyncRetry(async () => {
+        if (!(await this.healthcheck())) throw new Error();
+      });
     return this.client;
   }
 
@@ -73,12 +79,23 @@ export abstract class ElasticProjector extends Projector {
 
   async shutdown() {
     await this.eventListener.disconnect();
-    const client = this.getClient();
+    const client = await this.getClient();
     await client.close();
   }
 
+  async healthcheck(): Promise<boolean> {
+    try {
+      const client = await this.getClient();
+      const {body} = await client.cluster.health();
+      return (body.status === 'green' || body.status === 'yellow') && this.connected;
+    } catch (err) {
+      this.logger.error(err);
+      return false;
+    }
+  }
+
   private async upsertBookmark() {
-    const client = this.getClient();
+    const client = await this.getClient();
     try {
       const {body} = await client.get({
         index: this.index,

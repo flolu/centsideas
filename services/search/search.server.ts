@@ -11,7 +11,7 @@ export class SearchServer extends ServiceServer {
   }
 
   async healthcheck() {
-    return this.projector.healthy();
+    return this.projector.healthcheck();
   }
 
   async shutdownHandler() {

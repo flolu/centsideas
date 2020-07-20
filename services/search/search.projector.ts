@@ -63,7 +63,7 @@ export class SearchProjector extends ElasticProjector {
   @EventProjector(IdeaEventNames.Created)
   async created({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
     const {userId, createdAt} = data;
-    const client = this.getClient();
+    const client = await this.getClient();
     await client.index({
       index: this.index,
       body: {
@@ -89,7 +89,7 @@ export class SearchProjector extends ElasticProjector {
     data,
     streamId,
   }: PersistedEvent<IdeaModels.IdeaRenamedData>) {
-    const client = this.getClient();
+    const client = await this.getClient();
     await client.update({
       index: this.index,
       id: streamId,
@@ -110,7 +110,7 @@ export class SearchProjector extends ElasticProjector {
     data,
     streamId,
   }: PersistedEvent<IdeaModels.IdeaDescriptionEditedData>) {
-    const client = this.getClient();
+    const client = await this.getClient();
     await client.update({
       index: this.index,
       id: streamId,
@@ -131,7 +131,7 @@ export class SearchProjector extends ElasticProjector {
     data,
     streamId,
   }: PersistedEvent<IdeaModels.IdeaTagsAddedData>) {
-    const client = this.getClient();
+    const client = await this.getClient();
     const {body} = await client.get({index: this.index, id: streamId});
     const source = body._source;
     await client.update({
@@ -154,7 +154,7 @@ export class SearchProjector extends ElasticProjector {
     data,
     streamId,
   }: PersistedEvent<IdeaModels.IdeaTagsRemovedData>) {
-    const client = this.getClient();
+    const client = await this.getClient();
     const {body} = await client.get({index: this.index, id: streamId});
     const source = body._source;
     await client.update({
@@ -176,7 +176,7 @@ export class SearchProjector extends ElasticProjector {
     insertedAt,
     streamId,
   }: PersistedEvent<IdeaModels.IdeaPublishedData>) {
-    const client = this.getClient();
+    const client = await this.getClient();
     await client.update({
       index: this.index,
       id: streamId,
@@ -191,13 +191,13 @@ export class SearchProjector extends ElasticProjector {
 
   @EventProjector(IdeaEventNames.Deleted)
   async ideaDeleted(event: PersistedEvent<IdeaModels.IdeaDeletedData>) {
-    const client = this.getClient();
+    const client = await this.getClient();
     await client.delete({index: this.index, id: event.streamId});
   }
 
   @RpcMethod(SearchService)
   async searchIdeas({input}: SearchQueries.SearchIdeaPayload) {
-    const client = this.getClient();
+    const client = await this.getClient();
     // FIXME ideas with higher scores should be ranked higher
     const {body} = await client.search({
       index: this.index,
@@ -253,16 +253,5 @@ export class SearchProjector extends ElasticProjector {
     });
     this._logger.info(body.hits);
     return {hits: body.hits.hits.map((h: any) => ({...h._source, score: h._score}))};
-  }
-
-  async healthy(): Promise<boolean> {
-    try {
-      const client = this.getClient();
-      const {body} = await client.cluster.health();
-      return (body.status === 'green' || body.status === 'yellow') && this.connected;
-    } catch (err) {
-      this._logger.error(err);
-      return false;
-    }
   }
 }
