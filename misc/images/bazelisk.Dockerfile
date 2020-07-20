@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update
 RUN apt-get -y install curl gnupg unzip python python3 git build-essential
