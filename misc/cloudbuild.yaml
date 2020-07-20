@@ -13,6 +13,10 @@ steps:
   # - name: "gcr.io/cloud-builders/docker"
   #   args: ["push", "gcr.io/centsideas/bazelisk"]
 
+  - name: node
+    entrypoint: npm
+    args: ["config:dev"]
+
   - name: gcr.io/centsideas/bazelisk
     args: ["test", "//packages/event-sourcing/..."]
   - name: gcr.io/centsideas/bazelisk
