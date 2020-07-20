@@ -11,8 +11,6 @@ gcloud beta container --project "centsideas" clusters create "centsideas"\
 gcloud container clusters get-credentials centsideas --zone europe-west3-b --project centsideas
 ```
 
-_# FIXME add instructions on how to add Application-layer Secrets Encryption_
-
 ### 2. Setup [Helm](https://helm.sh/)
 
 ```bash
@@ -32,15 +30,15 @@ helm install nginx-ingress stable/nginx-ingress
 
 Go to the created [Load Balancer](https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list) and point your domain to this IP address via an "A" record.
 
-| Record Type | Domain               | Value           |
-| ----------- | -------------------- | --------------- |
-| A           | centsideas.com       | your IP address |
-| A           | api.centsideas.com   | your IP address |
-| A           | admin.centsideas.com | your IP address |
+| Record Type | Domain               | Value      |
+| ----------- | -------------------- | ---------- |
+| A           | centsideas.com       | ip-address |
+| A           | api.centsideas.com   | ip-address |
+| A           | admin.centsideas.com | ip-address |
 
 ### 5. Setup [Cert Manager](https://github.com/helm/charts/tree/master/stable/cert-manager)
 
-```
+```bash
 helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager --create-namespace \
@@ -50,24 +48,35 @@ helm install \
 
 ### 6. Setup Kafka Cluster
 
-```
-kubectl create namespace kafka && \
-kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka && \
-kubectl apply -f packages/kubernetes/kafka-persistent.yaml -n kafka
+```bash
+kubectl create namespace kafka
+kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+kubectl apply -f packages/kubernetes/kafka-ephemeral.yaml -n kafka
 ```
 
 ### 7. Setup Elasticsearch Cluster
 
-https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-eck.html
-
+```bash
+kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
+kubectl apply -f packages/kubernetes/elasticsearch.yaml
 ```
 
-```
-
-### 8. Deploy services
+### 8. Setup MongoDB
 
 ```
+git clone https://github.com/mongodb/mongodb-kubernetes-operator && \
+cd mongodb-kubernetes-operator && \
+kubectl create namespace mongodb && \
+kubectl create -f deploy/crds/mongodb.com_mongodb_crd.yaml && \
+kubectl create -f deploy/ --namespace mongodb
+
+cd ..
+microk8s.kubectl apply -f packages/kubernetes/event-store.yaml -n mongodb && \
+microk8s.kubectl apply -f packages/kubernetes/read-database.yaml -n mongodb
+```
+
+### 9. Deploy services
+
+```bash
 yarn deploy
 ```
-
-Wait until all Workloads are up and running. Now you should be able to visit https://centsideas.com

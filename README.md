@@ -5,14 +5,14 @@
   <br>
   <h1>CentsIdeas</h1>
   <p>
-    Full stack application for sharing Fastlane ideas based on the
+    Full stack application for sharing <a href="https://thefastlaneforum.com/">Fastlane</a> ideas based on the
     <a href="https://www.thefastlaneforum.com/community/threads/the-cents-business-commandments-for-entrepreneurs.81090/">CENTS</a>
     commandments by
     <a href="https://www.mjdemarco.com/">MJ DeMarco</a>
   </p>
 </div>
 
-## Technical Motives
+## Motives
 
 ### Backend
 
@@ -38,8 +38,14 @@ This project also aims to be compliant with GDPR.
 
 ## Documentation
 
-_coming soon_
+[Setup your development environment on Ubuntu](./misc/docs/ubuntu.md)
 
-## Thanks to all people listed below for your help!
+[Develop CentsIdeas](./misc/docs/development.md)
+
+[Run a local Kubernetes cluster on Ubuntu](./misc/docs/microk8s.md)
+
+[Deploy CentsIdeas to Google Cloud Platform](./misc/docs/deployment.md)
+
+## Thanks to all the people listed below!
 
 [@rayman1104](https://github.com/rayman1104) [@xmontero](https://github.com/xmontero) [@marcus-sa](https://github.com/marcus-sa) [@joeljeske](https://github.com/joeljeske)
