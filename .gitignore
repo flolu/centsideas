@@ -11,3 +11,5 @@ secrets.yaml
 .microk8s.secrets.env
 .prod.secrets.env
 .docker-compose.env
+
+mongodb-kubernetes-operator

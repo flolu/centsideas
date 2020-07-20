@@ -73,11 +73,6 @@ k8s_deploy(
 )
 
 k8s_deploy(
-    name = "storage",
-    template = ":authentication-storage.yaml",
-)
-
-k8s_deploy(
     name = "config",
     template = ":authentication-config.yaml",
 )
@@ -86,7 +81,6 @@ k8s_objects(
     name = "k8s",
     objects = [
         ":authentication",
-        ":storage",
         ":config",
     ],
 )
@@ -98,11 +92,6 @@ microk8s_deploy(
 )
 
 microk8s_deploy(
-    name = "microk8s_storage",
-    template = ":authentication-local-storage.yaml",
-)
-
-microk8s_deploy(
     name = "microk8s_config",
     template = ":authentication-config.yaml",
 )
@@ -111,7 +100,6 @@ k8s_objects(
     name = "microk8s",
     objects = [
         ":microk8s_authentication",
-        ":microk8s_storage",
         ":microk8s_config",
     ],
 )

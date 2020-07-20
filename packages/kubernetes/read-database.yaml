@@ -1,0 +1,9 @@
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: read-database
+spec:
+  members: 3
+  type: ReplicaSet
+  version: "4.2.7"
+  featureCompatibilityVersion: "4.0"

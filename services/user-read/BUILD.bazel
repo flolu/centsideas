@@ -56,11 +56,6 @@ k8s_deploy(
 )
 
 k8s_deploy(
-    name = "storage",
-    template = ":user-read-storage.yaml",
-)
-
-k8s_deploy(
     name = "config",
     template = ":user-read-config.yaml",
 )
@@ -69,7 +64,6 @@ k8s_objects(
     name = "k8s",
     objects = [
         ":user-read",
-        ":storage",
         ":config",
     ],
 )
@@ -81,11 +75,6 @@ microk8s_deploy(
 )
 
 microk8s_deploy(
-    name = "microk8s_storage",
-    template = ":user-read-local-storage.yaml",
-)
-
-microk8s_deploy(
     name = "microk8s_config",
     template = ":user-read-config.yaml",
 )
@@ -94,7 +83,6 @@ k8s_objects(
     name = "microk8s",
     objects = [
         ":microk8s_user-read",
-        ":microk8s_storage",
         ":microk8s_config",
     ],
 )

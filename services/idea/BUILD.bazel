@@ -73,11 +73,6 @@ k8s_deploy(
 )
 
 k8s_deploy(
-    name = "storage",
-    template = ":idea-storage.yaml",
-)
-
-k8s_deploy(
     name = "config",
     template = ":idea-config.yaml",
 )
@@ -86,7 +81,6 @@ k8s_objects(
     name = "k8s",
     objects = [
         ":config",
-        ":storage",
         ":idea",
     ],
 )
@@ -98,11 +92,6 @@ microk8s_deploy(
 )
 
 microk8s_deploy(
-    name = "microk8s_storage",
-    template = ":idea-local-storage.yaml",
-)
-
-microk8s_deploy(
     name = "microk8s_config",
     template = ":idea-config.yaml",
 )
@@ -111,7 +100,6 @@ k8s_objects(
     name = "microk8s",
     objects = [
         ":microk8s_config",
-        ":microk8s_storage",
         ":microk8s_idea",
     ],
 )

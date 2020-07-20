@@ -62,51 +62,6 @@ spec:
     - name: grpc
       port: 40000
   type: ClusterIP
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: idea-read-db-deployment
-spec:
-  selector:
-    matchLabels:
-      app: idea-read-db
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: idea-read-db
-    spec:
-      containers:
-        - name: idea-read-db
-          image: mongo:4
-          volumeMounts:
-            - name: persistent-db-storage
-              mountPath: /data/db
-          resources:
-            requests:
-              memory: 10Mi
-              cpu: 10m
-            limits:
-              memory: 500Mi
-              cpu: 500m
-      volumes:
-        - name: persistent-db-storage
-          persistentVolumeClaim:
-            claimName: idea-read-pvc
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: idea-read-db-service
-spec:
-  selector:
-    app: idea-read-db
-  ports:
-    - name: mongo
-      port: 27017
-  type: ClusterIP
 
 ---
 apiVersion: autoscaling/v1
@@ -121,5 +76,3 @@ spec:
   minReplicas: 2
   maxReplicas: 5
   targetCPUUtilizationPercentage: 75
----
-
