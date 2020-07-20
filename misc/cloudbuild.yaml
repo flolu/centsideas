@@ -5,40 +5,40 @@ steps:
       [
         "build",
         "-t",
-        "gcr.io/centsideas/bazelisk",
+        "eu.gcr.io/centsideas/bazelisk",
         "-f",
         "misc/images/bazelisk.Dockerfile",
         ".",
       ]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/centsideas/bazelisk"]
+    args: ["push", "eu.gcr.io/centsideas/bazelisk"]
 
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//packages/event-sourcing/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//packages/testing/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//packages/types/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//packages/utils/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
 
     args: ["test", "//services/admin/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//services/authentication/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//services/gateway/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//services/idea/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//services/idea-read/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//services/mailing/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//services/search/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//services/user/..."]
-  - name: gcr.io/centsideas/bazelisk
+  - name: eu.gcr.io/centsideas/bazelisk
     args: ["test", "//services/user-read/..."]
 #options:
 #  machineType: "N1_HIGHCPU_8"
