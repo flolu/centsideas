@@ -14,7 +14,10 @@ steps:
   #   args: ["push", "gcr.io/centsideas/bazelisk"]
 
   - name: node
-    entrypoint: npm
+    entrypoint: yarn
+    args: ["install"]
+  - name: node
+    entrypoint: yarn
     args: ["run", "config:dev"]
 
   - name: gcr.io/centsideas/bazelisk
