@@ -45,3 +45,11 @@ export enum UserErrorNames {
   UsernameUnavailable = 'user.usernameUnavailable',
   UsernameNotChanged = 'user.usernameNotChanged',
 }
+
+export enum ReviewErrorNames {
+  TooLong = 'review.tooLong',
+  TooShort = 'review.tooShort',
+  NoPermission = 'review.noPermission',
+  ScoreRequired = 'review.scoreRequired',
+  ContentRequired = 'review.contentRequired',
+}

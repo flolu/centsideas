@@ -89,7 +89,7 @@ export class Idea extends Aggregate<SerializedIdea> {
 
   publish(publishedAt: Timestamp, user: UserId) {
     this.checkGeneralConditions(user);
-    if (this.publishedAt) throw new Errors.IdeaAlreadyPublished(this.id, user);
+    if (this.publishedAt) return;
     if (!this.title) throw new Errors.IdeaTitleRequired(this.id, user);
     this.raise(new IdeaPublished(publishedAt));
   }

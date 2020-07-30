@@ -8,6 +8,8 @@ import {ServiceServer} from '@centsideas/utils';
 import {IdeaService} from './idea.service';
 import {IdeaConfig} from './idea.config';
 
+// TODO listen for user deletion and remove or anonymize his ideas
+
 @injectable()
 export class IdeaServer extends ServiceServer implements IdeaCommands.Service {
   private rpcServer: RpcServer = this.rpcServerFactory({

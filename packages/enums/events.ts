@@ -30,3 +30,10 @@ export enum UserEventNames {
   DeletionRequested = 'user:deletionRequested',
   DeletionConfirmed = 'user:deletionConfirmed',
 }
+
+export enum ReviewEventNames {
+  Created = 'review:created',
+  ContentEdited = 'review.contentEdited',
+  ScoreChanged = 'review.scoreChanged',
+  Published = 'review.published',
+}

@@ -186,14 +186,17 @@ describe('Idea', () => {
     );
   });
 
-  it('can not be published if it was already published', () => {
+  it('should not be published twice', () => {
     const idea = Idea.create(id, user, timestamp);
     const publishedAt = Timestamp.now();
     idea.rename(title, user);
     idea.publish(publishedAt, user);
-    expect(() => idea.publish(publishedAt, user)).toThrowError(
-      new Errors.IdeaAlreadyPublished(id, user),
-    );
+    let publishedCounter = 0;
+    idea
+      .flushEvents()
+      .toArray()
+      .forEach(e => (e.event instanceof IdeaPublished ? publishedCounter++ : null));
+    expect(publishedCounter).toEqual(1);
   });
 
   it('deletes idea', () => {

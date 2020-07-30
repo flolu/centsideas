@@ -26,7 +26,6 @@ export class IdeaAlreadyPublished extends Exception {
     super('Idea has already been published', {ideaId: idea.toString(), userId: user.toString()});
   }
 }
-
 export class IdeaTitleTooShort extends Exception {
   name = IdeaErrorNames.TitleTooShort;
   code = RpcStatus.INVALID_ARGUMENT;

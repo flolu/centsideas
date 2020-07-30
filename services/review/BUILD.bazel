@@ -1,0 +1,101 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("@centsideas//packages/jest:jest.bzl", "ts_jest")
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "lib",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//packages/config",
+        "//packages/dependency-injection",
+        "//packages/enums",
+        "//packages/event-sourcing",
+        "//packages/models",
+        "//packages/rpc",
+        "//packages/schemas",
+        "//packages/types",
+        "//packages/utils",
+        "@npm//@types/node",
+        "@npm//@types/sanitize-html",
+        "@npm//inversify",
+        "@npm//reflect-metadata",
+        "@npm//sanitize-html",
+    ],
+)
+
+nodejs_image(
+    name = "image",
+    data = [
+        ":lib",
+        # "//packages/schemas:proto_review",
+    ],
+    entry_point = ":index.ts",
+)
+
+ts_jest(
+    name = "test",
+    srcs = glob(["**/*.spec.ts"]),
+    data = [
+        # "//packages/schemas:proto_review",
+    ],
+    test_lib = "lib",
+    tsconfig = "//:tsconfig.json",
+    deps = [
+        "//packages/config",
+        "//packages/dependency-injection",
+        "//packages/enums",
+        "//packages/event-sourcing",
+        "//packages/models",
+        "//packages/rpc",
+        "//packages/rpc/testing",
+        "//packages/testing",
+        "//packages/types",
+        "@npm//reflect-metadata",
+    ],
+)
+
+k8s_deploy(
+    name = "review",
+    images = {"review:placeholder_name": ":image"},
+    template = ":review.yaml",
+)
+
+k8s_deploy(
+    name = "config",
+    template = ":review-config.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [
+        ":config",
+        ":review",
+    ],
+)
+
+microk8s_deploy(
+    name = "microk8s_review",
+    images = {"review:placeholder_name": ":image"},
+    template = ":review.yaml",
+)
+
+microk8s_deploy(
+    name = "microk8s_config",
+    template = ":review-config.yaml",
+)
+
+k8s_objects(
+    name = "microk8s",
+    objects = [
+        ":microk8s_config",
+        ":microk8s_review",
+    ],
+)
