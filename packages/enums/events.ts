@@ -33,7 +33,7 @@ export enum UserEventNames {
 
 export enum ReviewEventNames {
   Created = 'review:created',
-  ContentEdited = 'review.contentEdited',
-  ScoreChanged = 'review.scoreChanged',
-  Published = 'review.published',
+  ContentEdited = 'review:contentEdited',
+  ScoreChanged = 'review:scoreChanged',
+  Published = 'review:published',
 }

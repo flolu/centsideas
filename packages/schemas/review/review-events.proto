@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package review;
+
+message ReviewEvents {
+  repeated ReviewEvent events = 1;
+}
+
+message ReviewEvent {
+  string id = 1;
+  string streamId = 2;
+  int32 version = 3;
+  string name = 4;
+  string insertedAt = 5;
+  int32 sequence = 6;
+  ReviewEventData data = 7;
+}
+
+message ReviewEventData {
+  oneof data {
+    ReviewCreatedEvent created = 1;
+    ReviewContentEditedEvent contentEdited = 2;
+    ReviewScoreChangedEvent scoreChanged = 3;
+    ReviewPublishedEvent published = 4;
+  }
+}
+
+message ReviewScore {
+  int32 control = 1;
+  int32 entry = 2;
+  int32 need = 3;
+  int32 time = 4;
+  int32 scale = 5;
+}
+
+message ReviewCreatedEvent {
+  string id = 1;
+  string authorUserId = 2;
+  string receiverUserId = 3;
+  string ideaId = 4;
+  string createdAt = 5;
+}
+
+message ReviewContentEditedEvent {
+  string content = 1;
+}
+
+message ReviewScoreChangedEvent {
+  ReviewScore score = 2;
+}
+
+message ReviewPublishedEvent {
+  string publishedAt = 3;
+}

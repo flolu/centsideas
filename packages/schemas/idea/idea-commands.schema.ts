@@ -34,16 +34,12 @@ export interface DeleteIdea {
   userId: string;
 }
 
-export interface IdeaCreatedResponse {
-  id: string;
-}
-
 export interface GetByUserId {
   userId: string;
 }
 
 export interface Service {
-  create: (payload: CreateIdea) => Promise<IdeaCreatedResponse>;
+  create: (payload: CreateIdea) => Promise<{id: string}>;
   rename: (payload: RenameIdea) => Promise<void>;
   editDescription: (payload: EditIdeaDescription) => Promise<void>;
   updateTags: (payload: UpdateIdeaTags) => Promise<void>;

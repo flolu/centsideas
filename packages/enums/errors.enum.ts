@@ -52,4 +52,7 @@ export enum ReviewErrorNames {
   NoPermission = 'review.noPermission',
   ScoreRequired = 'review.scoreRequired',
   ContentRequired = 'review.contentRequired',
+  NotFound = 'review.notFound',
+  OneReviewPerIdea = 'review.oneReviewPerIdea',
+  IdeaNotFound = 'review.ideaNotFound',
 }

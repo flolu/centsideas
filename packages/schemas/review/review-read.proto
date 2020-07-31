@@ -1,0 +1,40 @@
+import "google/protobuf/empty.proto";
+import "review-events.proto";
+
+syntax = "proto3";
+
+package review;
+
+service ReviewRead {
+  rpc getByIdeaId(GetByIdeaId) returns (Reviews);
+  rpc getByAuthroAndIdea(GetByAuthor) returns (Reviews);
+  rpc getByAuthor(GetByAuthorAndIdea) returns (Review);
+}
+
+message GetByIdeaId {
+  string ideaId = 1;
+}
+
+message GetByAuthor {
+  string authorId = 1;
+}
+
+message GetByAuthorAndIdea {
+  string authorId = 1;
+  string ideaId = 2;
+}
+
+message Review {
+  string id = 1;
+  string authorUserId = 2;
+  string receiverUserId = 3;
+  string content = 4;
+  ReviewScore score = 5;
+  string publishedAt = 6;
+  string updateAt = 7;
+  int32 lastEventVersion = 8;
+}
+
+message Reviews {
+  repeated Review reviews = 1;
+}

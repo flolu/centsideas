@@ -1,11 +1,11 @@
-import {injectable, inject} from 'inversify';
+import {inject, injectable} from 'inversify';
 
 import {RpcClient, RPC_CLIENT_FACTORY, RpcClientFactory} from '@centsideas/rpc';
-import {UserId} from '@centsideas/types';
 import {IdeaReadQueries, IdeaReadService} from '@centsideas/schemas';
-import {RpcStatus} from '@centsideas/enums';
+import {IdeaId} from '@centsideas/types';
 
-import {IdeaConfig} from './idea.config';
+import {ReviewConfig} from './review.config';
+import {RpcStatus} from '@centsideas/enums';
 
 @injectable()
 export class IdeaReadAdapter {
@@ -16,13 +16,14 @@ export class IdeaReadAdapter {
   });
 
   constructor(
-    private config: IdeaConfig,
+    private config: ReviewConfig,
     @inject(RPC_CLIENT_FACTORY) private newRpcFactory: RpcClientFactory,
   ) {}
 
-  async getUnpublishedIdea(user: UserId) {
+  async getPublicIdeaById(idea: IdeaId) {
     try {
-      return await this.ideaReadRpc.client.getUnpublished({userId: user.toString()});
+      // TODO implement review-read
+      return await this.ideaReadRpc.client.getById({id: idea.toString()});
     } catch (error) {
       if (error.code === RpcStatus.NOT_FOUND) return null;
       throw error;
