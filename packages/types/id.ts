@@ -1,7 +1,8 @@
 import * as shortid from 'shortid';
 import {v4 as uuidv4} from 'uuid';
 
-import {InvalidId} from './invalid-id';
+import {Exception} from '@centsideas/utils';
+import {RpcStatus, GenericErrorNames} from '@centsideas/enums';
 
 abstract class BaseId {
   protected constructor(protected readonly id: string) {}
@@ -42,3 +43,12 @@ export class ShortId extends BaseId {
 }
 
 export type Id = UUId | ShortId;
+
+export class InvalidId extends Exception {
+  code = RpcStatus.INVALID_ARGUMENT;
+  name = GenericErrorNames.InvalidId;
+
+  constructor(id: string) {
+    super(`Id: "${id}" is invalid`);
+  }
+}
