@@ -32,7 +32,7 @@ export class IdeaProjector extends MongoProjector {
   }
 
   async initialize() {
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     await collection.createIndex({id: 1}, {unique: true});
   }
 
@@ -48,7 +48,7 @@ export class IdeaProjector extends MongoProjector {
   @EventProjector(IdeaEventNames.Created)
   async created({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaCreatedData>) {
     const {userId, createdAt} = data;
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     await collection.insertOne({
       id: streamId,
       userId,
@@ -66,7 +66,7 @@ export class IdeaProjector extends MongoProjector {
   @EventProjector(IdeaEventNames.Renamed)
   async renamed({data, streamId, version, insertedAt}: PersistedEvent<IdeaModels.IdeaRenamedData>) {
     const {title} = data;
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     await collection.findOneAndUpdate(
       {id: streamId},
       {$set: {title, lastEventVersion: version, updatedAt: insertedAt}},
@@ -81,7 +81,7 @@ export class IdeaProjector extends MongoProjector {
     insertedAt,
   }: PersistedEvent<IdeaModels.IdeaDescriptionEditedData>) {
     const {description} = data;
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     await collection.findOneAndUpdate(
       {id: streamId},
       {$set: {description, lastEventVersion: version, updatedAt: insertedAt}},
@@ -96,7 +96,7 @@ export class IdeaProjector extends MongoProjector {
     insertedAt,
   }: PersistedEvent<IdeaModels.IdeaTagsAddedData>) {
     const {tags} = data;
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     await collection.findOneAndUpdate(
       {id: streamId},
       {$push: {tags: {$each: tags}}, $set: {lastEventVersion: version, updatedAt: insertedAt}},
@@ -111,7 +111,7 @@ export class IdeaProjector extends MongoProjector {
     insertedAt,
   }: PersistedEvent<IdeaModels.IdeaTagsRemovedData>) {
     const {tags} = data;
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     await collection.findOneAndUpdate(
       {id: streamId},
       {$pull: {tags: {$in: tags}}, $set: {lastEventVersion: version, updatedAt: insertedAt}},
@@ -126,7 +126,7 @@ export class IdeaProjector extends MongoProjector {
     insertedAt,
   }: PersistedEvent<IdeaModels.IdeaPublishedData>) {
     const {publishedAt} = data;
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     await collection.findOneAndUpdate(
       {id: streamId},
       {$set: {publishedAt, lastEventVersion: version, updatedAt: insertedAt}},
@@ -136,14 +136,14 @@ export class IdeaProjector extends MongoProjector {
   @EventProjector(IdeaEventNames.Deleted)
   async deleted({version, streamId, data, insertedAt}: PersistedEvent<IdeaModels.IdeaDeletedData>) {
     const {deletedAt} = data;
-    const collection = await this.ideaCollection();
+    const collection = await this.collection();
     await collection.findOneAndUpdate(
       {id: streamId},
       {$set: {deletedAt, lastEventVersion: version, updatedAt: insertedAt}},
     );
   }
 
-  private async ideaCollection() {
+  private async collection() {
     const db = await this.db();
     return db.collection<IdeaModels.IdeaModel>(this.collectionName);
   }

@@ -49,6 +49,8 @@ steps:
     args: ["test", "//services/user-read/..."]
   - name: gcr.io/centsideas/bazelisk
     args: ["test", "//services/review/..."]
+  - name: gcr.io/centsideas/bazelisk
+    args: ["test", "//services/review-read/..."]
 
 timeout: 3600s
 #options:

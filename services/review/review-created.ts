@@ -13,7 +13,7 @@ export class ReviewCreated implements IDomainEvent {
     public readonly createdAt: Timestamp,
   ) {}
 
-  serialize(): ReviewModels.ReviewCreatedData {
+  serialize(): ReviewModels.CreatedData {
     return {
       id: this.id.toString(),
       authorUserId: this.author.toString(),
@@ -29,7 +29,7 @@ export class ReviewCreated implements IDomainEvent {
     receiverUserId,
     ideaId,
     createdAt,
-  }: ReviewModels.ReviewCreatedData) {
+  }: ReviewModels.CreatedData) {
     return new ReviewCreated(
       ReviewId.fromString(id),
       UserId.fromString(authorUserId),

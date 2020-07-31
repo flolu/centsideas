@@ -13,15 +13,17 @@ service ReviewRead {
 
 message GetByIdeaId {
   string ideaId = 1;
+  optional string auid = 2;
 }
 
 message GetByAuthor {
   string authorId = 1;
+  optional string auid = 2;
 }
 
 message GetByAuthorAndIdea {
-  string authorId = 1;
-  string ideaId = 2;
+  string ideaId = 1;
+  string auid = 2;
 }
 
 message Review {

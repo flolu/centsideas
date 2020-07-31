@@ -22,8 +22,8 @@ export class ReviewReadAdapter {
 
   async getByAuthorAndIdea(author: UserId, idea: IdeaId) {
     try {
-      return await this.reviewReadRpc.client.getByAuthroAndIdea({
-        authorId: author.toString(),
+      return await this.reviewReadRpc.client.getByAuthorAndIdea({
+        auid: author.toString(),
         ideaId: idea.toString(),
       });
     } catch (error) {

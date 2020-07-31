@@ -3,10 +3,10 @@ import {MongoClient} from 'mongodb';
 import * as asyncRetry from 'async-retry';
 
 import {IdeaModels} from '@centsideas/models';
+import {UserId, IdeaId} from '@centsideas/types';
 
 import * as Errors from './idea-read.errors';
 import {IdeaReadConfig} from './idea-read.config';
-import {UserId, IdeaId} from '@centsideas/types';
 
 @injectable()
 export class IdeaRepository {
@@ -14,6 +14,9 @@ export class IdeaRepository {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
+  private readonly collectionName = this.config.get('idea-read.database.collection');
+  private readonly databaseName = this.config.get('idea-read.database.name');
 
   constructor(private config: IdeaReadConfig) {}
 
@@ -31,6 +34,7 @@ export class IdeaRepository {
   async getAll() {
     const collection = await this.collection();
     const result = await collection.find({
+      // TODO $exists needed?
       publishedAt: {$exists: true, $ne: undefined},
       deletedAt: undefined,
     });
@@ -63,11 +67,11 @@ export class IdeaRepository {
 
   private async collection() {
     const db = await this.db();
-    return db.collection<IdeaModels.IdeaModel>(this.config.get('idea-read.database.collection'));
+    return db.collection<IdeaModels.IdeaModel>(this.collectionName);
   }
 
   private async db() {
     if (!this.client.isConnected()) await asyncRetry(() => this.client?.connect());
-    return this.client.db(this.config.get('idea-read.database.name'));
+    return this.client.db(this.databaseName);
   }
 }

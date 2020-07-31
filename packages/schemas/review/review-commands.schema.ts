@@ -16,7 +16,7 @@ export interface EditContent {
 export interface ChangeScore {
   id: string;
   userId: string;
-  score: ReviewModels.SerializedReviewScore;
+  score: ReviewModels.Score;
 }
 
 export interface Publish {

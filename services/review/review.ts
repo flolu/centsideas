@@ -16,7 +16,7 @@ export interface SerializedReview {
   receiverUserId: string;
   ideaId: string;
   content: string | undefined;
-  score: ReviewModels.SerializedReviewScore | undefined;
+  score: ReviewModels.Score | undefined;
   publishedAt: string | undefined;
 }
 

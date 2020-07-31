@@ -2,19 +2,21 @@ import {ReviewModels} from '@centsideas/models';
 
 export interface GetByIdeaId {
   ideaId: string;
+  auid?: string;
 }
 
 export interface GetByAuthor {
   authorId: string;
+  auid?: string;
 }
 
 export interface GetByAuthorAndIdea {
-  authorId: string;
   ideaId: string;
+  auid: string;
 }
 
 export interface Service {
   getByIdeaId: (payload: GetByIdeaId) => Promise<ReviewModels.ReviewModel[]>;
-  getByAuthroAndIdea: (payload: GetByAuthorAndIdea) => Promise<ReviewModels.ReviewModel | null>;
+  getByAuthorAndIdea: (payload: GetByAuthorAndIdea) => Promise<ReviewModels.ReviewModel | null>;
   getByAuthor: (payload: GetByAuthor) => Promise<ReviewModels.ReviewModel[]>;
 }

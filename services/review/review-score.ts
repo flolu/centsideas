@@ -4,14 +4,8 @@ import {ReviewModels} from '@centsideas/models';
 import * as Errors from './review.errors';
 
 export class ReviewScore {
-  private constructor(private score: ReviewModels.SerializedReviewScore) {
-    const keys: (keyof ReviewModels.SerializedReviewScore)[] = [
-      'control',
-      'entry',
-      'need',
-      'time',
-      'scale',
-    ];
+  private constructor(private score: ReviewModels.Score) {
+    const keys: (keyof ReviewModels.Score)[] = ['control', 'entry', 'need', 'time', 'scale'];
     for (const key of keys) {
       this.checkScoreValue(score[key], key);
     }
@@ -22,7 +16,7 @@ export class ReviewScore {
       throw new Errors.ReviewScoreInvalid(value, key);
   }
 
-  static fromObject(score: ReviewModels.SerializedReviewScore) {
+  static fromObject(score: ReviewModels.Score) {
     return new ReviewScore(score);
   }
 

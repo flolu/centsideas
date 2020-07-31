@@ -2,14 +2,15 @@ export interface ReviewModel {
   id: string;
   authorUserId: string;
   receiverUserId: string;
-  content: string;
-  score: SerializedReviewScore;
-  publishedAt: string;
+  ideaId: string;
+  content: string | undefined;
+  score: Score | undefined;
+  publishedAt: string | undefined;
   updatedAt: string;
   lastEventVersion: number;
 }
 
-export interface ReviewCreatedData {
+export interface CreatedData {
   id: string;
   authorUserId: string;
   receiverUserId: string;
@@ -17,19 +18,19 @@ export interface ReviewCreatedData {
   createdAt: string;
 }
 
-export interface ReviewContentEditedData {
+export interface ContentEditedData {
   content: string;
 }
 
-export interface ReviewScoreChangedData {
-  score: SerializedReviewScore;
+export interface ScoreChangedData {
+  score: Score;
 }
 
-export interface ReviewPublishedData {
+export interface PublishedData {
   publishedAt: string;
 }
 
-export interface SerializedReviewScore {
+export interface Score {
   control: number;
   entry: number;
   need: number;

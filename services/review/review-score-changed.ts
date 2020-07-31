@@ -8,11 +8,11 @@ import {ReviewScore} from './review-score';
 export class ReviewScoreChanged implements IDomainEvent {
   constructor(public readonly score: ReviewScore) {}
 
-  serialize(): ReviewModels.ReviewScoreChangedData {
+  serialize(): ReviewModels.ScoreChangedData {
     return {score: this.score.toObject()};
   }
 
-  static deserialize({score}: ReviewModels.ReviewScoreChangedData) {
+  static deserialize({score}: ReviewModels.ScoreChangedData) {
     return new ReviewScoreChanged(ReviewScore.fromObject(score));
   }
 }

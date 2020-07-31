@@ -14,6 +14,8 @@ import {IdeaReadAdapter} from './idea-read.adapter';
 import {ReviewContent} from './review-content';
 import {ReviewScore} from './review-score';
 
+// TODO should review be deleted or any action be taken when idea was deleted?
+
 @injectable()
 export class ReviewService {
   private eventStore = this.eventStoreFactory({
@@ -55,7 +57,7 @@ export class ReviewService {
     await this.store(review);
   }
 
-  async changeScore(id: string, auid: string, score: ReviewModels.SerializedReviewScore) {
+  async changeScore(id: string, auid: string, score: ReviewModels.Score) {
     const review = await this.build(ReviewId.fromString(id));
     review.changeScore(ReviewScore.fromObject(score), UserId.fromString(auid));
     await this.store(review);

@@ -22,6 +22,7 @@ export class IdeaReadServer extends ServiceServer implements IdeaReadQueries.Ser
   ) {
     super();
   }
+
   @RpcMethod(IdeaReadService)
   getById({id, userId}: IdeaReadQueries.GetBydId) {
     return this.repository.getById(

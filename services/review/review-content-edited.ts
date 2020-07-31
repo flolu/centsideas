@@ -8,11 +8,11 @@ import {ReviewContent} from './review-content';
 export class ReviewContentEdited implements IDomainEvent {
   constructor(public readonly content: ReviewContent) {}
 
-  serialize(): ReviewModels.ReviewContentEditedData {
+  serialize(): ReviewModels.ContentEditedData {
     return {content: this.content.toString()};
   }
 
-  static deserialize({content}: ReviewModels.ReviewContentEditedData) {
+  static deserialize({content}: ReviewModels.ContentEditedData) {
     return new ReviewContentEdited(ReviewContent.fromString(content));
   }
 }

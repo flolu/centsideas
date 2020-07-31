@@ -7,11 +7,11 @@ import {ReviewModels} from '@centsideas/models';
 export class ReviewPublished implements IDomainEvent {
   constructor(public readonly publishedAt: Timestamp) {}
 
-  serialize(): ReviewModels.ReviewPublishedData {
+  serialize(): ReviewModels.PublishedData {
     return {publishedAt: this.publishedAt.toString()};
   }
 
-  static deserialze({publishedAt}: ReviewModels.ReviewPublishedData) {
+  static deserialze({publishedAt}: ReviewModels.PublishedData) {
     return new ReviewPublished(Timestamp.fromString(publishedAt));
   }
 }
