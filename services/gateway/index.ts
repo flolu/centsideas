@@ -9,13 +9,14 @@ import {GlobalConfig, SecretsConfig} from '@centsideas/config';
 
 import {GatewayServer} from './gateway.server';
 import {RootController} from './root.controller';
-import {AuthMiddleware} from './auth.middleware';
+import {AuthMiddleware, OptionalAuthMiddleware} from './auth.middleware';
 import {GatewayConfig} from './gateway.config';
 import {AuthenticationController} from './authentication.controller';
 import {IdeaController} from './idea.controller';
 import {UserController} from './user.controller';
 import {PersonalDataController} from './personal-data.controller';
 import {SearchController} from './search.controller';
+import {ReviewController} from './review.controller';
 
 DI.registerProviders(
   GatewayServer,
@@ -23,9 +24,11 @@ DI.registerProviders(
   AuthenticationController,
   IdeaController,
   AuthMiddleware,
+  OptionalAuthMiddleware,
   UserController,
   PersonalDataController,
   SearchController,
+  ReviewController,
 );
 DI.registerSingletons(Logger, GatewayConfig, GlobalConfig, SecretsConfig);
 

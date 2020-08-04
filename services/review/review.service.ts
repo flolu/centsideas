@@ -19,8 +19,8 @@ import {ReviewScore} from './review-score';
 @injectable()
 export class ReviewService {
   private eventStore = this.eventStoreFactory({
-    url: this.config.get('review1.database.url'),
-    name: this.config.get('review1.database.name'),
+    url: this.config.get('review.database.url'),
+    name: this.config.get('review.database.name'),
     topic: EventTopics.Review,
   });
 
@@ -44,6 +44,7 @@ export class ReviewService {
 
     if (!reviewIdea) throw new Errors.IdeaNotFound(idea);
     const receiverUser = UserId.fromString(reviewIdea.userId);
+    if (receiverUser.equals(user)) throw new Errors.CantReviewOwnIdea(idea, user);
     if (existingReview) throw new Errors.OneReviewPerIdea(user, idea);
 
     const review = Review.create(id, user, receiverUser, idea, Timestamp.now());

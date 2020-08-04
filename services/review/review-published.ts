@@ -11,7 +11,7 @@ export class ReviewPublished implements IDomainEvent {
     return {publishedAt: this.publishedAt.toString()};
   }
 
-  static deserialze({publishedAt}: ReviewModels.PublishedData) {
+  static deserialize({publishedAt}: ReviewModels.PublishedData) {
     return new ReviewPublished(Timestamp.fromString(publishedAt));
   }
 }

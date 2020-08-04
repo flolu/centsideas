@@ -31,9 +31,9 @@ export abstract class MongoProjector extends Projector {
 
   @postConstruct()
   async initializeProjector() {
-    await this.initialize();
     const db = await this.db();
     await db.createCollection(this.sequenceCollectionName);
+    await this.initialize();
     await this.initializeSequenceCounter();
     await this.replay();
     this.eventListener

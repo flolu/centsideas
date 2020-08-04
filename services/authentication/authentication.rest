@@ -1,7 +1,7 @@
 @sessionId = ___
 @email = ___
 @emailSignInToken = ___
-@googleSignInCode = ___
+@googleSignInCode = 4/2gEp9RuMfMEvWY5aGTDHJLSo7YamUl5EMQ95J_jsmUr7keAa61-virllUF2L7pFTw3kmcFVcfWZP5NCDw_BxbiA
 
 ###
 

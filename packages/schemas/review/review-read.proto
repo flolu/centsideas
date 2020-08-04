@@ -7,8 +7,9 @@ package review;
 
 service ReviewRead {
   rpc getByIdeaId(GetByIdeaId) returns (Reviews);
-  rpc getByAuthroAndIdea(GetByAuthor) returns (Reviews);
-  rpc getByAuthor(GetByAuthorAndIdea) returns (Review);
+  rpc getByAuthorAndIdea(GetByAuthorAndIdea) returns (Review);
+  rpc getByAuthor(GetByAuthor) returns (Reviews);
+  rpc getAll(google.protobuf.Empty) returns (Reviews);
 }
 
 message GetByIdeaId {
@@ -23,18 +24,20 @@ message GetByAuthor {
 
 message GetByAuthorAndIdea {
   string ideaId = 1;
-  string auid = 2;
+  string authorId = 2;
+  optional string auid = 3;
 }
 
 message Review {
   string id = 1;
   string authorUserId = 2;
   string receiverUserId = 3;
-  string content = 4;
-  ReviewScore score = 5;
-  string publishedAt = 6;
-  string updateAt = 7;
-  int32 lastEventVersion = 8;
+  string ideaId = 4;
+  string content = 5;
+  ReviewScore score = 6;
+  string publishedAt = 7;
+  string updatedAt = 8;
+  int32 lastEventVersion = 9;
 }
 
 message Reviews {

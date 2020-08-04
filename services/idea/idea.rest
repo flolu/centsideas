@@ -16,14 +16,6 @@ Authorization: Bearer {{userId}}
 
 ###
 
-PUT {{apiUrl}}/idea/{{ideaId}}/rename
-content-type: application/json
-Authorization: Bearer {{userId}}
-
-{"title":"no"}
-
-###
-
 PUT {{apiUrl}}/idea/{{ideaId}}/description
 content-type: application/json
 Authorization: Bearer {{userId}}
@@ -55,3 +47,11 @@ Authorization: Bearer {{userId}}
 
 DELETE {{apiUrl}}/idea/{{ideaId}}
 Authorization: Bearer {{userId}}
+
+### errors
+
+PUT {{apiUrl}}/idea/{{ideaId}}/rename
+content-type: application/json
+Authorization: Bearer {{userId}}
+
+{"title":"no"}

@@ -71,6 +71,15 @@ export class ReviewContentRequired extends Exception {
   }
 }
 
+export class AlreadyPublished extends Exception {
+  name = ReviewErrorNames.AlreadyPublished;
+  code = RpcStatus.INVALID_ARGUMENT;
+
+  constructor(review: ReviewId) {
+    super(`You have already published this review`, {reviewId: review.toString()});
+  }
+}
+
 export class NotFound extends Exception {
   name = ReviewErrorNames.NotFound;
   code = RpcStatus.NOT_FOUND;
@@ -99,6 +108,18 @@ export class IdeaNotFound extends Exception {
   constructor(idea: IdeaId) {
     super(`The idea, you wanted to write a review for, was not found`, {
       ideaId: idea.toString(),
+    });
+  }
+}
+
+export class CantReviewOwnIdea extends Exception {
+  name = ReviewErrorNames.CantReviewOwnIdea;
+  code = RpcStatus.INVALID_ARGUMENT;
+
+  constructor(idea: IdeaId, user: UserId) {
+    super(`You can't review you own idea`, {
+      ideaId: idea.toString(),
+      userId: user.toString(),
     });
   }
 }

@@ -2,7 +2,6 @@ import {inject, postConstruct} from 'inversify';
 import * as elasticsearch from '@elastic/elasticsearch';
 import {concatMap} from 'rxjs/operators';
 import {from} from 'rxjs';
-import * as asyncRetry from 'async-retry';
 
 import {PersistedEvent} from '@centsideas/models';
 import {EventTopics} from '@centsideas/enums';
@@ -22,11 +21,16 @@ export abstract class ElasticProjector extends Projector {
 
   @inject(EventListener) private eventListener!: EventListener;
 
-  private client: elasticsearch.Client | undefined;
+  private client!: elasticsearch.Client;
   private readonly bookmarkId = 'bookmark';
 
   @postConstruct()
   async initializeProjector() {
+    this.client = new elasticsearch.Client({
+      node: this.elasticNode,
+      auth: {username: 'elastic', password: this.elasticUserPassword || 'changeme'},
+      ssl: {ca: this.elasticTlsCertificate, rejectUnauthorized: false},
+    });
     await this.initialize();
     await this.upsertBookmark();
     await this.replay();
@@ -37,9 +41,8 @@ export abstract class ElasticProjector extends Projector {
   }
 
   async increaseBookmark() {
-    const client = await this.getClient();
     const bookmark = await this.getBookmark();
-    await client.update({
+    await this.client.update({
       index: this.index,
       type: this.bookmarkType,
       id: this.bookmarkId,
@@ -48,8 +51,7 @@ export abstract class ElasticProjector extends Projector {
   }
 
   async getBookmark() {
-    const client = await this.getClient();
-    const {body} = await client.get({
+    const {body} = await this.client.get({
       index: this.index,
       type: this.bookmarkType,
       id: this.bookmarkId,
@@ -58,18 +60,6 @@ export abstract class ElasticProjector extends Projector {
   }
 
   protected async getClient() {
-    if (!this.client) {
-      this.client = new elasticsearch.Client({
-        node: this.elasticNode,
-        auth: {username: 'elastic', password: this.elasticUserPassword || 'changeme'},
-        ssl: {ca: this.elasticTlsCertificate, rejectUnauthorized: false},
-      });
-    }
-    const healthy = await this.healthcheck();
-    if (!healthy)
-      await asyncRetry(async () => {
-        if (!(await this.healthcheck())) throw new Error();
-      });
     return this.client;
   }
 
@@ -79,14 +69,12 @@ export abstract class ElasticProjector extends Projector {
 
   async shutdown() {
     await this.eventListener.disconnect();
-    const client = await this.getClient();
-    await client.close();
+    await this.client.close();
   }
 
   async healthcheck(): Promise<boolean> {
     try {
-      const client = await this.getClient();
-      const {body} = await client.cluster.health();
+      const {body} = await this.client.cluster.health();
       return (body.status === 'green' || body.status === 'yellow') && this.connected;
     } catch (err) {
       this.logger.error(err);
@@ -94,10 +82,18 @@ export abstract class ElasticProjector extends Projector {
     }
   }
 
+  async connect() {
+    this.client = new elasticsearch.Client({
+      node: this.elasticNode,
+      auth: {username: 'elastic', password: this.elasticUserPassword || 'changeme'},
+      ssl: {ca: this.elasticTlsCertificate, rejectUnauthorized: false},
+    });
+    await this.client.cluster.health();
+  }
+
   private async upsertBookmark() {
-    const client = await this.getClient();
     try {
-      const {body} = await client.get({
+      const {body} = await this.client.get({
         index: this.index,
         type: this.bookmarkType,
         id: this.bookmarkId,
@@ -106,7 +102,7 @@ export abstract class ElasticProjector extends Projector {
       throw new Error();
     } catch (error) {
       try {
-        await client.index({
+        await this.client.index({
           index: this.index,
           type: this.bookmarkType,
           id: this.bookmarkId,

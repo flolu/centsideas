@@ -55,4 +55,6 @@ export enum ReviewErrorNames {
   NotFound = 'review.notFound',
   OneReviewPerIdea = 'review.oneReviewPerIdea',
   IdeaNotFound = 'review.ideaNotFound',
+  CantReviewOwnIdea = 'review.cantReviewOwnIdea',
+  AlreadyPublished = 'review.alreadyPublished',
 }

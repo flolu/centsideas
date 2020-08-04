@@ -24,24 +24,36 @@ export class ReviewReadServer extends ServiceServer implements ReviewQueries.Ser
   }
 
   @RpcMethod(ReviewReadService)
-  getByIdeaId({ideaId, auid}: ReviewQueries.GetByIdeaId) {
-    return this.repository.getByIdea(
+  async getAll() {
+    const reviews = await this.repository.getAll();
+    return {reviews};
+  }
+
+  @RpcMethod(ReviewReadService)
+  async getByIdeaId({ideaId, auid}: ReviewQueries.GetByIdeaId) {
+    const reviews = await this.repository.getByIdea(
       IdeaId.fromString(ideaId),
       auid ? UserId.fromString(auid) : undefined,
     );
+    return {reviews};
   }
 
   @RpcMethod(ReviewReadService)
-  getByAuthorAndIdea({ideaId, auid}: ReviewQueries.GetByAuthorAndIdea) {
-    return this.repository.getByIdeaAndAuthor(IdeaId.fromString(ideaId), UserId.fromString(auid));
-  }
-
-  @RpcMethod(ReviewReadService)
-  getByAuthor({authorId, auid}: ReviewQueries.GetByAuthor) {
-    return this.repository.getByAuthor(
+  getByAuthorAndIdea({ideaId, authorId, auid}: ReviewQueries.GetByAuthorAndIdea) {
+    return this.repository.getByIdeaAndAuthor(
+      IdeaId.fromString(ideaId),
       UserId.fromString(authorId),
       auid ? UserId.fromString(auid) : undefined,
     );
+  }
+
+  @RpcMethod(ReviewReadService)
+  async getByAuthor({authorId, auid}: ReviewQueries.GetByAuthor) {
+    const reviews = await this.repository.getByAuthor(
+      UserId.fromString(authorId),
+      auid ? UserId.fromString(auid) : undefined,
+    );
+    return {reviews};
   }
 
   async healthcheck() {

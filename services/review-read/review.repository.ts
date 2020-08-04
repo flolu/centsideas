@@ -5,6 +5,7 @@ import * as asyncRetry from 'async-retry';
 import {ReviewModels} from '@centsideas/models';
 import {IdeaId, UserId} from '@centsideas/types';
 
+import * as Errors from './review-read.errors';
 import {ReviewReadConfig} from './review-read.config';
 
 @injectable()
@@ -53,12 +54,20 @@ export class ReviewRepository {
     return result.toArray();
   }
 
-  async getByIdeaAndAuthor(idea: IdeaId, auid: UserId) {
+  async getByIdeaAndAuthor(idea: IdeaId, author: UserId, auid?: UserId) {
     const collection = await this.collection();
-    return collection.findOne({
-      authorUserId: auid.toString(),
-      ideaId: idea.toString(),
-    });
+    const review = auid
+      ? await collection.findOne({
+          authorUserId: author.toString(),
+          ideaId: idea.toString(),
+        })
+      : await collection.findOne({
+          authorUserId: author.toString(),
+          ideaId: idea.toString(),
+          publishedAt: {$ne: undefined},
+        });
+    if (!review) throw new Errors.NotFound();
+    return review;
   }
 
   private async collection() {

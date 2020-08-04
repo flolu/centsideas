@@ -3,4 +3,5 @@ export enum ApiEndpoints {
   Idea = 'idea',
   Authentication = 'auth',
   User = 'user',
+  Review = 'review',
 }

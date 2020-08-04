@@ -85,6 +85,7 @@ export class Review extends Aggregate<SerializedReview> {
   publish(publishedAt: Timestamp, user: UserId) {
     this.checkGeneralConditions(user);
     if (this.publishedAt) return;
+    if (!!this.publishedAt) throw new Errors.AlreadyPublished(this.id);
     if (!this.content) throw new Errors.ReviewContentRequired(this.id);
     if (!this.score) throw new Errors.ReviewScoreRequired(this.id);
     this.raise(new ReviewPublished(publishedAt));

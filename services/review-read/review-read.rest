@@ -1,1 +1,21 @@
-# TODO test review api
+@ideaId = ueouRZvmF
+@authorId = dtUd0B9AD
+
+###
+
+GET {{apiUrl}}/review
+
+###
+
+GET {{apiUrl}}/review?ideaId={{ideaId}}
+Authorization: Bearer {{userId}}
+
+###
+
+GET {{apiUrl}}/review?authorId={{authorId}}
+Authorization: Bearer {{userId}}
+
+###
+
+GET {{apiUrl}}/review?ideaId={{ideaId}}&authorId={{authorId}}
+Authorization: Bearer {{userId}}

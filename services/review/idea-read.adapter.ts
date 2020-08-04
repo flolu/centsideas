@@ -22,7 +22,6 @@ export class IdeaReadAdapter {
 
   async getPublicIdeaById(idea: IdeaId) {
     try {
-      // TODO implement review-read
       return await this.ideaReadRpc.client.getById({id: idea.toString()});
     } catch (error) {
       if (error.code === RpcStatus.NOT_FOUND) return null;

@@ -12,11 +12,13 @@ export interface GetByAuthor {
 
 export interface GetByAuthorAndIdea {
   ideaId: string;
-  auid: string;
+  authorId: string;
+  auid?: string;
 }
 
 export interface Service {
-  getByIdeaId: (payload: GetByIdeaId) => Promise<ReviewModels.ReviewModel[]>;
+  getByIdeaId: (payload: GetByIdeaId) => Promise<{reviews: ReviewModels.ReviewModel[]}>;
   getByAuthorAndIdea: (payload: GetByAuthorAndIdea) => Promise<ReviewModels.ReviewModel | null>;
-  getByAuthor: (payload: GetByAuthor) => Promise<ReviewModels.ReviewModel[]>;
+  getByAuthor: (payload: GetByAuthor) => Promise<{reviews: ReviewModels.ReviewModel[]}>;
+  getAll: (payload: void) => Promise<{reviews: ReviewModels.ReviewModel[]}>;
 }

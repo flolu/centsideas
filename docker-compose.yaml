@@ -2,6 +2,29 @@
 
 version: "3"
 services:
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.8.0
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    logging:
+      driver: none
+
   zookeeper:
     container_name: zookeeper
     image: zookeeper
@@ -23,42 +46,11 @@ services:
     depends_on:
       - zookeeper
 
-  postgres:
-    container_name: postgres
-    image: postgres
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
-
   mongo-database:
     container_name: mongo-database
     image: mongo:4
     ports:
       - 27017:27017
-    logging:
-      driver: none
-
-  elasticsearch:
-    container_name: elasticsearch
-    image: elasticsearch:7.8.0
-    environment:
-      - xpack.security.enabled=false
-      - discovery.type=single-node
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    cap_add:
-      - IPC_LOCK
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-      - 9300:9300
     logging:
       driver: none
 
@@ -151,6 +143,36 @@ services:
     depends_on:
       - kafka
       - user
+
+  review:
+    container_name: review
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./services/review:/services/review
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: env/.docker-compose.env
+    command: yarn run ts-node-dev services/review --colors --transpileOnly --debounce 1500
+    depends_on:
+      - kafka
+  review-read:
+    container_name: review-read
+    image: node:lts-alpine
+    working_dir: /
+    volumes:
+      - ./package.json:/package.json
+      - ./tsconfig.json:/tsconfig.json
+      - ./services/review-read:/services/review-read
+      - ./packages:/packages
+      - ./node_modules:/node_modules
+    env_file: env/.docker-compose.env
+    command: yarn run ts-node-dev services/review-read --colors --transpileOnly --debounce 1500
+    depends_on:
+      - kafka
+      - review
 
   mailing:
     container_name: mailing

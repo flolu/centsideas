@@ -23,8 +23,9 @@ export class ReviewReadAdapter {
   async getByAuthorAndIdea(author: UserId, idea: IdeaId) {
     try {
       return await this.reviewReadRpc.client.getByAuthorAndIdea({
-        auid: author.toString(),
+        authorId: author.toString(),
         ideaId: idea.toString(),
+        auid: author.toString(),
       });
     } catch (error) {
       if (error.code === RpcStatus.NOT_FOUND) return null;

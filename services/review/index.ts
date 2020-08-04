@@ -28,12 +28,13 @@ import {ReviewServer} from './review.server';
 import {ReviewService} from './review.service';
 import {ReviewConfig} from './review.config';
 import {ReviewReadAdapter} from './review-read.adapter';
+import {IdeaReadAdapter} from './idea-read.adapter';
 
 DI.registerProviders(ReviewServer, ReviewService);
 DI.registerSingletons(ReviewConfig);
 
 DI.registerSingletons(Logger, GlobalConfig);
-DI.registerProviders(RpcServer, RpcClient, ReviewReadAdapter);
+DI.registerProviders(RpcServer, RpcClient, ReviewReadAdapter, IdeaReadAdapter);
 DI.registerFactory(RPC_SERVER_FACTORY, rpcServerFactory);
 DI.registerFactory(RPC_CLIENT_FACTORY, rpcClientFactory);
 DI.registerProviders(EventDispatcher, MongoEventStore, MongoSnapshotStore);
