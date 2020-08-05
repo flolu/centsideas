@@ -1,6 +1,8 @@
 # FIXME research integration testing (maybe with docker-compose or microk8s)
+# https://github.com/testcontainers/testcontainers-node/issues/109
+# https://github.com/visionmedia/supertest
 
-version: "3"
+version: '3'
 services:
   elasticsearch:
     container_name: elasticsearch

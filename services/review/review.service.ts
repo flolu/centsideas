@@ -14,7 +14,7 @@ import {IdeaReadAdapter} from './idea-read.adapter';
 import {ReviewContent} from './review-content';
 import {ReviewScore} from './review-score';
 
-// TODO should review be deleted or any action be taken when idea was deleted?
+// FIXME should review be deleted or any action be taken when idea was deleted?
 
 @injectable()
 export class ReviewService {
@@ -31,7 +31,7 @@ export class ReviewService {
     @inject(MONGO_EVENT_STORE_FACTORY) private eventStoreFactory: MongoEventStoreFactory,
   ) {}
 
-  // TODO rename all userId strings that came from auth token to authenticatedUserId or auid to make it clear (in all services)
+  // FIXME rename all userId strings that came from auth token to authenticatedUserId or auid to make it clear (in all services)
   async create(id: ReviewId, userId: string, ideaId: string) {
     const user = UserId.fromString(userId);
     const idea = IdeaId.fromString(ideaId);

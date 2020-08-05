@@ -14,6 +14,10 @@ import {
   IdeaReadService,
   AuthenticationCommands,
   AuthenticationCommandsService,
+  ReviewCommandsService,
+  ReviewReadService,
+  ReviewCommands,
+  ReviewQueries,
 } from '@centsideas/schemas';
 
 import {GatewayConfig} from './gateway.config';
@@ -49,6 +53,17 @@ export class PersonalDataController implements interfaces.Controller {
     service: AuthenticationCommandsService,
   });
 
+  private reviewRpc: RpcClient<ReviewCommands.Service> = this.rpcFactory({
+    host: this.config.get('review.rpc.host'),
+    service: ReviewCommandsService,
+    port: this.config.getNumber('review.rpc.port'),
+  });
+  private reviewReadRpc: RpcClient<ReviewQueries.Service> = this.rpcFactory({
+    host: this.config.get('review-read.rpc.host'),
+    service: ReviewReadService,
+    port: this.config.getNumber('review-read.rpc.port'),
+  });
+
   constructor(
     private config: GatewayConfig,
     @inject(RPC_CLIENT_FACTORY) private rpcFactory: RpcClientFactory,
@@ -64,13 +79,27 @@ export class PersonalDataController implements interfaces.Controller {
   async getPersonalData(_req: express.Request, res: express.Response) {
     const {userId} = res.locals;
 
-    const [user, userEvents, userPrivateEvents, ideas, ideaEvents, authEvents] = await Promise.all([
+    const [
+      user,
+      userEvents,
+      userPrivateEvents,
+      ideas,
+      ideaEvents,
+      authEvents,
+      reviews,
+      reviewEvents,
+    ] = await Promise.all([
       this.userReadRpc.client.getMe({id: userId}),
       this.userRpc.client.getEvents({after: 0, streamId: userId}),
       this.userRpc.client.getPrivateEvents({after: 0, streamId: userId}),
+
       this.ideaReadRpc.client.getAllByUserId({userId, privates: true}),
       this.ideaRpc.client.getEventsByUserId({userId}),
+
       this.authenticationRpc.client.getEventsByUserId({userId}),
+
+      this.reviewReadRpc.client.getByAuthor({authorId: userId, auid: userId}),
+      this.reviewRpc.client.getEventsByUserId({userId}),
     ]);
 
     return {
@@ -80,6 +109,8 @@ export class PersonalDataController implements interfaces.Controller {
       ideas,
       ideaEvents,
       authEvents,
+      reviews,
+      reviewEvents,
     };
   }
 }

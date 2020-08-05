@@ -34,8 +34,7 @@ export class IdeaRepository {
   async getAll() {
     const collection = await this.collection();
     const result = await collection.find({
-      // TODO $exists needed?
-      publishedAt: {$exists: true, $ne: undefined},
+      publishedAt: {$ne: undefined},
       deletedAt: undefined,
     });
     return result.toArray();
@@ -47,7 +46,7 @@ export class IdeaRepository {
       ? await collection.find({userId: user.toString()})
       : await collection.find({
           userId: user.toString(),
-          publishedAt: {$exists: true, $ne: undefined},
+          publishedAt: {$ne: undefined},
           deletedAt: undefined,
         });
     return result.toArray();

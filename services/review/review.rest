@@ -1,4 +1,4 @@
-@ideaId = ueouRZvmF
+@ideaId = JAJf8zCUd
 @reviewId = {{create.response.body.id}}
 
 ###
@@ -36,5 +36,3 @@ Authorization: Bearer {{userId}}
 
 PUT {{apiUrl}}/review/{{reviewId}}/publish
 Authorization: Bearer {{userId}}
-
-### TODO get events in .rest files

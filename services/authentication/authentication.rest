@@ -1,7 +1,7 @@
 @sessionId = ___
-@email = ___
-@emailSignInToken = ___
-@googleSignInCode = 4/2gEp9RuMfMEvWY5aGTDHJLSo7YamUl5EMQ95J_jsmUr7keAa61-virllUF2L7pFTw3kmcFVcfWZP5NCDw_BxbiA
+@email = mamok52762@ainbz.com
+@emailSignInToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIxNDE0NmEwYS0yNTZhLTQ4Y2MtYjU4Ny1jZjNjYjBhNTMwYzciLCJlbWFpbCI6Im1hbW9rNTI3NjJAYWluYnouY29tIiwiaWF0IjoxNTk2NjEwNjI2LCJleHAiOjE1OTY2MTc4MjZ9.UOCcNGvO6cok2bDW4IPy3TWrNKuUP95gVFXAxGReAvg
+@googleSignInCode = 4/2gEy3V-Sg0xzFTevrsd8DC98TQwiQKmeigqr2YBy5iSG0Mdwh8kKemCblE1sYtmhWqJUohQa7NVfZGqnd99s3ZI
 
 ###
 
