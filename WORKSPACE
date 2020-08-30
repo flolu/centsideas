@@ -8,8 +8,16 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # https://github.com/bazelbuild/rules_nodejs/releases
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "84abf7ac4234a70924628baa9a73a5a5cbad944c4358cf9abdb4aab29c9a5b77",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/1.7.0/rules_nodejs-1.7.0.tar.gz"],
+    sha256 = "10fffa29f687aa4d8eb6dfe8731ab5beb63811ab00981fc84a93899641fd4af1",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/2.0.3/rules_nodejs-2.0.3.tar.gz"],
+)
+
+# https://github.com/bazelbuild/rules_sass#setup
+http_archive(
+    name = "io_bazel_rules_sass",
+    sha256 = "9dcfba04e4af896626f4760d866f895ea4291bc30bf7287887cefcf4707b6a62",
+    strip_prefix = "rules_sass-1.26.3",
+    url = "https://github.com/bazelbuild/rules_sass/archive/1.26.3.zip",
 )
 
 load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
@@ -20,18 +28,17 @@ yarn_install(
     yarn_lock = "//:yarn.lock",
 )
 
-load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
-
-install_bazel_dependencies()
-
-load("@npm_bazel_protractor//:package.bzl", "npm_bazel_protractor_dependencies")
+# Load @bazel/protractor dependencies
+load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
 
 npm_bazel_protractor_dependencies()
 
-load("@npm_bazel_karma//:package.bzl", "npm_bazel_karma_dependencies")
+# Load @bazel/karma dependencies
+load("@npm//@bazel/karma:package.bzl", "npm_bazel_karma_dependencies")
 
 npm_bazel_karma_dependencies()
 
+# Setup the rules_webtesting toolchain
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
 
 web_test_repositories()
@@ -42,18 +49,13 @@ browser_repositories(
     chromium = True,
     firefox = True,
 )
+# load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
 
-load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
+# install_bazel_dependencies()
 
-ts_setup_workspace()
+# load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
 
-# https://github.com/bazelbuild/rules_sass#setup
-http_archive(
-    name = "io_bazel_rules_sass",
-    sha256 = "9dcfba04e4af896626f4760d866f895ea4291bc30bf7287887cefcf4707b6a62",
-    strip_prefix = "rules_sass-1.26.3",
-    url = "https://github.com/bazelbuild/rules_sass/archive/1.26.3.zip",
-)
+# ts_setup_workspace()
 
 load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
 

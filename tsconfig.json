@@ -4,7 +4,7 @@
     "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "target": "ES5",
+    "target": "es6",
     "paths": {
       "@centsideas/*": ["./packages/*"],
       "@cic/*": ["./services/client/*"]

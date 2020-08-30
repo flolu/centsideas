@@ -1,5 +1,6 @@
 load("@npm//jest-cli:index.bzl", _jest_test = "jest_test")
-load("@npm_bazel_typescript//:index.bzl", "ts_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+#load("@npm_bazel_typescript//:index.bzl", "ts_library")
 
 def jest_test(name, srcs, deps, jest_config, data = [], **kwargs):
     """Wrapper for running jest tests with the jest cli
