@@ -1,17 +1,15 @@
 {
   "rest-client.environmentVariables": {
-    "$shared": {
-      "userId": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIxNDE0NmEwYS0yNTZhLTQ4Y2MtYjU4Ny1jZjNjYjBhNTMwYzciLCJ1c2VySWQiOiJmUEhtaUxxZnkiLCJpYXQiOjE1OTY2MTA2NDksImV4cCI6MTU5NjYxMTU0OX0.28_0xHLEMBE3HhUtI9UozPOHbHZNwqOiGg9GZ4bp0K0"
-    },
+    "$shared": {},
     "dev": {
-      "apiUrl": "http://localhost:3000"
+      "api": "http://localhost:3000"
     },
     "microk8s": {
-      "apiUrl": "http://api.localhost"
+      "api": "http://api.localhost"
     },
     "prod": {
-      "apiUrl": "http://api.centsideas.com"
+      "api": "http://api.centsideas.com"
     }
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "rest-client.rememberCookiesForSubsequentRequests": true
 }

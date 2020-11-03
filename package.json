@@ -1,0 +1,60 @@
+{
+  "name": "centsideas",
+  "private": "true",
+  "scripts": {
+    "dev": "yarn run config dev && yarn dev:generate-docker-compose && yarn dev:docker",
+    "dev:generate-docker-compose": "yarn ts-node dev/docker-compose",
+    "dev:docker": "docker-compose -f docker-compose.json up --build",
+    "test": "yarn run config dev && yarn bazelisk test //... --test_output=errors",
+    "test:jasmine": "ts-node -r tsconfig-paths/register node_modules/jasmine/bin/jasmine --config=dev/jasmine.json",
+    "clean": "rm -rf node_modules && rm docker-compose.json && bazelisk clean",
+    "deploy:microk8s": "yarn run config microk8s && bazelisk run :microk8s.apply",
+    "deploy": "yarn run config prod && bazelisk run :k8s.apply",
+    "config": "yarn ts-node -r tsconfig-paths/register packages/config/setup-config",
+    "up": "yarn upgrade-interactive --latest",
+    "up:bazel": "yarn upgrade --scope @bazel",
+    "postinstall": "yarn patch-package --patch-dir dev/patches"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@bazel/bazelisk": "^1.7.3",
+    "@bazel/jasmine": "^2.2.2",
+    "@bazel/typescript": "^2.2.2",
+    "@types/jasmine": "^3.6.0",
+    "@types/node": "^14.14.6",
+    "dotenv": "^8.2.0",
+    "husky": "^4.3.0",
+    "jasmine": "^3.6.3",
+    "lint-staged": "^10.5.1",
+    "prettier": "^2.1.2",
+    "ts-node": "^9.0.0",
+    "ts-node-dev": "^1.0.0",
+    "tsconfig-paths": "^3.9.0",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.0.5"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": false,
+    "arrowParens": "avoid",
+    "semi": false
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "sh dev/now-code-checker.sh && lint-staged && commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "tslint --fix",
+      "prettier --write --parser=typescript"
+    ]
+  }
+}

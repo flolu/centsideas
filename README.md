@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://centsideas.com">
-    <img width="180px" height="auto" src="misc/assets/icon.png" />
+    <img width="180px" height="auto" src="dev/assets/icon.png" />
   </a>
   <br>
   <h1>CentsIdeas</h1>
@@ -39,8 +39,6 @@ This project also aims to be compliant with GDPR.
 ## Documentation
 
 [Setup your development environment on Ubuntu](./misc/docs/ubuntu.md)
-
-[Develop CentsIdeas](./misc/docs/development.md)
 
 [Run a local Kubernetes cluster on Ubuntu](./misc/docs/microk8s.md)
 

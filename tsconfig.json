@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": ["es6"],
+    "target": "es5",
+    "paths": {
+      "@centsideas/*": ["./packages/*"]
+    },
+    "types": ["reflect-metadata", "node", "jasmine"]
+  },
+  "exclude": ["node_modules", "bazel-out", "bazel-bin", "bazel-testlogs", "bazel-centsideas", "dist"]
+}

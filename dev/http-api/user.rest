@@ -1,0 +1,55 @@
+@endpoint = user
+@accessToken = ___
+@emailChangeToken = ___
+@deletionToken = ___
+
+###
+POST {{api}}/{{endpoint}}/rename
+authorization: Bearer {{accessToken}}
+content-type: application/json
+
+{"username":"ronny"}
+
+###
+POST {{api}}/{{endpoint}}/updateProfile
+authorization: Bearer {{accessToken}}
+content-type: application/json
+
+{
+  "avatar":"https://centsideas.com/image.jpg",
+  "name":"Ronny Schnackelmann",
+  "bio":"Hi, I am Ronny!",
+  "location":"Ort",
+  "website":"ronny.com",
+  "email":"ronny@schnack.com"
+}
+
+###
+POST {{api}}/{{endpoint}}/email/confirm
+authorization: Bearer {{accessToken}}
+content-type: application/json
+
+{"token":"{{emailChangeToken}}"}
+
+###
+POST {{api}}/{{endpoint}}/deletion/request
+authorization: Bearer {{accessToken}}
+
+###
+POST {{api}}/{{endpoint}}/deletion/confirm
+authorization: Bearer {{accessToken}}
+content-type: application/json
+
+{"token":"{{deletionToken}}"}
+
+###
+GET {{api}}/{{endpoint}}/me
+authorization: Bearer {{accessToken}}
+
+###
+GET {{api}}/{{endpoint}}/ronny
+authorization: Bearer {{accessToken}}
+
+###
+GET {{api}}/{{endpoint}}
+authorization: Bearer {{accessToken}}

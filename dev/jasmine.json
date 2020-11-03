@@ -1,0 +1,5 @@
+{
+  "spec_files": ["**/*.test.ts", "!node_modules/**", "!bazel-*/**", "!dist/**"],
+  "stopSpecOnExpectationFailure": false,
+  "random": false
+}

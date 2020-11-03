@@ -1,0 +1,34 @@
+@endpoint = auth
+@accessToken = ___
+@email = ___
+@emailToken = ___
+@googleCode = ___
+
+###
+POST {{api}}/{{endpoint}}/refresh
+authorization: Bearer {{accessToken}}
+
+###
+POST {{api}}/{{endpoint}}/signin/email
+authorization: Bearer {{accessToken}}
+content-type: application/json
+
+{"email":"{{email}}"}
+
+###
+POST {{api}}/{{endpoint}}/signin/confirm-email
+authorization: Bearer {{accessToken}}
+content-type: application/json
+
+{"token":"{{emailToken}}"}
+
+###
+POST {{api}}/{{endpoint}}/signin/google
+authorization: Bearer {{accessToken}}
+content-type: application/json
+
+{"code":"{{googleCode}}"}
+
+###
+POST {{api}}/{{endpoint}}/signout
+authorization: Bearer {{accessToken}}

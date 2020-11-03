@@ -1,0 +1,11 @@
+node_modules
+bazel-*
+dist
+
+docker-compose.json
+docker-compose.env
+secrets.config.ts
+secrets.yaml
+config.yaml
+
+*.log

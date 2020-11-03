@@ -1,0 +1,17 @@
+steps:
+  - name: node
+    entrypoint: yarn
+    args: ['install']
+
+  - name: node
+    entrypoint: yarn
+    args: ['run', 'config', 'dev']
+
+  - name: node
+    entrypoint: yarn
+    args: ['run', 'test:jasmine']
+
+  - name: gcr.io/centsideas/bazelisk
+    args: ['test', '//...']
+
+timeout: 3600s
