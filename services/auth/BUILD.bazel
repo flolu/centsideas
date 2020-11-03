@@ -1,0 +1,45 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "auth",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = [
+            "**/*.test.ts",
+            "write/**",
+        ],
+    ),
+    deps = [
+        "//packages/adapters",
+        "//packages/common",
+        "//packages/config",
+        "//packages/event-sourcing",
+        "//packages/shared",
+        "@npm//axios",
+        "@npm//inversify",
+        "@npm//query-string",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = glob(["**/*.test.ts"]),
+    deps = [
+        ":auth",
+        "//packages/common",
+        "//packages/event-sourcing",
+        "//packages/shared",
+        "@npm//@types/jasmine",
+        "@npm//inversify",
+        "@npm//reflect-metadata",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    config_file = "//dev:jasmine.json",
+    deps = [":test_lib"],
+)

@@ -1,0 +1,37 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "config",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = ["**/*.test.ts"],
+    ),
+    module_name = "@centsideas/config",
+    deps = [
+        "//packages/common",
+        "@npm//@types/node",
+        "@npm//inversify",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = glob(["**/*.test.ts"]),
+    deps = [
+        ":config",
+        "@npm//@types/jasmine",
+        "@npm//@types/jsonwebtoken",
+        "@npm//jasmine",
+        "@npm//jsonwebtoken",
+        "@npm//reflect-metadata",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    config_file = "//dev:jasmine.json",
+    deps = [":test_lib"],
+)

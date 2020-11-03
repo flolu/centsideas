@@ -1,0 +1,21 @@
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: read-database
+spec:
+  members: 2
+  type: ReplicaSet
+  version: "4.2.7"
+  featureCompatibilityVersion: "4.0"
+  security:
+    authentication:
+      modes: ["SCRAM"]
+  users:
+    - name: admin
+      db: admin
+      passwordSecretRef:
+        name: secrets
+        key: secrets.readDatabase.password
+      roles:
+        - name: root
+          db: admin

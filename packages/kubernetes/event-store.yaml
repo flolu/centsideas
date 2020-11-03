@@ -1,0 +1,24 @@
+# FIXME stateful sets required?
+# https://github.com/mongodb/mongodb-kubernetes-operator/blob/5fc56be89e32faca30e05f5720427833205eeeb5/deploy/crds/arbitrary_statefulset_configuration/mongodb.com_v1_custom_volume_cr.yaml#L22
+
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: event-store
+spec:
+  members: 2
+  type: ReplicaSet
+  version: "4.2.7"
+  featureCompatibilityVersion: "4.0"
+  security:
+    authentication:
+      modes: ["SCRAM"]
+  users:
+    - name: admin
+      db: admin
+      passwordSecretRef:
+        name: secrets
+        key: secrets.eventStore.password
+      roles:
+        - name: root
+          db: admin

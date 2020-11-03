@@ -1,0 +1,91 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+load("@k8s_deploy//:defaults.bzl", "k8s_deploy")
+load("@microk8s_deploy//:defaults.bzl", "microk8s_deploy")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "lib",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = ["**/*.test.ts"],
+    ),
+    deps = [
+        "//packages/adapters",
+        "//packages/common",
+        "//packages/config",
+        "//packages/event-sourcing",
+        "//packages/messaging",
+        "//packages/schema",
+        "//packages/shared",
+        "//services/auth",
+        "@npm//@types/body-parser",
+        "@npm//@types/express",
+        "@npm//@types/node",
+        "@npm//axios",
+        "@npm//body-parser",
+        "@npm//express",
+        "@npm//inversify",
+        "@npm//inversify-express-utils",
+        "@npm//protobufjs",
+        "@npm//query-string",
+        "@npm//reflect-metadata",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = glob(["**/*.test.ts"]),
+    deps = [
+        ":lib",
+        "//packages/adapters",
+        "//packages/common",
+        "//packages/config",
+        "//packages/event-sourcing",
+        "//packages/messaging",
+        "//packages/schema",
+        "//packages/shared",
+        "//services/auth",
+        "@npm//@types/jasmine",
+        "@npm//inversify",
+        "@npm//jasmine",
+        "@npm//reflect-metadata",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    config_file = "//dev:jasmine.json",
+    deps = [":test_lib"],
+)
+
+nodejs_image(
+    name = "image",
+    data = [":lib"],
+    entry_point = ":index.ts",
+)
+
+k8s_deploy(
+    name = "auth_write",
+    images = {"auth-write:placeholder_name": ":image"},
+    template = ":auth-write.yaml",
+)
+
+k8s_objects(
+    name = "k8s",
+    objects = [":auth_write"],
+)
+
+microk8s_deploy(
+    name = "microk8s_auth_write",
+    images = {"auth-write:placeholder_name": ":image"},
+    template = ":auth-write.yaml",
+)
+
+k8s_objects(
+    name = "microk8s",
+    objects = [":microk8s_auth_write"],
+)

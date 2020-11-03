@@ -1,0 +1,13 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "testing",
+    srcs = glob(["**/*.ts"]),
+    module_name = "@centsideas/testing",
+    deps = [
+        "@npm//@types/jasmine",
+        "@npm//jasmine",
+    ],
+)

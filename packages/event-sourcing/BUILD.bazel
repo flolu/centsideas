@@ -1,0 +1,60 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "event-sourcing",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = [
+            "**/*.test.ts",
+        ],
+    ),
+    module_name = "@centsideas/event-sourcing",
+    deps = [
+        "//packages/common",
+        "//packages/messaging",
+        "@npm//@types/async-retry",
+        "@npm//@types/jasmine",
+        "@npm//@types/mongodb",
+        "@npm//async-retry",
+        "@npm//inversify",
+        "@npm//kafkajs",
+        "@npm//mongodb",
+        "@npm//reflect-metadata",
+        "@npm//rxjs",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = glob(
+        include = [
+            "**/*.test.ts",
+        ],
+        exclude = [
+            "testing/*.ts",
+            # FIXME prevent bazel from re-downloading mongodb every time
+            "mongo.event-store.test.ts",
+            "mongo.projector.test.ts",
+        ],
+    ),
+    deps = [
+        ":event-sourcing",
+        "//packages/common",
+        "//packages/messaging",
+        "//packages/testing",
+        "@npm//@types/jasmine",
+        "@npm//inversify",
+        "@npm//jasmine",
+        "@npm//mongodb-memory-server",
+        "@npm//reflect-metadata",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    config_file = "//dev:jasmine.json",
+    deps = [":test_lib"],
+)

@@ -1,0 +1,23 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "adapters",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = ["**/*.test.ts"],
+    ),
+    module_name = "@centsideas/adapters",
+    deps = [
+        "//packages/common",
+        "//packages/config",
+        "//packages/event-sourcing",
+        "//packages/schema",
+        "//packages/shared",
+        "@npm//@sendgrid/mail",
+        "@npm//@types/node",
+        "@npm//axios",
+        "@npm//inversify",
+    ],
+)

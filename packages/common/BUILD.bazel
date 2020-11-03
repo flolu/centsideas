@@ -1,0 +1,42 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "common",
+    srcs = glob(
+        include = ["**/*.ts"],
+        exclude = ["**/*.test.ts"],
+    ),
+    module_name = "@centsideas/common",
+    deps = [
+        "@npm//@types/express",
+        "@npm//@types/jsonwebtoken",
+        "@npm//@types/uuid",
+        "@npm//express",
+        "@npm//inversify",
+        "@npm//inversify-express-utils",
+        "@npm//jsonwebtoken",
+        "@npm//url-regex",
+        "@npm//uuid",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = glob(["**/*.test.ts"]),
+    deps = [
+        ":common",
+        "@npm//@types/jasmine",
+        "@npm//@types/jsonwebtoken",
+        "@npm//jasmine",
+        "@npm//jsonwebtoken",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    config_file = "//dev:jasmine.json",
+    deps = [":test_lib"],
+)
