@@ -1,1 +1,0 @@
-GET {{apiUrl}}/search/ideas/marketplace

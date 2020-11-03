@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package common;
-
-message GetEvents {
-  int32 after = 1;
-  optional string streamId = 2;
-}
