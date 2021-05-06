@@ -62,7 +62,7 @@
     "query-string": "^6.13.1",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.6.0",
-    "sanitize-html": "1.27.1",
+    "sanitize-html": "2.3.2",
     "shortid": "2.2.15",
     "socket.io": "^2.3.0",
     "ts-node": "8.10.2",
