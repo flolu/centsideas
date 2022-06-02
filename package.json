@@ -58,7 +58,7 @@
     "module-alias": "2.2.2",
     "mongodb": "3.5.9",
     "ngx-socket-io": "^3.2.0",
-    "protobufjs": "^6.10.1",
+    "protobufjs": "^6.11.3",
     "query-string": "^6.13.1",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.6.0",
