@@ -135,7 +135,7 @@
     "rollup": "2.22.1",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
-    "terser": "4.8.0",
+    "terser": "4.8.1",
     "ts-jest": "^26.1.3",
     "ts-node-dev": "1.0.0-pre.52",
     "tslint": "6.1.2",
